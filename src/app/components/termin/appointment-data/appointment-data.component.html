@@ -1,22 +1,32 @@
-<div class="block child appointment-data">
-  <h1>{{appointment.title}}</h1>
-  <span class="seperator colored middle high bold center"></span>
-  <span><mat-icon>location_on</mat-icon>
-    {{appointment.location}}</span>
-  <span><mat-icon>verified_user</mat-icon>
-    {{appointment.creator}}</span>
-  <span><mat-icon>access_time</mat-icon>
-    {{appointment.date | date: 'dd.MM.y, HH:mm' }}Uhr</span>
-  <ng-container *ngIf="appointment.date != appointment.deadline">
-    <span><mat-icon>alarm_on</mat-icon>
-      {{appointment.date | date: 'dd.MM.y, HH:mm' }}Uhr</span>
-  </ng-container>
-  <p>{{appointment.description}}</p>
+<mat-card class="appointment-data">
+  <mat-card-title class="headline">
+    {{appointment.title}}
+  </mat-card-title>
+  <mat-card-content>
+    <span class="seperator colored middle high bold center"></span>
+    <span>
+      <mat-icon>location_on</mat-icon>
+      <span>{{appointment.location}}</span>
+    </span>
+    <span>
+      <mat-icon>verified_user</mat-icon>
+      <span>{{appointment.creator}}</span>
+    </span>
+    <span>
+      <mat-icon>access_time</mat-icon>
+      <span> {{appointment.date | date: 'dd.MM.y, HH:mm' }}Uhr</span>
+    </span>
+    <span *ngIf="appointment.date != appointment.deadline">
+      <mat-icon>alarm_on</mat-icon>
+      <span>{{appointment.date | date: 'dd.MM.y, HH:mm' }}Uhr</span>
+    </span>
+    <p>{{appointment.description}}</p>
+  </mat-card-content>
 
-  <div class="link-management">
+  <mat-card-actions class="link-management">
     <mat-form-field>
       <input matInput readonly placeholder="" value="{{urlService.getHostname() + appointment.link}}" #inputElement>
     </mat-form-field>
     <button mat-raised-button (click)="copyInputMessage(inputElement)">Kopieren</button>
-  </div>
-</div>
+  </mat-card-actions>
+</mat-card>

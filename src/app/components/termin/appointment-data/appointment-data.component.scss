@@ -10,9 +10,9 @@
   text-align: center;
   margin: 25px auto 50px;
 
-  h1 {
+  mat-card-title{
+    margin-bottom: 15px;
     font-size: 1.75em;
-    margin: 10px auto;
   }
 
   & > * {
@@ -20,10 +20,10 @@
   }
 
   span {
-    margin: 5px auto;
+    margin: 5px 10px;
     display: inline-block;
-    width: 50%;
-    vertical-align: top;
+    width: calc(50% - 20px);
+    text-align: left;
 
     &.seperator {
       width: 100%;
@@ -33,7 +33,7 @@
 
     mat-icon {
       @include md-icon-size(20px);
-      vertical-align: text-top;;
+      vertical-align: top;
       left: 0;
     }
   }
