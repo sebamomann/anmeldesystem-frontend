@@ -18,9 +18,16 @@
 <!--  </ng-container>-->
 <!--</mat-expansion-panel>-->
 
-<button mat-raised-button (click)="openFilterDialog()">Filter</button>
-
 <div class="enrollment-list block decent" *ngIf="enrollments.length > 0; else emptyList">
+
+  <mat-icon (click)="openFilterDialog()"
+            matBadge="{{activeFilter.length > 0 ? activeFilter.length : ''}}"
+            matBadgeColor="info"
+            class="filter-open"
+            matBadgeSize="small">
+    filter_list
+  </mat-icon>
+
   <mat-accordion>
     <ng-container *ngFor="let enrollment of enrollments">
       <mat-expansion-panel class="enrollment">

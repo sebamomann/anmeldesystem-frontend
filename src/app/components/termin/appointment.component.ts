@@ -16,7 +16,7 @@ export class AppointmentComponent implements OnInit {
 
   private appointment = this.terminService.getTermin('');
   private enrollments = this.appointment.enrollments;
-  private activefilter = null;
+  private activeFilter = ['diver'];
   allowModify = true;
 
   ngOnInit() {
@@ -28,7 +28,7 @@ export class AppointmentComponent implements OnInit {
       height: 'auto',
       data: {
         appointment: this.appointment,
-        activeFilter: this.activefilter
+        activeFilter: this.activeFilter
       },
     });
 
