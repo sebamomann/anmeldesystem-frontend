@@ -27,6 +27,7 @@ $anmeldesystem-theme: mat-light-theme($anmeldesystem-primary, $anmeldesystem-acc
 
 @import url('https://fonts.googleapis.com/css?family=Nunito:300,400,600,700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Changa&display=swap');
 
 $accent: #2B2C30;
 $primary: #AECB37;
@@ -152,13 +153,33 @@ h1 {
 }
 
 mat-card {
+  max-width: calc(90% - 32px);
+
+  &.main {
+    margin: 25px auto;
+    max-width: calc(85% - 40px);
+    padding: 20px;
+
+    mat-card-title {
+      font-size: 2em;
+    }
+
+    mat-card-content {
+      margin-top: 25px;
+      text-align: justify;
+      font-size: 0.8em;
+    }
+  }
+
+  &.float {
+    top: calc(50vh - 25px);
+    transform: translateY(-50%);
+  }
+
   &.form {
-    max-width: calc(90% - 32px);
+    margin: 0 auto;
     width: fit-content;
     text-align: center;
-    top: 50vh;
-    transform: translateY(-50%);
-    margin: 0 auto;
 
     mat-card-title {
       margin-bottom: 25px;

@@ -1,19 +1,38 @@
 .stat-wrapper {
   width: 100%;
   display: flex;
-  margin: 25px auto 50px;
+  margin: 15px auto 35px;
+  font-size: 0.9em;
 
   .stat-container {
     width: 50%;
     text-align: center;
 
     h2 {
+      margin: 5px auto;
+      font-size: 1.25em;
       text-align: center;
+      font-weight: 400;
     }
 
-    span {
+    & > span {
+      margin: 0 auto;
       display: block;
-      width: 100%;
+      width: 100px;
+      height: 40px;
+      border-radius: 100%;
+      background-color: gray;
+      color: white;
+      font-weight: bold;
+      font-family: "Changa", "Helvetica Neue", sans-serif;
+
+      & > span {
+        position: relative;
+        top: 50%;
+        display: block;
+        margin: 0 auto 0;
+        transform: translateY(-50%);
+      }
     }
 
   }
