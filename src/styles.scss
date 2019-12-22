@@ -129,6 +129,10 @@ h1 {
     border-color: $primary;
   }
 
+  &.brighter:after {
+    border-color: lightgray;
+  }
+
   /* HEIGHT */
 
   &.higher:after {
@@ -137,6 +141,10 @@ h1 {
 
   &.high:after {
     margin: 5px 0;
+  }
+
+  &.tall:after {
+    margin: 7px 0;
   }
 
   &.center:after {
@@ -153,7 +161,8 @@ h1 {
 }
 
 mat-card {
-  max-width: calc(90% - 32px);
+  max-width: calc(90% - 40px);
+  margin: 0 auto;
 
   &.main {
     margin: 25px auto;

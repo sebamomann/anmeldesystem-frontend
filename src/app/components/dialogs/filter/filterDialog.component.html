@@ -1,0 +1,26 @@
+<div class="filter">
+  <h2 mat-dialog-title>Filter</h2>
+  <div mat-dialog-content>
+    <ng-container *ngFor="let addition of data.appointment.additions">
+      <div class="filter-element">
+        <mat-checkbox class="example-margin">{{addition.name}}</mat-checkbox>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="data.appointment.driverAddition">
+      <div class="seperator tall brighter"></div>
+      <mat-radio-group [(ngModel)]="driverPassenger">
+        <mat-radio-button [value]="'driver'" class="filter-element">
+          Fahrer
+        </mat-radio-button>
+        <mat-radio-button [value]="'passenger'" class="filter-element">
+          Passagier
+        </mat-radio-button>
+      </mat-radio-group>
+    </ng-container>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Abbrechen</button>
+    <button mat-button [mat-dialog-close]="" cdkFocusInitial>Anwenden</button>
+  </div>
+</div>

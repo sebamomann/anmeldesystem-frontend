@@ -59,3 +59,20 @@
     }
   }
 }
+
+
+.filter {
+  width: calc(95% - 32px);
+  margin: 0 auto 25px;
+
+  mat-panel-title{
+    mat-icon{
+      margin-right: 5px;
+    }
+  }
+
+  .filter-element {
+    display: inline-block;
+    width: 50%;
+  }
+}

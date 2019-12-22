@@ -36,6 +36,7 @@ export class TerminService {
           name: 'Diner'
         }
       ],
+      driverAddition: true,
       enrollments: [
         {
           name: 'Test Enrollment',

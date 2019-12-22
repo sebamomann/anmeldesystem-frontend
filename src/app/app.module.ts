@@ -7,19 +7,23 @@ import {LandingPageComponent} from './components/landing-page/landing-page.compo
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MatBadgeModule,
-  MatButtonModule, MatCardModule,
+  MatButtonModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatDialogModule,
   MatExpansionModule,
   MatFormFieldModule,
   MatIconModule,
-  MatInputModule,
+  MatInputModule, MatRadioModule,
   MatSnackBarModule
 } from '@angular/material';
 import {AppointmentComponent} from './components/termin/appointment.component';
 import {AppointmentDataComponent} from './components/termin/appointment-data/appointment-data.component';
 import {WINDOW_PROVIDERS} from './provider/window.provider';
-import { LoginComponent } from './components/account/login/login.component';
-import { RegisterComponent } from './components/account/register/register.component';
-import {ReactiveFormsModule} from '@angular/forms';
+import {LoginComponent} from './components/account/login/login.component';
+import {RegisterComponent} from './components/account/register/register.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FilterDialogComponent} from './components/dialogs/filter/filterDialog.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +33,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     AppointmentDataComponent,
     LoginComponent,
     RegisterComponent,
+    FilterDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,10 +47,16 @@ import {ReactiveFormsModule} from '@angular/forms';
     MatInputModule,
     MatSnackBarModule,
     MatCardModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    MatRadioModule,
+    FormsModule,
   ],
   providers: [WINDOW_PROVIDERS],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [FilterDialogComponent],
+  entryComponents: [FilterDialogComponent]
 })
 export class AppModule {
 
