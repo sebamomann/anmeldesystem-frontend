@@ -1,31 +1,33 @@
 <app-appointment-data [appointment]="appointment"></app-appointment-data>
 <div class="enrollment-list block decent" *ngIf="enrollments.length > 0; else emptyList">
-  <ng-container *ngFor="let enrollment of enrollments">
-    <mat-expansion-panel class="enrollment">
-      <mat-expansion-panel-header class="enrollment-info" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
-        <span>{{enrollment.name}}</span>
-        <span class="seperator small colored bolder high"></span>
-        <span class="comment">{{ enrollment.comment.length > 0 ? enrollment.comment : "---" }}</span>
-        <div class="addition-list" *ngIf="enrollment.additions > 0">
-          <ng-container *ngIf="enrollment.additions > 0 && enrollment.comment.length > 0">
-            <span class="seperator small higher  "></span>
+  <mat-accordion>
+    <ng-container *ngFor="let enrollment of enrollments">
+      <mat-expansion-panel class="enrollment">
+        <mat-expansion-panel-header class="enrollment-info" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+          <span>{{enrollment.name}}</span>
+          <span class="seperator small colored bolder high"></span>
+          <span class="comment">{{ enrollment.comment.length > 0 ? enrollment.comment : "---" }}</span>
+          <div class="addition-list" *ngIf="enrollment.additions > 0">
+            <ng-container *ngIf="enrollment.additions > 0 && enrollment.comment.length > 0">
+              <span class="seperator small higher  "></span>
+            </ng-container>
+            <ng-template *ngFor="let addition of enrollment.additions">
+              <span>{{addition}}</span>
+            </ng-template>
+          </div>
+        </mat-expansion-panel-header>
+        <div class="enrollment-additions">
+          <mat-icon matBadge="{{enrollment.comments.length > 0 ? enrollment.comments.length : ''}}" matBadgeColor="info">
+            comment
+          </mat-icon>
+          <ng-container *ngIf="allowModify">
+            <mat-icon>edit</mat-icon>
+            <mat-icon>delete</mat-icon>
           </ng-container>
-          <ng-template *ngFor="let addition of enrollment.additions">
-            <span>{{addition}}</span>
-          </ng-template>
         </div>
-      </mat-expansion-panel-header>
-      <div class="enrollment-additions">
-        <mat-icon matBadge="{{enrollment.comments.length > 0 ? enrollment.comments.length : ''}}" matBadgeColor="info">
-          comment
-        </mat-icon>
-        <ng-container *ngIf="allowModify">
-          <mat-icon>edit</mat-icon>
-          <mat-icon>delete</mat-icon>
-        </ng-container>
-      </div>
-    </mat-expansion-panel>
-  </ng-container>
+      </mat-expansion-panel>
+    </ng-container>
+  </mat-accordion>
 </div>
 <ng-template #emptyList>
   This List is empty ffs.

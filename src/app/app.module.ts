@@ -7,7 +7,7 @@ import {LandingPageComponent} from './components/landing-page/landing-page.compo
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MatBadgeModule,
-  MatButtonModule,
+  MatButtonModule, MatCardModule,
   MatExpansionModule,
   MatFormFieldModule,
   MatIconModule,
@@ -17,6 +17,9 @@ import {
 import {AppointmentComponent} from './components/termin/appointment.component';
 import {AppointmentDataComponent} from './components/termin/appointment-data/appointment-data.component';
 import {WINDOW_PROVIDERS} from './provider/window.provider';
+import { LoginComponent } from './components/account/login/login.component';
+import { RegisterComponent } from './components/account/register/register.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -24,6 +27,8 @@ import {WINDOW_PROVIDERS} from './provider/window.provider';
     LandingPageComponent,
     AppointmentComponent,
     AppointmentDataComponent,
+    LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,7 +40,9 @@ import {WINDOW_PROVIDERS} from './provider/window.provider';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatCardModule,
+    ReactiveFormsModule
   ],
   providers: [WINDOW_PROVIDERS],
   bootstrap: [AppComponent]

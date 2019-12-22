@@ -14,9 +14,9 @@
   <p>{{appointment.description}}</p>
 
   <div class="link-management">
-    <button mat-raised-button (click)="copyInputMessage(inputElement)">Kopieren</button>
     <mat-form-field>
       <input matInput readonly placeholder="" value="{{urlService.getHostname() + appointment.link}}" #inputElement>
     </mat-form-field>
+    <button mat-raised-button (click)="copyInputMessage(inputElement)">Kopieren</button>
   </div>
 </div>
