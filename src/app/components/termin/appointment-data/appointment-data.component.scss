@@ -10,7 +10,7 @@
   text-align: center;
   margin: 25px auto 50px;
 
-  mat-card-title{
+  mat-card-title {
     margin-bottom: 15px;
     font-size: 1.75em;
   }
@@ -36,6 +36,11 @@
       vertical-align: top;
       left: 0;
     }
+  }
+
+  p {
+    margin: 10px auto 0;
+    max-width: 95%;
   }
 
   .link-management {
