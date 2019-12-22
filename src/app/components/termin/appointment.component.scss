@@ -8,7 +8,7 @@
 .enrollment-list {
   .enrollment {
     .enrollment-info {
-      padding: 10px 24px;
+      padding: 15px 24px;
       font-size: 1em;
 
       span {
@@ -25,13 +25,14 @@
       }
     }
 
+
     .enrollment-additions {
       margin: 5px auto;
       display: flex;
       flex: 3;
 
       mat-icon {
-        @include md-icon-size(22px);
+        @include md-icon-size(20px);
         margin: 0 10% 0 0;
         text-align: center;
       }
@@ -44,14 +45,15 @@
         display: inline-block;
         width: 50%;
 
-        span, mat-icon{
+        span, mat-icon {
           display: inline-block;
           width: auto;
           vertical-align: middle;
         }
 
-        mat-icon{
-          @include md-icon-size(24px);
+        mat-icon {
+          @include md-icon-size(22px);
+          margin-right: 5px;
         }
       }
     }
