@@ -1,0 +1,53 @@
+@mixin md-icon-size($size: 24px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+  line-height: $size;
+}
+
+.appointment-data {
+  width: 80%;
+  text-align: center;
+  margin: 25px auto 50px;
+
+  h1 {
+    font-size: 1.75em;
+    margin: 10px auto;
+  }
+
+  & > * {
+    display: block;
+  }
+
+  span {
+    margin: 5px auto;
+    display: inline-block;
+    width: 50%;
+    vertical-align: top;
+
+    &.seperator {
+      width: 100%;
+      display: block;
+      margin-bottom: 15px;
+    }
+
+    mat-icon {
+      @include md-icon-size(20px);
+      vertical-align: text-top;;
+      left: 0;
+    }
+  }
+
+  .link-management {
+    font-size: 0.9em;
+
+    button {
+      font-size: 0.9em;
+      line-height: 30px;
+    }
+
+    mat-form-field {
+      margin-left: 15px;
+    }
+  }
+}

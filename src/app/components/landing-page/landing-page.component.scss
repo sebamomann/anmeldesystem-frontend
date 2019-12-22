@@ -1,0 +1,35 @@
+.stat-wrapper {
+  width: 100%;
+  display: flex;
+  margin: 25px auto 50px;
+
+  .stat-container {
+    width: 50%;
+    text-align: center;
+
+    h2 {
+      text-align: center;
+    }
+
+    span {
+      display: block;
+      width: 100%;
+    }
+
+  }
+
+}
+
+.lading-account-option-wrapper {
+  width: 100%;
+
+  .landing-account-options-container {
+    width: 50%;
+    margin: 0 auto;
+
+    button {
+      display: block;
+      margin: 0 auto;
+    }
+  }
+}

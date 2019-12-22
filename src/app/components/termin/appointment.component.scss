@@ -1,0 +1,40 @@
+@mixin md-icon-size($size: 24px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+  line-height: $size;
+}
+
+.enrollment-list {
+  .enrollment {
+    .enrollment-info {
+      padding: 10px 24px;
+      font-size: 1em;
+
+      span {
+        display: block;
+        width: 95%;
+
+        &.comment{
+          font-size: 0.9em;
+        }
+
+        &:first-of-type {
+          font-weight: 500;
+        }
+      }
+    }
+
+    .enrollment-additions {
+      margin: 5px auto;
+      display: flex;
+      flex: 3;
+
+      mat-icon {
+        @include md-icon-size(22px);
+        margin: 0 10% 0 0;
+        text-align: center;
+      }
+    }
+  }
+}

@@ -1,1 +1,154 @@
-/* You can add global styles to this file, and also import other style files */
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@import '~@angular/material/theming';
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$anmeldesystem-primary: mat-palette($mat-indigo);
+$anmeldesystem-accent: mat-palette($mat-pink, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$anmeldesystem-warn: mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$anmeldesystem-theme: mat-light-theme($anmeldesystem-primary, $anmeldesystem-accent, $anmeldesystem-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($anmeldesystem-theme);
+
+@import url('https://fonts.googleapis.com/css?family=Nunito:300,400,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700&display=swap');
+
+$accent: #2B2C30;
+$primary: #AECB37;
+$secondary: gray;
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Nunito", "Helvetica Neue", sans-serif;
+}
+
+.main-wrapper{
+  min-height: 100vh;
+}
+
+h1 {
+  font-family: "Montserrat", "Helvetica Neue", sans-serif;
+}
+
+.headline {
+  margin: 25px 0 50px 0;
+  text-align: center;
+  text-decoration: none;
+  color: rgba(75, 75, 75, 1);
+  font-weight: bold;
+  font-size: 2.5em;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.125);
+  font-family: "Montserrat", "Helvetica Neue", sans-serif;
+}
+
+.block {
+  display: block;
+  width: calc(95% - 30px);
+  border-radius: 10px;
+  margin: 0 auto 0;
+  padding: 5px 15px 10px;
+  text-align: justify;
+  box-shadow: 0 5px 10px rgba(150, 150, 150, 0.5);
+
+  &.main {
+    margin: 10px auto 50px;
+  }
+
+  &.child {
+    margin: 10px auto 10px;
+  }
+
+  &.decent {
+    box-shadow: none;
+  }
+}
+
+.enrollment-info .mat-content {
+  display: block !important;
+}
+
+/* ACCENTS */
+/* ACCENTS */
+/* ACCENTS */
+
+.seperator {
+  &:after {
+    display: block;
+    border-bottom: 2px solid black;
+    content: '';
+  }
+
+  /* WIDTH */
+  &.middle:after {
+    width: 50%;
+  }
+
+  &.small:after {
+    width: 15%;
+  }
+
+  /* BORDER HEIGHT */
+  &.light:after {
+    border-width: 1px;
+  }
+
+  &.bolder:after {
+    border-width: 3px;
+  }
+
+  &.bold:after {
+    border-width: 4px;
+  }
+
+  /* COLOR ACCENTS */
+  &.colored:after {
+    border-color: $primary;
+  }
+
+  &.high:after {
+    margin: 5px 0;
+  }
+
+  &.center:after {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+}
+
+.snackbar-default {
+  button {
+    color: $primary;
+  }
+}
+
+footer {
+  color: lightgray;
+  text-align: center;
+  padding: 2em 1em;
+  background-color: $accent;
+
+  span {
+    margin: 5px auto;
+    display: block;
+  }
+}
