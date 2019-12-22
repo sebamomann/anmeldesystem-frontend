@@ -41,7 +41,7 @@ body {
   font-family: "Nunito", "Helvetica Neue", sans-serif;
 }
 
-.main-wrapper{
+.main-wrapper {
   min-height: 100vh;
 }
 
@@ -140,6 +140,33 @@ h1 {
     color: $primary;
   }
 }
+
+mat-card {
+  &.form {
+    max-width: calc(90% - 32px);
+    width: fit-content;
+    text-align: center;
+    top: 50vh;
+    transform: translateY(-50%);
+    margin: 0 auto;
+
+    mat-card-title{
+      margin-bottom: 25px;
+    }
+
+    mat-form-field {
+      width: 100%;
+    }
+
+    mat-card-content {
+      form > span {
+        display: block;
+        margin: 15px auto;
+      }
+    }
+  }
+}
+
 
 footer {
   color: lightgray;

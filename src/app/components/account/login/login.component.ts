@@ -41,13 +41,13 @@ export class LoginComponent implements OnInit {
 
   getUsernameErrorMessage(): string {
     return this.getUsername().hasError('required')
-      ? 'Please enter a username for your account'
-      : 'Some error occured.';
+      ? 'Bitte gebe Email/Benutzername ein'
+      : 'Etwas ist schief gelaufen';
   }
 
   getPasswordErrorMessage(): string {
     if (this.getPassword().hasError('required')) {
-      return 'Please specify a password.';
+      return 'Bitte gebe dein Passwort ein';
     }
   }
 
