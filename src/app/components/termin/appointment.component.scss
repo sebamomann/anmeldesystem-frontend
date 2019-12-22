@@ -15,7 +15,7 @@
         display: block;
         width: 95%;
 
-        &.comment{
+        &.comment {
           font-size: 0.9em;
         }
 
@@ -34,6 +34,25 @@
         @include md-icon-size(22px);
         margin: 0 10% 0 0;
         text-align: center;
+      }
+    }
+
+    .addition-list {
+      font-size: 0.85em;
+
+      & > div {
+        display: inline-block;
+        width: 50%;
+
+        span, mat-icon{
+          display: inline-block;
+          width: auto;
+          vertical-align: middle;
+        }
+
+        mat-icon{
+          @include md-icon-size(24px);
+        }
       }
     }
   }
