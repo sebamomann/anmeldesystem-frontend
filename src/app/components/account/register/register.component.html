@@ -1,1 +1,66 @@
-<p>register works!</p>
+<mat-card class="form">
+  <mat-card-title class="headline">
+    Register
+  </mat-card-title>
+
+  <mat-card-content>
+    <form (ngSubmit)="create()" class="register-form" [formGroup]="event">
+      <mat-form-field class="username">
+        <input matInput
+               id="username"
+               placeholder="Benutzername"
+               formControlName="username"
+               required>
+        <mat-error *ngIf="event.get('username').invalid">{{ getUsernameErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="email">
+        <input matInput
+               id="email"
+               placeholder="E-Mail"
+               formControlName="email"
+               required>
+        <mat-error *ngIf="event.get('email').invalid">{{ getEmailErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="pass" formGroupName="passwords">
+        <input matInput
+               id="password"
+               placeholder="Passwort"
+               [type]="hide ? 'password' : 'text'"
+               formControlName="password"
+               required>
+        <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error
+          *ngIf="event.get('passwords').get('password').invalid">{{ getPasswordErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="pass" formGroupName="passwords">
+        <input matInput
+               id="passwordVerify"
+               placeholder="Passwort wiederholen"
+               [type]="hide ? 'password' : 'text'"
+               formControlName="passwordVerify"
+               required>
+        <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error
+          *ngIf="event.get('passwords').get('passwordVerify').invalid">{{ getPasswordVerifyErrorMessage() }}</mat-error>
+      </mat-form-field>
+      <span>
+        Du hast bereits einen Account?
+        <br/>
+        <a [routerLink]="['/account/login']">
+          Mit Account einloggen!
+        </a>
+      </span>
+
+      <mat-card-actions>
+        <button id="submit" mat-raised-button color="primary">
+          Registrieren
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card-content>
+</mat-card>
+
