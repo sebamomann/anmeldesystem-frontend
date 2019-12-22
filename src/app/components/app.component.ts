@@ -10,6 +10,7 @@ import {WINDOW} from '../provider/window.provider';
 export class AppComponent {
 
   private now: string;
+  public particlesJS: any;
 
   constructor(private router: Router, @Inject(WINDOW) private window: Window) {
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -19,10 +20,10 @@ export class AppComponent {
     const date = new Date();
     this.now = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
 
+    particlesJS.load('particles-js', '/assets/particlesjs-config.json', null);
   }
 
   getHostname(): string {
     return this.window.location.hostname;
   }
-
 }
