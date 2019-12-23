@@ -18,17 +18,18 @@
 <!--  </ng-container>-->
 <!--</mat-expansion-panel>-->
 
-<div class="enrollment-list block decent" *ngIf="enrollments.length > 0; else emptyList">
+<div class="enrollment-list block decent"
+     *ngIf="enrollments.length > 0 || getNumberOfActiveFilter() > 0; else emptyList">
 
   <mat-icon (click)="openFilterDialog()"
-            matBadge="{{filter.length > 0 ? filter.length : ''}}"
+            matBadge="{{getNumberOfActiveFilter() > 0 ? getNumberOfActiveFilter() : ''}}"
             matBadgeColor="info"
             class="filter-open"
             matBadgeSize="small">
     filter_list
   </mat-icon>
 
-  <mat-accordion>
+  <mat-accordion *ngIf="enrollments.length > 0; else emptyListFilter">
     <ng-container *ngFor="let enrollment of enrollments">
       <mat-expansion-panel class="enrollment">
         <mat-expansion-panel-header class="enrollment-info" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
@@ -66,7 +67,18 @@
       </mat-expansion-panel>
     </ng-container>
   </mat-accordion>
+
+  <ng-template #emptyListFilter>
+    <div class="error floating">
+      <mat-icon>search</mat-icon>
+      <span>
+        Dieser Filter liefert keine Ergebnisse
+      </span>
+    </div>
+  </ng-template>
 </div>
+
+
 <ng-template #emptyList>
   This List is empty ffs.
 </ng-template>

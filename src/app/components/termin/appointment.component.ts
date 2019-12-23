@@ -34,7 +34,6 @@ export class AppointmentComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.filterEnrollments();
-      console.log(this.appointment.enrollments.toString());
     });
   }
 
@@ -53,17 +52,14 @@ export class AppointmentComponent implements OnInit {
       const output = [];
 
       this.enrollments.forEach(enrollment => {
-        console.log(`enrollment: ${enrollment.name}`);
         try {
           this.filter.forEach(filter => {
-            console.log(`filter: ${filter.id}`);
             let valid = true;
 
             enrollment.additions.forEach(id => {
               if (filter.id === id && !filter.active) {
                 valid = false;
               }
-              console.log(`checking: ${id} ${valid}`);
             });
 
             if (filter.active === true && !enrollment.additions.some(uID => uID === filter.id)) {
@@ -71,7 +67,6 @@ export class AppointmentComponent implements OnInit {
             }
 
             if (!valid) {
-              console.log('BREAK');
               throw BreakException;
             }
           });
@@ -80,9 +75,18 @@ export class AppointmentComponent implements OnInit {
         } catch (e) {
           //
         }
-        console.log(`---------------`);
       });
       this.enrollments = output;
     }
+  }
+
+  getNumberOfActiveFilter() {
+    let i = 0;
+    this.filter.forEach(filter => {
+      if (filter.active) {
+        i++;
+      }
+    });
+    return i;
   }
 }
