@@ -35,7 +35,7 @@
         <mat-expansion-panel-header class="enrollment-info" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
           <span>{{enrollment.name}}</span>
           <span class="seperator small colored bolder high"></span>
-          <span class="comment">{{ enrollment.comment.length > 0 ? enrollment.comment : "---" }}</span>
+          <span class="comment-block">{{ enrollment.comment.length > 0 ? enrollment.comment : "---" }}</span>
           <div class="addition-list" *ngIf="appointment.additions.length > 0">
             <ng-container *ngIf="appointment.additions.length > 0 && enrollment.comment.length > 0">
               <span class="seperator small high"></span>
@@ -56,7 +56,9 @@
 
         <div class="enrollment-additions">
           <mat-icon matBadge="{{enrollment.comments.length > 0 ? enrollment.comments.length : ''}}"
-                    matBadgeColor="info">
+                    matBadgeColor="info"
+                    matBadgeSize="small"
+                    (click)="openCommentDialog(enrollment)">
             comment
           </mat-icon>
           <ng-container *ngIf="allowModify">

@@ -3,6 +3,7 @@ import {TerminService} from '../../services/termin.service';
 import {MatDialog} from '@angular/material';
 import {FilterDialogComponent} from '../dialogs/filter/filterDialog.component';
 import {isObject} from 'util';
+import {CommentDialogComponent} from '../dialogs/comment/commentDialog.component';
 
 @Component({
   selector: 'app-appointment',
@@ -53,6 +54,18 @@ export class AppointmentComponent implements OnInit {
     });
   }
 
+  openCommentDialog(enrollment): void {
+    const dialogRef = this.dialog.open(CommentDialogComponent, {
+      width: '90%',
+      maxWidth: 'initial',
+      height: 'auto',
+      data: {enrollment},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
   initializeFilterObject(appointment: any): any {
     const additions = [];
     appointment.additions.forEach(value => additions.push({id: value.id, name: value.name, active: false}));
@@ -70,7 +83,6 @@ export class AppointmentComponent implements OnInit {
       const output = [];
 
       this.enrollments.forEach(eEnrollment => {
-        console.log(`Enrollment: ${eEnrollment.name}`);
         try {
           if (numberOfAdditionFilters > 0) {
             let contains = 0;
@@ -79,7 +91,6 @@ export class AppointmentComponent implements OnInit {
 
               if (eFilter.active === true) {
                 if (eEnrollment.additions.includes(eFilter.id)) {
-                  console.log(`contains: ${eFilter.id}`);
                   contains++;
                 }
               }
@@ -118,8 +129,6 @@ export class AppointmentComponent implements OnInit {
         } catch (e) {
           //
         }
-
-        console.log('-----');
       });
       return output;
     }

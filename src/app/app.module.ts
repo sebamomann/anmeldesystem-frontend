@@ -16,7 +16,8 @@ import {
   MatIconModule,
   MatInputModule,
   MatRadioModule,
-  MatSnackBarModule, MatTooltipModule
+  MatSnackBarModule,
+  MatTooltipModule
 } from '@angular/material';
 import {AppointmentComponent} from './components/termin/appointment.component';
 import {AppointmentDataComponent} from './components/termin/appointment-data/appointment-data.component';
@@ -25,6 +26,7 @@ import {LoginComponent} from './components/account/login/login.component';
 import {RegisterComponent} from './components/account/register/register.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FilterDialogComponent} from './components/dialogs/filter/filterDialog.component';
+import {CommentDialogComponent} from './components/dialogs/comment/commentDialog.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +37,7 @@ import {FilterDialogComponent} from './components/dialogs/filter/filterDialog.co
     LoginComponent,
     RegisterComponent,
     FilterDialogComponent,
+    CommentDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,8 +60,8 @@ import {FilterDialogComponent} from './components/dialogs/filter/filterDialog.co
   ],
   providers: [WINDOW_PROVIDERS],
   bootstrap: [AppComponent],
-  exports: [FilterDialogComponent],
-  entryComponents: [FilterDialogComponent]
+  exports: [FilterDialogComponent, CommentDialogComponent],
+  entryComponents: [FilterDialogComponent, CommentDialogComponent]
 })
 export class AppModule {
 

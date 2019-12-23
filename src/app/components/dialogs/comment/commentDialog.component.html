@@ -1,0 +1,37 @@
+<div class="comment-dialog">
+  <div mat-dialog-content>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Kommentieren
+        </mat-panel-title>
+        <mat-panel-description>
+          <mat-icon>add_comment</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <form (ngSubmit)="comment()" class="register-form" [formGroup]="event">
+        <mat-form-field>
+          <input matInput placeholder="Name">
+          <mat-error *ngIf="event.get('name').invalid">{{ getNameErrorMessage() }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <textarea matInput placeholder="Kommentar"></textarea>
+          <mat-error *ngIf="event.get('comment').invalid">{{ getCommentErrorMessage() }}</mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button id="submit"></button>
+      </form>
+    </mat-expansion-panel>
+
+    <div class="comment-list">
+      <div class="comment-block" *ngFor="let comment of enrollment.comments">
+        <span>{{comment.name}}</span>
+        <span class="seperator higher colored small"></span>
+        <span class="comment">{{comment.comment}}</span>
+        <span>{{comment.iat}}</span>
+      </div>
+    </div>
+  </div>
+</div>
