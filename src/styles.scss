@@ -36,9 +36,9 @@ $anmeldesystem-theme: mat-light-theme($anmeldesystem-primary, $anmeldesystem-acc
   line-height: $size;
 }
 
-$accent: #2B2C30;
-$primary: #AECB37;
-$secondary: gray;
+$primary: #366EA7;
+$secondary: #2B2C30;
+$accent: #9BC963;
 
 html, body {
   height: 100%;
@@ -65,9 +65,14 @@ h1 {
   text-decoration: none;
   color: rgba(75, 75, 75, 1);
   font-weight: bold;
-  font-size: 2.5em;
+  font-size: 1.75em;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.125);
   font-family: "Montserrat", "Helvetica Neue", sans-serif;
+
+  &.medium {
+    font-size: 1.5em;
+    margin-bottom: 25px
+  }
 }
 
 .block {
@@ -249,7 +254,7 @@ footer {
   color: lightgray;
   text-align: center;
   padding: 1em 1em;
-  background-color: $accent;
+  background-color: $secondary;
 
   span {
     margin: 5px auto;

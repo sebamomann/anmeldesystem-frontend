@@ -18,6 +18,7 @@ export class TerminService {
       date: '01-01-2020 00:00:00',
       deadline: '01-01-2019 00:00:00',
       link: 'ABCDE',
+      maxEnrollments: 10,
       additions: [
         {
           id: 'id1',

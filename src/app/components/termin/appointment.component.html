@@ -1,25 +1,11 @@
 <app-appointment-data [appointment]="appointment"></app-appointment-data>
 
-<!--<mat-expansion-panel class="filter">-->
-<!--  <mat-expansion-panel-header>-->
-<!--    <mat-panel-title>-->
-<!--      <mat-icon>filter_list</mat-icon>-->
-<!--      Filter-->
-<!--    </mat-panel-title>-->
-<!--    <mat-panel-description>-->
-<!--      Anmeldungen nach Kriterien filtern-->
-<!--    </mat-panel-description>-->
-<!--  </mat-expansion-panel-header>-->
-
-<!--  <ng-container *ngFor="let addition of appointment.additions">-->
-<!--    <div class="filter-element">-->
-<!--      <mat-checkbox class="example-margin">{{addition.name}}</mat-checkbox>-->
-<!--    </div>-->
-<!--  </ng-container>-->
-<!--</mat-expansion-panel>-->
-
 <div class="enrollment-list block decent"
      *ngIf="enrollments.length > 0 || getNumberOfActiveFilter() > 0; else emptyList">
+  <div class="header">
+    <h2 class="headline medium">Teilnehmer [{{enrollments.length}}{{appointment.maxEnrollments !== null
+        ? '/' + appointment.maxEnrollments : ''}}]</h2>
+  </div>
 
   <mat-icon (click)="openFilterDialog()"
             matBadge="{{getNumberOfActiveFilter() > 0 ? getNumberOfActiveFilter() : ''}}"
@@ -28,11 +14,12 @@
             matBadgeSize="small">
     filter_list
   </mat-icon>
-
   <mat-accordion *ngIf="enrollments.length > 0; else emptyListFilter">
     <ng-container *ngFor="let enrollment of enrollments">
       <mat-expansion-panel class="enrollment">
-        <mat-expansion-panel-header class="enrollment-info" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+        <mat-expansion-panel-header class="enrollment-info"
+                                    [collapsedHeight]="'auto'"
+                                    [expandedHeight]="'auto'">
           <span>{{enrollment.name}}</span>
           <span class="seperator small colored bolder high"></span>
           <span class="comment-block">{{ enrollment.comment.length > 0 ? enrollment.comment : "---" }}</span>
