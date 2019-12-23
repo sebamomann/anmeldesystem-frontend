@@ -1,27 +1,66 @@
 <div class="filter">
   <h2 mat-dialog-title>Filter</h2>
   <div mat-dialog-content>
-    <ng-container *ngFor="let addition of data.filter">
+    <ng-container *ngFor="let filter of dialogFilter.additions">
       <div class="filter-element">
         <mat-checkbox class="example-margin"
-                      [(ngModel)]="addition.active">{{addition.name}}</mat-checkbox>
+                      [(ngModel)]="filter.active"
+                      (change)="checkForActiveFilters()">
+          {{filter.name}}
+        </mat-checkbox>
       </div>
     </ng-container>
 
     <ng-container *ngIf="data.appointment.driverAddition">
       <div class="seperator tall brighter"></div>
-      <mat-radio-group [(ngModel)]="driverPassenger">
-        <mat-radio-button [value]="'driver'" class="filter-element">
+      <mat-radio-group [(ngModel)]="dialogFilter.driverPassenger">
+        <mat-radio-button [value]="'driver'"
+                          class="filter-element">
           Fahrer
         </mat-radio-button>
-        <mat-radio-button [value]="'passenger'" class="filter-element">
+        <mat-radio-button [value]="'passenger'"
+                          class="filter-element">
           Passagier
+        </mat-radio-button>
+        <mat-radio-button (click)="dialogFilter.driverPassenger = ''"
+                          [value]="''">
+          Beide
         </mat-radio-button>
       </mat-radio-group>
     </ng-container>
+
+
+    <div class="filter-block" *ngIf="isFilterActive">
+      <div class="seperator tall brighter"></div>
+      <!--suppress TypeScriptUnresolvedFunction -->
+      <mat-icon class="tooltip"
+                #tooltip="matTooltip"
+                matTooltip="{{'Exp.: Genau dieser Filter \r\n S.E.: Genau diese Filter oder mehr \r\n Dyn.: Mindestens einer dieser Filter'}}"
+                (click)="tooltip.toggle()">
+        info
+      </mat-icon>
+      <mat-radio-group [(ngModel)]="dialogFilter.explicitly">
+
+        <mat-radio-button class="filter-element" [value]="'explicit'">
+          Explizit
+        </mat-radio-button>
+        <mat-radio-button class="filter-element" [value]="'semiExplicit'">
+          Semi-Explizit
+        </mat-radio-button>
+        <mat-radio-button class="filter-element" [value]="'dynamic'">
+          Dynamisch
+        </mat-radio-button>
+
+      </mat-radio-group>
+    </div>
+
+    <span *ngIf="data.error"
+          class="error">
+      Dieser Filter Liefert keine Ergebnisse
+    </span>
   </div>
   <div mat-dialog-actions>
     <button mat-button (click)="onNoClick()">Abbrechen</button>
-    <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Anwenden</button>
+    <button mat-button [mat-dialog-close]="dialogFilter" cdkFocusInitial>Anwenden</button>
   </div>
 </div>

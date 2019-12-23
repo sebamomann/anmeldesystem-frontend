@@ -69,7 +69,7 @@
   </mat-accordion>
 
   <ng-template #emptyListFilter>
-    <div class="error floating">
+    <div class="empty-list">
       <mat-icon>search</mat-icon>
       <span>
         Dieser Filter liefert keine Ergebnisse
@@ -80,5 +80,9 @@
 
 
 <ng-template #emptyList>
-  This List is empty ffs.
+  <div class="empty-list float">
+    <span>
+        Es hat sich noch niemand angemeldet.
+      </span>
+  </div>
 </ng-template>

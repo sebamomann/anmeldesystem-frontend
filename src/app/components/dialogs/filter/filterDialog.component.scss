@@ -7,4 +7,16 @@
   .mat-dialog-content {
     padding: 10px 24px;
   }
+
+  .filter-block {
+    position: relative;
+
+    .tooltip {
+      position: absolute;
+      right: -20px;
+      top: -11px;
+      height: auto;
+      white-space: pre-line;
+    }
+  }
 }

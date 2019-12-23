@@ -62,6 +62,22 @@ export class TerminService {
           iat: '01-01-2019 00:00:00',
         },
         {
+          name: 'Driver',
+          comment: 'This is my cool comment but it is acutally waaay to long to be put in just one line',
+          comments: [],
+          driver: {
+            service: 1,
+            seats: 3,
+          },
+          passenger: null,
+          additions: [
+            'id1',
+            'id2',
+            'id4'
+          ],
+          iat: '01-01-2019 00:00:00',
+        },
+        {
           name: 'Test Enrollment2',
           comment: 'This is my cool comment',
           comments: [{
@@ -85,7 +101,7 @@ export class TerminService {
           iat: '01-01-2019 00:00:00',
         },
         {
-          name: 'Test Enrollment3',
+          name: 'Driver 2',
           comment: 'This is my cool comment',
           comments: [],
           driver: {
@@ -95,6 +111,22 @@ export class TerminService {
           additions: [
             'id1',
             'id2',
+          ],
+          iat: '01-01-2019 00:00:00',
+        },
+        {
+          name: 'Driver 3',
+          comment: 'This is my cool comment',
+          comments: [],
+          driver: {
+            requirement: 1,
+          },
+          passenger: null,
+          additions: [
+            'id1',
+            'id2',
+            'id3',
+            'id4',
           ],
           iat: '01-01-2019 00:00:00',
         }

@@ -2,6 +2,7 @@ import {Component, NgModule, OnInit} from '@angular/core';
 import {TerminService} from '../../services/termin.service';
 import {MatDialog} from '@angular/material';
 import {FilterDialogComponent} from '../dialogs/filter/filterDialog.component';
+import {isObject} from 'util';
 
 @Component({
   selector: 'app-appointment',
@@ -15,32 +16,47 @@ export class AppointmentComponent implements OnInit {
   }
 
   private appointment = this.terminService.getTermin('');
-  private filter = this.getFilter(this.appointment);
+  private filter = this.initializeFilterObject(this.appointment);
   private enrollments = this.appointment.enrollments;
   allowModify = true;
 
   ngOnInit() {
   }
 
-  openFilterDialog(): void {
+  openFilterDialog(error: boolean = false): void {
     const dialogRef = this.dialog.open(FilterDialogComponent, {
       width: '75%',
       height: 'auto',
       data: {
         appointment: this.appointment,
-        filter: this.filter
+        filter: this.filter,
+        error
       },
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.filterEnrollments();
+      if (isObject(result) && result !== this.filter) {
+        const oldFilter = this.filter;
+        const oldEnrollments = this.enrollments;
+
+        this.filter = result;
+        const tmpEnrollments = this.filterEnrollments();
+
+        if (tmpEnrollments.length === 0 && this.getNumberOfActiveFilter() > 0) {
+          this.enrollments = oldEnrollments;
+          this.openFilterDialog(true);
+          this.filter = oldFilter;
+        } else {
+          this.enrollments = tmpEnrollments;
+        }
+      }
     });
   }
 
-  getFilter(appointment: any) {
+  initializeFilterObject(appointment: any): any {
     const additions = [];
     appointment.additions.forEach(value => additions.push({id: value.id, name: value.name, active: false}));
-    return additions;
+    return {additions, explicitly: 'dynamic', driverPassenger: ''};
   }
 
   filterEnrollments() {
@@ -48,45 +64,77 @@ export class AppointmentComponent implements OnInit {
     this.enrollments = this.appointment.enrollments;
 
     const BreakException = {};
-    if (this.filter.filter(val => val.active).length > 0) {
+    const numberOfAdditionFilters = this.filter.additions.filter(val => val.active).length;
+    if (numberOfAdditionFilters > 0
+      || this.filter.driverPassenger !== '') {
       const output = [];
 
-      this.enrollments.forEach(enrollment => {
+      this.enrollments.forEach(eEnrollment => {
+        console.log(`Enrollment: ${eEnrollment.name}`);
         try {
-          this.filter.forEach(filter => {
-            let valid = true;
+          if (numberOfAdditionFilters > 0) {
+            let contains = 0;
+            this.filter.additions.forEach(eFilter => {
+              let valid = true;
 
-            enrollment.additions.forEach(id => {
-              if (filter.id === id && !filter.active) {
+              if (eFilter.active === true) {
+                if (eEnrollment.additions.includes(eFilter.id)) {
+                  console.log(`contains: ${eFilter.id}`);
+                  contains++;
+                }
+              }
+
+              eEnrollment.additions.forEach(eId => {
+                if (eFilter.id === eId && !eFilter.active && this.filter.explicitly === 'explicit') {
+                  valid = false;
+                }
+              });
+
+              if ((this.filter.explicitly === 'explicit' || this.filter.explicitly === 'semiExplicit')
+                && eFilter.active === true
+                && !eEnrollment.additions.some(uID => uID === eFilter.id)) {
                 valid = false;
+              }
+
+              if (!valid) {
+                throw BreakException;
               }
             });
 
-            if (filter.active === true && !enrollment.additions.some(uID => uID === filter.id)) {
-              valid = false;
-            }
-
-            if (!valid) {
+            if (contains === 0) {
               throw BreakException;
             }
-          });
+          }
 
-          output.push(enrollment);
+          if (this.filter.driverPassenger !== '') {
+            if ((eEnrollment.driver === null && this.filter.driverPassenger === 'driver')
+              || (eEnrollment.passenger === null && this.filter.driverPassenger === 'passenger')) {
+              throw BreakException;
+            }
+          }
+
+
+          output.push(eEnrollment);
         } catch (e) {
           //
         }
+
+        console.log('-----');
       });
-      this.enrollments = output;
+      return output;
     }
   }
 
   getNumberOfActiveFilter() {
     let i = 0;
-    this.filter.forEach(filter => {
+    this.filter.additions.forEach(filter => {
       if (filter.active) {
         i++;
       }
     });
+    if (this.filter.driverPassenger === 'driver' || this.filter.driverPassenger === 'passenger') {
+      i++;
+    }
     return i;
   }
 }

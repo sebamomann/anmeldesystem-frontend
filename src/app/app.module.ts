@@ -14,8 +14,9 @@ import {
   MatExpansionModule,
   MatFormFieldModule,
   MatIconModule,
-  MatInputModule, MatRadioModule,
-  MatSnackBarModule
+  MatInputModule,
+  MatRadioModule,
+  MatSnackBarModule, MatTooltipModule
 } from '@angular/material';
 import {AppointmentComponent} from './components/termin/appointment.component';
 import {AppointmentDataComponent} from './components/termin/appointment-data/appointment-data.component';
@@ -52,6 +53,7 @@ import {FilterDialogComponent} from './components/dialogs/filter/filterDialog.co
     MatDialogModule,
     MatRadioModule,
     FormsModule,
+    MatTooltipModule,
   ],
   providers: [WINDOW_PROVIDERS],
   bootstrap: [AppComponent],

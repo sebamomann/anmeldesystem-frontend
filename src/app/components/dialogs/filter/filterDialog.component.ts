@@ -8,7 +8,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 })
 export class FilterDialogComponent implements OnInit {
 
-  driverPassenger: string;
+  private dialogFilter: any;
+  private isFilterActive: boolean;
 
   ngOnInit() {
   }
@@ -16,10 +17,16 @@ export class FilterDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<FilterDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data) {
+
+    this.dialogFilter = JSON.parse(JSON.stringify(data.filter));
+    this.checkForActiveFilters();
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
+  checkForActiveFilters() {
+    this.isFilterActive = this.dialogFilter.additions.filter(val => val.active).length > 0;
+  }
 }
