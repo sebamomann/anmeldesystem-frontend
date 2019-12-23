@@ -15,8 +15,8 @@ export class AppointmentComponent implements OnInit {
   }
 
   private appointment = this.terminService.getTermin('');
+  private filter = this.getFilter(this.appointment);
   private enrollments = this.appointment.enrollments;
-  private activeFilter = ['diver'];
   allowModify = true;
 
   ngOnInit() {
@@ -28,12 +28,61 @@ export class AppointmentComponent implements OnInit {
       height: 'auto',
       data: {
         appointment: this.appointment,
-        activeFilter: this.activeFilter
+        filter: this.filter
       },
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      this.filterEnrollments();
+      console.log(this.appointment.enrollments.toString());
     });
+  }
+
+  getFilter(appointment: any) {
+    const additions = [];
+    appointment.additions.forEach(value => additions.push({id: value.id, name: value.name, active: false}));
+    return additions;
+  }
+
+  filterEnrollments() {
+    /* RESET */
+    this.enrollments = this.appointment.enrollments;
+
+    const BreakException = {};
+    if (this.filter.filter(val => val.active).length > 0) {
+      const output = [];
+
+      this.enrollments.forEach(enrollment => {
+        console.log(`enrollment: ${enrollment.name}`);
+        try {
+          this.filter.forEach(filter => {
+            console.log(`filter: ${filter.id}`);
+            let valid = true;
+
+            enrollment.additions.forEach(id => {
+              if (filter.id === id && !filter.active) {
+                valid = false;
+              }
+              console.log(`checking: ${id} ${valid}`);
+            });
+
+            if (filter.active === true && !enrollment.additions.some(uID => uID === filter.id)) {
+              valid = false;
+            }
+
+            if (!valid) {
+              console.log('BREAK');
+              throw BreakException;
+            }
+          });
+
+          output.push(enrollment);
+        } catch (e) {
+          //
+        }
+        console.log(`---------------`);
+      });
+      this.enrollments = output;
+    }
   }
 }

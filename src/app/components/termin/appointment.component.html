@@ -21,7 +21,7 @@
 <div class="enrollment-list block decent" *ngIf="enrollments.length > 0; else emptyList">
 
   <mat-icon (click)="openFilterDialog()"
-            matBadge="{{activeFilter.length > 0 ? activeFilter.length : ''}}"
+            matBadge="{{filter.length > 0 ? filter.length : ''}}"
             matBadgeColor="info"
             class="filter-open"
             matBadgeSize="small">

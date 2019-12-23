@@ -95,7 +95,6 @@ export class TerminService {
           additions: [
             'id1',
             'id2',
-            'id4'
           ],
           iat: '01-01-2019 00:00:00',
         }
