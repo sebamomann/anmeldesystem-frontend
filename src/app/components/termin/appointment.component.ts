@@ -59,6 +59,7 @@ export class AppointmentComponent implements OnInit {
       width: '90%',
       maxWidth: 'initial',
       height: 'auto',
+      maxHeight: '80vh',
       data: {enrollment},
     });
 

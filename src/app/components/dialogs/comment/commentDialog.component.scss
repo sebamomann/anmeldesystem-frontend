@@ -1,32 +1,43 @@
-.comment-list {
-  padding-right: 10px;
-  margin-top: 25px;
-  max-height: 50vh;
-  overflow: auto;
-
-  .comment-block {
+.comment-dialog {
+  .mat-form-field {
     width: 100%;
-    display: block;
-    padding-bottom: 5px;
-    border-bottom: 2px solid lightgray;
-    margin: 10px auto;
+    margin: 0 auto;
+  }
 
-    span {
-      font-size: 0.9em;
+  .mat-dialog-content {
+    max-height: 85vh;
+  }
+
+  .comment-list {
+    padding-right: 10px;
+    margin-top: 25px;
+    max-height: 50vh;
+    overflow: auto;
+
+    .comment-block {
       width: 100%;
       display: block;
+      padding-bottom: 5px;
+      border-bottom: 2px solid lightgray;
+      margin: 10px auto;
 
-      &:first-of-type {
-        font-weight: bolder;
-      }
+      span {
+        font-size: 0.9em;
+        width: 100%;
+        display: block;
 
-      &.comment {
-        font-size: 0.85em;
-      }
+        &:first-of-type {
+          font-weight: bolder;
+        }
 
-      &:last-of-type {
-        font-size: 0.65em;
-        text-align: right;
+        &.comment {
+          font-size: 0.85em;
+        }
+
+        &:last-of-type {
+          font-size: 0.65em;
+          text-align: right;
+        }
       }
     }
   }

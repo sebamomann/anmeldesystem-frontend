@@ -10,7 +10,7 @@
         </mat-panel-description>
       </mat-expansion-panel-header>
 
-      <form (ngSubmit)="comment()" class="register-form" [formGroup]="event">
+      <form (ngSubmit)="comment()" [formGroup]="event">
         <mat-form-field>
           <input matInput placeholder="Name">
           <mat-error *ngIf="event.get('name').invalid">{{ getNameErrorMessage() }}</mat-error>
@@ -21,7 +21,7 @@
           <mat-error *ngIf="event.get('comment').invalid">{{ getCommentErrorMessage() }}</mat-error>
         </mat-form-field>
 
-        <button mat-raised-button id="submit"></button>
+        <button mat-raised-button id="submit">Kommentieren</button>
       </form>
     </mat-expansion-panel>
 
