@@ -14,6 +14,7 @@
             matBadgeSize="small">
     filter_list
   </mat-icon>
+
   <mat-accordion *ngIf="enrollments.length > 0; else emptyListFilter">
     <ng-container *ngFor="let enrollment of enrollments">
       <mat-expansion-panel class="enrollment">
@@ -22,11 +23,12 @@
                                     [expandedHeight]="'auto'">
           <span>{{enrollment.name}}</span>
           <span class="seperator small colored bolder high"></span>
-          <span class="comment-block">{{ enrollment.comment.length > 0 ? enrollment.comment : "---" }}</span>
+          <span class="comment-block">
+            {{ enrollment.comment.length > 0 ? enrollment.comment : "---" }}
+          </span>
           <div class="addition-list" *ngIf="appointment.additions.length > 0">
-            <ng-container *ngIf="appointment.additions.length > 0 && enrollment.comment.length > 0">
-              <span class="seperator small high"></span>
-            </ng-container>
+            <span *ngIf="appointment.additions.length > 0 && enrollment.comment.length > 0"
+                  class="seperator small high"></span>
             <ng-container *ngFor="let addition of appointment.additions">
               <div>
                 <mat-icon *ngIf="enrollment.additions.indexOf(addition.id) !== -1">
@@ -75,3 +77,8 @@
       </span>
   </div>
 </ng-template>
+
+<mat-icon [routerLink]="['/enroll/add']"
+          class="floating-button">
+  person_add
+</mat-icon>

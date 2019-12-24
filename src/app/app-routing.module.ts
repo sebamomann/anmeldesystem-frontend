@@ -4,6 +4,7 @@ import {LandingPageComponent} from './components/landing-page/landing-page.compo
 import {AppointmentComponent} from './components/termin/appointment.component';
 import {LoginComponent} from './components/account/login/login.component';
 import {RegisterComponent} from './components/account/register/register.component';
+import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
 
 
 const routes: Routes = [
@@ -16,7 +17,9 @@ const routes: Routes = [
   },
   {
     path: 'enroll', children: [
-      {path: '', pathMatch: 'full', component: AppointmentComponent}
+      {path: '', pathMatch: 'full', component: AppointmentComponent},
+      {path: 'add', pathMatch: 'full', component: EnrollmentComponent},
+      {path: 'change', pathMatch: 'full', component: EnrollmentComponent}
     ]
   }
 ];

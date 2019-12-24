@@ -1,0 +1,16 @@
+.additions {
+
+  & > div {
+    text-align: left;
+    width: 50%;
+    display: inline-block;
+  }
+}
+
+.driverAddition {
+  margin-top: 10px;
+
+  & > div {
+    text-align: left;
+  }
+}

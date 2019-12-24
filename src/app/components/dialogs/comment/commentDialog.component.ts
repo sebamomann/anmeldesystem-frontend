@@ -33,7 +33,7 @@ export class CommentDialogComponent implements OnInit {
 
   getNameErrorMessage(): string {
     return this.getName().hasError('required')
-      ? 'Bitte gebe deinen Namen an.'
+      ? 'Bitte gebe deinen namen an.'
       : 'Etwas ist schief gelaufen';
   }
 
