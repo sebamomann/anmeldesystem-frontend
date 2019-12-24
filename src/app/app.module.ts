@@ -9,13 +9,15 @@ import {
   MatBadgeModule,
   MatButtonModule,
   MatCardModule,
-  MatCheckboxModule, MatChipsModule,
+  MatCheckboxModule,
+  MatChipsModule,
   MatDialogModule,
   MatExpansionModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
-  MatRadioModule, MatSelectModule,
+  MatRadioModule,
+  MatSelectModule,
   MatSnackBarModule,
   MatTooltipModule
 } from '@angular/material';
@@ -27,7 +29,7 @@ import {RegisterComponent} from './components/account/register/register.componen
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FilterDialogComponent} from './components/dialogs/filter/filterDialog.component';
 import {CommentDialogComponent} from './components/dialogs/comment/commentDialog.component';
-import { EnrollmentComponent } from './components/termin/enrollment/enrollment.component';
+import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
 
 @NgModule({
   declarations: [

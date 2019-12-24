@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {TerminService} from '../../../services/termin.service';
 import {Location} from '@angular/common';
+import {of} from 'rxjs';
 
 @Component({
   selector: 'app-enrollment',
@@ -9,24 +10,33 @@ import {Location} from '@angular/common';
   styleUrls: ['./enrollment.component.scss']
 })
 export class EnrollmentComponent implements OnInit {
+  event: FormGroup;
+  appointment: any;
+  additions = [];
+  ordersData = [];
 
-  private appointment;
+  constructor(private terminService: TerminService, private location: Location, private formBuilder: FormBuilder) {
+    this.event = this.formBuilder.group({
+      name: new FormControl('', [Validators.required, Validators.min(2)]),
+      comment: new FormControl('', [Validators.required, Validators.min(2)]),
+      additions: new FormArray([]),
+      orders: new FormArray([]),
+      driver: new FormControl(false),
+      seats: new FormControl('', [Validators.min(1)]),
+      requirementService: new FormControl('', [])
+    });
 
-  event = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.min(2)]),
-    comment: new FormControl('', [Validators.required, Validators.min(2)]),
-    additions: new FormArray([]),
-    driver: new FormControl(false),
-    seats: new FormControl('', [Validators.min(1)]),
-    requirementService: new FormControl('', [])
-  });
 
-  constructor(private terminService: TerminService, private location: Location) {
-    this.appointment = this.terminService.getTermin('');
-
-    this.addCheckboxes();
+    // this.appointment = of(this.terminService.getTermin('')).pipe(map(o => JSON.stringify(o)));
+    of(this.getAppointment()).subscribe(appointment => {
+      this.appointment = appointment;
+      this.addCheckboxes();
+    });
   }
 
+  private getAppointment() {
+    return this.terminService.getTermin('');
+  }
 
   private addCheckboxes() {
     this.appointment.additions.forEach((o, i) => {
@@ -39,6 +49,10 @@ export class EnrollmentComponent implements OnInit {
   }
 
   create(): void {
+    const selectedOrderIds = this.event.value.additions
+      .map((v, i) => v ? this.appointment.additions[i].id : null)
+      .filter(v => v !== null);
+    console.log(selectedOrderIds);
   }
 
   getUsernameErrorMessage(): string {
