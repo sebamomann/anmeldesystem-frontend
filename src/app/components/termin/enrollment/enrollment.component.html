@@ -68,7 +68,10 @@
       </div>
 
       <mat-form-field>
-        <textarea matInput placeholder="Kommentar"></textarea>
+        <textarea matInput
+                  cdkTextareaAutosize
+                  cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="5" placeholder="Kommentar"></textarea>
       </mat-form-field>
 
       <mat-card-actions>

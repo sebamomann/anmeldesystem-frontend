@@ -18,10 +18,6 @@
 
         <mat-form-field>
           <textarea matInput
-                    cdkTextareaAutosize
-                    #autosize="cdkTextareaAutosize"
-                    cdkAutosizeMinRows="1"
-                    cdkAutosizeMaxRows="5"
                     placeholder="Kommentar"></textarea>
           <mat-error *ngIf="event.get('comment').invalid">{{ getCommentErrorMessage() }}</mat-error>
         </mat-form-field>
