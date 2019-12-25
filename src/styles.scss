@@ -246,6 +246,7 @@ mat-card {
 
 mat-checkbox {
   &.solo {
+    margin: 5px auto;
     display: block;
   }
 }
@@ -253,6 +254,17 @@ mat-checkbox {
 .mat-button {
   &.solo {
     margin: 5px auto 15px auto;
+  }
+}
+
+.mat-step {
+  .mat-step-header {
+    padding: 15px 24px;
+  }
+
+  .mat-stepper-vertical-line::before {
+    top: -7.5px;
+    bottom: -7.5px;
   }
 }
 
