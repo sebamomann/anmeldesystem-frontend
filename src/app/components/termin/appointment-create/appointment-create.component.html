@@ -1,0 +1,97 @@
+<mat-card>
+  <mat-card-title class="headline">
+    Termin erstellen
+  </mat-card-title>
+  <mat-vertical-stepper [linear]="false" #stepper>
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Allgemein</ng-template>
+        <mat-form-field class="">
+          <input matInput
+                 placeholder="Titel"
+                 formControlName="title"
+                 id="title">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <input matInput [matDatepicker]="date"
+                 placeholder="Datum"
+                 formControlName="date"
+                 id="date">
+          <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+          <mat-datepicker touchUi #date></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <input matInput [matDatepicker]="expire"
+                 placeholder="Anmeldefrist"
+                 formControlName="expire"
+                 id="expire">
+          <mat-datepicker-toggle matSuffix [for]="expire"></mat-datepicker-toggle>
+          <mat-datepicker touchUi #expire></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="">
+          <input matInput
+                 placeholder="Ort"
+                 formControlName="location"
+                 id="location">
+        </mat-form-field>
+        <div class="stepper-navigation">
+          <button mat-button mat-stroked-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="additionFormGroup">
+      <form [formGroup]="additionFormGroup">
+        <ng-template matStepLabel>Zusätze</ng-template>
+
+        <ng-container id="additionList">
+          <div *ngFor="let addition of additionFormGroup.controls.additions.controls; let i = index"
+               formArrayName="additions">
+            <mat-form-field class="">
+              <input matInput
+                     [formControlName]="i"
+                     placeholder="Zusatz {{i + 1}}"
+                     id="i">
+              <mat-icon matSuffix
+                        (click)="remove(i)">clear
+              </mat-icon>
+            </mat-form-field>
+          </div>
+        </ng-container>
+
+        <button mat-button mat-stroked-button (click)="addAddition()" class="solo">Hinzufügen</button>
+
+        <mat-checkbox class="solo" formControlName="driverAddition">Fahrer</mat-checkbox>
+        <div class="stepper-navigation">
+          <button mat-button mat-stroked-button matStepperNext>Next</button>
+          <button mat-button matStepperNext>Back</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]=" secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Link</ng-template>
+        <div class="stepper-navigation">
+          <button mat-button mat-stroked-button matStepperNext>Next</button>
+          <button mat-button matStepperPrevious>Back</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="thirdFormGroup">
+      <form [formGroup]="thirdFormGroup">
+        <ng-template matStepLabel>Administration</ng-template>
+        <div class="stepper-navigation">
+          <button mat-button mat-stroked-button matStepperNext>Next</button>
+          <button mat-button matStepperPrevious>Back</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Fertig</ng-template>
+      You are now done.
+      <div class="stepper-navigation">
+        <button mat-button mat-stroked-button (click)="create()">Erstellen</button>
+        <button mat-button matStepperPrevious>Back</button>
+      </div>
+    </mat-step>
+  </mat-vertical-stepper>
+</mat-card>

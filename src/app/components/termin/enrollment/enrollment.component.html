@@ -22,8 +22,8 @@
           <mat-error *ngIf="event.get('name').invalid">{{ getNameErrorMessage() }}</mat-error>
         </mat-form-field>
 
-        <!--        suppress TypeScriptUnresolvedVariable-->
         <div class="additions">
+          <!--suppress TypeScriptUnresolvedVariable -->
           <div *ngFor="let addition of event.controls.additions.controls; let i = index"
                formArrayName="additions">
             <mat-checkbox

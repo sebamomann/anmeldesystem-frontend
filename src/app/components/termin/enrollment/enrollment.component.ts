@@ -49,10 +49,10 @@ export class EnrollmentComponent implements OnInit {
   }
 
   create(): void {
-    const selectedOrderIds = this.event.value.additions
+    const selectedAdditionIds = this.event.value.additions
       .map((v, i) => v ? this.appointment.additions[i].id : null)
       .filter(v => v !== null);
-    console.log(selectedOrderIds);
+    console.log(selectedAdditionIds);
   }
 
   getUsernameErrorMessage(): string {

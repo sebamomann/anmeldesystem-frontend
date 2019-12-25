@@ -11,14 +11,17 @@ import {
   MatCardModule,
   MatCheckboxModule,
   MatChipsModule,
+  MatDatepickerModule,
   MatDialogModule,
   MatExpansionModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
+  MatNativeDateModule,
   MatRadioModule,
   MatSelectModule,
   MatSnackBarModule,
+  MatStepperModule,
   MatTooltipModule
 } from '@angular/material';
 import {AppointmentComponent} from './components/termin/appointment.component';
@@ -30,6 +33,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FilterDialogComponent} from './components/dialogs/filter/filterDialog.component';
 import {CommentDialogComponent} from './components/dialogs/comment/commentDialog.component';
 import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
+import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
 
 @NgModule({
   declarations: [
@@ -42,8 +46,11 @@ import {EnrollmentComponent} from './components/termin/enrollment/enrollment.com
     FilterDialogComponent,
     CommentDialogComponent,
     EnrollmentComponent,
+    AppointmentCreateComponent,
   ],
   imports: [
+    MatDatepickerModule,
+    MatNativeDateModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -63,8 +70,10 @@ import {EnrollmentComponent} from './components/termin/enrollment/enrollment.com
     MatTooltipModule,
     MatChipsModule,
     MatSelectModule,
+    MatStepperModule,
+    MatDatepickerModule,
   ],
-  providers: [WINDOW_PROVIDERS],
+  providers: [WINDOW_PROVIDERS, MatDatepickerModule],
   bootstrap: [AppComponent],
   exports: [FilterDialogComponent, CommentDialogComponent],
   entryComponents: [FilterDialogComponent, CommentDialogComponent]
