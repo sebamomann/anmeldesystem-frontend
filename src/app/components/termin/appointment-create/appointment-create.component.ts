@@ -12,13 +12,13 @@ import {map, startWith} from 'rxjs/operators';
   styleUrls: ['./appointment-create.component.scss']
 })
 export class AppointmentCreateComponent implements OnInit {
-  firstFormGroup: any;
-  secondFormGroup: any;
-  thirdFormGroup: any;
+  overallDataFormGroup: any;
   additionFormGroup: any;
+  linkFormGroup: any;
+  administrationFormGroup: any;
 
   /* Addition Form */
-  driverAddition: any;
+  driverAddition = false;
   additions = [];
 
   /* Administration Form */
@@ -34,12 +34,12 @@ export class AppointmentCreateComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private urlService: UrlService) {
 
-    this.firstFormGroup = this.formBuilder.group({
+    this.overallDataFormGroup = this.formBuilder.group({
       title: ['', Validators.required],
       date: ['', Validators.required],
-      expire: [],
+      deadline: [''],
       location: [''],
-      limit: [''],
+      maxEnrollments: [''],
     });
 
     this.additionFormGroup = this.formBuilder.group({
@@ -47,15 +47,18 @@ export class AppointmentCreateComponent implements OnInit {
       driverAddition: new FormControl()
     });
 
-    this.secondFormGroup = this.formBuilder.group({
-      link: new FormControl()
+    this.linkFormGroup = this.formBuilder.group({
+      link: new FormControl(),
+      description: new FormControl()
     });
 
-    this.thirdFormGroup = this.formBuilder.group({
+    this.administrationFormGroup = this.formBuilder.group({
       users: new FormControl()
     });
 
-    this.filteredUsers = this.thirdFormGroup.get('users').valueChanges.pipe(
+    // Not yet working
+    // noinspection TypeScriptValidateJSTypes
+    this.filteredUsers = this.administrationFormGroup.get('users').valueChanges.pipe(
       startWith(null),
       map((user: string | null) => user ? this._filter(user) : this.allUsers.slice()));
   }
@@ -68,9 +71,28 @@ export class AppointmentCreateComponent implements OnInit {
   }
 
   create() {
+    const additions = [];
+    this.additionFormGroup.controls.additions.controls.forEach(field => additions.push(field.value));
 
+    const output: CreateAppointmentModel = {
+      title: this.overallDataFormGroup.get('title').value,
+      description: this.linkFormGroup.get('description').value,
+      link: this.linkFormGroup.get('link').value,
+      location: this.overallDataFormGroup.get('title').value,
+      date: this.overallDataFormGroup.get('date').value,
+      deadline: this.overallDataFormGroup.get('deadline').value,
+      maxEnrollments: this.overallDataFormGroup.get('maxEnrollments').value,
+      additions,
+      driverAddition: this.driverAddition,
+      administrations: this.users,
+    };
+
+    console.log(JSON.stringify(output));
+
+    return output;
   }
 
+  /* Addition Form */
   removeAddition(index: number) {
     this.additionFormGroup.controls.additions.removeAt(index);
   }
@@ -80,8 +102,8 @@ export class AppointmentCreateComponent implements OnInit {
       || this.additionFormGroup.get('driverAddition').value;
   }
 
+  /* Administration Form */
   add(event: MatChipInputEvent) {
-
     if (!this.matAutocomplete.isOpen) {
       const input = event.input;
       const value = event.value;
@@ -96,7 +118,7 @@ export class AppointmentCreateComponent implements OnInit {
         input.value = '';
       }
 
-      this.thirdFormGroup.get('users').setValue(null);
+      this.administrationFormGroup.get('users').setValue(null);
     }
   }
 
@@ -111,7 +133,7 @@ export class AppointmentCreateComponent implements OnInit {
   selected(event: MatAutocompleteSelectedEvent): void {
     this.users.push(event.option.viewValue);
     this.userInput.nativeElement.value = '';
-    this.thirdFormGroup.get('users').setValue(null);
+    this.administrationFormGroup.get('users').setValue(null);
   }
 
   private _filter(value: string): string[] {

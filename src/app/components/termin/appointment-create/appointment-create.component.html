@@ -2,9 +2,9 @@
   <mat-card-title class="headline">
     Termin erstellen
   </mat-card-title>
-  <mat-vertical-stepper [linear]="false" #stepper>
-    <mat-step [stepControl]="firstFormGroup">
-      <form [formGroup]="firstFormGroup">
+  <mat-vertical-stepper [linear]="true" #stepper>
+    <mat-step [stepControl]="overallDataFormGroup">
+      <form [formGroup]="overallDataFormGroup">
         <ng-template matStepLabel>Allgemein</ng-template>
         <mat-form-field class="">
           <input matInput
@@ -23,12 +23,12 @@
           <mat-datepicker touchUi #date></mat-datepicker>
         </mat-form-field>
         <mat-form-field class="example-full-width">
-          <input matInput [matDatepicker]="expire"
+          <input matInput [matDatepicker]="deadline"
                  placeholder="Anmeldefrist"
-                 formControlName="expire"
-                 id="expire">
-          <mat-datepicker-toggle matSuffix [for]="expire"></mat-datepicker-toggle>
-          <mat-datepicker touchUi #expire></mat-datepicker>
+                 formControlName="deadline"
+                 id="deadline">
+          <mat-datepicker-toggle matSuffix [for]="deadline"></mat-datepicker-toggle>
+          <mat-datepicker touchUi #deadline></mat-datepicker>
         </mat-form-field>
         <mat-form-field class="">
           <input matInput
@@ -39,8 +39,8 @@
         <mat-form-field class="">
           <input matInput
                  placeholder="Maximale Teilnehmer"
-                 formControlName="limit"
-                 id="limit">
+                 formControlName="maxEnrollments"
+                 id="maxEnrollments">
         </mat-form-field>
         <div class="stepper-navigation">
           <button mat-button mat-stroked-button matStepperNext>Weiter</button>
@@ -62,13 +62,18 @@
                      placeholder="Zusatz {{i + 1}}"
                      id="i">
               <mat-icon matSuffix
-                        (click)="removeAddition(i)">clear
+                        (click)="removeAddition(i)">
+                clear
               </mat-icon>
             </mat-form-field>
           </div>
         </ng-container>
 
-        <button mat-button mat-stroked-button (click)="addAddition()" class="solo">Hinzufügen</button>
+        <button mat-button mat-stroked-button
+                (click)="addAddition()"
+                class="solo">
+          Hinzufügen
+        </button>
 
         <div class="stepper-navigation">
           <button mat-button mat-stroked-button matStepperNext>{{hasAdditions() ? 'Weiter' : 'Nein danke'}}</button>
@@ -76,22 +81,36 @@
         </div>
       </form>
     </mat-step>
-    <mat-step [stepControl]=" secondFormGroup">
-      <form [formGroup]="secondFormGroup">
+    <mat-step [stepControl]=" linkFormGroup">
+      <form [formGroup]="linkFormGroup">
         <ng-template matStepLabel>Link</ng-template>
 
         <mat-form-field class="">
           <input matInput
                  placeholder="Wunschlink"
                  formControlName="link"
-                 id="link">
+                 id="link"
+                 minlength="10">
+          <mat-hint class="small"
+                    *ngIf="linkFormGroup.get('link').value !== ''
+                  && linkFormGroup.get('link').value !== null">
+            {{urlService.getHostname()}}{{linkFormGroup.get('link').value | urlEncode}}
+          </mat-hint>
         </mat-form-field>
 
-        <mat-hint class="small"
-                  *ngIf="secondFormGroup.get('link').value !== ''
-                  && secondFormGroup.get('link').value !== null">
-          {{urlService.getHostname()}}{{secondFormGroup.get('link').value | urlEncode}}
-        </mat-hint>
+        <mat-form-field>
+          <textarea matInput
+                    #description
+                    placeholder="Zusatzinformationen"
+                    formControlName="description"
+                    id="description"
+                    required>
+          </textarea>
+          <mat-hint align="start"
+                    *ngIf="description.value.length < 10">
+            Noch mindestens {{10 - description.value.length}} Zeichen
+          </mat-hint>
+        </mat-form-field>
 
         <div class="stepper-navigation">
           <button mat-button mat-stroked-button matStepperNext>Weiter</button>
@@ -99,8 +118,8 @@
         </div>
       </form>
     </mat-step>
-    <mat-step [stepControl]="thirdFormGroup">
-      <form [formGroup]="thirdFormGroup">
+    <mat-step [stepControl]="administrationFormGroup">
+      <form [formGroup]="administrationFormGroup">
         <ng-template matStepLabel>Administration</ng-template>
         <span class="info">
           Erlaube jemandem die Administration dieses Termins
