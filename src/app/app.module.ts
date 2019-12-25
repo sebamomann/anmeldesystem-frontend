@@ -34,6 +34,7 @@ import {FilterDialogComponent} from './components/dialogs/filter/filterDialog.co
 import {CommentDialogComponent} from './components/dialogs/comment/commentDialog.component';
 import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
 import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
+import {UrlEncodePipe} from './pipes/url-encode.pipe';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import {AppointmentCreateComponent} from './components/termin/appointment-create
     CommentDialogComponent,
     EnrollmentComponent,
     AppointmentCreateComponent,
+    UrlEncodePipe,
   ],
   imports: [
     MatDatepickerModule,
@@ -75,7 +77,7 @@ import {AppointmentCreateComponent} from './components/termin/appointment-create
   ],
   providers: [WINDOW_PROVIDERS, MatDatepickerModule],
   bootstrap: [AppComponent],
-  exports: [FilterDialogComponent, CommentDialogComponent],
+  exports: [FilterDialogComponent, CommentDialogComponent, UrlEncodePipe],
   entryComponents: [FilterDialogComponent, CommentDialogComponent]
 })
 export class AppModule {

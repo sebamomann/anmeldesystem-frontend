@@ -10,13 +10,15 @@
           <input matInput
                  placeholder="Titel"
                  formControlName="title"
-                 id="title">
+                 id="title"
+                 required>
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <input matInput [matDatepicker]="date"
                  placeholder="Datum"
                  formControlName="date"
-                 id="date">
+                 id="date"
+                 required>
           <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
           <mat-datepicker touchUi #date></mat-datepicker>
         </mat-form-field>
@@ -34,8 +36,14 @@
                  formControlName="location"
                  id="location">
         </mat-form-field>
+        <mat-form-field class="">
+          <input matInput
+                 placeholder="Maximale Teilnehmer"
+                 formControlName="limit"
+                 id="limit">
+        </mat-form-field>
         <div class="stepper-navigation">
-          <button mat-button mat-stroked-button matStepperNext>Next</button>
+          <button mat-button mat-stroked-button matStepperNext>Weiter</button>
         </div>
       </form>
     </mat-step>
@@ -44,6 +52,8 @@
         <ng-template matStepLabel>Zusätze</ng-template>
 
         <ng-container id="additionList">
+          <mat-checkbox class="solo" formControlName="driverAddition">Fahrer</mat-checkbox>
+
           <div *ngFor="let addition of additionFormGroup.controls.additions.controls; let i = index"
                formArrayName="additions">
             <mat-form-field class="">
@@ -60,19 +70,32 @@
 
         <button mat-button mat-stroked-button (click)="addAddition()" class="solo">Hinzufügen</button>
 
-        <mat-checkbox class="solo" formControlName="driverAddition">Fahrer</mat-checkbox>
         <div class="stepper-navigation">
-          <button mat-button mat-stroked-button matStepperNext>Next</button>
-          <button mat-button matStepperNext>Back</button>
+          <button mat-button mat-stroked-button matStepperNext>{{hasAdditions() ? 'Weiter' : 'Nein danke'}}</button>
+          <button mat-button matStepperPrevious>Zurück</button>
         </div>
       </form>
     </mat-step>
     <mat-step [stepControl]=" secondFormGroup">
       <form [formGroup]="secondFormGroup">
         <ng-template matStepLabel>Link</ng-template>
+
+        <mat-form-field class="">
+          <input matInput
+                 placeholder="Wunschlink"
+                 formControlName="link"
+                 id="link">
+        </mat-form-field>
+
+        <mat-hint class="small"
+                  *ngIf="secondFormGroup.get('link').value !== ''
+                  && secondFormGroup.get('link').value !== null">
+          {{urlService.getHostname()}}{{secondFormGroup.get('link').value | urlEncode}}
+        </mat-hint>
+
         <div class="stepper-navigation">
-          <button mat-button mat-stroked-button matStepperNext>Next</button>
-          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button mat-stroked-button matStepperNext>Weiter</button>
+          <button mat-button matStepperPrevious>Zurück</button>
         </div>
       </form>
     </mat-step>
@@ -80,17 +103,17 @@
       <form [formGroup]="thirdFormGroup">
         <ng-template matStepLabel>Administration</ng-template>
         <div class="stepper-navigation">
-          <button mat-button mat-stroked-button matStepperNext>Next</button>
-          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button mat-stroked-button matStepperNext>Weiter</button>
+          <button mat-button matStepperPrevious>Zurück</button>
         </div>
       </form>
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>Fertig</ng-template>
-      You are now done.
+      Alle Daten korrekt?
       <div class="stepper-navigation">
         <button mat-button mat-stroked-button (click)="create()">Erstellen</button>
-        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperPrevious>Zurück</button>
       </div>
     </mat-step>
   </mat-vertical-stepper>
