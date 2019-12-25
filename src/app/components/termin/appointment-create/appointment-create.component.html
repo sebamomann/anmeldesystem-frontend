@@ -62,7 +62,7 @@
                      placeholder="Zusatz {{i + 1}}"
                      id="i">
               <mat-icon matSuffix
-                        (click)="remove(i)">clear
+                        (click)="removeAddition(i)">clear
               </mat-icon>
             </mat-form-field>
           </div>
@@ -102,6 +102,32 @@
     <mat-step [stepControl]="thirdFormGroup">
       <form [formGroup]="thirdFormGroup">
         <ng-template matStepLabel>Administration</ng-template>
+        <span class="info">
+          Erlaube jemandem die Administration dieses Termins
+        </span>
+        <mat-form-field>
+          <mat-chip-list #chipList aria-label="Berechtigungen">
+            <mat-chip *ngFor="let user of users"
+                      [removable]="true"
+                      (removed)="removeUser(user)">
+              {{user}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input matInput
+                   placeholder="Email Adresse"
+                   #userInput
+                   [matChipInputFor]="chipList"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   [matAutocomplete]="auto"
+                   [matChipInputAddOnBlur]="true"
+                   (matChipInputTokenEnd)="add($event)">
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+              {{user}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
         <div class="stepper-navigation">
           <button mat-button mat-stroked-button matStepperNext>Weiter</button>
           <button mat-button matStepperPrevious>Zurück</button>

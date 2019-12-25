@@ -6,6 +6,7 @@ import {AppComponent} from './components/app.component';
 import {LandingPageComponent} from './components/landing-page/landing-page.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
+  MatAutocompleteModule,
   MatBadgeModule,
   MatButtonModule,
   MatCardModule,
@@ -74,6 +75,7 @@ import {UrlEncodePipe} from './pipes/url-encode.pipe';
     MatSelectModule,
     MatStepperModule,
     MatDatepickerModule,
+    MatAutocompleteModule,
   ],
   providers: [WINDOW_PROVIDERS, MatDatepickerModule],
   bootstrap: [AppComponent],
