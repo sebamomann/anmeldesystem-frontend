@@ -1,4 +1,4 @@
-import { UrlEncodePipe } from './url-encode.pipe';
+import {UrlEncodePipe} from './url-encode.pipe';
 
 describe('UrlEncodePipe', () => {
   it('create an instance', () => {

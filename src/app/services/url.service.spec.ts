@@ -1,7 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 
 import {UrlService} from './url.service';
-import {WINDOW, WINDOW_PROVIDERS} from '../provider/window.provider';
+import {WINDOW_PROVIDERS} from '../provider/window.provider';
 
 describe('UrlService', () => {
   beforeEach(() => TestBed.configureTestingModule({
