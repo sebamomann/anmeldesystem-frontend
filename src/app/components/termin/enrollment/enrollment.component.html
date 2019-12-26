@@ -23,8 +23,7 @@
         </mat-form-field>
 
         <div class="additions">
-          <!--suppress TypeScriptUnresolvedVariable -->
-          <div *ngFor="let addition of event.controls.additions.controls; let i = index"
+          <div *ngFor="let addition of getAdditionsControls(); let i = index;"
                formArrayName="additions">
             <mat-checkbox
               [formControlName]="i">

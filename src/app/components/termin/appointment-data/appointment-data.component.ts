@@ -10,9 +10,9 @@ import {MatSnackBar} from '@angular/material';
 export class AppointmentDataComponent implements OnInit {
 
   @Input()
-  private appointment;
+  public appointment;
 
-  constructor(private urlService: UrlService, private snackBar: MatSnackBar) {
+  constructor(public urlService: UrlService, private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {

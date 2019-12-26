@@ -5,6 +5,7 @@ import {MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent} from '
 import {COMMA, SPACE} from '@angular/cdk/keycodes';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import {CreateAppointmentModel} from '../../../models/createAppointment.model';
 
 @Component({
   selector: 'app-appointment-create',
@@ -32,7 +33,7 @@ export class AppointmentCreateComponent implements OnInit {
   @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
 
 
-  constructor(private formBuilder: FormBuilder, private urlService: UrlService) {
+  constructor(private formBuilder: FormBuilder, public urlService: UrlService) {
 
     this.overallDataFormGroup = this.formBuilder.group({
       title: ['', Validators.required],
@@ -74,7 +75,8 @@ export class AppointmentCreateComponent implements OnInit {
     const additions = [];
     this.additionFormGroup.controls.additions.controls.forEach(field => additions.push(field.value));
 
-    const output: CreateAppointmentModel = {
+    let output: CreateAppointmentModel;
+    output = {
       title: this.overallDataFormGroup.get('title').value,
       description: this.linkFormGroup.get('description').value,
       link: this.linkFormGroup.get('link').value,

@@ -1,4 +1,4 @@
-interface CreateAppointmentModel {
+export interface CreateAppointmentModel {
   title: string;
   description: string;
   link: string;

@@ -1,16 +1,34 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { FilterDialogComponent } from './filterDialog.component';
+import {FilterDialogComponent} from './filterDialog.component';
+import {MatCheckboxModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatTooltipModule} from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-describe('FilterComponent', () => {
+describe('FilterDialogComponent', () => {
   let component: FilterDialogComponent;
   let fixture: ComponentFixture<FilterDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FilterDialogComponent ]
+      imports: [MatFormFieldModule, MatCheckboxModule,
+        ReactiveFormsModule, FormsModule,
+        MatRadioModule, MatIconModule,
+        MatTooltipModule, MatDialogModule],
+      declarations: [FilterDialogComponent],
+      providers: [{provide: MatDialogRef, useValue: {}},
+        {
+          provide: MAT_DIALOG_DATA, useValue: {
+            filter: {
+              additions: [], driverPassenger: true
+            },
+            appointment: {
+              driverAddition: true
+            }
+          }
+        }]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

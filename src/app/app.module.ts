@@ -80,7 +80,7 @@ import {UrlEncodePipe} from './pipes/url-encode.pipe';
   providers: [WINDOW_PROVIDERS, MatDatepickerModule],
   bootstrap: [AppComponent],
   exports: [FilterDialogComponent, CommentDialogComponent, UrlEncodePipe],
-  entryComponents: [FilterDialogComponent, CommentDialogComponent]
+  entryComponents: [FilterDialogComponent, CommentDialogComponent],
 })
 export class AppModule {
 

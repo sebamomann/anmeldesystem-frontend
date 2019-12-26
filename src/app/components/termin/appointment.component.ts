@@ -16,9 +16,9 @@ export class AppointmentComponent implements OnInit {
   constructor(private terminService: TerminService, public dialog: MatDialog) {
   }
 
-  private appointment = this.terminService.getTermin('');
+  public appointment = this.terminService.getTermin('');
   private filter = this.initializeFilterObject(this.appointment);
-  private enrollments = this.appointment.enrollments;
+  public enrollments = this.appointment.enrollments;
   allowModify = true;
 
   ngOnInit() {

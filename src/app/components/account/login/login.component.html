@@ -14,7 +14,10 @@
         <mat-error *ngIf="event.get('username').invalid">{{ getUsernameErrorMessage() }}</mat-error>
       </mat-form-field>
       <mat-form-field class="pass">
-        <input [type]="hide ? 'password' : 'text'" formControlName="password" id="password" matInput
+        <input matInput
+               [type]="hide ? 'password' : 'text'"
+               formControlName="password"
+               id="password"
                placeholder="Passwort" required>
         <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>

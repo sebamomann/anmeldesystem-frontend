@@ -2,6 +2,8 @@ import {Component, Inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {WINDOW} from '../provider/window.provider';
 
+declare var particlesJS: any;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -9,8 +11,7 @@ import {WINDOW} from '../provider/window.provider';
 })
 export class AppComponent {
 
-  private now: string;
-  public particlesJS: any;
+  public now: string;
 
   constructor(private router: Router, @Inject(WINDOW) private window: Window) {
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',

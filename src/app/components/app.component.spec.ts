@@ -1,6 +1,9 @@
-import { TestBed, async } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { AppComponent } from './app.component';
+import {async, TestBed} from '@angular/core/testing';
+import {RouterTestingModule} from '@angular/router/testing';
+import {AppComponent} from './app.component';
+import {WINDOW_PROVIDERS} from '../provider/window.provider';
+
+declare var particlesJS: any;
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -9,8 +12,9 @@ describe('AppComponent', () => {
         RouterTestingModule
       ],
       declarations: [
-        AppComponent
+        AppComponent,
       ],
+      providers: [WINDOW_PROVIDERS]
     }).compileComponents();
   }));
 

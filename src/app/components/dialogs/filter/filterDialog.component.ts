@@ -8,8 +8,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 })
 export class FilterDialogComponent implements OnInit {
 
-  private dialogFilter: any;
-  private isFilterActive: boolean;
+  public dialogFilter: any;
+  public isFilterActive: boolean;
 
   ngOnInit() {
   }

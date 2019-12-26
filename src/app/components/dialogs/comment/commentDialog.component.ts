@@ -9,7 +9,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 })
 export class CommentDialogComponent implements OnInit {
 
-  private enrollment: any;
+  public enrollment: any;
 
   event = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.min(2)]),

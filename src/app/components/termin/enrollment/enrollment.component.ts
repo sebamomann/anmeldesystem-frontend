@@ -12,8 +12,6 @@ import {of} from 'rxjs';
 export class EnrollmentComponent implements OnInit {
   event: FormGroup;
   appointment: any;
-  additions = [];
-  ordersData = [];
 
   constructor(private terminService: TerminService, private location: Location, private formBuilder: FormBuilder) {
     this.event = this.formBuilder.group({
@@ -85,6 +83,10 @@ export class EnrollmentComponent implements OnInit {
 
   private getEmail() {
     return this.event.get('email');
+  }
+
+  getAdditionsControls() {
+    return (this.event.get('additions') as FormArray).controls;
   }
 
   getNameErrorMessage() {
