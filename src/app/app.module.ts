@@ -36,7 +36,7 @@ import {CommentDialogComponent} from './components/dialogs/comment/commentDialog
 import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
 import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
 import {UrlEncodePipe} from './pipes/url-encode.pipe';
-import {HashLocationStrategy, LocationStrategy} from '@angular/common';
+import {HashLocationStrategy, LocationStrategy, PathLocationStrategy} from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -78,7 +78,7 @@ import {HashLocationStrategy, LocationStrategy} from '@angular/common';
     MatDatepickerModule,
     MatAutocompleteModule,
   ],
-  providers: [WINDOW_PROVIDERS, MatDatepickerModule, {provide: LocationStrategy, useClass: HashLocationStrategy}],
+  providers: [WINDOW_PROVIDERS, MatDatepickerModule, {provide: LocationStrategy, useClass: PathLocationStrategy}],
   bootstrap: [AppComponent],
   exports: [FilterDialogComponent, CommentDialogComponent, UrlEncodePipe],
   entryComponents: [FilterDialogComponent, CommentDialogComponent],
