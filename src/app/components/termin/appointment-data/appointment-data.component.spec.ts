@@ -4,6 +4,7 @@ import {AppointmentDataComponent} from './appointment-data.component';
 import {MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSnackBarModule} from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {WINDOW_PROVIDERS} from '../../../provider/window.provider';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('AppointmentDataComponent', () => {
   let component: AppointmentDataComponent;
@@ -13,7 +14,8 @@ describe('AppointmentDataComponent', () => {
     TestBed.configureTestingModule({
       imports: [MatCardModule, MatIconModule,
         MatFormFieldModule, FormsModule,
-        MatSnackBarModule, MatInputModule],
+        MatSnackBarModule, MatInputModule,
+        BrowserAnimationsModule],
       declarations: [AppointmentDataComponent],
       providers: [WINDOW_PROVIDERS]
     })
