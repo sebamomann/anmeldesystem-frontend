@@ -17,171 +17,67 @@ import {FormsModule} from '@angular/forms';
 import {WINDOW_PROVIDERS} from '../../provider/window.provider';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
+function createEnrollment(id1: boolean, id2: boolean, id3: boolean, id4: boolean, driver: boolean, passenger: boolean) {
+  const obj = {
+    name: (driver ? 'Driver' : 'Passenger') + Math.random(),
+    comment: 'This is my cool comment',
+    comments: [],
+    driver: (driver ? {seats: 3, service: 1} : null),
+    passenger: (passenger ? {requirement: 1} : null),
+    additions: [],
+    iat: '01-01-2019 00:00:00',
+  };
+  if (id1) {
+    obj.additions.push('id1');
+  }
+  if (id2) {
+    obj.additions.push('id2');
+  }
+  if (id3) {
+    obj.additions.push('id3');
+  }
+  if (id4) {
+    obj.additions.push('id4');
+  }
+  return obj;
+}
+
+function createFilter(b1: boolean, b2: boolean, b3: boolean, b4: boolean, explicitly: string, driverPassenger: string) {
+  return {
+    additions: [
+      {id: 'id1', active: b1},
+      {id: 'id2', active: b2},
+      {id: 'id3', active: b3},
+      {id: 'id4', active: b4}
+    ],
+    driverPassenger,
+    explicitly,
+  };
+}
+
 describe('AppointmentComponent', () => {
   let component: AppointmentComponent;
   let fixture: ComponentFixture<AppointmentComponent>;
-  const DriverMc = {
-    name: 'Driver',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: {seats: 3, requirement: 1},
-    passenger: null,
-    additions: ['id1'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const DriverMcBk = {
-    name: 'Driver',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: {seats: 4, requirement: 1},
-    passenger: null,
-    additions: ['id1', 'id2'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const DriverSubwayDiner = {
-    name: 'Driver',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: {seats: 4, requirement: 1},
-    passenger: null,
-    additions: ['id3', 'id4'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const DriverSubwayDiner2 = {
-    name: 'Driver',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: {seats: 4, requirement: 1},
-    passenger: null,
-    additions: ['id3', 'id4'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const DriverSubwayDiner3 = {
-    name: 'Driver',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: {seats: 4, requirement: 1},
-    passenger: null,
-    additions: ['id3', 'id4'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const DriverMcBkSubway = {
-    name: 'Driver',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: {seats: 4, requirement: 1},
-    passenger: null,
-    additions: ['id1', 'id2', 'id3'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const DriverBkSubwayDiner = {
-    name: 'Driver',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: {seats: 4, requirement: 1},
-    passenger: null,
-    additions: ['id2', 'id3', 'id4'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const DriverMcBkSubwayDiner = {
-    name: 'Driver',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: {seats: 4, requirement: 1},
-    passenger: null,
-    additions: ['id1', 'id2', 'id3', 'id4'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const DriverMcBkSubwayDiner2 = {
-    name: 'Driver',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: {seats: 4, requirement: 1},
-    passenger: null,
-    additions: ['id1', 'id2', 'id3', 'id4'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const PassengerMc = {
-    name: 'Passenger',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: null,
-    passenger: {requirement: 1},
-    additions: ['id1'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const PassengerDiner = {
-    name: 'Passenger',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: null,
-    passenger: {requirement: 1},
-    additions: ['id4'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const PassengerMcBk = {
-    name: 'Passenger',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: null,
-    passenger: {requirement: 1},
-    additions: ['id1', 'id2'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const PassengerMcBk2 = {
-    name: 'Passenger',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: null,
-    passenger: {requirement: 1},
-    additions: ['id1', 'id2'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const PassengerMcSubway = {
-    name: 'Passenger',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: null,
-    passenger: {requirement: 1},
-    additions: ['id1', 'id4'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const PassengerBkDiner = {
-    name: 'Passenger',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: null,
-    passenger: {requirement: 1},
-    additions: ['id2', 'id4'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const PassengerBkSubwayDiner = {
-    name: 'Passenger',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: null,
-    passenger: {requirement: 1},
-    additions: ['id2', 'id3', 'id4'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const PassengerMcBkSubwayDiner = {
-    name: 'Passenger',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: null,
-    passenger: {requirement: 1},
-    additions: ['id1', 'id2', 'id3', 'id4'],
-    iat: '01-01-2019 00:00:00',
-  };
-  const PassengerMcBkSubwayDiner2 = {
-    name: 'Passenger',
-    comment: 'This is my cool comment',
-    comments: [],
-    driver: null,
-    passenger: {requirement: 1},
-    additions: ['id1', 'id2', 'id3', 'id4'],
-    iat: '01-01-2019 00:00:00',
-  };
+
+  const DriverMc = createEnrollment(true, false, false, false, true, false);
+  const DriverMcBk = createEnrollment(true, true, false, false, true, false);
+  const DriverSubwayDiner = createEnrollment(false, false, true, true, true, false);
+  const DriverSubwayDiner2 = createEnrollment(false, false, true, true, true, false);
+  const DriverSubwayDiner3 = createEnrollment(false, false, true, true, true, false);
+  const DriverMcBkSubway = createEnrollment(true, true, true, false, true, false);
+  const DriverBkSubwayDiner = createEnrollment(false, true, true, true, true, false);
+  const DriverAll1 = createEnrollment(true, true, true, true, true, false);
+  const DriverAll2 = createEnrollment(true, true, true, true, true, false);
+
+  const PassengerMc = createEnrollment(true, false, false, false, false, true);
+  const PassengerDiner = createEnrollment(false, false, false, true, false, true);
+  const PassengerMcBk = createEnrollment(true, true, false, false, false, true);
+  const PassengerMcBk2 = createEnrollment(true, true, false, false, false, true);
+  const PassengerMcSubway = createEnrollment(true, false, true, false, false, true);
+  const PassengerBkDiner = createEnrollment(false, true, false, true, false, true);
+  const PassengerBkSubwayDiner = createEnrollment(false, true, true, true, false, true);
+  const PassengerAll1 = createEnrollment(true, true, true, true, false, true);
+  const PassengerAll2 = createEnrollment(true, true, true, true, false, true);
 
 
   beforeEach(async(() => {
@@ -229,14 +125,19 @@ describe('AppointmentComponent', () => {
         }
       ],
       driverAddition: true,
-      enrollments: [DriverMc, DriverMcBk,
+      enrollments: [DriverMc,
+        DriverMcBk,
         DriverSubwayDiner, DriverSubwayDiner2, DriverSubwayDiner3,
-        DriverMcBkSubway, DriverBkSubwayDiner,
-        DriverMcBkSubwayDiner, DriverMcBkSubwayDiner2,
-        PassengerMc, PassengerDiner,
-        PassengerMcBk, PassengerMcBk2, PassengerMcSubway,
-        PassengerBkDiner, PassengerBkSubwayDiner,
-        PassengerMcBkSubwayDiner, PassengerMcBkSubwayDiner2]
+        DriverMcBkSubway,
+        DriverBkSubwayDiner,
+        DriverAll1, DriverAll2,
+        PassengerMc,
+        PassengerDiner,
+        PassengerMcBk, PassengerMcBk2,
+        PassengerMcSubway,
+        PassengerBkDiner,
+        PassengerBkSubwayDiner,
+        PassengerAll1, PassengerAll2]
     };
     fixture.detectChanges();
   });
@@ -246,122 +147,162 @@ describe('AppointmentComponent', () => {
   });
 
   it('correct filter: mc, explicit', () => {
-    component.filter = {
-      additions: [
-        {id: 'id1', active: true},
-        {id: 'id2', active: false},
-        {id: 'id3', active: false},
-        {id: 'id4', active: false}
-      ],
-      driverPassenger: '',
-      explicitly: 'explicit'
-    };
+    component.filter = createFilter(true, false, false, false, 'explicit', '');
     const filtered = component.filterEnrollments();
     expect(filtered).toEqual([DriverMc, PassengerMc]);
   });
 
   it('correct filter: diner, explicit, passenger', () => {
-    component.filter = {
-      additions: [
-        {id: 'id1', active: false},
-        {id: 'id2', active: false},
-        {id: 'id3', active: false},
-        {id: 'id4', active: true}
-      ],
-      driverPassenger: 'passenger',
-      explicitly: 'explicit'
-    };
+    component.filter = createFilter(false, false, false, true, 'explicit', 'passenger');
     const filtered = component.filterEnrollments();
     expect(filtered).toEqual([PassengerDiner]);
   });
 
   it('correct filter: two (mc, bk), explicit', () => {
-    component.filter = {
-      additions: [
-        {id: 'id1', active: true},
-        {id: 'id2', active: true},
-        {id: 'id3', active: false},
-        {id: 'id4', active: false}
-      ],
-      driverPassenger: '',
-      explicitly: 'explicit'
-    };
+    component.filter = createFilter(true, true, false, false, 'explicit', '');
     const filtered = component.filterEnrollments();
     expect(filtered).toEqual([DriverMcBk, PassengerMcBk, PassengerMcBk2]);
   });
 
   it('correct filter: two (subway, diner), explicit, driver', () => {
-    component.filter = {
-      additions: [
-        {id: 'id1', active: false},
-        {id: 'id2', active: false},
-        {id: 'id3', active: true},
-        {id: 'id4', active: true}
-      ],
-      driverPassenger: 'driver',
-      explicitly: 'explicit'
-    };
+    component.filter = createFilter(false, false, true, true, 'explicit', 'driver');
     const filtered = component.filterEnrollments();
     expect(filtered).toEqual([DriverSubwayDiner, DriverSubwayDiner2, DriverSubwayDiner3]);
   });
 
   it('correct filter: three, explicit', () => {
-    component.filter = {
-      additions: [
-        {id: 'id1', active: false},
-        {id: 'id2', active: true},
-        {id: 'id3', active: true},
-        {id: 'id4', active: true}
-      ],
-      driverPassenger: '',
-      explicitly: 'explicit'
-    };
+    component.filter = createFilter(false, true, true, true, 'explicit', '');
     const filtered = component.filterEnrollments();
     expect(filtered).toEqual([DriverBkSubwayDiner, PassengerBkSubwayDiner]);
   });
 
   it('correct filter: three (bk, subway, diner), explicit, passenger', () => {
-    component.filter = {
-      additions: [
-        {id: 'id1', active: false},
-        {id: 'id2', active: true},
-        {id: 'id3', active: true},
-        {id: 'id4', active: true}
-      ],
-      driverPassenger: 'passenger',
-      explicitly: 'explicit'
-    };
+    component.filter = createFilter(false, true, true, true, 'explicit', 'passenger');
     const filtered = component.filterEnrollments();
     expect(filtered).toEqual([PassengerBkSubwayDiner]);
   });
 
   it('correct filter: all, explicit', () => {
-    component.filter = {
-      additions: [
-        {id: 'id1', active: true},
-        {id: 'id2', active: true},
-        {id: 'id3', active: true},
-        {id: 'id4', active: true}
-      ],
-      driverPassenger: '',
-      explicitly: 'explicit'
-    };
+    component.filter = createFilter(true, true, true, true, 'explicit', '');
     const filtered = component.filterEnrollments();
-    expect(filtered).toEqual([DriverMcBkSubwayDiner, DriverMcBkSubwayDiner2, PassengerMcBkSubwayDiner, PassengerMcBkSubwayDiner]);
+    expect(filtered).toEqual([DriverAll1, DriverAll2, PassengerAll1, PassengerAll2]);
   });
 
   it('correct filter: all, explicit, driver', () => {
-    component.filter = {
-      additions: [
-        {id: 'id1', active: true},
-        {id: 'id2', active: true},
-        {id: 'id3', active: true},
-        {id: 'id4', active: true}
-      ],
-      driverPassenger: 'driver',
-      explicitly: 'explicit'
-    };
+    component.filter = createFilter(true, true, true, true, 'explicit', 'driver');
     const filtered = component.filterEnrollments();
-    expect(filtered).toEqual([DriverMcBkSubwayDiner, DriverMcBkSubwayDiner2]);
+    expect(filtered).toEqual([DriverAll1, DriverAll2]);
+  });
+
+  /* SEMI EXPLICIT */
+  it('correct filter: mc, semiExplicit', () => {
+    component.filter = createFilter(true, false, false, false, 'semiExplicit', '');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([DriverMc, DriverMcBk, DriverMcBkSubway, DriverAll1, DriverAll2, PassengerMc, PassengerMcBk,
+      PassengerMcBk2, PassengerMcSubway, PassengerAll1, PassengerAll2]);
+  });
+
+  it('correct filter: diner, semiExplicit, passenger', () => {
+    component.filter = createFilter(false, false, false, true, 'semiExplicit', 'passenger');
+    const filtered = component.filterEnrollments();
+    console.log(JSON.stringify(filtered, null, 2));
+    expect(filtered).toEqual([PassengerDiner, PassengerBkDiner, PassengerBkSubwayDiner, PassengerAll1, PassengerAll2]);
+  });
+
+  it('correct filter: two (mc, bk), semiExplicit', () => {
+    component.filter = createFilter(true, true, false, false, 'semiExplicit', '');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([DriverMcBk, DriverMcBkSubway, DriverAll1, DriverAll2, PassengerMcBk, PassengerMcBk2, PassengerAll1,
+      PassengerAll2]);
+  });
+
+  it('correct filter: two (subway, diner), semiExplicit, driver', () => {
+    component.filter = createFilter(false, false, true, true, 'semiExplicit', 'driver');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([DriverSubwayDiner, DriverSubwayDiner2, DriverSubwayDiner3, DriverBkSubwayDiner, DriverAll1,
+      DriverAll2]);
+  });
+
+  it('correct filter: three (bs, subway, diner), semiExplicit', () => {
+    component.filter = createFilter(false, true, true, true, 'semiExplicit', '');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([DriverBkSubwayDiner, DriverAll1, DriverAll2, PassengerBkSubwayDiner, PassengerAll1, PassengerAll2]);
+  });
+
+  it('correct filter: three (bk, subway, diner), semiExplicit, passenger', () => {
+    component.filter = createFilter(false, true, true, true, 'semiExplicit', 'passenger');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([PassengerBkSubwayDiner, PassengerAll1, PassengerAll2]);
+  });
+
+  it('correct filter: all, semiExplicit', () => {
+    component.filter = createFilter(true, true, true, true, 'semiExplicit', '');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([DriverAll1, DriverAll2, PassengerAll1, PassengerAll2]);
+  });
+
+  it('correct filter: all, semiExplicit, driver', () => {
+    component.filter = createFilter(true, true, true, true, 'semiExplicit', 'driver');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([DriverAll1, DriverAll2]);
+  });
+
+  /* DYNAMIC */
+  it('correct filter: mc, dynamic', () => {
+    component.filter = createFilter(true, false, false, false, 'dynamic', '');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([DriverMc, DriverMcBk, DriverMcBkSubway, DriverAll1, DriverAll2, PassengerMc, PassengerMcBk,
+      PassengerMcBk2, PassengerMcSubway, PassengerAll1, PassengerAll2]);
+  });
+
+  it('correct filter: diner, dynamic, passenger', () => {
+    component.filter = createFilter(false, false, false, true, 'dynamic', 'passenger');
+    const filtered = component.filterEnrollments();
+    console.log(JSON.stringify(filtered, null, 2));
+    expect(filtered).toEqual([PassengerDiner, PassengerBkDiner, PassengerBkSubwayDiner, PassengerAll1, PassengerAll2]);
+  });
+
+  it('correct filter: two (mc, bk), dynamic', () => {
+    component.filter = createFilter(true, true, false, false, 'dynamic', '');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([DriverMc, DriverMcBk, DriverMcBkSubway, DriverBkSubwayDiner, DriverAll1, DriverAll2, PassengerMc,
+      PassengerMcBk, PassengerMcBk2, PassengerMcSubway, PassengerBkDiner, PassengerBkSubwayDiner, PassengerAll1, PassengerAll2]);
+  });
+
+  it('correct filter: two (subway, diner), dynamic, driver', () => {
+    component.filter = createFilter(false, false, true, true, 'dynamic', 'driver');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([DriverSubwayDiner, DriverSubwayDiner2, DriverSubwayDiner3, DriverMcBkSubway, DriverBkSubwayDiner,
+      DriverAll1, DriverAll2]);
+  });
+
+  it('correct filter: three (bk, subway, diner), dynamic', () => {
+    component.filter = createFilter(false, true, true, true, 'dynamic', '');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([DriverMcBk, DriverSubwayDiner, DriverSubwayDiner2, DriverSubwayDiner3, DriverMcBkSubway,
+      DriverBkSubwayDiner, DriverAll1, DriverAll2, PassengerDiner, PassengerMcBk, PassengerMcBk2, PassengerMcSubway, PassengerBkDiner,
+      PassengerBkSubwayDiner, PassengerAll1, PassengerAll2]);
+  });
+
+  it('correct filter: three (bk, subway, diner), dynamic, passenger', () => {
+    component.filter = createFilter(false, true, true, true, 'dynamic', 'passenger');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([PassengerDiner, PassengerMcBk, PassengerMcBk2, PassengerMcSubway, PassengerBkDiner,
+      PassengerBkSubwayDiner, PassengerAll1, PassengerAll2]);
+  });
+
+  it('correct filter: all, dynamic', () => {
+    component.filter = createFilter(true, true, true, true, 'dynamic', '');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([DriverMc, DriverMcBk, DriverSubwayDiner, DriverSubwayDiner2, DriverSubwayDiner3, DriverMcBkSubway,
+      DriverBkSubwayDiner, DriverAll1, DriverAll2, PassengerMc, PassengerDiner, PassengerMcBk, PassengerMcBk2, PassengerMcSubway,
+      PassengerBkDiner, PassengerBkSubwayDiner, PassengerAll1, PassengerAll2]);
+  });
+
+  it('correct filter: all, dynamic, driver', () => {
+    component.filter = createFilter(true, true, true, true, 'dynamic', 'driver');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([DriverMc, DriverMcBk, DriverSubwayDiner, DriverSubwayDiner2, DriverSubwayDiner3, DriverMcBkSubway,
+      DriverBkSubwayDiner, DriverAll1, DriverAll2]);
   });
 });
