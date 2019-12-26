@@ -295,7 +295,7 @@ export class TerminService {
         }
       ]
     }, {
-      title: 'Test Termin',
+      title: 'Test Termin 2',
       description: 'This is a very very cool date because I created it lol',
       location: 'Hier lol',
       creator: 'TestCreator',

@@ -22,7 +22,7 @@ import {
   MatRadioModule,
   MatSelectModule,
   MatSnackBarModule,
-  MatStepperModule,
+  MatStepperModule, MatTabsModule,
   MatTooltipModule
 } from '@angular/material';
 import {AppointmentComponent} from './components/termin/appointment.component';
@@ -79,6 +79,7 @@ import { DashboardComponent } from './components/termin/dashboard/dashboard.comp
     MatStepperModule,
     MatDatepickerModule,
     MatAutocompleteModule,
+    MatTabsModule,
   ],
   providers: [WINDOW_PROVIDERS, MatDatepickerModule, {provide: LocationStrategy, useClass: PathLocationStrategy}],
   bootstrap: [AppComponent],

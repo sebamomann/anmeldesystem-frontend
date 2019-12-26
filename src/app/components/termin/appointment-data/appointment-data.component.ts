@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {UrlService} from '../../../services/url.service';
 import {MatSnackBar} from '@angular/material';
+import {IAppointmentModel} from '../../../models/IAppointment.model';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-appointment-data',
@@ -12,7 +14,10 @@ export class AppointmentDataComponent implements OnInit {
   @Input()
   public appointment;
 
-  constructor(public urlService: UrlService, private snackBar: MatSnackBar) {
+  @Input()
+  public preview = false;
+
+  constructor(public urlService: UrlService, private snackBar: MatSnackBar, private router: Router) {
   }
 
   ngOnInit() {
@@ -27,4 +32,10 @@ export class AppointmentDataComponent implements OnInit {
       panelClass: 'snackbar-default'
     });
   }
+
+
+  redirectToAppointment(appointment: IAppointmentModel) {
+    this.router.navigate(['/enroll'], {queryParams: {val: appointment.link}});
+  }
+
 }

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {TerminService} from '../../../services/termin.service';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,13 +10,12 @@ import {IAppointmentModel} from '../../../models/IAppointment.model';
 })
 export class DashboardComponent implements OnInit {
 
-  public appointment: IAppointmentModel[] = this.terminService.getTermine();
+  public appointments: IAppointmentModel[] = this.terminService.getTermine();
 
-  constructor(public terminService: TerminService) {
+  constructor(public terminService: TerminService, private router: Router) {
 
   }
 
   ngOnInit() {
   }
-
 }
