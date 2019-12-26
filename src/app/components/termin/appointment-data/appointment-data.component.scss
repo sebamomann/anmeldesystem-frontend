@@ -24,6 +24,7 @@
     display: inline-block;
     width: calc(50% - 20px);
     text-align: left;
+    vertical-align: top;
 
     &.seperator {
       width: 100%;
