@@ -12,12 +12,13 @@ import {CommentDialogComponent} from '../dialogs/comment/commentDialog.component
 })
 @NgModule({})
 export class AppointmentComponent implements OnInit {
+  component: {};
 
   constructor(private terminService: TerminService, public dialog: MatDialog) {
   }
 
   public appointment = this.terminService.getTermin('');
-  private filter = this.initializeFilterObject(this.appointment);
+  public filter = this.initializeFilterObject(this.appointment);
   public enrollments = this.appointment.enrollments;
   allowModify = true;
 

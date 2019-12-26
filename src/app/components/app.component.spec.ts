@@ -3,8 +3,6 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {AppComponent} from './app.component';
 import {WINDOW_PROVIDERS} from '../provider/window.provider';
 
-declare var particlesJS: any;
-
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({

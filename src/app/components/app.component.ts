@@ -2,8 +2,6 @@ import {Component, Inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {WINDOW} from '../provider/window.provider';
 
-declare var particlesJS: any;
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
