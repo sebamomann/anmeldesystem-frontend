@@ -1,1 +1,1 @@
-declare var particlesJS: any;
+declare const particlesJS: any;
