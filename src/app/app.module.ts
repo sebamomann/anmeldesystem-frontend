@@ -37,6 +37,7 @@ import {EnrollmentComponent} from './components/termin/enrollment/enrollment.com
 import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
 import {UrlEncodePipe} from './pipes/url-encode.pipe';
 import {HashLocationStrategy, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import { DashboardComponent } from './components/termin/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import {HashLocationStrategy, LocationStrategy, PathLocationStrategy} from '@ang
     EnrollmentComponent,
     AppointmentCreateComponent,
     UrlEncodePipe,
+    DashboardComponent,
   ],
   imports: [
     MatDatepickerModule,

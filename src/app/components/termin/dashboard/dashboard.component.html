@@ -1,0 +1,5 @@
+<h1 class="headline">Terminübersicht</h1>
+
+<ng-component *ngFor="let appointment of appointments">
+  <app-appointment-data [appointment]="appointment"]></app-appointment-data>
+</ng-component>
