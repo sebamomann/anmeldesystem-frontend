@@ -6,6 +6,7 @@ import {LoginComponent} from './components/account/login/login.component';
 import {RegisterComponent} from './components/account/register/register.component';
 import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
 import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
+import {DashboardComponent} from './components/termin/dashboard/dashboard.component';
 
 
 const routes: Routes = [
@@ -16,6 +17,7 @@ const routes: Routes = [
       {path: 'register', component: RegisterComponent}
     ]
   },
+  {path: 'dashboard', component: DashboardComponent},
   {path: 'create', component: AppointmentCreateComponent},
   {
     path: 'enroll', children: [
