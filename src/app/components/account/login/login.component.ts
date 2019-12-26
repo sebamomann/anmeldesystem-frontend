@@ -33,9 +33,11 @@ export class LoginComponent implements OnInit {
 
       const response = this.accountService.login(userCredentials);
 
-      response.subscribe(res => {
-        this.router.navigateByUrl('');
-      });
+      // response.subscribe(res => {
+      //   this.router.navigateByUrl('/dashboard');
+      // });
+
+      this.router.navigateByUrl('/dashboard');
     }
   }
 
