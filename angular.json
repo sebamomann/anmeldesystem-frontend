@@ -32,7 +32,6 @@
               "src/theme.scss"
             ],
             "scripts": [
-              "src/js"
             ]
           },
           "configurations": {
