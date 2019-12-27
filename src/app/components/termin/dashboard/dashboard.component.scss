@@ -1,3 +1,7 @@
 ::ng-deep .appointment-data {
-  margin: 20px auto 20px !important;
+  margin: 20px auto 20px;
+
+  mat-card-title {
+    font-size: 1.4em;
+  }
 }
