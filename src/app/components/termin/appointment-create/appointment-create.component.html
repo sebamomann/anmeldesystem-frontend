@@ -63,7 +63,17 @@
         </span>
 
         <ng-container id="additionList">
-          <mat-checkbox class="solo" formControlName="driverAddition">Fahrer</mat-checkbox>
+          <div class="tooltip-container">
+            <mat-checkbox formControlName="driverAddition">
+              Fahrer
+            </mat-checkbox>
+            <mat-icon class="tooltip"
+                      #driverAdditionTooltip="matTooltip"
+                      matTooltip="{{'Hierbei können sich Teilnehmer als Fahrer melden. Sie geben unter Anderem die Anzahl freier Plätze ein und in welche Richtung sie fahren.'}}"
+                      (click)="driverAdditionTooltip.toggle()">
+              info
+            </mat-icon>
+          </div>
 
           <div *ngFor="let addition of additionFormGroup.controls.additions.controls; let i = index"
                formArrayName="additions">
@@ -113,14 +123,23 @@
         </mat-form-field>
 
         <mat-form-field>
-          <textarea matInput
-                    #description
-                    placeholder="Zusatzinformationen"
-                    formControlName="description"
-                    id="description"
-                    minlength="5"
-                    required>
-          </textarea>
+          <div class="tooltip-container">
+            <textarea matInput
+                      #description
+                      placeholder="Zusatzinformationen"
+                      formControlName="description"
+                      id="description"
+                      minlength="5"
+                      required>
+            </textarea>
+            <mat-icon class="tooltip"
+                      #descriptionTooltip="matTooltip"
+                      matTooltip="{{'Dieser Text wird unter Anderem beim Versenden des Anmeldelinks als Linkvorschau angezeigt.'}}"
+                      (click)="descriptionTooltip.toggle()">
+              info
+            </mat-icon>
+          </div>
+
           <mat-hint align="start"
                     *ngIf="description.value.length < 10">
             Noch mindestens {{10 - description.value.length}} Zeichen
@@ -197,7 +216,17 @@
       <form [formGroup]="doneGroup">
         <ng-template matStepLabel>Fertig</ng-template>
 
-        <mat-checkbox formControlName="saveAsTemplate">Als Vorlage Speichern</mat-checkbox>
+        <div class="tooltip-container">
+          <mat-checkbox formControlName="saveAsTemplate">
+            Als Vorlage Speichern
+          </mat-checkbox>
+          <mat-icon class="tooltip"
+                    #templateTooltip="matTooltip"
+                    matTooltip="{{'Die Kerndaten des Termins werden als Vorlage für schnelleres Erstellen eines Termins bereitgestellt.'}}"
+                    (click)="templateTooltip.toggle()">
+            info
+          </mat-icon>
+        </div>
 
         <div class="stepper-navigation">
           <button mat-button mat-stroked-button (click)="create()">Erstellen</button>
