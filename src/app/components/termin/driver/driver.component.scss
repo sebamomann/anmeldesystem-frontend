@@ -1,0 +1,89 @@
+@mixin md-icon-size($size: 24px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+  line-height: $size;
+}
+
+mat-card {
+  margin: 75px auto 25px;
+}
+
+.driver-wrapper {
+  display: block;
+  margin: 15px auto 35px;
+
+  .driver-block {
+    position: relative;
+    text-align: center;
+    display: inline-block;
+    width: calc(50% - 60px);
+    margin: 10px;
+    border-radius: 10px;
+    padding: 10px 20px;
+    box-shadow: 5px 5px 9px #d9d9d9,
+    -5px -5px 9px #fcfcfc;
+
+    span {
+      display: block;
+
+      &:first-of-type {
+        font-weight: bolder;
+      }
+
+      &:not(:first-of-type) {
+        margin-top: 10px;
+      }
+
+      &.service {
+        width: 20px;
+        height: 20px;
+        margin: 0;
+        position: absolute;
+        top: -7.5px;
+        left: -7.5px;
+        background-color: white;
+        border-radius: 100%;
+        box-shadow: 0px 0px 5px lightgray;
+
+        mat-icon {
+          @include md-icon-size(14px);
+          vertical-align: middle;
+        }
+
+        &.negative {
+          background-color: red;
+        }
+      }
+    }
+  }
+}
+
+.analysis-block-wrapper {
+  text-align: center;
+
+  .analysis-block {
+    padding: 10px;
+    display: inline-block;
+    width: calc(50% - 20px);
+    margin-top: 15px;
+
+    .title {
+      font-weight: bolder;
+    }
+
+    .case {
+      font-size: 1em;
+      width: 100%;
+      display: block;
+
+      .positive {
+        color: green;
+      }
+
+      .negative {
+        color: red;
+      }
+    }
+  }
+}

@@ -43,34 +43,25 @@ export class TerminService {
         {
           name: 'Test Enrollment',
           comment: 'This is my cool comment but it is acutally waaay to long to be put in just one line',
-          comments: [{
-            name: 'CommentWriter1',
-            comment: 'This is my comment response to your comment',
-            iat: '01-01-2019 00:00:00'
-          }, {
-            name: 'CommentWriter1',
-            comment: 'This is my comment response to your comment',
-            iat: '01-01-2019 00:00:00'
-          }, {
-            name: 'CommentWriter1',
-            comment: 'This is my comment response to your comment',
-            iat: '01-01-2019 00:00:00'
-          }, {
-            name: 'CommentWriter1',
-            comment: 'This is my comment response to your comment',
-            iat: '01-01-2019 00:00:00'
-          }, {
-            name: 'CommentWriter1',
-            comment: 'This is my comment response to your comment',
-            iat: '01-01-2019 00:00:00'
-          }, {
-            name: 'CommentWriter2',
-            comment: 'This is my comment response to your comment too lol',
-            iat: '01-01-2019 00:00:00'
-          }],
+          comments: [],
           driver: null,
           passenger: {
             requirement: 1,
+          },
+          additions: [
+            {id: 'id1', name: 'Megges'},
+            {id: 'id2', name: 'Bk'},
+            {id: 'id4', name: 'Diner'},
+          ],
+          iat: '01-01-2019 00:00:00',
+        },
+        {
+          name: 'Passenger To',
+          comment: 'This is my cool comment but it is acutally waaay to long to be put in just one line',
+          comments: [],
+          driver: null,
+          passenger: {
+            requirement: 2,
           },
           additions: [
             {id: 'id1', name: 'Megges'},
@@ -98,15 +89,7 @@ export class TerminService {
         {
           name: 'Test Enrollment2',
           comment: 'This is my cool comment',
-          comments: [{
-            name: 'CommentWriter1',
-            comment: 'This is my comment response to your comment',
-            iat: '01-01-2019 00:00:00'
-          }, {
-            name: 'CommentWriter2',
-            comment: 'This is my comment response to your comment too lol',
-            iat: '01-01-2019 00:00:00'
-          }],
+          comments: [],
           driver: null,
           passenger: {
             requirement: 1,
@@ -123,7 +106,7 @@ export class TerminService {
           comment: 'This is my cool comment',
           comments: [],
           driver: {
-            service: 1,
+            service: 2,
             seats: 3,
           },
           passenger: null,
