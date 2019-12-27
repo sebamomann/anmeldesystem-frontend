@@ -7,6 +7,7 @@ import {RegisterComponent} from './components/account/register/register.componen
 import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
 import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
 import {DashboardComponent} from './components/termin/dashboard/dashboard.component';
+import {DriverComponent} from './componets/termin/driver/driver.component';
 
 
 const routes: Routes = [
@@ -19,6 +20,11 @@ const routes: Routes = [
   },
   {path: 'dashboard', component: DashboardComponent},
   {path: 'create', component: AppointmentCreateComponent},
+  {
+    path: 'appointment', children: [
+      {path: 'driver', pathMatch: 'full', component: DriverComponent},
+    ]
+  },
   {
     path: 'enroll', children: [
       {path: '', pathMatch: 'full', component: AppointmentComponent},

@@ -41,6 +41,7 @@ import {UrlEncodePipe} from './pipes/url-encode.pipe';
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {DashboardComponent} from './components/termin/dashboard/dashboard.component';
 import {HttpClientModule} from '@angular/common/http';
+import { DriverComponent } from './componets/termin/driver/driver.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import {HttpClientModule} from '@angular/common/http';
     AppointmentCreateComponent,
     UrlEncodePipe,
     DashboardComponent,
+    DriverComponent,
   ],
   imports: [
     MatDatepickerModule,
