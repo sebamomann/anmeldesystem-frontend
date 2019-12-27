@@ -1,9 +1,10 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
 import {UrlService} from '../../../services/url.service';
 import {MatSnackBar} from '@angular/material';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {Router} from '@angular/router';
-import {saveAs} from 'file-saver';
+import {DomSanitizer} from '@angular/platform-browser';
+import {WINDOW} from '../../../provider/window.provider';
 
 @Component({
   selector: 'app-appointment-data',
@@ -18,7 +19,8 @@ export class AppointmentDataComponent implements OnInit {
   @Input()
   public preview = false;
 
-  constructor(public urlService: UrlService, private snackBar: MatSnackBar, private router: Router) {
+  constructor(public urlService: UrlService, private snackBar: MatSnackBar, private router: Router,
+              private sanitizer: DomSanitizer, @Inject(WINDOW) private window: Window) {
   }
 
   ngOnInit() {
@@ -37,11 +39,5 @@ export class AppointmentDataComponent implements OnInit {
 
   redirectToAppointment(appointment: IAppointmentModel) {
     this.router.navigate(['/enroll'], {queryParams: {val: appointment.link}});
-  }
-
-  downloadFile() {
-    this.appointment.files.forEach(file => {
-      saveAs(file, 'file.pdf');
-    });
   }
 }

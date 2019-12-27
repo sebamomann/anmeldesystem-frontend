@@ -8,7 +8,7 @@ import {map, startWith} from 'rxjs/operators';
 import {CreateAppointmentModel} from '../../../models/createAppointment.model';
 import {HttpClient} from '@angular/common/http';
 import {DomSanitizer} from '@angular/platform-browser';
-import {saveAs} from 'file-saver';
+import {IFileModel} from '../../../models/IFileModel.model';
 
 @Component({
   selector: 'app-appointment-create',
@@ -77,7 +77,7 @@ export class AppointmentCreateComponent implements OnInit {
     // tslint:disable-next-line:no-output-native
   @Output() complete = new EventEmitter<string>();
   private files: Array<FileUploadModel> = [];
-  private fileData: string[];
+  private fileData: IFileModel[] = [];
 
   allUsers: string[] = ['benutzer1@sebamomann.de', 'text@example.de', 'mama@mia.com', 'foo@bar.tld', 'hallo@helmut.rofl'];
 
@@ -85,6 +85,9 @@ export class AppointmentCreateComponent implements OnInit {
   @ViewChild('userInput', {static: false}) userInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
   private fileBlob: Blob;
+
+  private string;
+  private type;
 
   ngOnInit() {
   }
@@ -204,14 +207,8 @@ export class AppointmentCreateComponent implements OnInit {
   }
 
   private uploadFile(file: FileUploadModel) {
-    const type = file.data.type;
-    this.changeFile(file.data).then((base64: string): any => {
-      console.log(base64);
-      // this.fileBlob = new Blob([base64], {type: 'application/pdf'});
-      saveAs(base64, 'test.pdf');
-      this.fileData.push(base64);
-    }).finally(() => {
-    });
+    this.fileBlob = new Blob([file.data], {type: 'application/octet-stream'});
+    this.fileData.push({name: file.data.name, data: this.fileBlob});
   }
 
   private uploadFiles() {

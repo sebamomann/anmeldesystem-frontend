@@ -19,7 +19,7 @@ export class TerminService {
       deadline: '01-01-2019 00:00:00',
       link: 'ABCDE',
       maxEnrollments: 10,
-      files: [file],
+      fileAdditions: [{data: new Blob([file], {type: 'application/octet-stream'}), name: 'test.pdf'}],
       additions: [
         {
           id: 'id1',
@@ -164,7 +164,7 @@ export class TerminService {
       deadline: '01-01-2019 00:00:00',
       link: 'ABCDE',
       maxEnrollments: 10,
-      files: [file],
+      fileAdditions: [{data: new Blob([file], {type: 'application/octet-stream'}), name: 'test.pdf'}],
       additions: [
         {
           id: 'id1',
@@ -305,7 +305,7 @@ export class TerminService {
       deadline: '01-01-2019 00:00:00',
       link: 'ABCDE',
       maxEnrollments: 10,
-      files: [file],
+      fileAdditions: [{data: new Blob([file], {type: 'application/octet-stream'}), name: 'test.pdf'}],
       additions: [
         {
           id: 'id1',

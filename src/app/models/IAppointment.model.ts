@@ -1,5 +1,6 @@
 import {IAdditionModel} from './IAddition.model';
 import {IEnrollmentModel} from './IEnrollment.model';
+import {IFileModel} from './IFileModel.model';
 
 export interface IAppointmentModel {
   id?: string;
@@ -14,5 +15,5 @@ export interface IAppointmentModel {
   additions: IAdditionModel[];
   driverAddition: boolean;
   enrollments: IEnrollmentModel[];
-  files: string[] | null;
+  fileAdditions: IFileModel[];
 }
