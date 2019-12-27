@@ -10,6 +10,9 @@
     <mat-step [stepControl]="overallDataFormGroup">
       <form [formGroup]="overallDataFormGroup">
         <ng-template matStepLabel>Allgemein</ng-template>
+        <span class="info">
+          Allgemeine Informationen des Termins
+        </span>
         <mat-form-field class="">
           <input matInput
                  placeholder="Titel"
@@ -55,6 +58,10 @@
       <form [formGroup]="additionFormGroup">
         <ng-template matStepLabel>Zusätze</ng-template>
 
+        <span class="info">
+          Zusätze, welche beim Anmelden mit Ja/Nein beantwortet werden.
+        </span>
+
         <ng-container id="additionList">
           <mat-checkbox class="solo" formControlName="driverAddition">Fahrer</mat-checkbox>
 
@@ -88,6 +95,10 @@
     <mat-step [stepControl]=" linkFormGroup">
       <form [formGroup]="linkFormGroup">
         <ng-template matStepLabel>Link</ng-template>
+
+        <span class="info">
+          Eigener URL Pfad zum Termin
+        </span>
 
         <mat-form-field class="">
           <input matInput
@@ -159,6 +170,9 @@
     </mat-step>
     <mat-step [stepControl]="fileUpload">
       <ng-template matStepLabel>Zusatzdatei</ng-template>
+      <span class="info">
+        Diese Datei wird zum Download bereitgestellt. Hier finden z.B: Muttizettel o.ä. Platz
+      </span>
       <button mat-button color="warn" (click)="selectFile()">
         <mat-icon>file_upload</mat-icon>
         {{text}}
