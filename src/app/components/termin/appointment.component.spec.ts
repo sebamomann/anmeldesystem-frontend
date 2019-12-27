@@ -16,9 +16,10 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {FormsModule} from '@angular/forms';
 import {WINDOW_PROVIDERS} from '../../provider/window.provider';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {IEnrollmentModel} from '../../models/IEnrollment.model';
 
-function createEnrollment(id1: boolean, id2: boolean, id3: boolean, id4: boolean, driver: boolean, passenger: boolean) {
-  const obj = {
+function createEnrollment(id1: boolean, id2: boolean, id3: boolean, id4: boolean, driver: boolean, passenger: boolean): IEnrollmentModel {
+  const obj: IEnrollmentModel = {
     name: (driver ? 'Driver' : 'Passenger') + Math.random(),
     comment: 'This is my cool comment',
     comments: [],
@@ -28,16 +29,16 @@ function createEnrollment(id1: boolean, id2: boolean, id3: boolean, id4: boolean
     iat: '01-01-2019 00:00:00',
   };
   if (id1) {
-    obj.additions.push('id1');
+    obj.additions.push({id: 'id1', name: 'Megges'});
   }
   if (id2) {
-    obj.additions.push('id2');
+    obj.additions.push({id: 'id2', name: 'Bk'});
   }
   if (id3) {
-    obj.additions.push('id3');
+    obj.additions.push({id: 'id3', name: 'Subway'});
   }
   if (id4) {
-    obj.additions.push('id4');
+    obj.additions.push({id: 'id4', name: 'Diner'});
   }
   return obj;
 }
@@ -205,7 +206,6 @@ describe('AppointmentComponent', () => {
   it('correct filter: diner, semiExplicit, passenger', () => {
     component.filter = createFilter(false, false, false, true, 'semiExplicit', 'passenger');
     const filtered = component.filterEnrollments();
-    console.log(JSON.stringify(filtered, null, 2));
     expect(filtered).toEqual([PassengerDiner, PassengerBkDiner, PassengerBkSubwayDiner, PassengerAll1, PassengerAll2]);
   });
 
@@ -258,7 +258,6 @@ describe('AppointmentComponent', () => {
   it('correct filter: diner, dynamic, passenger', () => {
     component.filter = createFilter(false, false, false, true, 'dynamic', 'passenger');
     const filtered = component.filterEnrollments();
-    console.log(JSON.stringify(filtered, null, 2));
     expect(filtered).toEqual([PassengerDiner, PassengerBkDiner, PassengerBkSubwayDiner, PassengerAll1, PassengerAll2]);
   });
 

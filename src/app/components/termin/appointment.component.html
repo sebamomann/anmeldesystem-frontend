@@ -31,12 +31,14 @@
                   class="separator small high"></span>
             <ng-container *ngFor="let addition of appointment.additions">
               <div>
-                <mat-icon *ngIf="enrollment.additions.indexOf(addition.id) !== -1">
+                <mat-icon *ngIf="findIndex(enrollment, addition.id) !== -1; else blank">
                   check_box
                 </mat-icon>
-                <mat-icon *ngIf="enrollment.additions.indexOf(addition.id) === -1">
-                  check_box_outline_blank
-                </mat-icon>
+                <ng-template #blank>
+                  <mat-icon>
+                    check_box_outline_blank
+                  </mat-icon>
+                </ng-template>
                 <span>{{addition.name}}</span>
               </div>
             </ng-container>
