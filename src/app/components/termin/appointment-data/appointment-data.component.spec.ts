@@ -5,6 +5,8 @@ import {MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSna
 import {FormsModule} from '@angular/forms';
 import {WINDOW_PROVIDERS} from '../../../provider/window.provider';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {RouterTestingModule} from '@angular/router/testing';
+import {RouterModule} from '@angular/router';
 
 describe('AppointmentDataComponent', () => {
   let component: AppointmentDataComponent;
@@ -15,7 +17,7 @@ describe('AppointmentDataComponent', () => {
       imports: [MatCardModule, MatIconModule,
         MatFormFieldModule, FormsModule,
         MatSnackBarModule, MatInputModule,
-        BrowserAnimationsModule],
+        BrowserAnimationsModule, RouterTestingModule],
       declarations: [AppointmentDataComponent],
       providers: [WINDOW_PROVIDERS]
     })

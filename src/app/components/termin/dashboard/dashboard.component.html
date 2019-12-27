@@ -1,6 +1,8 @@
 <h1 class="headline">Terminübersicht</h1>
 
-<a [routerLink]="['/create']" class="title">Termin hinzufügen <mat-icon>library_add</mat-icon></a>
+<a routerLink="['/create']" class="title">Termin hinzufügen
+  <mat-icon>library_add</mat-icon>
+</a>
 
 <ng-container *ngFor="let appointment of appointments">
   <app-appointment-data [appointment]="appointment" [preview]="true"></app-appointment-data>

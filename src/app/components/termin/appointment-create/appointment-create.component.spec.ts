@@ -12,12 +12,14 @@ import {
   MatInputModule,
   MatNativeDateModule,
   MatOptionModule,
+  MatProgressBarModule,
   MatStepperModule
 } from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UrlEncodePipe} from '../../../pipes/url-encode.pipe';
 import {WINDOW_PROVIDERS} from '../../../provider/window.provider';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('AppointmentCreateComponent', () => {
   let component: AppointmentCreateComponent;
@@ -31,7 +33,8 @@ describe('AppointmentCreateComponent', () => {
         MatCheckboxModule, MatIconModule,
         MatChipsModule, MatOptionModule,
         MatAutocompleteModule, MatNativeDateModule,
-        MatInputModule, BrowserAnimationsModule],
+        MatInputModule, BrowserAnimationsModule,
+        MatProgressBarModule, HttpClientTestingModule],
       declarations: [AppointmentCreateComponent, UrlEncodePipe],
       providers: [WINDOW_PROVIDERS]
     })

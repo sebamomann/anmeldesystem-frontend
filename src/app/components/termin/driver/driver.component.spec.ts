@@ -1,6 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { DriverComponent } from './driver.component';
+import {DriverComponent} from './driver.component';
+import {MatCardModule, MatIconModule} from '@angular/material';
+import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import {RouterTestingModule} from '@angular/router/testing';
+import {RouterModule} from '@angular/router';
 
 describe('DriverComponent', () => {
   let component: DriverComponent;
@@ -8,9 +12,11 @@ describe('DriverComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DriverComponent ]
+      imports: [MatIconModule, MatCardModule],
+      declarations: [DriverComponent],
+      providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}, RouterTestingModule, RouterModule]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -21,12 +21,14 @@
       <span>{{appointment.date | date: 'dd.MM.y, HH:mm' }}Uhr</span>
     </span>
     <p>{{appointment.description}}</p>
-    <ng-container *ngFor="let file of appointment.fileAdditions">
-      <a [href]="this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(file.data))"
-         download="{{file.name}}"
-         mat-button>
-        {{file.name}}
-      </a>
+    <ng-container *ngIf="!preview">
+      <ng-container *ngFor="let file of appointment.fileAdditions">
+        <a [href]="this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(file.data))"
+           download="{{file.name}}"
+           mat-button>
+          {{file.name}}
+        </a>
+      </ng-container>
     </ng-container>
   </mat-card-content>
 
