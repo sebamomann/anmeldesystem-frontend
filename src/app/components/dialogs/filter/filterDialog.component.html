@@ -12,7 +12,7 @@
     </ng-container>
 
     <ng-container *ngIf="data.appointment.driverAddition">
-      <div class="seperator tall brighter"></div>
+      <div class="separator tall brighter"></div>
       <mat-radio-group [(ngModel)]="dialogFilter.driverPassenger">
         <mat-radio-button [value]="'driver'"
                           class="filter-element">
@@ -31,7 +31,7 @@
 
 
     <div class="filter-block" *ngIf="isFilterActive">
-      <div class="seperator tall brighter"></div>
+      <div class="separator tall brighter"></div>
       <!--suppress TypeScriptUnresolvedFunction -->
       <mat-icon class="tooltip"
                 #tooltip="matTooltip"

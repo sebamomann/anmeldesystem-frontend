@@ -22,13 +22,13 @@
                                     [collapsedHeight]="'auto'"
                                     [expandedHeight]="'auto'">
           <span>{{enrollment.name}}</span>
-          <span class="seperator small colored bolder high"></span>
+          <span class="separator small colored bolder high"></span>
           <span class="comment-block">
             {{ enrollment.comment.length > 0 ? enrollment.comment : "---" }}
           </span>
           <div class="addition-list" *ngIf="appointment.additions.length > 0">
             <span *ngIf="appointment.additions.length > 0 && enrollment.comment.length > 0"
-                  class="seperator small high"></span>
+                  class="separator small high"></span>
             <ng-container *ngFor="let addition of appointment.additions">
               <div>
                 <mat-icon *ngIf="enrollment.additions.indexOf(addition.id) !== -1">
