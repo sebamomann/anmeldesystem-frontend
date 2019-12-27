@@ -14,5 +14,5 @@ export interface IAppointmentModel {
   additions: IAdditionModel[];
   driverAddition: boolean;
   enrollments: IEnrollmentModel[];
-  file: string | null;
+  files: string[] | null;
 }

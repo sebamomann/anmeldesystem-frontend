@@ -3,6 +3,7 @@ import {UrlService} from '../../../services/url.service';
 import {MatSnackBar} from '@angular/material';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {Router} from '@angular/router';
+import {saveAs} from 'file-saver';
 
 @Component({
   selector: 'app-appointment-data',
@@ -39,6 +40,8 @@ export class AppointmentDataComponent implements OnInit {
   }
 
   downloadFile() {
-
+    this.appointment.files.forEach(file => {
+      saveAs(file, 'file.pdf');
+    });
   }
 }
