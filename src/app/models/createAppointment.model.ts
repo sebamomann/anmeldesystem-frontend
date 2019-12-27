@@ -9,4 +9,5 @@ export interface CreateAppointmentModel {
   additions: string[];
   driverAddition: boolean;
   administrations: string[];
+  files: string[];
 }

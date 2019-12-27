@@ -21,6 +21,7 @@
       <span>{{appointment.date | date: 'dd.MM.y, HH:mm' }}Uhr</span>
     </span>
     <p>{{appointment.description}}</p>
+    <button mat-button (click)="downloadFile()">Download</button>
   </mat-card-content>
 
   <mat-card-actions class="link-management" *ngIf="!preview">

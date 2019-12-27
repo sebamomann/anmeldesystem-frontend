@@ -19,10 +19,12 @@ import {
   MatIconModule,
   MatInputModule,
   MatNativeDateModule,
+  MatProgressBarModule,
   MatRadioModule,
   MatSelectModule,
   MatSnackBarModule,
-  MatStepperModule, MatTabsModule,
+  MatStepperModule,
+  MatTabsModule,
   MatTooltipModule
 } from '@angular/material';
 import {AppointmentComponent} from './components/termin/appointment.component';
@@ -36,8 +38,9 @@ import {CommentDialogComponent} from './components/dialogs/comment/commentDialog
 import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
 import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
 import {UrlEncodePipe} from './pipes/url-encode.pipe';
-import {HashLocationStrategy, LocationStrategy, PathLocationStrategy} from '@angular/common';
-import { DashboardComponent } from './components/termin/dashboard/dashboard.component';
+import {LocationStrategy, PathLocationStrategy} from '@angular/common';
+import {DashboardComponent} from './components/termin/dashboard/dashboard.component';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -80,6 +83,8 @@ import { DashboardComponent } from './components/termin/dashboard/dashboard.comp
     MatDatepickerModule,
     MatAutocompleteModule,
     MatTabsModule,
+    MatProgressBarModule,
+    HttpClientModule
   ],
   providers: [WINDOW_PROVIDERS, MatDatepickerModule, {provide: LocationStrategy, useClass: PathLocationStrategy}],
   bootstrap: [AppComponent],

@@ -2,7 +2,7 @@
   <mat-card-title class="headline">
     Termin erstellen
   </mat-card-title>
-  <mat-vertical-stepper [linear]="true" #stepper>
+  <mat-vertical-stepper [linear]="false" #stepper>
     <mat-step [stepControl]="overallDataFormGroup">
       <form [formGroup]="overallDataFormGroup">
         <ng-template matStepLabel>Allgemein</ng-template>
@@ -152,6 +152,29 @@
           <button mat-button matStepperPrevious>Zurück</button>
         </div>
       </form>
+    </mat-step>
+    <mat-step [stepControl]="fileUpload">
+      <ng-template matStepLabel>Zusatzdatei</ng-template>
+      <button mat-button color="warn" (click)="selectFile()">
+        <mat-icon>file_upload</mat-icon>
+        {{text}}
+      </button>
+      <br/>
+      <ul>
+        <li *ngFor="let file of files">
+          <mat-progress-bar [value]="file.progress"></mat-progress-bar>
+          <span id="file-label">
+            {{file.data.name}}
+            <a title="Retry" (click)="retryFile(file)" *ngIf="file.canRetry">
+            <mat-icon>refresh</mat-icon></a>
+            <a title="Cancel" (click)="cancelFile(file)" *ngIf="file.canCancel">
+            <mat-icon>cancel</mat-icon></a>
+            </span>
+        </li>
+      </ul>
+      <input type="file" id="fileUpload" name="fileUpload" multiple="multiple"
+             accept="{{accept}}" style="display:none;"/>
+      <a *ngIf="downloadUrl != ''" href="{{ downloadUrl }}" download="file.pdf">download</a>
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>Fertig</ng-template>

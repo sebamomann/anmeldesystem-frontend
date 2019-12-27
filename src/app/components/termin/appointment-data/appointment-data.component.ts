@@ -38,4 +38,7 @@ export class AppointmentDataComponent implements OnInit {
     this.router.navigate(['/enroll'], {queryParams: {val: appointment.link}});
   }
 
+  downloadFile() {
+
+  }
 }
