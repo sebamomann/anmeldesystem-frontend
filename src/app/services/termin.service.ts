@@ -103,7 +103,7 @@ export class TerminService {
         },
         {
           name: 'Driver 2',
-          comment: 'This is my cool comment',
+          comment: null,
           comments: [],
           driver: {
             service: 2,

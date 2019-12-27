@@ -3,8 +3,12 @@
 <div class="enrollment-list block decent"
      *ngIf="enrollments.length > 0 || getNumberOfActiveFilter() > 0; else emptyList">
   <div class="header">
-    <h2 class="headline medium">Teilnehmer [{{enrollments.length}}{{appointment.maxEnrollments !== null
-        ? '/' + appointment.maxEnrollments : ''}}]</h2>
+    <h2 class="headline medium">Teilnehmer [{{appointment.enrollments.length}}{{appointment.maxEnrollments !== null
+        ? '/' + appointment.maxEnrollments : ''}}]
+      <span *ngIf="getNumberOfActiveFilter() > 0">
+        [<mat-icon>filter_list</mat-icon>: {{enrollments.length}}]
+      </span>
+    </h2>
   </div>
 
   <mat-icon (click)="openFilterDialog()"
@@ -23,11 +27,11 @@
                                     [expandedHeight]="'auto'">
           <span>{{enrollment.name}}</span>
           <span class="separator small colored bolder high"></span>
-          <span class="comment-block">
-            {{ enrollment.comment.length > 0 ? enrollment.comment : "---" }}
+          <span class="comment-block" *ngIf="enrollment.comment !== null">
+            {{ enrollment.comment }}
           </span>
           <div class="addition-list" *ngIf="appointment.additions.length > 0">
-            <span *ngIf="appointment.additions.length > 0 && enrollment.comment.length > 0"
+            <span *ngIf="appointment.additions.length > 0 && enrollment.comment !== null"
                   class="separator small high"></span>
             <ng-container *ngFor="let addition of appointment.additions">
               <div>

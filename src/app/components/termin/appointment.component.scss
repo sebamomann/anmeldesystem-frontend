@@ -10,6 +10,16 @@
   position: relative;
   background-color: transparent;
 
+  .header {
+    .headline {
+      span {
+        mat-icon {
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+
   .enrollment {
     .enrollment-info {
       padding: 15px 24px;

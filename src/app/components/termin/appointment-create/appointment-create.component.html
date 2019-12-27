@@ -89,8 +89,7 @@
           <input matInput
                  placeholder="Wunschlink"
                  formControlName="link"
-                 id="link"
-                 minlength="10">
+                 id="link">
           <mat-hint class="small"
                     *ngIf="linkFormGroup.get('link').value !== ''
                   && linkFormGroup.get('link').value !== null">
@@ -104,6 +103,7 @@
                     placeholder="Zusatzinformationen"
                     formControlName="description"
                     id="description"
+                    minlength="5"
                     required>
           </textarea>
           <mat-hint align="start"
