@@ -1,5 +1,22 @@
+@mixin md-icon-size($size: 24px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+  line-height: $size;
+}
+
 .mat-card {
   margin: 25px auto;
+
+  span:first-of-type {
+    display: block;
+    margin: 0 auto;
+    width: fit-content;
+
+    mat-icon {
+      @include md-icon-size(1.25em);
+    }
+  }
 }
 
 .mat-form-field {

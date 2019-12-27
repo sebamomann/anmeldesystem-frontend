@@ -77,6 +77,10 @@ body {
   font-family: "Nunito", "Helvetica Neue", sans-serif;
 }
 
+mat-icon {
+  vertical-align: middle;
+}
+
 .main-wrapper {
   min-height: calc(100vh - 100px);
   z-index: 5;
@@ -114,10 +118,6 @@ a {
     text-align: center;
     font-weight: bolder;
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.125);
-  }
-
-  mat-icon {
-    vertical-align: middle;
   }
 }
 
