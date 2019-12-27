@@ -7,7 +7,7 @@ import {RegisterComponent} from './components/account/register/register.componen
 import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
 import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
 import {DashboardComponent} from './components/termin/dashboard/dashboard.component';
-import {DriverComponent} from './componets/termin/driver/driver.component';
+import {DriverComponent} from './components/termin/driver/driver.component';
 
 
 const routes: Routes = [
