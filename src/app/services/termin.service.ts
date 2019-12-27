@@ -309,15 +309,15 @@ export class TerminService {
           name: 'Megges'
         },
         {
-          id: 'id1',
+          id: 'id2',
           name: 'BK'
         },
         {
-          id: 'id1',
+          id: 'id3',
           name: 'Subway'
         },
         {
-          id: 'id1',
+          id: 'id4',
           name: 'Diner'
         }
       ],
