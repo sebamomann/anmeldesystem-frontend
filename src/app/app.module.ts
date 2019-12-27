@@ -17,7 +17,7 @@ import {
   MatExpansionModule,
   MatFormFieldModule,
   MatIconModule,
-  MatInputModule,
+  MatInputModule, MatListModule,
   MatNativeDateModule,
   MatProgressBarModule,
   MatRadioModule,
@@ -41,7 +41,8 @@ import {UrlEncodePipe} from './pipes/url-encode.pipe';
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {DashboardComponent} from './components/termin/dashboard/dashboard.component';
 import {HttpClientModule} from '@angular/common/http';
-import { DriverComponent } from './components/termin/driver/driver.component';
+import {DriverComponent} from './components/termin/driver/driver.component';
+import {TemplateDialogComponent} from './components/dialogs/template-dialog/template-dialog.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { DriverComponent } from './components/termin/driver/driver.component';
     UrlEncodePipe,
     DashboardComponent,
     DriverComponent,
+    TemplateDialogComponent,
   ],
   imports: [
     MatDatepickerModule,
@@ -86,12 +88,13 @@ import { DriverComponent } from './components/termin/driver/driver.component';
     MatAutocompleteModule,
     MatTabsModule,
     MatProgressBarModule,
-    HttpClientModule
+    HttpClientModule,
+    MatListModule
   ],
   providers: [WINDOW_PROVIDERS, MatDatepickerModule, {provide: LocationStrategy, useClass: PathLocationStrategy}],
   bootstrap: [AppComponent],
   exports: [FilterDialogComponent, CommentDialogComponent, UrlEncodePipe],
-  entryComponents: [FilterDialogComponent, CommentDialogComponent],
+  entryComponents: [FilterDialogComponent, CommentDialogComponent, TemplateDialogComponent],
 })
 export class AppModule {
 

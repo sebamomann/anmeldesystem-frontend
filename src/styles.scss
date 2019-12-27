@@ -329,6 +329,9 @@ mat-hint {
 }
 
 #particles-js {
+  background-image: url("img/background.png");
+  background-attachment: fixed;
+  background-size: cover;
   position: fixed;
   width: 100%;
   height: 100%;

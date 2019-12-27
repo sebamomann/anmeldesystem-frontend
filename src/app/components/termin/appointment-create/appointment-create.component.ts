@@ -1,7 +1,7 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
 import {UrlService} from '../../../services/url.service';
-import {MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent} from '@angular/material';
+import {MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent, MatDialog} from '@angular/material';
 import {COMMA, SPACE} from '@angular/cdk/keycodes';
 import {Observable, Subscription} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
@@ -9,6 +9,8 @@ import {CreateAppointmentModel} from '../../../models/createAppointment.model';
 import {HttpClient} from '@angular/common/http';
 import {DomSanitizer} from '@angular/platform-browser';
 import {IFileModel} from '../../../models/IFileModel.model';
+import {TemplateDialogComponent} from '../../dialogs/template-dialog/template-dialog.component';
+import {isObject} from 'util';
 
 @Component({
   selector: 'app-appointment-create',
@@ -16,7 +18,8 @@ import {IFileModel} from '../../../models/IFileModel.model';
   styleUrls: ['./appointment-create.component.scss']
 })
 export class AppointmentCreateComponent implements OnInit {
-  constructor(private formBuilder: FormBuilder, public urlService: UrlService, private http: HttpClient, private sanitizer: DomSanitizer) {
+  constructor(private formBuilder: FormBuilder, public urlService: UrlService, private http: HttpClient, private sanitizer: DomSanitizer,
+              public dialog: MatDialog) {
 
     this.overallDataFormGroup = this.formBuilder.group({
       title: ['', Validators.required],
@@ -40,6 +43,10 @@ export class AppointmentCreateComponent implements OnInit {
       users: new FormControl()
     });
 
+    this.doneGroup = this.formBuilder.group({
+      saveAsTemplate: new FormControl()
+    });
+
     // Not yet working
     // noinspection TypeScriptValidateJSTypes
     this.filteredUsers = this.administrationFormGroup.get('users').valueChanges.pipe(
@@ -53,17 +60,16 @@ export class AppointmentCreateComponent implements OnInit {
   additionFormGroup: any;
   linkFormGroup: any;
   fileUpload: any;
+  doneGroup: any;
 
   administrationFormGroup: any;
-
   /* Addition Form */
   driverAddition = false;
-  additions = [];
 
   /* Administration Form */
   users = [];
-  filteredUsers: Observable<string[]>;
 
+  filteredUsers: Observable<string[]>;
   /* FILE UPLOAD */
   /** Link text */
   @Input() text = 'Upload';
@@ -76,24 +82,24 @@ export class AppointmentCreateComponent implements OnInit {
   /** Allow you to add handler after its completion. Bubble up response text from remote. */
     // tslint:disable-next-line:no-output-native
   @Output() complete = new EventEmitter<string>();
-  private files: Array<FileUploadModel> = [];
+  public files: Array<FileUploadModel> = [];
+
   private fileData: IFileModel[] = [];
 
   allUsers: string[] = ['benutzer1@sebamomann.de', 'text@example.de', 'mama@mia.com', 'foo@bar.tld', 'hallo@helmut.rofl'];
-
   readonly separatorKeysCodes: number[] = [COMMA, SPACE];
   @ViewChild('userInput', {static: false}) userInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
-  private fileBlob: Blob;
 
+  private fileBlob: Blob;
   private string;
   private type;
 
   ngOnInit() {
   }
 
-  addAddition() {
-    (this.additionFormGroup.controls.additions as FormArray).push(new FormControl());
+  addAddition(value: string | null = null) {
+    return (this.additionFormGroup.controls.additions as FormArray).push(new FormControl(value));
   }
 
   create() {
@@ -225,6 +231,31 @@ export class AppointmentCreateComponent implements OnInit {
     if (index > -1) {
       this.files.splice(index, 1);
     }
+  }
+
+  /* Template selection*/
+  openAppointmentTemplateDialog() {
+    const dialogRef = this.dialog.open(TemplateDialogComponent, {
+      width: '90%',
+      maxWidth: 'initial',
+      height: 'auto',
+      maxHeight: '80vh',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (isObject(result)) {
+        this.overallDataFormGroup.get('title').setValue(result.title);
+        this.overallDataFormGroup.get('location').setValue(result.location);
+        this.overallDataFormGroup.get('maxEnrollments').setValue(result.maxEnrollments);
+
+        this.linkFormGroup.get('description').setValue(result.description);
+        result.additions.forEach(addition => {
+          this.addAddition(addition.name);
+        });
+
+        this.driverAddition = result.driverAddition;
+      }
+    });
   }
 }
 

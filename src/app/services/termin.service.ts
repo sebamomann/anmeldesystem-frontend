@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {IAppointmentModel} from '../models/IAppointment.model';
+import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.model';
 
 @Injectable({
   providedIn: 'root'
@@ -421,6 +422,27 @@ export class TerminService {
         }
       ]
     }];
+  }
+
+  getTemplates(): IAppointmentTemplateModel[] {
+    return [
+      {
+        title: 'Template 1',
+        description: 'Template description',
+        location: 'Template location',
+        maxEnrollments: 20,
+        additions: [{name: 'Template Addition 1'}],
+        driverAddition: true
+      },
+      {
+        title: 'Template 2',
+        description: 'Template 2 description',
+        location: 'Template 2 location',
+        maxEnrollments: 20,
+        additions: [{name: 'Template Addition 2'}],
+        driverAddition: true
+      }
+    ];
   }
 }
 
