@@ -23,7 +23,7 @@
     <p>{{appointment.description}}</p>
     <ng-container *ngIf="!preview">
       <ng-container *ngFor="let file of appointment.fileAdditions">
-        <a [href]="this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(file.data))"
+        <a [href]="this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(b64toBlob(file.data)))"
            download="{{file.name}}"
            mat-button>
           {{file.name}}
