@@ -13,7 +13,8 @@ import {
   MatNativeDateModule,
   MatOptionModule,
   MatProgressBarModule,
-  MatStepperModule
+  MatStepperModule,
+  MatTooltipModule
 } from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UrlEncodePipe} from '../../../pipes/url-encode.pipe';
@@ -34,7 +35,8 @@ describe('AppointmentCreateComponent', () => {
         MatChipsModule, MatOptionModule,
         MatAutocompleteModule, MatNativeDateModule,
         MatInputModule, BrowserAnimationsModule,
-        MatProgressBarModule, HttpClientTestingModule],
+        MatProgressBarModule, HttpClientTestingModule,
+        MatTooltipModule],
       declarations: [AppointmentCreateComponent, UrlEncodePipe],
       providers: [WINDOW_PROVIDERS]
     })
