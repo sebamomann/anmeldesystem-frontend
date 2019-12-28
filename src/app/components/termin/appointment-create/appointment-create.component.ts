@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
 import {UrlService} from '../../../services/url.service';
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent, MatDialog} from '@angular/material';
@@ -71,18 +71,7 @@ export class AppointmentCreateComponent implements OnInit {
 
   filteredUsers: Observable<string[]>;
   /* FILE UPLOAD */
-  /** Link text */
-  @Input() text = 'Upload';
-  /** Name used in form which will be sent in HTTP request. */
-  @Input() param = 'file';
-  /** Target URL for file uploading. */
-  @Input() target = 'https://file.io';
-  /** File extension that accepted, same as 'accept' of <input type="file" />. By the default, it's set to 'image/*'. */
-  @Input() accept = '';
-  /** Allow you to add handler after its completion. Bubble up response text from remote. */
-    // tslint:disable-next-line:no-output-native
-  @Output() complete = new EventEmitter<string>();
-  public files: Array<FileUploadModel> = [];
+  public files: Array<{ file: File, done: boolean }> = [];
 
   private fileData: IFileModel[] = [];
 
@@ -183,42 +172,25 @@ export class AppointmentCreateComponent implements OnInit {
       // tslint:disable-next-line:prefer-for-of
       for (let index = 0; index < fileUpload.files.length; index++) {
         const file = fileUpload.files[index];
-        this.files.push({
-          data: file, state: 'in',
-          inProgress: false, progress: 0, canRetry: false, canCancel: true
-        });
+        this.files.push({file, done: false});
       }
       this.uploadFiles();
     };
     fileUpload.click();
   }
 
-  cancelFile(file: FileUploadModel) {
-    file.sub.unsubscribe();
-    this.removeFileFromArray(file);
-  }
-
-  retryFile(file: FileUploadModel) {
-    this.uploadFile(file);
-    file.canRetry = false;
-  }
-
-  changeFile(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-  }
-
-  private async uploadFile(file: FileUploadModel) {
-    this.fileBlob = new Blob([file.data], {type: 'application/octet-stream'});
+  private async uploadFile(file) {
+    this.fileBlob = new Blob([file.file], {type: 'application/octet-stream'});
     const result = await this.toBase64(this.fileBlob).catch(e => e);
     if (result instanceof Error) {
       return;
     }
-    this.fileData.push({name: file.data.name, data: result.toString()});
+    this.fileData.push({name: file.file.name, data: result.toString()});
+    setTimeout(() => {
+        file.done = true;
+      },
+      1000);
+
   }
 
   async toBase64(file) {
@@ -237,13 +209,6 @@ export class AppointmentCreateComponent implements OnInit {
     this.files.forEach(file => {
       this.uploadFile(file);
     });
-  }
-
-  private removeFileFromArray(file: FileUploadModel) {
-    const index = this.files.indexOf(file);
-    if (index > -1) {
-      this.files.splice(index, 1);
-    }
   }
 
   /* Template selection*/

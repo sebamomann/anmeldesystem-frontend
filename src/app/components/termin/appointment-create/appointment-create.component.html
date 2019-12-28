@@ -67,6 +67,7 @@
             <mat-checkbox formControlName="driverAddition">
               Fahrer
             </mat-checkbox>
+            <!--suppress TypeScriptUnresolvedFunction -->
             <mat-icon class="tooltip"
                       #driverAdditionTooltip="matTooltip"
                       matTooltip="{{'Hierbei können sich Teilnehmer als Fahrer melden. Sie geben unter Anderem die Anzahl freier Plätze ein und in welche Richtung sie fahren.'}}"
@@ -132,6 +133,7 @@
                       minlength="5"
                       required>
             </textarea>
+            <!--suppress TypeScriptUnresolvedFunction -->
             <mat-icon class="tooltip"
                       #descriptionTooltip="matTooltip"
                       matTooltip="{{'Dieser Text wird unter Anderem beim Versenden des Anmeldelinks als Linkvorschau angezeigt.'}}"
@@ -194,23 +196,18 @@
       </span>
       <button mat-button color="warn" (click)="selectFile()">
         <mat-icon>file_upload</mat-icon>
-        {{text}}
+        Hochladen
       </button>
       <br/>
       <ul>
         <li *ngFor="let file of files">
-          <mat-progress-bar [value]="file.progress"></mat-progress-bar>
           <span id="file-label">
-            {{file.data.name}}
-            <a title="Retry" (click)="retryFile(file)" *ngIf="file.canRetry">
-            <mat-icon>refresh</mat-icon></a>
-            <a title="Cancel" (click)="cancelFile(file)" *ngIf="file.canCancel">
-            <mat-icon>cancel</mat-icon></a>
-            </span>
+            {{file.file.name}}
+          </span>
+          <mat-progress-bar *ngIf="!file.done" mode="indeterminate"></mat-progress-bar>
         </li>
       </ul>
-      <input type="file" id="fileUpload" name="fileUpload" multiple="multiple"
-             accept="{{accept}}" style="display:none;"/>
+      <input type="file" id="fileUpload" name="fileUpload" multiple="multiple" style="display:none;"/>
     </mat-step>
     <mat-step [stepControl]="doneGroup">
       <form [formGroup]="doneGroup">
@@ -220,6 +217,7 @@
           <mat-checkbox formControlName="saveAsTemplate">
             Als Vorlage Speichern
           </mat-checkbox>
+          <!--suppress TypeScriptUnresolvedFunction -->
           <mat-icon class="tooltip"
                     #templateTooltip="matTooltip"
                     matTooltip="{{'Die Kerndaten des Termins werden als Vorlage für schnelleres Erstellen eines Termins bereitgestellt.'}}"

@@ -58,3 +58,17 @@ mat-chip-list {
   width: 100% !important;
   margin: 0 auto 20px !important;
 }
+
+ul {
+  padding-left: 2.5em;
+  margin-left: 0;
+  font-size: 0.75em;
+
+  li {
+    text-align: left;
+
+    span {
+      width: 100% !important;
+    }
+  }
+}
