@@ -212,9 +212,22 @@ export class AppointmentCreateComponent implements OnInit {
     });
   }
 
-  private uploadFile(file: FileUploadModel) {
+  private async uploadFile(file: FileUploadModel) {
     this.fileBlob = new Blob([file.data], {type: 'application/octet-stream'});
-    this.fileData.push({name: file.data.name, data: this.fileBlob});
+    const result = await this.toBase64(this.fileBlob).catch(e => e);
+    if (result instanceof Error) {
+      return;
+    }
+    this.fileData.push({name: file.data.name, data: result.toString()});
+  }
+
+  async toBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
   }
 
   private uploadFiles() {

@@ -1,4 +1,4 @@
 export interface IFileModel {
-  data: Blob;
+  data: string;
   name: string;
 }
