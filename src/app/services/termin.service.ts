@@ -20,7 +20,7 @@ export class TerminService {
       deadline: '01-01-2019 00:00:00',
       link: 'ABCDE',
       maxEnrollments: 10,
-      fileAdditions: [{data: file, name: 'test.pdf'}],
+      fileAdditions: [{data: file, name: 'test.pdf'}, {data: file, name: 'nommadaslgeiche.pdf'}, {data: file, name: 'nommal_mit_unterstrich_weil_ichs_kann.pdf'}],
       additions: [
         {
           id: 'id1',

@@ -19,6 +19,26 @@
     display: block;
   }
 
+  .files-wrapper {
+    .file {
+      display: inline-block;
+      vertical-align: top;
+      overflow: hidden;
+
+      mat-icon {
+        @include md-icon-size(19px);
+      }
+
+      a {
+        line-break: anywhere;
+        font-size: 0.75em;
+        padding: 0;
+        margin: 0 15px 0 0;
+        min-width: 0;
+      }
+    }
+  }
+
   span {
     margin: 3px 10px;
     display: inline-block;
