@@ -21,7 +21,7 @@ export class AppointmentComponent implements OnInit {
 
   constructor(private terminService: TerminService, public dialog: MatDialog, private route: ActivatedRoute) {
     this.route.queryParams.subscribe(params => {
-      this.link = params.link;
+      this.link = params.val;
     });
   }
 
@@ -31,9 +31,8 @@ export class AppointmentComponent implements OnInit {
   public allowModify = true;
 
   async ngOnInit() {
-    this.appointment$ = this.terminService.getTermin(this.link);
+    this.appointment$ = await this.terminService.getTermin(this.link);
     this.appointment$.subscribe(app => {
-      console.log(app);
       this.enrollments = app.enrollments;
       this.filter = this.initializeFilterObject(app);
     });
