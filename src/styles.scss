@@ -322,7 +322,7 @@ mat-hint {
 }
 
 #particles-js {
-  background-image: url("img/background.png");
+  background-image: url("assets/img/background.png");
   background-attachment: fixed;
   background-size: cover;
   position: fixed;
@@ -333,13 +333,21 @@ mat-hint {
 }
 
 .empty-list {
+  text-align: center;
+  background-color: white;
+  border-radius: 5px;
   position: relative;
-  width: 75%;
+  width: 80%;
   color: gray;
   margin: 0 auto;
   display: flex;
   flex: 2;
   padding: 15px;
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+
+  span {
+    width: 100%;
+  }
 
   mat-icon {
     @include md-icon-size(50px);
@@ -407,12 +415,35 @@ footer {
   color: gray;
 }
 
+.error {
+  background-color: white;
+  border-radius: 25px;
+  box-shadow: 0px 0px 5px gray;
+  padding: 20px;
 
-html, body {
-  height: 100%;
-}
+  &.empty {
+    text-align: center;
+    position: relative;
+    width: 75%;
+    margin: 0 auto 0;
+    top: 50vh;
+    font-size: 1.25em;
+    transform: translateY(-50%);
+    font-weight: bold;
 
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+    span:first-child {
+      font-size: 1.5em;
+      display: block;
+      color: red;
+      margin-bottom: 25px;
+      font-weight: bold;
+      text-shadow: 1px 1px 5px lightgray;
+    }
+
+    img {
+      margin: 0 auto 25px;
+      display: block;
+      height: 150px;
+    }
+  }
 }

@@ -98,5 +98,15 @@
 </ng-container>
 
 <ng-template #loading>
-  <mat-progress-bar mode="query">Lade Termin</mat-progress-bar>
+  <ng-container *ngIf="appointment$ === undefined; else loadingBar">
+    <div class="error empty">
+      <span>Sorry - 404</span>
+      <img src="/assets/img/404.svg">
+      Ich konnte diesen Termin nicht finden!
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #loadingBar>
+  <mat-progress-bar mode="query"></mat-progress-bar>
 </ng-template>

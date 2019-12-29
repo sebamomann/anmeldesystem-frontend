@@ -33,8 +33,12 @@ export class AppointmentComponent implements OnInit {
   async ngOnInit() {
     this.appointment$ = await this.terminService.getTermin(this.link);
     this.appointment$.subscribe(app => {
-      this.enrollments = app.enrollments;
-      this.filter = this.initializeFilterObject(app);
+      if (app !== null) {
+        this.enrollments = app.enrollments;
+        this.filter = this.initializeFilterObject(app);
+      } else {
+        this.appointment$ = undefined;
+      }
     });
   }
 
