@@ -31,7 +31,8 @@ const routes: Routes = [
       {path: 'add', pathMatch: 'full', component: EnrollmentComponent},
       {path: 'change', pathMatch: 'full', component: EnrollmentComponent}
     ]
-  }
+  },
+  {path: ':link', component: AppointmentComponent},
 ];
 
 @NgModule({

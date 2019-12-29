@@ -86,12 +86,12 @@
     </div>
   </ng-template>
 
-  <mat-icon [routerLink]="['/enroll/add']"
+  <mat-icon [routerLink]="['/enroll/add']" [queryParams]="{val: link}"
             class="floating-button right">
     person_add
   </mat-icon>
 
-  <mat-icon [routerLink]="['/appointment/driver']"
+  <mat-icon [routerLink]="['/appointment/driver']" [queryParams]="{val: link}"
             class="floating-button left decent">
     directions_car
   </mat-icon>

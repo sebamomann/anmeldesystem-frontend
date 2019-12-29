@@ -6,7 +6,7 @@ import {isObject} from 'util';
 import {CommentDialogComponent} from '../dialogs/comment/commentDialog.component';
 import {IEnrollmentModel} from '../../models/IEnrollment.model';
 import {IAppointmentModel} from '../../models/IAppointment.model';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs';
 
 @Component({
@@ -19,9 +19,16 @@ export class AppointmentComponent implements OnInit {
   component: {};
   public link: string;
 
-  constructor(private terminService: TerminService, public dialog: MatDialog, private route: ActivatedRoute) {
+  constructor(private terminService: TerminService, public dialog: MatDialog, private route: ActivatedRoute, private router: Router) {
     this.route.queryParams.subscribe(params => {
       this.link = params.val;
+    });
+    this.route.params.subscribe(params => {
+      if (params.link !== undefined) {
+        this.link = params.link;
+        console.log(this.link);
+        this.router.navigate(['/enroll'], {queryParams: {val: this.link}});
+      }
     });
   }
 
