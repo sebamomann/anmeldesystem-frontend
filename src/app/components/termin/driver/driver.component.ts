@@ -20,14 +20,17 @@ export class DriverComponent implements OnInit {
 
   constructor(private terminService: TerminService, private location: Location, private route: ActivatedRoute) {
     this.route.queryParams.subscribe(params => {
-      this.link = params.link;
+      this.link = params.val;
     });
   }
 
   async ngOnInit() {
-    this.appointment$ = await this.terminService.getTermin('');
+    this.appointment$ = await this.terminService.getTermin(this.link);
 
     this.appointment$.subscribe(app => {
+      if (app === null) {
+        return;
+      }
       this.drivers = app.enrollments.filter(fAppointment => fAppointment.driver !== null);
 
       this.data.neededTo = app.enrollments.filter(fAppointment => {
