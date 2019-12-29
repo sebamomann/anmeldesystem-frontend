@@ -4,6 +4,8 @@
   <mat-icon>library_add</mat-icon>
 </a>
 
-<ng-container *ngFor="let appointment of appointments">
-  <app-appointment-data [appointment]="appointment" [preview]="true"></app-appointment-data>
+<ng-container *ngIf="appointments$ | async let appointments">
+  <ng-container *ngFor="let appointment of appointments">
+    <app-appointment-data [appointment]="appointment" [preview]="true"></app-appointment-data>
+  </ng-container>
 </ng-container>

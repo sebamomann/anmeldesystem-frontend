@@ -15,5 +15,5 @@ export interface IAppointmentModel {
   additions: IAdditionModel[];
   driverAddition: boolean;
   enrollments: IEnrollmentModel[];
-  fileAdditions: IFileModel[];
+  files: IFileModel[];
 }

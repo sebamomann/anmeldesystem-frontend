@@ -1,4 +1,4 @@
 export interface IFileModel {
-  data: string;
+  data: ArrayBuffer;
   name: string;
 }

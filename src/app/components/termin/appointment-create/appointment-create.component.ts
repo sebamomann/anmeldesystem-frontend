@@ -8,9 +8,10 @@ import {map, startWith} from 'rxjs/operators';
 import {CreateAppointmentModel} from '../../../models/createAppointment.model';
 import {HttpClient} from '@angular/common/http';
 import {DomSanitizer} from '@angular/platform-browser';
-import {IFileModel} from '../../../models/IFileModel.model';
 import {TemplateDialogComponent} from '../../dialogs/template-dialog/template-dialog.component';
 import {isObject} from 'util';
+import {TerminService} from '../../../services/termin.service';
+import {IFileModelUpload} from '../../../models/IFileModelUpload.model';
 
 @Component({
   selector: 'app-appointment-create',
@@ -19,7 +20,7 @@ import {isObject} from 'util';
 })
 export class AppointmentCreateComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, public urlService: UrlService, private http: HttpClient, private sanitizer: DomSanitizer,
-              public dialog: MatDialog) {
+              public dialog: MatDialog, private terminService: TerminService) {
 
     this.overallDataFormGroup = this.formBuilder.group({
       title: ['', Validators.required],
@@ -73,7 +74,7 @@ export class AppointmentCreateComponent implements OnInit {
   /* FILE UPLOAD */
   public files: Array<{ file: File, done: boolean }> = [];
 
-  private fileData: IFileModel[] = [];
+  private fileData: IFileModelUpload[] = [];
 
   allUsers: string[] = ['benutzer1@sebamomann.de', 'text@example.de', 'mama@mia.com', 'foo@bar.tld', 'hallo@helmut.rofl'];
   readonly separatorKeysCodes: number[] = [COMMA, SPACE];
@@ -111,6 +112,8 @@ export class AppointmentCreateComponent implements OnInit {
     };
 
     console.log(JSON.stringify(output));
+
+    this.terminService.create(output);
 
     return output;
   }
@@ -185,12 +188,12 @@ export class AppointmentCreateComponent implements OnInit {
     if (result instanceof Error) {
       return;
     }
+    const encoder = new TextEncoder();
     this.fileData.push({name: file.file.name, data: result.toString()});
     setTimeout(() => {
         file.done = true;
       },
       1000);
-
   }
 
   async toBase64(file) {

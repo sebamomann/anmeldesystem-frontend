@@ -14,7 +14,7 @@ import {WINDOW} from '../../../provider/window.provider';
 export class AppointmentDataComponent implements OnInit {
 
   @Input()
-  public appointment;
+  public appointment: IAppointmentModel;
 
   @Input()
   public preview = false;
@@ -34,6 +34,18 @@ export class AppointmentDataComponent implements OnInit {
       duration: 3000,
       panelClass: 'snackbar-default'
     });
+  }
+
+  getBlob(base64: string) {
+    return new Blob([base64]);
+  }
+
+  arrayBufferToBase64(buffer) {
+    const TYPED_ARRAY = new Uint8Array(buffer.data);
+    const STRING_CHAR = TYPED_ARRAY.reduce((data, byte) => {
+      return data + String.fromCharCode(byte);
+    }, '');
+    return STRING_CHAR;
   }
 
 

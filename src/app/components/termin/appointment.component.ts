@@ -6,6 +6,8 @@ import {isObject} from 'util';
 import {CommentDialogComponent} from '../dialogs/comment/commentDialog.component';
 import {IEnrollmentModel} from '../../models/IEnrollment.model';
 import {IAppointmentModel} from '../../models/IAppointment.model';
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-appointment',
@@ -15,24 +17,36 @@ import {IAppointmentModel} from '../../models/IAppointment.model';
 @NgModule({})
 export class AppointmentComponent implements OnInit {
   component: {};
+  public link: string;
 
-  constructor(private terminService: TerminService, public dialog: MatDialog) {
+  constructor(private terminService: TerminService, public dialog: MatDialog, private route: ActivatedRoute) {
+    this.route.queryParams.subscribe(params => {
+      this.link = params.link;
+    });
   }
 
-  public appointment: IAppointmentModel = this.terminService.getTermin('');
-  public filter = this.initializeFilterObject(this.appointment);
-  public enrollments: IEnrollmentModel[] = this.appointment.enrollments;
-  allowModify = true;
+  public appointment$: Observable<IAppointmentModel>;
+  public filter;
+  public enrollments: IEnrollmentModel[];
+  public allowModify = true;
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.appointment$ = this.terminService.getTermin(this.link);
+    this.appointment$.subscribe(app => {
+      console.log(app);
+      this.enrollments = app.enrollments;
+      this.filter = this.initializeFilterObject(app);
+    });
   }
 
   openFilterDialog(error: boolean = false): void {
+    let appointment;
+    this.appointment$.subscribe(app => appointment = app);
     const dialogRef = this.dialog.open(FilterDialogComponent, {
       width: '75%',
       height: 'auto',
       data: {
-        appointment: this.appointment,
+        appointment,
         filter: this.filter,
         error
       },
@@ -78,7 +92,9 @@ export class AppointmentComponent implements OnInit {
 
   filterEnrollments() {
     /* RESET */
-    this.enrollments = this.appointment.enrollments;
+    this.appointment$.subscribe(app => {
+      this.enrollments = app.enrollments;
+    });
 
     const BreakException = {};
     const numberOfAdditionFilters = this.filter.additions.filter(val => val.active).length;
