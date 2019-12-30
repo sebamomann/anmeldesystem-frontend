@@ -86,15 +86,15 @@
 <ng-template #calculation let-nr1='nr1' let-nr2='nr2'>
   <ng-container [ngSwitch]="compare(nr1, nr2)">
       <span class='case' *ngSwitchCase="1">
-        {{nr2}} Plätze belegt,
+        {{nr2}} {{nr2 > 1 ? "Plätze" : "Platz"}} belegt,
         <span class="positive"> {{nr1 - nr2}} frei. </span>
       </span>
     <span class='case' *ngSwitchCase="0">
       <span class="positive"> Es geht genau auf </span>
     </span>
     <span class='case' *ngSwitchCase="-1">
-        {{nr2}} Plätze belegt,
-        <span class="positive"> {{nr2 - nr1}} benötigt. </span>
+        {{nr2}} {{nr2 > 1 ? "Plätze" : "Platz"}} belegt,
+        <span class="negative"> {{nr2 - nr1}} benötigt. </span>
     </span>
   </ng-container>
 </ng-template>

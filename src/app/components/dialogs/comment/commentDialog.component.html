@@ -10,7 +10,8 @@
         </mat-panel-description>
       </mat-expansion-panel-header>
 
-      <form (ngSubmit)="comment()" [formGroup]="event">
+      <!--suppress AngularInvalidTemplateReferenceVariable -->
+      <form #formDirective="ngForm" (ngSubmit)="comment(enrollment); formDirective.resetForm()" [formGroup]="event">
         <mat-form-field>
           <input matInput
                  id="name"
