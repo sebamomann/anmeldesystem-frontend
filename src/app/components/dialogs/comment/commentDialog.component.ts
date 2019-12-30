@@ -12,13 +12,6 @@ import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 })
 export class CommentDialogComponent implements OnInit {
 
-  public enrollment: any;
-
-  event = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.min(2)]),
-    comment: new FormControl('', [Validators.required, Validators.min(2)]),
-  });
-
   constructor(public dialogRef: MatDialogRef<CommentDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data,
               private commentService: CommentService,
@@ -26,7 +19,18 @@ export class CommentDialogComponent implements OnInit {
     this.enrollment = data.enrollment;
   }
 
+  public enrollment: any;
+
+  event = new FormGroup({
+    name: new FormControl('', [Validators.required, Validators.min(2)]),
+    comment: new FormControl('', [Validators.required, Validators.min(2)]),
+  });
+
+  // Workaround for angular component issue #13870
+  disableAnimation = true;
+
   ngOnInit() {
+    setTimeout(() => this.disableAnimation = false);
   }
 
   comment(enrollment: IEnrollmentModel): void {

@@ -1,6 +1,6 @@
-<div class="comment-dialog">
+<div [@.disabled]="disableAnimation" class="comment-dialog">
   <div mat-dialog-content>
-    <mat-expansion-panel>
+    <mat-expansion-panel [expanded]="false">
       <mat-expansion-panel-header>
         <mat-panel-title>
           Kommentieren
