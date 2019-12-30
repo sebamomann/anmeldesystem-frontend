@@ -1,4 +1,4 @@
-<ng-container *ngIf="appointment$ | async as appointment; else loading">
+<ng-container *ngIf="(appointment$ | async) as appointment; else loading">
 
   <app-appointment-data [appointment]="appointment"></app-appointment-data>
 
@@ -52,10 +52,11 @@
           </mat-expansion-panel-header>
 
           <div class="enrollment-additions">
-            <mat-icon matBadge="{{enrollment.comments.length > 0 ? enrollment.comments.length : ''}}"
-                      matBadgeColor="info"
-                      matBadgeSize="small"
-                      (click)="openCommentDialog(enrollment)">
+            <mat-icon
+              (click)="openCommentDialog(enrollment)"
+              matBadge="{{enrollment.comments != null && enrollment.comments.length > 0 ? enrollment.comments.length : ''}}"
+              matBadgeColor="info"
+              matBadgeSize="small">
               comment
             </mat-icon>
             <ng-container *ngIf="allowModify">

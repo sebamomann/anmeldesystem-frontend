@@ -16,13 +16,19 @@ import {Observable} from 'rxjs';
 })
 @NgModule({})
 export class AppointmentComponent implements OnInit {
-  component: {};
+
   public link: string;
+  public appointment$: Observable<IAppointmentModel>;
+  public filter;
+  public enrollments: IEnrollmentModel[];
+  public allowModify = true;
+
 
   constructor(private terminService: TerminService, public dialog: MatDialog, private route: ActivatedRoute, private router: Router) {
     this.route.queryParams.subscribe(params => {
       this.link = params.val;
     });
+
     this.route.params.subscribe(params => {
       if (params.link !== undefined) {
         this.link = params.link;
@@ -32,15 +38,11 @@ export class AppointmentComponent implements OnInit {
     });
   }
 
-  public appointment$: Observable<IAppointmentModel>;
-  public filter;
-  public enrollments: IEnrollmentModel[];
-  public allowModify = true;
-
   async ngOnInit() {
     this.appointment$ = await this.terminService.getTermin(this.link);
     this.appointment$.subscribe(app => {
       if (app !== null) {
+        console.log(app);
         this.enrollments = app.enrollments;
         this.filter = this.initializeFilterObject(app);
       } else {

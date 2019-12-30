@@ -9,9 +9,9 @@ export interface IAppointmentModel {
   location: string;
   creator: string;
   date: string;
-  deadline: string;
+  deadline: string | null;
   link: string;
-  maxEnrollments: number;
+  maxEnrollments: number | null;
   additions: IAdditionModel[];
   driverAddition: boolean;
   enrollments: IEnrollmentModel[];
