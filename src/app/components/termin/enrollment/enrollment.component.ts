@@ -74,7 +74,8 @@ export class EnrollmentComponent implements OnInit {
 
     output.additions = this.getAdditionIdList();
 
-    this.terminService.enroll(output, this.appointment);
+    this.terminService.enroll(output, this.appointment).subscribe(resposne => {
+    });
   }
 
   private addCheckboxes() {
