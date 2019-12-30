@@ -1,4 +1,4 @@
 export interface IAdditionModel {
   id?: string;
-  name: string;
+  name?: string;
 }

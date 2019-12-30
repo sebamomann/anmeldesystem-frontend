@@ -4,6 +4,7 @@ import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.mod
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
+import {IEnrollmentModel} from '../models/IEnrollment.model';
 
 @Injectable({
   providedIn: 'root'
@@ -44,5 +45,10 @@ export class TerminService {
 
   create(appointment: CreateAppointmentModel) {
     return this.httpClient.post<IAppointmentModel>(`http://localhost:3000/appointment`, appointment);
+  }
+
+  enroll(enrollment: IEnrollmentModel, appointment: IAppointmentModel) {
+    console.log(JSON.stringify(enrollment));
+    return this.httpClient.post<IAppointmentModel>(`http://localhost:3000/enrollment?link=${appointment.link}`, enrollment);
   }
 }

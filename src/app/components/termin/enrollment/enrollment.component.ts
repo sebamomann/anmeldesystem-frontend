@@ -1,8 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
 import {TerminService} from '../../../services/termin.service';
 import {Location} from '@angular/common';
-import {of} from 'rxjs';
+import {Observable} from 'rxjs';
+import {IAppointmentModel} from '../../../models/IAppointment.model';
+import {ActivatedRoute} from '@angular/router';
+import {IEnrollmentModel} from '../../../models/IEnrollment.model';
+import {IAdditionModel} from '../../../models/IAddition.model';
 
 @Component({
   selector: 'app-enrollment',
@@ -10,47 +14,90 @@ import {of} from 'rxjs';
   styleUrls: ['./enrollment.component.scss']
 })
 export class EnrollmentComponent implements OnInit {
-  event: FormGroup;
-  appointment: any;
+  event = this.formBuilder.group({
+    name: new FormControl('', [Validators.required, Validators.min(2)]),
+    comment: new FormControl('', [Validators.required, Validators.min(2)]),
+    additions: new FormArray([]),
+    driver: new FormControl(false),
+    seats: new FormControl('', [Validators.min(1)]),
+    requirement: new FormControl('', []),
+    service: new FormControl('', [])
+  });
 
-  constructor(private terminService: TerminService, private location: Location, private formBuilder: FormBuilder) {
-    this.event = this.formBuilder.group({
-      name: new FormControl('', [Validators.required, Validators.min(2)]),
-      comment: new FormControl('', [Validators.required, Validators.min(2)]),
-      additions: new FormArray([]),
-      orders: new FormArray([]),
-      driver: new FormControl(false),
-      seats: new FormControl('', [Validators.min(1)]),
-      requirementService: new FormControl('', [])
-    });
+  appointment$: Observable<IAppointmentModel>;
+  appointment = null;
+  additions = [];
 
+  private link: string;
+
+  async ngOnInit() {
+    this.appointment$ = await this.terminService.getTermin(this.link);
 
     // this.appointment = of(this.terminService.getTermin('')).pipe(map(o => JSON.stringify(o)));
-    of(this.getAppointment()).subscribe(appointment => {
+    this.appointment$.subscribe(appointment => {
       this.appointment = appointment;
       this.addCheckboxes();
     });
   }
 
-  private getAppointment() {
-    return this.terminService.getTermin('');
-  }
-
-  private addCheckboxes() {
-    this.appointment.additions.forEach((o, i) => {
-      const control = new FormControl(); // if first item set to true, else false
-      (this.event.controls.additions as FormArray).push(control);
+  constructor(private terminService: TerminService, private location: Location,
+              private formBuilder: FormBuilder, private route: ActivatedRoute) {
+    this.route.queryParams.subscribe(params => {
+      this.link = params.val;
     });
   }
 
-  ngOnInit() {
+  async create() {
+    let output: IEnrollmentModel;
+    output = {
+      additions: [],
+      driver: null,
+      passenger: null,
+      name: this.event.get('name').value,
+      comment: this.event.get('comment').value
+    };
+
+    if (this.appointment.driverAddition) {
+      if (this.event.get('driver').value) {
+        output.driver = {
+          service: this.event.get('service').value,
+          seats: this.event.get('seats').value,
+        };
+        output.passenger = null;
+      } else {
+        output.passenger = {
+          requirement: this.event.get('requirement').value,
+        };
+        output.driver = null;
+      }
+    }
+
+    output.additions = this.getAdditionIdList();
+
+    this.terminService.enroll(output, this.appointment);
   }
 
-  create(): void {
-    const selectedAdditionIds = this.event.value.additions
+  private addCheckboxes() {
+    this.appointment$.subscribe(appointment => {
+      appointment.additions.forEach((o, i) => {
+        const control = new FormControl(); // if first item set to true, else false
+        (this.event.controls.additions as FormArray).push(control);
+      });
+    });
+  }
+
+  getAdditionIdList(): IAdditionModel[] {
+    const additionListRaw = this.event.value.additions
       .map((v, i) => v ? this.appointment.additions[i].id : null)
       .filter(v => v !== null);
-    console.log(selectedAdditionIds);
+
+    const additionList = [];
+    additionListRaw.forEach(fAddition => {
+      const addition = {id: fAddition};
+      additionList.push(addition);
+    });
+
+    return additionList;
   }
 
   getUsernameErrorMessage(): string {
@@ -63,26 +110,9 @@ export class EnrollmentComponent implements OnInit {
     }
   }
 
-  getEmailErrorMessage(): string {
-    if (this.getEmail().hasError('required')) {
-      return 'Bitte gebe eine Email-Adresse an';
-    }
-
-    if (this.getEmail().hasError('email')) {
-      return 'Diese Email-Adresse hat kein gültiges Format';
-    }
-
-    if (this.getEmail().hasError('inUse')) {
-      return 'Diese Email wird bereits verwendet';
-    }
-  }
 
   private getUsername() {
     return this.event.get('username');
-  }
-
-  private getEmail() {
-    return this.event.get('email');
   }
 
   getAdditionsControls() {

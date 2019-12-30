@@ -7,9 +7,9 @@ export interface IEnrollmentModel {
   id?: number;
   name: string;
   comment: string;
-  comments: ICommentModel[];
+  comments?: ICommentModel[];
   driver: IDriverModel | null;
   passenger: IPassengerModel | null;
-  additions: IAdditionModel[];
-  iat: string;
+  additions?: IAdditionModel[];
+  iat?: string;
 }
