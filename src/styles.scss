@@ -416,12 +416,12 @@ footer {
 }
 
 .error {
-  background-color: white;
-  border-radius: 25px;
-  box-shadow: 0px 0px 5px gray;
-  padding: 20px;
 
   &.empty {
+    background-color: white;
+    border-radius: 25px;
+    box-shadow: 0px 0px 5px gray;
+    padding: 20px;
     text-align: center;
     position: relative;
     width: 75%;

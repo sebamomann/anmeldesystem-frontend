@@ -52,35 +52,36 @@ export class AppointmentComponent implements OnInit {
   }
 
   openFilterDialog(error: boolean = false): void {
-    let appointment;
-    this.appointment$.subscribe(app => appointment = app);
-    const dialogRef = this.dialog.open(FilterDialogComponent, {
-      width: '75%',
-      height: 'auto',
-      data: {
-        appointment,
-        filter: this.filter,
-        error
-      },
-    });
+    this.appointment$.subscribe(sAppointment => {
+      const dialogRef = this.dialog.open(FilterDialogComponent, {
+        width: '75%',
+        height: 'auto',
+        data: {
+          appointment: sAppointment,
+          filter: this.filter,
+          error
+        },
+      });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (isObject(result) && result !== this.filter) {
-        const oldFilter = this.filter;
-        const oldEnrollments = this.enrollments;
+      dialogRef.afterClosed().subscribe(result => {
+        if (isObject(result) && result !== this.filter) {
+          const oldFilter = this.filter;
+          const oldEnrollments = this.enrollments;
 
-        this.filter = result;
-        const tmpEnrollments = this.filterEnrollments();
+          this.filter = result;
+          const tmpEnrollments = this.filterEnrollments();
 
-        if (tmpEnrollments.length === 0 && this.getNumberOfActiveFilter() > 0) {
-          this.enrollments = oldEnrollments;
-          this.openFilterDialog(true);
-          this.filter = oldFilter;
-        } else {
-          this.enrollments = tmpEnrollments;
+          if (tmpEnrollments.length === 0 && this.getNumberOfActiveFilter() > 0) {
+            this.enrollments = oldEnrollments;
+            this.openFilterDialog(true);
+            this.filter = oldFilter;
+          } else {
+            this.enrollments = tmpEnrollments;
+          }
         }
-      }
+      });
     });
+
   }
 
   openCommentDialog(enrollment): void {

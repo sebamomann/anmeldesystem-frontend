@@ -17,7 +17,7 @@ export class FilterDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<FilterDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data) {
-
+    console.log(data);
     this.dialogFilter = JSON.parse(JSON.stringify(data.filter));
     this.checkForActiveFilters();
   }
