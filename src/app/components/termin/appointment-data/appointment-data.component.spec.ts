@@ -27,11 +27,18 @@ describe('AppointmentDataComponent', () => {
     fixture = TestBed.createComponent(AppointmentDataComponent);
     component = fixture.componentInstance;
     component.appointment = {
-      appointment: {
-        location: '',
-        date: '',
-        title: ''
-      }
+      title: '',
+      description: '',
+      location: '',
+      creator: {},
+      date: '',
+      deadline: '',
+      link: '',
+      maxEnrollments: 0,
+      additions: [],
+      driverAddition: false,
+      enrollments: [],
+      files: []
     };
     fixture.detectChanges();
   });

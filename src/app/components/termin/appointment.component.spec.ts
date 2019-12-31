@@ -17,8 +17,6 @@ import {FormsModule} from '@angular/forms';
 import {WINDOW_PROVIDERS} from '../../provider/window.provider';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {IEnrollmentModel} from '../../models/IEnrollment.model';
-import {Observable} from 'rxjs';
-import {IAppointmentModel} from '../../models/IAppointment.model';
 
 function createEnrollment(id1: boolean, id2: boolean, id3: boolean, id4: boolean, driver: boolean, passenger: boolean): IEnrollmentModel {
   const obj: IEnrollmentModel = {
@@ -100,7 +98,7 @@ describe('AppointmentComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AppointmentComponent);
     component = fixture.componentInstance;
-    component.appointment = new Observable<IAppointmentModel>({
+    component.appointment = {
       title: 'Test Termin',
       description: 'This is a very very cool date because I created it lol',
       location: 'Hier lol',
@@ -109,7 +107,7 @@ describe('AppointmentComponent', () => {
       deadline: '01-01-2019 00:00:00',
       link: 'ABCDE',
       maxEnrollments: 10,
-      fileAdditions: [],
+      files: [],
       additions: [
         {
           id: 'id1',
@@ -142,7 +140,7 @@ describe('AppointmentComponent', () => {
         PassengerBkDiner,
         PassengerBkSubwayDiner,
         PassengerAll1, PassengerAll2]
-    });
+    };
 
     fixture.detectChanges();
   });
