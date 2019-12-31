@@ -54,7 +54,7 @@ export class AppointmentCreateComponent implements OnInit {
       title: ['', Validators.required],
       date: ['', Validators.required],
       deadline: [''],
-      location: [''],
+      location: ['', Validators.required],
       maxEnrollments: [''],
     });
 
@@ -101,6 +101,8 @@ export class AppointmentCreateComponent implements OnInit {
       administrations: this.users,
       files: this.fileData,
     };
+
+    console.log(JSON.stringify(output));
 
     this.terminService.create(output).subscribe(result => {
         switch (result.status) {
