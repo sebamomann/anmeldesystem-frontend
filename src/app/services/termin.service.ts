@@ -15,7 +15,7 @@ export class TerminService {
   }
 
   getAppointment(link: string): Observable<HttpResponse<IAppointmentModel | any>> {
-    return this.httpClient.get<IAppointmentModel>(`http://localhost:3000/appointment/get?link=${link}`, {observe: 'response'});
+    return this.httpClient.get<IAppointmentModel>(`http://localhost:3000/appointment/${link}`, {observe: 'response'});
   }
 
   getTermine(): Observable<IAppointmentModel[]> {
