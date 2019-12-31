@@ -2,8 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
 import {TerminService} from '../../../services/termin.service';
 import {Location} from '@angular/common';
-import {Observable} from 'rxjs';
-import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {ActivatedRoute} from '@angular/router';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {IAdditionModel} from '../../../models/IAddition.model';
@@ -24,7 +22,6 @@ export class EnrollmentComponent implements OnInit {
     service: new FormControl('', [])
   });
 
-  appointment$: Observable<IAppointmentModel>;
   appointment = null;
   additions = [];
 
@@ -39,11 +36,10 @@ export class EnrollmentComponent implements OnInit {
 
   async ngOnInit() {
     await this.terminService.getAppointment(this.link).subscribe(sAppointment => {
-      this.appointment$ = new Observable<IAppointmentModel>(sAppointment.body);
       this.appointment = sAppointment.body;
       this.addCheckboxes();
     }, error => {
-      this.appointment$ = undefined;
+      this.appointment = undefined;
     });
 
   }
@@ -94,11 +90,9 @@ export class EnrollmentComponent implements OnInit {
   }
 
   private addCheckboxes() {
-    this.appointment$.subscribe(appointment => {
-      appointment.additions.forEach((o, i) => {
-        const control = new FormControl(); // if first item set to true, else false
-        (this.event.controls.additions as FormArray).push(control);
-      });
+    this.appointment.additions.forEach((o, i) => {
+      const control = new FormControl(); // if first item set to true, else false
+      (this.event.controls.additions as FormArray).push(control);
     });
   }
 
@@ -111,7 +105,6 @@ export class EnrollmentComponent implements OnInit {
       return 'Dieser Benutzername ist bereits vergeben';
     }
   }
-
 
   private getUsername() {
     return this.event.get('username');
