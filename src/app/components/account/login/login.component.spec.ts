@@ -5,6 +5,7 @@ import {MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule} from '
 import {RouterTestingModule} from '@angular/router/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -15,7 +16,8 @@ describe('LoginComponent', () => {
       imports: [MatCardModule, MatFormFieldModule,
         RouterTestingModule, MatIconModule,
         ReactiveFormsModule, FormsModule,
-        MatInputModule, BrowserAnimationsModule],
+        MatInputModule, BrowserAnimationsModule,
+        HttpClientTestingModule],
       declarations: [LoginComponent]
     })
       .compileComponents();

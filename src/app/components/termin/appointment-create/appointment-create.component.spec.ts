@@ -21,6 +21,7 @@ import {UrlEncodePipe} from '../../../pipes/url-encode.pipe';
 import {WINDOW_PROVIDERS} from '../../../provider/window.provider';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('AppointmentCreateComponent', () => {
   let component: AppointmentCreateComponent;
@@ -36,7 +37,7 @@ describe('AppointmentCreateComponent', () => {
         MatAutocompleteModule, MatNativeDateModule,
         MatInputModule, BrowserAnimationsModule,
         MatProgressBarModule, HttpClientTestingModule,
-        MatTooltipModule],
+        MatTooltipModule, RouterTestingModule],
       declarations: [AppointmentCreateComponent, UrlEncodePipe],
       providers: [WINDOW_PROVIDERS]
     })

@@ -18,7 +18,7 @@ export class AppointmentComponent implements OnInit {
 
   public link: string;
   public appointment: IAppointmentModel = null;
-  public filter;
+  public filter: any;
   public enrollments: IEnrollmentModel[];
   public allowModify = true;
 

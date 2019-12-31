@@ -8,11 +8,13 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
+  MatSnackBarModule,
   MatTooltipModule
 } from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('CommentDialogComponent', () => {
   let component: CommentDialogComponent;
@@ -25,7 +27,9 @@ describe('CommentDialogComponent', () => {
         FormsModule, MatFormFieldModule,
         MatTooltipModule, ReactiveFormsModule,
         MatDialogModule, BrowserAnimationsModule,
-        MatInputModule],
+        MatInputModule, HttpClientTestingModule,
+        MatSnackBarModule
+      ],
       declarations: [CommentDialogComponent],
       providers: [{provide: MatDialogRef, useValue: {}},
         {provide: MAT_DIALOG_DATA, useValue: {enrollment: {comments: []}}}]

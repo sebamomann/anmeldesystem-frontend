@@ -10,6 +10,7 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
+  MatProgressBarModule,
   MatSnackBarModule
 } from '@angular/material';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -17,6 +18,7 @@ import {FormsModule} from '@angular/forms';
 import {WINDOW_PROVIDERS} from '../../provider/window.provider';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {IEnrollmentModel} from '../../models/IEnrollment.model';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 function createEnrollment(id1: boolean, id2: boolean, id3: boolean, id4: boolean, driver: boolean, passenger: boolean): IEnrollmentModel {
   const obj: IEnrollmentModel = {
@@ -88,7 +90,8 @@ describe('AppointmentComponent', () => {
         MatCardModule, FormsModule,
         MatFormFieldModule, MatDialogModule,
         MatSnackBarModule, BrowserAnimationsModule,
-        MatInputModule],
+        MatInputModule, MatProgressBarModule,
+        HttpClientTestingModule],
       declarations: [AppointmentComponent, AppointmentDataComponent],
       providers: [WINDOW_PROVIDERS]
     })

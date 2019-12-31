@@ -2,6 +2,8 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {TemplateDialogComponent} from './template-dialog.component';
 import {MatDialogModule, MatIconModule, MatListModule} from '@angular/material';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('TemplateDialogComponent', () => {
   let component: TemplateDialogComponent;
@@ -9,7 +11,9 @@ describe('TemplateDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MatListModule, MatIconModule, MatDialogModule],
+      imports: [MatListModule, MatIconModule,
+        MatDialogModule, HttpClientTestingModule,
+        RouterTestingModule],
       declarations: [TemplateDialogComponent]
     })
       .compileComponents();

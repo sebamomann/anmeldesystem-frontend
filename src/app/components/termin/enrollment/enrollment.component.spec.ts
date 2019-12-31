@@ -8,12 +8,15 @@ import {
   MatIconModule,
   MatInputModule,
   MatOptionModule,
+  MatProgressBarModule,
   MatSelectModule
 } from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('EnrollmentComponent', () => {
   let component: EnrollmentComponent;
@@ -25,7 +28,9 @@ describe('EnrollmentComponent', () => {
         MatFormFieldModule, MatCheckboxModule,
         ReactiveFormsModule, FormsModule,
         MatOptionModule, MatSelectModule,
-        BrowserAnimationsModule, MatInputModule],
+        BrowserAnimationsModule, MatInputModule,
+        MatProgressBarModule, HttpClientTestingModule,
+        RouterTestingModule],
       declarations: [EnrollmentComponent],
       providers: [{provide: Location, useClass: SpyLocation}],
     })

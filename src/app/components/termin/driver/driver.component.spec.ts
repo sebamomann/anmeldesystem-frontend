@@ -1,10 +1,11 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {DriverComponent} from './driver.component';
-import {MatCardModule, MatIconModule} from '@angular/material';
+import {MatCardModule, MatIconModule, MatProgressBarModule} from '@angular/material';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {RouterTestingModule} from '@angular/router/testing';
 import {RouterModule} from '@angular/router';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('DriverComponent', () => {
   let component: DriverComponent;
@@ -12,7 +13,9 @@ describe('DriverComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MatIconModule, MatCardModule],
+      imports: [MatIconModule, MatCardModule,
+        MatProgressBarModule, HttpClientTestingModule,
+        RouterTestingModule],
       declarations: [DriverComponent],
       providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}, RouterTestingModule, RouterModule]
     })
