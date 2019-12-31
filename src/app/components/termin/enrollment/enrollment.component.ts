@@ -76,7 +76,7 @@ export class EnrollmentComponent implements OnInit {
     this.terminService.enroll(output, this.appointment).subscribe(result => {
         switch (result.status) {
           case HttpStatus.CREATED:
-            this.router.navigate([`enroll?val=${this.appointment.link}`]);
+            this.router.navigate([`enroll`], {queryParams: {val: this.appointment.link}});
             break;
         }
       }, error => {
