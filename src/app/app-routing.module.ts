@@ -33,7 +33,7 @@ const routes: Routes = [
       {path: 'change', pathMatch: 'full', component: EnrollmentComponent}
     ]
   },
-  // {path: ':link', component: AppointmentComponent},
+  {path: ':link', component: AppointmentComponent},
 ];
 
 @NgModule({
