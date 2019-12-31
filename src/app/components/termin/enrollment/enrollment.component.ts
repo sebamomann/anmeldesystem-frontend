@@ -41,7 +41,7 @@ export class EnrollmentComponent implements OnInit {
       this.appointment = sAppointment.body;
       this.addCheckboxes();
     }, error => {
-      this.appointment = undefined;
+      this.appointment = null;
     });
 
   }

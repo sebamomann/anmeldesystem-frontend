@@ -1,4 +1,4 @@
-<div *ngIf="appointment$ | async as appointment">
+<div *ngIf="appointment; else loading">
   <div class="header fixed">
     <mat-icon (click)="goBack()" class="go_back">last_page</mat-icon>
     <h2 class="headline">{{appointment.title}}</h2>
@@ -98,4 +98,19 @@
     </span>
   </ng-container>
 </ng-template>
+
+<ng-template #loading>
+  <ng-container *ngIf="appointment === null; else loadingBar">
+    <div class="error empty">
+      <span>Sorry - 404</span>
+      <img src="/assets/img/404.svg">
+      Ich konnte diesen Termin nicht finden!
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #loadingBar>
+  <mat-progress-bar mode="query"></mat-progress-bar>
+</ng-template>
+
 

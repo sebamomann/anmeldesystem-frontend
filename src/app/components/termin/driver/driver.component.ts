@@ -4,7 +4,6 @@ import {TerminService} from '../../../services/termin.service';
 import {Location} from '@angular/common';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {ActivatedRoute} from '@angular/router';
-import {Observable} from 'rxjs';
 
 const HttpStatus = require('http-status-codes');
 
@@ -15,7 +14,7 @@ const HttpStatus = require('http-status-codes');
 })
 export class DriverComponent implements OnInit {
 
-  public appointment$: Observable<IAppointmentModel>;
+  public appointment: IAppointmentModel;
   public data: MyType = {};
   public drivers: IEnrollmentModel[];
   public link;
@@ -29,12 +28,15 @@ export class DriverComponent implements OnInit {
   async ngOnInit() {
     await this.terminService.getAppointment(this.link).subscribe(sAppointment => {
       if (sAppointment.status !== HttpStatus.OK) {
+        this.appointment = null;
         return;
       }
 
-      this.drivers = sAppointment.body.y.enrollments.filter(fAppointment => fAppointment.driver !== null);
+      this.appointment = sAppointment.body;
 
-      this.data.neededTo = sAppointment.body.enrollments.filter(fAppointment => {
+      this.drivers = this.appointment.enrollments.filter(fAppointment => fAppointment.driver !== null);
+
+      this.data.neededTo = this.appointment.enrollments.filter(fAppointment => {
         if (fAppointment.passenger != null
           && (fAppointment.passenger.requirement === 1 || fAppointment.passenger.requirement === 2)) {
           return fAppointment;
@@ -42,13 +44,13 @@ export class DriverComponent implements OnInit {
       }).length;
       this.data.gotTo = 0;
       // tslint:disable-next-line:no-unused-expression
-      sAppointment.body.enrollments.filter(fAppointment => {
+      this.appointment.enrollments.filter(fAppointment => {
         if (fAppointment.driver != null
           && (fAppointment.driver.service === 1 || fAppointment.driver.service === 2)) {
           this.data.gotTo += fAppointment.driver.seats;
         }
       }).length;
-      this.data.neededFrom = sAppointment.body.enrollments.filter(fAppointment => {
+      this.data.neededFrom = this.appointment.enrollments.filter(fAppointment => {
         if (fAppointment.passenger != null
           && (fAppointment.passenger.requirement === 1 || fAppointment.passenger.requirement === 3)) {
           return fAppointment;
@@ -56,7 +58,7 @@ export class DriverComponent implements OnInit {
       }).length;
       this.data.gotFrom = 0;
       // tslint:disable-next-line:no-unused-expression
-      sAppointment.body.enrollments.filter(fAppointment => {
+      this.appointment.enrollments.filter(fAppointment => {
         if (fAppointment.driver != null
           && (fAppointment.driver.service === 1 || fAppointment.driver.service === 3)) {
           this.data.gotFrom += fAppointment.driver.seats;
