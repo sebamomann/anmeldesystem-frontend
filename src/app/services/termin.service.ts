@@ -49,6 +49,6 @@ export class TerminService {
 
   enroll(enrollment: IEnrollmentModel, appointment: IAppointmentModel) {
     const url = `http://localhost:3000/enrollment?link=${appointment.link}`;
-    return this.httpClient.post<IEnrollmentModel>(url, enrollment);
+    return this.httpClient.post<IEnrollmentModel>(url, enrollment, {observe: 'response'});
   }
 }

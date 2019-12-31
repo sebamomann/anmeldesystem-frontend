@@ -2,9 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
 import {TerminService} from '../../../services/termin.service';
 import {Location} from '@angular/common';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {IAdditionModel} from '../../../models/IAddition.model';
+
+const HttpStatus = require('http-status-codes');
 
 @Component({
   selector: 'app-enrollment',
@@ -28,7 +30,7 @@ export class EnrollmentComponent implements OnInit {
   private link: string;
 
   constructor(private terminService: TerminService, private location: Location,
-              private formBuilder: FormBuilder, private route: ActivatedRoute) {
+              private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router) {
     this.route.queryParams.subscribe(params => {
       this.link = params.val;
     });
@@ -71,8 +73,26 @@ export class EnrollmentComponent implements OnInit {
 
     output.additions = this.getAdditionIdList();
 
-    this.terminService.enroll(output, this.appointment).subscribe(resposne => {
-    });
+    this.terminService.enroll(output, this.appointment).subscribe(result => {
+        switch (result.status) {
+          case HttpStatus.CREATED:
+            this.router.navigate([`enroll?val=${this.appointment.link}`]);
+            break;
+        }
+      }, error => {
+        switch (error.status) {
+          case HttpStatus.BAD_REQUEST:
+            error.error.error.columns.forEach(fColumn => {
+              if (fColumn.error === 'duplicate') {
+                const uppercaseName = fColumn.name.charAt(0).toUpperCase() + fColumn.name.substring(1);
+                const fnName: string = 'get' + uppercaseName;
+                this[fnName]().setErrors({inUse: true});
+              }
+            });
+            break;
+        }
+      }
+    );
   }
 
   getAdditionIdList(): IAdditionModel[] {
@@ -96,26 +116,22 @@ export class EnrollmentComponent implements OnInit {
     });
   }
 
-  getUsernameErrorMessage(): string {
-    if (this.getUsername().hasError('required')) {
+  getNameErrorMessage(): string {
+    if (this.getName().hasError('required')) {
       return 'Bitte gebe einen Benutezrnamen an';
     }
 
-    if (this.getUsername().hasError('inUse')) {
-      return 'Dieser Benutzername ist bereits vergeben';
+    if (this.getName().hasError('inUse')) {
+      return 'Es besteht bereits eine Anmeldung mit diesem Namen.';
     }
   }
 
-  private getUsername() {
-    return this.event.get('username');
+  private getName() {
+    return this.event.get('name');
   }
 
   getAdditionsControls() {
     return (this.event.get('additions') as FormArray).controls;
-  }
-
-  getNameErrorMessage() {
-    return '';
   }
 
   getSeatsErrorMessage() {
