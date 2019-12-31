@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AccountService} from '../../../services/account.service';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {first} from 'rxjs/operators';
-import {AlertService} from '../../../services/alter.service';
+import {AlertService} from '../../../services/alert.service';
 
 @Component({
   selector: 'app-login',
