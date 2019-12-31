@@ -5,6 +5,7 @@ import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {IAdditionModel} from '../../../models/IAddition.model';
+import {IAppointmentModel} from '../../../models/IAppointment.model';
 
 const HttpStatus = require('http-status-codes');
 
@@ -24,7 +25,7 @@ export class EnrollmentComponent implements OnInit {
     service: new FormControl('', [])
   });
 
-  appointment = null;
+  appointment: IAppointmentModel;
   additions = [];
 
   private link: string;
