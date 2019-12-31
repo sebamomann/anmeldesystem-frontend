@@ -1,5 +1,5 @@
-<div>
-  <div class="header">
+<div *ngIf="appointment$ | async as appointment">
+  <div class="header fixed">
     <mat-icon class="go_back" (click)="goBack()">last_page</mat-icon>
     <h2 class="headline">{{appointment.title}}</h2>
   </div>
@@ -39,9 +39,10 @@
               Fahrer
             </mat-checkbox>
           </div>
-          <mat-form-field *ngIf="!event.get('driver').value">
+
+          <mat-form-field *ngIf="!event.get('driver').value; else driver">
             <mat-label>Mich bitte mitnehmen</mat-label>
-            <mat-select>
+            <mat-select formControlName="requirement" required>
               <mat-option [value]="0"> ---</mat-option>
               <mat-option [value]="1"> Nur Hin</mat-option>
               <mat-option [value]="2"> Nur Zurück</mat-option>
@@ -49,10 +50,10 @@
             </mat-select>
           </mat-form-field>
 
-          <ng-container *ngIf="event.get('driver').value">
+          <ng-template #driver>
             <mat-form-field>
               <mat-label>Ich fahre</mat-label>
-              <mat-select>
+              <mat-select formControlName="service" required>
                 <mat-option [value]="1"> Nur Hin</mat-option>
                 <mat-option [value]="2"> Nur Zurück</mat-option>
                 <mat-option [value]="3"> Hin und Zurück</mat-option>
@@ -68,11 +69,13 @@
                      required>
               <mat-error *ngIf="event.get('seats').invalid">{{ getSeatsErrorMessage() }}</mat-error>
             </mat-form-field>
-          </ng-container>
+          </ng-template>
         </div>
 
         <mat-form-field>
         <textarea matInput
+                  formControlName="comment"
+                  id="comment"
                   cdkTextareaAutosize
                   cdkAutosizeMinRows="1"
                   cdkAutosizeMaxRows="5" placeholder="Kommentar"></textarea>

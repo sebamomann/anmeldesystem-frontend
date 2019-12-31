@@ -1,0 +1,101 @@
+<div *ngIf="appointment$ | async as appointment">
+  <div class="header fixed">
+    <mat-icon (click)="goBack()" class="go_back">last_page</mat-icon>
+    <h2 class="headline">{{appointment.title}}</h2>
+  </div>
+
+  <mat-card class="">
+    <mat-card-title class="headline">
+      Fahrerverwaltung
+    </mat-card-title>
+
+    <mat-card-content>
+      <div class="driver-wrapper">
+        <ng-container *ngFor="let driver of drivers">
+          <div class="driver-block">
+            <span>{{driver.name}}</span>
+            <span>{{driver.driver.seats}} freie Plätze</span>
+            <ng-container [ngSwitch]="driver.driver.service">
+              <span *ngSwitchCase="1" class='service'>
+                <mat-icon>compare_arrows</mat-icon>
+              </span>
+              <span *ngSwitchCase="2" class='service negative'>
+                <mat-icon>arrow_forward</mat-icon>
+              </span>
+              <span *ngSwitchCase="3" class='service negative'>
+                <mat-icon>arrow_back</mat-icon>
+              </span>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+      <ng-container *ngIf="data.gotTo === data.gotFrom then gotSame; else gotDifferent"></ng-container>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!-- TEMPLATES -->
+<ng-template #gotSame>
+  <div class="analysis-block-wrapper">
+    <span class="title">Für Hin und Rückfahrt gibt es insgesamt {{data.gotTo}} Plätze</span>
+    <ng-container *ngIf="data.neededTo === data.neededFrom then neededSame; else neededDifferent"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #gotDifferent>
+  <div class="analysis-block-wrapper">
+    <div class="analysis-block">
+      <span class="title">Hinfahrt: {{data.gotTo}} Plätze</span>
+      <ng-container [ngTemplateOutletContext]="{nr1:data.gotFrom, nr2: data.neededFrom}"
+                    [ngTemplateOutlet]="calculation">
+      </ng-container>
+    </div>
+    <div class="analysis-block">
+      <span class="title">Rückfahrt: {{data.gotFrom}} Plätze</span>
+      <ng-container [ngTemplateOutletContext]="{nr1:data.gotFrom, nr2: data.neededFrom}"
+                    [ngTemplateOutlet]="calculation">
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #neededSame>
+  <div class="analysis-block">
+    <ng-container [ngTemplateOutletContext]="{nr1:data.gotTo, nr2: data.neededTo}"
+                  [ngTemplateOutlet]="calculation">
+    </ng-container>
+  </div>
+</ng-template>
+
+
+<ng-template #neededDifferent>
+  <div class="analysis-block">
+    <span class="title">Hinfahrt</span>
+    <ng-container [ngTemplateOutletContext]="{nr1:data.gotTo, nr2: data.neededTo}"
+                  [ngTemplateOutlet]="calculation">
+    </ng-container>
+  </div>
+  <div class="analysis-block">
+    <span class="title">Rückfahrt</span>
+    <ng-container [ngTemplateOutletContext]="{nr1:data.gotFrom, nr2: data.neededFrom}"
+                  [ngTemplateOutlet]="calculation">
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #calculation let-nr1='nr1' let-nr2='nr2'>
+  <ng-container [ngSwitch]="compare(nr1, nr2)">
+      <span *ngSwitchCase="1" class='case'>
+        {{nr2}} {{nr2 > 1 ? "Plätze" : "Platz"}} belegt,
+        <span class="positive"> {{nr1 - nr2}} frei. </span>
+      </span>
+    <span *ngSwitchCase="0" class='case'>
+      <span class="positive"> Es geht genau auf </span>
+    </span>
+    <span *ngSwitchCase="-1" class='case'>
+        {{nr2}} {{nr2 > 1 ? "Plätze" : "Platz"}} belegt,
+        <span class="negative"> {{nr2 - nr1}} benötigt. </span>
+    </span>
+  </ng-container>
+</ng-template>
+

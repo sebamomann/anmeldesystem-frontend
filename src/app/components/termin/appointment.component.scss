@@ -5,10 +5,21 @@
   line-height: $size;
 }
 
+/* GLOBAL */
 .enrollment-list {
   padding: 0;
   position: relative;
   background-color: transparent;
+
+  .header {
+    .headline {
+      span {
+        mat-icon {
+          vertical-align: middle;
+        }
+      }
+    }
+  }
 
   .enrollment {
     .enrollment-info {

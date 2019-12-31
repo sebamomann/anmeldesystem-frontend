@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { TerminService } from './termin.service';
+import {TerminService} from './termin.service';
 
 describe('TerminService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

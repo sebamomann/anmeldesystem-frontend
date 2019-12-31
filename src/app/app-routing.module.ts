@@ -6,6 +6,9 @@ import {LoginComponent} from './components/account/login/login.component';
 import {RegisterComponent} from './components/account/register/register.component';
 import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
 import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
+import {DashboardComponent} from './components/termin/dashboard/dashboard.component';
+import {DriverComponent} from './components/termin/driver/driver.component';
+import {AuthGuard} from './_helper/auth.guard';
 
 
 const routes: Routes = [
@@ -16,14 +19,21 @@ const routes: Routes = [
       {path: 'register', component: RegisterComponent}
     ]
   },
-  {path: 'create', component: AppointmentCreateComponent},
+  {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
+  {path: 'create', component: AppointmentCreateComponent, canActivate: [AuthGuard]},
+  {
+    path: 'appointment', children: [
+      {path: 'driver', pathMatch: 'full', component: DriverComponent},
+    ]
+  },
   {
     path: 'enroll', children: [
       {path: '', pathMatch: 'full', component: AppointmentComponent},
       {path: 'add', pathMatch: 'full', component: EnrollmentComponent},
       {path: 'change', pathMatch: 'full', component: EnrollmentComponent}
     ]
-  }
+  },
+  // {path: ':link', component: AppointmentComponent},
 ];
 
 @NgModule({

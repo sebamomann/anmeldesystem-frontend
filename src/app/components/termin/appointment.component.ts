@@ -4,6 +4,9 @@ import {MatDialog} from '@angular/material';
 import {FilterDialogComponent} from '../dialogs/filter/filterDialog.component';
 import {isObject} from 'util';
 import {CommentDialogComponent} from '../dialogs/comment/commentDialog.component';
+import {IEnrollmentModel} from '../../models/IEnrollment.model';
+import {IAppointmentModel} from '../../models/IAppointment.model';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-appointment',
@@ -12,17 +15,36 @@ import {CommentDialogComponent} from '../dialogs/comment/commentDialog.component
 })
 @NgModule({})
 export class AppointmentComponent implements OnInit {
-  component: {};
 
-  constructor(private terminService: TerminService, public dialog: MatDialog) {
+  public link: string;
+  public appointment: IAppointmentModel = null;
+  public filter;
+  public enrollments: IEnrollmentModel[];
+  public allowModify = true;
+
+
+  constructor(private terminService: TerminService, public dialog: MatDialog, private route: ActivatedRoute, private router: Router) {
+    this.route.queryParams.subscribe(params => {
+      this.link = params.val;
+    });
+
+    this.route.params.subscribe(params => {
+      if (params.link !== undefined) {
+        this.link = params.link;
+        this.router.navigate(['/enroll'], {queryParams: {val: this.link}});
+      }
+    });
   }
 
-  public appointment = this.terminService.getTermin('');
-  public filter = this.initializeFilterObject(this.appointment);
-  public enrollments = this.appointment.enrollments;
-  allowModify = true;
-
   ngOnInit() {
+    this.terminService.getAppointment(this.link).subscribe(sAppointment => {
+        this.appointment = sAppointment.body;
+        this.enrollments = sAppointment.body.enrollments;
+        this.filter = this.initializeFilterObject(sAppointment.body);
+      },
+      error => {
+        this.appointment = undefined;
+      });
   }
 
   openFilterDialog(error: boolean = false): void {
@@ -53,6 +75,7 @@ export class AppointmentComponent implements OnInit {
         }
       }
     });
+
   }
 
   openCommentDialog(enrollment): void {
@@ -65,10 +88,11 @@ export class AppointmentComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
     });
   }
 
-  initializeFilterObject(appointment: any): any {
+  initializeFilterObject(appointment: IAppointmentModel): any {
     const additions = [];
     appointment.additions.forEach(value => additions.push({id: value.id, name: value.name, active: false}));
     return {additions, explicitly: 'dynamic', driverPassenger: ''};
@@ -88,24 +112,26 @@ export class AppointmentComponent implements OnInit {
         try {
           if (numberOfAdditionFilters > 0) {
             let contains = 0;
-            this.filter.additions.forEach(eFilter => {
+            this.filter.additions.forEach(eFilterAddition => {
               let valid = true;
 
-              if (eFilter.active === true) {
-                if (eEnrollment.additions.includes(eFilter.id)) {
+              if (eFilterAddition.active === true) {
+                if (eEnrollment.additions.some(iAddition => iAddition.id === eFilterAddition.id)) {
                   contains++;
                 }
               }
 
-              eEnrollment.additions.forEach(eId => {
-                if (eFilter.id === eId && !eFilter.active && this.filter.explicitly === 'explicit') {
+              eEnrollment.additions.forEach(eAddition => {
+                if (eAddition.id === eFilterAddition.id
+                  && !eFilterAddition.active
+                  && this.filter.explicitly === 'explicit') {
                   valid = false;
                 }
               });
 
               if ((this.filter.explicitly === 'explicit' || this.filter.explicitly === 'semiExplicit')
-                && eFilter.active === true
-                && !eEnrollment.additions.some(uID => uID === eFilter.id)) {
+                && eFilterAddition.active === true
+                && !eEnrollment.additions.some(sAddition => sAddition.id === eFilterAddition.id)) {
                 valid = false;
               }
 
@@ -125,7 +151,6 @@ export class AppointmentComponent implements OnInit {
               throw BreakException;
             }
           }
-
 
           output.push(eEnrollment);
         } catch (e) {
@@ -147,5 +172,9 @@ export class AppointmentComponent implements OnInit {
       i++;
     }
     return i;
+  }
+
+  findIndex(enrollment: IEnrollmentModel, id: string) {
+    return enrollment.additions.findIndex(add => add.id === id);
   }
 }

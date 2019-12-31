@@ -1,84 +1,113 @@
-<app-appointment-data [appointment]="appointment"></app-appointment-data>
+<ng-container *ngIf="appointment; else loading">
 
-<div class="enrollment-list block decent"
-     *ngIf="enrollments.length > 0 || getNumberOfActiveFilter() > 0; else emptyList">
-  <div class="header">
-    <h2 class="headline medium">Teilnehmer [{{enrollments.length}}{{appointment.maxEnrollments !== null
-        ? '/' + appointment.maxEnrollments : ''}}]</h2>
-  </div>
+  <app-appointment-data [appointment]="appointment"></app-appointment-data>
 
-  <mat-icon (click)="openFilterDialog()"
-            matBadge="{{getNumberOfActiveFilter() > 0 ? getNumberOfActiveFilter() : ''}}"
-            matBadgeColor="info"
-            class="filter-open"
-            matBadgeSize="small">
-    filter_list
-  </mat-icon>
+  <div *ngIf="enrollments.length > 0 || getNumberOfActiveFilter() > 0; else emptyList"
+       class="enrollment-list block decent">
+    <div class="header">
+      <h2 class="headline medium">Teilnehmer [{{appointment.enrollments.length}}{{appointment.maxEnrollments !== null
+          ? '/' + appointment.maxEnrollments : ''}}]
+        <span *ngIf="getNumberOfActiveFilter() > 0">
+        [<mat-icon>filter_list</mat-icon>: {{enrollments.length}}]
+      </span>
+      </h2>
+    </div>
 
-  <mat-accordion *ngIf="enrollments.length > 0; else emptyListFilter">
-    <ng-container *ngFor="let enrollment of enrollments">
-      <mat-expansion-panel class="enrollment">
-        <mat-expansion-panel-header class="enrollment-info"
-                                    [collapsedHeight]="'auto'"
-                                    [expandedHeight]="'auto'">
-          <span>{{enrollment.name}}</span>
-          <span class="seperator small colored bolder high"></span>
-          <span class="comment-block">
-            {{ enrollment.comment.length > 0 ? enrollment.comment : "---" }}
+    <mat-icon (click)="openFilterDialog()"
+              class="filter-open"
+              matBadge="{{getNumberOfActiveFilter() > 0 ? getNumberOfActiveFilter() : ''}}"
+              matBadgeColor="info"
+              matBadgeSize="small">
+      filter_list
+    </mat-icon>
+
+    <mat-accordion *ngIf="enrollments.length > 0; else emptyListFilter">
+      <ng-container *ngFor="let enrollment of enrollments">
+        <mat-expansion-panel class="enrollment">
+          <mat-expansion-panel-header [collapsedHeight]="'auto'"
+                                      [expandedHeight]="'auto'"
+                                      class="enrollment-info">
+            <span>{{enrollment.name}}</span>
+            <span class="separator small colored bolder high"></span>
+            <span *ngIf="enrollment.comment !== null" class="comment-block">
+            {{ enrollment.comment }}
           </span>
-          <div class="addition-list" *ngIf="appointment.additions.length > 0">
-            <span *ngIf="appointment.additions.length > 0 && enrollment.comment.length > 0"
-                  class="seperator small high"></span>
-            <ng-container *ngFor="let addition of appointment.additions">
-              <div>
-                <mat-icon *ngIf="enrollment.additions.indexOf(addition.id) !== -1">
-                  check_box
-                </mat-icon>
-                <mat-icon *ngIf="enrollment.additions.indexOf(addition.id) === -1">
-                  check_box_outline_blank
-                </mat-icon>
-                <span>{{addition.name}}</span>
-              </div>
+            <div *ngIf="appointment.additions.length > 0" class="addition-list">
+            <span *ngIf="appointment.additions.length > 0 && enrollment.comment !== null"
+                  class="separator small high"></span>
+              <ng-container *ngFor="let addition of appointment.additions">
+                <div>
+                  <mat-icon *ngIf="findIndex(enrollment, addition.id) !== -1; else blank">
+                    check_box
+                  </mat-icon>
+                  <ng-template #blank>
+                    <mat-icon>
+                      check_box_outline_blank
+                    </mat-icon>
+                  </ng-template>
+                  <span>{{addition.name}}</span>
+                </div>
+              </ng-container>
+            </div>
+          </mat-expansion-panel-header>
+
+          <div class="enrollment-additions">
+            <mat-icon
+              (click)="openCommentDialog(enrollment)"
+              matBadge="{{enrollment.comments != null && enrollment.comments.length > 0 ? enrollment.comments.length : ''}}"
+              matBadgeColor="info"
+              matBadgeSize="small">
+              comment
+            </mat-icon>
+            <ng-container *ngIf="allowModify">
+              <mat-icon>edit</mat-icon>
+              <mat-icon>delete</mat-icon>
             </ng-container>
           </div>
-        </mat-expansion-panel-header>
+        </mat-expansion-panel>
+      </ng-container>
+    </mat-accordion>
 
-        <div class="enrollment-additions">
-          <mat-icon matBadge="{{enrollment.comments.length > 0 ? enrollment.comments.length : ''}}"
-                    matBadgeColor="info"
-                    matBadgeSize="small"
-                    (click)="openCommentDialog(enrollment)">
-            comment
-          </mat-icon>
-          <ng-container *ngIf="allowModify">
-            <mat-icon>edit</mat-icon>
-            <mat-icon>delete</mat-icon>
-          </ng-container>
-        </div>
-      </mat-expansion-panel>
-    </ng-container>
-  </mat-accordion>
-
-  <ng-template #emptyListFilter>
-    <div class="empty-list">
-      <mat-icon>search</mat-icon>
-      <span>
+    <ng-template #emptyListFilter>
+      <div class="empty-list">
+        <mat-icon>search</mat-icon>
+        <span>
         Dieser Filter liefert keine Ergebnisse
       </span>
-    </div>
-  </ng-template>
-</div>
+      </div>
+    </ng-template>
+  </div>
 
 
-<ng-template #emptyList>
-  <div class="empty-list float">
+  <ng-template #emptyList>
+    <div class="empty-list float">
     <span>
         Es hat sich noch niemand angemeldet.
       </span>
-  </div>
+    </div>
+  </ng-template>
+
+  <mat-icon [queryParams]="{val: link}" [routerLink]="['/enroll/add']"
+            class="floating-button right">
+    person_add
+  </mat-icon>
+
+  <mat-icon [queryParams]="{val: link}" [routerLink]="['/appointment/driver']"
+            class="floating-button left decent">
+    directions_car
+  </mat-icon>
+</ng-container>
+
+<ng-template #loading>
+  <ng-container *ngIf="appointment === undefined; else loadingBar">
+    <div class="error empty">
+      <span>Sorry - 404</span>
+      <img src="/assets/img/404.svg">
+      Ich konnte diesen Termin nicht finden!
+    </div>
+  </ng-container>
 </ng-template>
 
-<mat-icon [routerLink]="['/enroll/add']"
-          class="floating-button">
-  person_add
-</mat-icon>
+<ng-template #loadingBar>
+  <mat-progress-bar mode="query"></mat-progress-bar>
+</ng-template>

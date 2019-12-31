@@ -1,3 +1,24 @@
+@mixin md-icon-size($size: 24px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+  line-height: $size;
+}
+
+.mat-card {
+  margin: 25px auto;
+
+  span:first-of-type {
+    display: block;
+    margin: 0 auto;
+    width: fit-content;
+
+    mat-icon {
+      @include md-icon-size(1.25em);
+    }
+  }
+}
+
 .mat-form-field {
   font-size: 0.8em;
 }
@@ -17,5 +38,43 @@ mat-chip-list {
     overflow: initial;
     padding: 4px 8px 4px 12px;
     min-height: 25px;
+  }
+}
+
+.tooltip-container {
+  margin-top: 5px;
+  position: relative;
+
+  .tooltip {
+    margin-left: 5px;
+    top: -5px;
+    position: absolute;
+    @include md-icon-size(20px);
+  }
+}
+
+.info {
+  display: block;
+  width: 100% !important;
+  margin: 0 auto 20px !important;
+
+  span {
+    margin: 5px auto !important;
+    font-size: 0.75em;
+    display: block;
+  }
+}
+
+ul {
+  padding-left: 2.5em;
+  margin-left: 0;
+  font-size: 0.75em;
+
+  li {
+    text-align: left;
+
+    span {
+      width: 100% !important;
+    }
   }
 }

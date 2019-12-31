@@ -1,6 +1,6 @@
-<div class="comment-dialog">
+<div [@.disabled]="disableAnimation" class="comment-dialog">
   <div mat-dialog-content>
-    <mat-expansion-panel>
+    <mat-expansion-panel [expanded]="false">
       <mat-expansion-panel-header>
         <mat-panel-title>
           Kommentieren
@@ -10,7 +10,8 @@
         </mat-panel-description>
       </mat-expansion-panel-header>
 
-      <form (ngSubmit)="comment()" [formGroup]="event">
+      <!--suppress AngularInvalidTemplateReferenceVariable -->
+      <form #formDirective="ngForm" (ngSubmit)="comment(enrollment); formDirective.resetForm()" [formGroup]="event">
         <mat-form-field>
           <input matInput
                  id="name"
@@ -35,7 +36,7 @@
     <div class="comment-list">
       <div class="comment-block" *ngFor="let comment of enrollment.comments">
         <span>{{comment.name}}</span>
-        <span class="seperator higher colored small"></span>
+        <span class="separator higher colored small"></span>
         <span class="comment">{{comment.comment}}</span>
         <span>{{comment.iat}}</span>
       </div>

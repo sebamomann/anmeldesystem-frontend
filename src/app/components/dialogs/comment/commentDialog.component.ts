@@ -1,6 +1,9 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from '@angular/material';
+import {CommentService} from '../../../services/comment.service';
+import {ICommentModel} from '../../../models/ICommentModel.model';
+import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 
 @Component({
   selector: 'app-comment',
@@ -8,6 +11,9 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
   styleUrls: ['./commentDialog.component.scss']
 })
 export class CommentDialogComponent implements OnInit {
+
+  // Workaround for angular component issue #13870
+  disableAnimation = true;
 
   public enrollment: any;
 
@@ -17,17 +23,30 @@ export class CommentDialogComponent implements OnInit {
   });
 
   constructor(public dialogRef: MatDialogRef<CommentDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data) {
+              @Inject(MAT_DIALOG_DATA) public data,
+              private commentService: CommentService,
+              private snackBar: MatSnackBar) {
     this.enrollment = data.enrollment;
   }
 
   ngOnInit() {
+    setTimeout(() => this.disableAnimation = false);
   }
 
-  comment(): void {
+  comment(enrollment: IEnrollmentModel): void {
     if (this.event.valid) {
-      console.log('name: ' + this.getName().value);
-      console.log('comment: ' + this.getComment().value);
+      const comment: ICommentModel = {
+        name: this.getName().value,
+        comment: this.getComment().value
+      };
+
+      this.commentService.comment(comment, enrollment).subscribe(response => {
+        this.enrollment.comments.push(response);
+        this.snackBar.open('Kommentar gesendet', null, {
+          duration: 2000,
+          panelClass: 'snackbar-default'
+        });
+      });
     }
   }
 

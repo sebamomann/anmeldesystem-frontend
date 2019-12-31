@@ -1,3 +1,5 @@
+import {IFileModelUpload} from './IFileModelUpload.model';
+
 export interface CreateAppointmentModel {
   title: string;
   description: string;
@@ -9,4 +11,5 @@ export interface CreateAppointmentModel {
   additions: string[];
   driverAddition: boolean;
   administrations: string[];
+  files: IFileModelUpload[];
 }

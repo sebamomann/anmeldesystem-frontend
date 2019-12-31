@@ -1,153 +1,54 @@
 import {Injectable} from '@angular/core';
+import {IAppointmentModel} from '../models/IAppointment.model';
+import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.model';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {CreateAppointmentModel} from '../models/createAppointment.model';
+import {IEnrollmentModel} from '../models/IEnrollment.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TerminService {
 
-  constructor() {
+  constructor(private readonly httpClient: HttpClient) {
   }
 
-  getTermin(link: string) {
+  getAppointment(link: string): Observable<HttpResponse<IAppointmentModel | any>> {
+    return this.httpClient.get<IAppointmentModel>(`http://localhost:3000/appointment/get?link=${link}`, {observe: 'response'});
+  }
 
-    return {
-      title: 'Test Termin',
-      description: 'This is a very very cool date because I created it lol',
-      location: 'Hier lol',
-      creator: 'TestCreator',
-      date: '01-01-2020 00:00:00',
-      deadline: '01-01-2019 00:00:00',
-      link: 'ABCDE',
-      maxEnrollments: 10,
-      additions: [
-        {
-          id: 'id1',
-          name: 'Megges'
-        },
-        {
-          id: 'id2',
-          name: 'BK'
-        },
-        {
-          id: 'id3',
-          name: 'Subway'
-        },
-        {
-          id: 'id4',
-          name: 'Diner'
-        }
-      ],
-      driverAddition: true,
-      enrollments: [
-        {
-          name: 'Test Enrollment',
-          comment: 'This is my cool comment but it is acutally waaay to long to be put in just one line',
-          comments: [{
-            name: 'CommentWriter1',
-            comment: 'This is my comment response to your comment',
-            iat: '01-01-2019 00:00:00'
-          }, {
-            name: 'CommentWriter1',
-            comment: 'This is my comment response to your comment',
-            iat: '01-01-2019 00:00:00'
-          }, {
-            name: 'CommentWriter1',
-            comment: 'This is my comment response to your comment',
-            iat: '01-01-2019 00:00:00'
-          }, {
-            name: 'CommentWriter1',
-            comment: 'This is my comment response to your comment',
-            iat: '01-01-2019 00:00:00'
-          }, {
-            name: 'CommentWriter1',
-            comment: 'This is my comment response to your comment',
-            iat: '01-01-2019 00:00:00'
-          }, {
-            name: 'CommentWriter2',
-            comment: 'This is my comment response to your comment too lol',
-            iat: '01-01-2019 00:00:00'
-          }],
-          driver: null,
-          passenger: {
-            requirement: 1,
-          },
-          additions: [
-            'id1',
-            'id2',
-            'id4'
-          ],
-          iat: '01-01-2019 00:00:00',
-        },
-        {
-          name: 'Driver',
-          comment: 'This is my cool comment but it is acutally waaay to long to be put in just one line',
-          comments: [],
-          driver: {
-            service: 1,
-            seats: 3,
-          },
-          passenger: null,
-          additions: [
-            'id1',
-            'id2',
-            'id4'
-          ],
-          iat: '01-01-2019 00:00:00',
-        },
-        {
-          name: 'Test Enrollment2',
-          comment: 'This is my cool comment',
-          comments: [{
-            name: 'CommentWriter1',
-            comment: 'This is my comment response to your comment',
-            iat: '01-01-2019 00:00:00'
-          }, {
-            name: 'CommentWriter2',
-            comment: 'This is my comment response to your comment too lol',
-            iat: '01-01-2019 00:00:00'
-          }],
-          driver: null,
-          passenger: {
-            requirement: 1,
-          },
-          additions: [
-            'id1',
-            'id2',
-            'id4'
-          ],
-          iat: '01-01-2019 00:00:00',
-        },
-        {
-          name: 'Driver 2',
-          comment: 'This is my cool comment',
-          comments: [],
-          driver: {
-            requirement: 1,
-          },
-          passenger: null,
-          additions: [
-            'id1',
-            'id2',
-          ],
-          iat: '01-01-2019 00:00:00',
-        },
-        {
-          name: 'Driver 3',
-          comment: 'This is my cool comment',
-          comments: [],
-          driver: {
-            requirement: 1,
-          },
-          passenger: null,
-          additions: [
-            'id1',
-            'id2',
-            'id3',
-            'id4',
-          ],
-          iat: '01-01-2019 00:00:00',
-        }
-      ]
-    };
+  getTermine(): Observable<IAppointmentModel[]> {
+    return this.httpClient.get<IAppointmentModel[]>(`http://localhost:3000/appointment`);
+  }
+
+  getTemplates(): IAppointmentTemplateModel[] {
+    return [
+      {
+        title: 'Template 1',
+        description: 'Template description',
+        location: 'Template location',
+        maxEnrollments: 20,
+        additions: [{name: 'Template Addition 1'}],
+        driverAddition: true
+      },
+      {
+        title: 'Template 2',
+        description: 'Template 2 description',
+        location: 'Template 2 location',
+        maxEnrollments: 20,
+        additions: [{name: 'Template Addition 2'}],
+        driverAddition: true
+      }
+    ];
+  }
+
+  create(appointment: CreateAppointmentModel): Observable<HttpResponse<IAppointmentModel | any>> {
+    return this.httpClient.post<IAppointmentModel>(`http://localhost:3000/appointment`, appointment, {observe: 'response'});
+  }
+
+  enroll(enrollment: IEnrollmentModel, appointment: IAppointmentModel) {
+    const url = `http://localhost:3000/enrollment?link=${appointment.link}`;
+    return this.httpClient.post<IEnrollmentModel>(url, enrollment);
   }
 }

@@ -18,11 +18,14 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
+  MatListModule,
   MatNativeDateModule,
+  MatProgressBarModule,
   MatRadioModule,
   MatSelectModule,
   MatSnackBarModule,
   MatStepperModule,
+  MatTabsModule,
   MatTooltipModule
 } from '@angular/material';
 import {AppointmentComponent} from './components/termin/appointment.component';
@@ -36,6 +39,13 @@ import {CommentDialogComponent} from './components/dialogs/comment/commentDialog
 import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
 import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
 import {UrlEncodePipe} from './pipes/url-encode.pipe';
+import {LocationStrategy, PathLocationStrategy} from '@angular/common';
+import {DashboardComponent} from './components/termin/dashboard/dashboard.component';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {DriverComponent} from './components/termin/driver/driver.component';
+import {TemplateDialogComponent} from './components/dialogs/template-dialog/template-dialog.component';
+import {AuthInterceptor} from './_helper/interceptor/auth.interceptor';
+import {JwtInterceptor} from './_helper/interceptor/jwt.interceptor';
 
 @NgModule({
   declarations: [
@@ -50,6 +60,9 @@ import {UrlEncodePipe} from './pipes/url-encode.pipe';
     EnrollmentComponent,
     AppointmentCreateComponent,
     UrlEncodePipe,
+    DashboardComponent,
+    DriverComponent,
+    TemplateDialogComponent,
   ],
   imports: [
     MatDatepickerModule,
@@ -76,11 +89,18 @@ import {UrlEncodePipe} from './pipes/url-encode.pipe';
     MatStepperModule,
     MatDatepickerModule,
     MatAutocompleteModule,
+    MatTabsModule,
+    MatProgressBarModule,
+    HttpClientModule,
+    MatListModule
   ],
-  providers: [WINDOW_PROVIDERS, MatDatepickerModule],
+  providers: [WINDOW_PROVIDERS, MatDatepickerModule,
+    {provide: LocationStrategy, useClass: PathLocationStrategy},
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent],
   exports: [FilterDialogComponent, CommentDialogComponent, UrlEncodePipe],
-  entryComponents: [FilterDialogComponent, CommentDialogComponent],
+  entryComponents: [FilterDialogComponent, CommentDialogComponent, TemplateDialogComponent],
 })
 export class AppModule {
 

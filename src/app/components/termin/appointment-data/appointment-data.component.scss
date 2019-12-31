@@ -11,7 +11,7 @@
   margin: 25px auto 50px;
 
   mat-card-title {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     font-size: 1.75em;
   }
 
@@ -19,40 +19,80 @@
     display: block;
   }
 
-  span {
-    margin: 5px 10px;
-    display: inline-block;
-    width: calc(50% - 20px);
-    text-align: left;
+  mat-card-content {
+    margin-bottom: 0px;
 
-    &.seperator {
-      width: 100%;
-      display: block;
-      margin-bottom: 15px;
+    .files-wrapper {
+      .separator {
+        margin-bottom: initial;
+      }
+
+      .file {
+        display: inline-block;
+        vertical-align: top;
+        overflow: hidden;
+
+        mat-icon {
+          @include md-icon-size(16px);
+        }
+
+        a {
+          line-height: 2.25em;
+          line-break: anywhere;
+          font-size: 0.8em;
+          padding: 5px auto;
+          margin: 0 15px 0 0;
+          min-width: 0;
+          max-width: 200px;
+        }
+      }
     }
 
-    mat-icon {
-      @include md-icon-size(20px);
+    span {
+      margin: 3px 10px;
+      display: inline-block;
+      width: calc(50% - 20px);
+      text-align: left;
       vertical-align: top;
-      left: 0;
+
+      &.separator:first-of-type {
+        width: calc(100% - 20px);
+        display: block;
+        margin-bottom: 15px;
+      }
+
+      mat-icon {
+        @include md-icon-size(20px);
+        vertical-align: top;
+        left: 0;
+      }
+    }
+
+    p {
+      margin: 10px auto 0;
+      max-width: 95%;
     }
   }
 
-  p {
-    margin: 10px auto 0;
-    max-width: 95%;
-  }
-
-  .link-management {
-    font-size: 0.9em;
+  mat-card-actions {
+    font-size: 0.8em;
 
     button {
-      font-size: 0.9em;
+      font-size: 0.8em;
       line-height: 30px;
     }
 
     mat-form-field {
       margin-right: 15px;
+
+      /* NOT WORKING */
+      & > .mat-form-field-wrapper {
+        & > .mat-form-field-flex {
+          & > .mat-form-field-infix {
+            border: none !important;
+          }
+        }
+      }
     }
   }
 }

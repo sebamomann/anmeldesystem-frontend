@@ -2,10 +2,17 @@
   <mat-card-title class="headline">
     Termin erstellen
   </mat-card-title>
-  <mat-vertical-stepper [linear]="true" #stepper>
+  <span (click)="openAppointmentTemplateDialog()">
+    Vorlagen
+    <mat-icon>file_copy</mat-icon>
+  </span>
+  <mat-vertical-stepper #stepper [linear]="false">
     <mat-step [stepControl]="overallDataFormGroup">
       <form [formGroup]="overallDataFormGroup">
         <ng-template matStepLabel>Allgemein</ng-template>
+        <span class="info">
+          Allgemeine Informationen des Termins
+        </span>
         <mat-form-field class="">
           <input matInput
                  placeholder="Titel"
@@ -51,8 +58,23 @@
       <form [formGroup]="additionFormGroup">
         <ng-template matStepLabel>Zusätze</ng-template>
 
+        <span class="info">
+          Zusätze, welche beim Anmelden mit Ja/Nein beantwortet werden.
+        </span>
+
         <ng-container id="additionList">
-          <mat-checkbox class="solo" formControlName="driverAddition">Fahrer</mat-checkbox>
+          <div class="tooltip-container">
+            <mat-checkbox formControlName="driverAddition">
+              Fahrer
+            </mat-checkbox>
+            <!--suppress TypeScriptUnresolvedFunction -->
+            <mat-icon #driverAdditionTooltip="matTooltip"
+                      (click)="driverAdditionTooltip.toggle()"
+                      class="tooltip"
+                      matTooltip="{{'Hierbei können sich Teilnehmer als Fahrer melden. Sie geben unter Anderem die Anzahl freier Plätze ein und in welche Richtung sie fahren.'}}">
+              info
+            </mat-icon>
+          </div>
 
           <div *ngFor="let addition of additionFormGroup.controls.additions.controls; let i = index"
                formArrayName="additions">
@@ -85,27 +107,42 @@
       <form [formGroup]="linkFormGroup">
         <ng-template matStepLabel>Link</ng-template>
 
+        <span class="info">
+          Eigener URL Pfad zum Termin
+        </span>
+
         <mat-form-field class="">
           <input matInput
                  placeholder="Wunschlink"
                  formControlName="link"
-                 id="link"
-                 minlength="10">
+                 id="link">
           <mat-hint class="small"
                     *ngIf="linkFormGroup.get('link').value !== ''
                   && linkFormGroup.get('link').value !== null">
             {{urlService.getHostname()}}{{linkFormGroup.get('link').value | urlEncode}}
           </mat-hint>
+          <mat-error>{{ this.getLinkErrorMessage() }}</mat-error>
         </mat-form-field>
 
         <mat-form-field>
-          <textarea matInput
-                    #description
-                    placeholder="Zusatzinformationen"
-                    formControlName="description"
-                    id="description"
-                    required>
-          </textarea>
+          <div class="tooltip-container">
+            <textarea #description
+                      formControlName="description"
+                      id="description"
+                      matInput
+                      minlength="5"
+                      placeholder="Zusatzinformationen"
+                      required>
+            </textarea>
+            <!--suppress TypeScriptUnresolvedFunction -->
+            <mat-icon #descriptionTooltip="matTooltip"
+                      (click)="descriptionTooltip.toggle()"
+                      class="tooltip"
+                      matTooltip="{{'Dieser Text wird unter Anderem beim Versenden des Anmeldelinks als Linkvorschau angezeigt.'}}">
+              info
+            </mat-icon>
+          </div>
+
           <mat-hint align="start"
                     *ngIf="description.value.length < 10">
             Noch mindestens {{10 - description.value.length}} Zeichen
@@ -153,13 +190,49 @@
         </div>
       </form>
     </mat-step>
-    <mat-step>
-      <ng-template matStepLabel>Fertig</ng-template>
-      Alle Daten korrekt?
-      <div class="stepper-navigation">
-        <button mat-button mat-stroked-button (click)="create()">Erstellen</button>
-        <button mat-button matStepperPrevious>Zurück</button>
-      </div>
+    <mat-step [stepControl]="fileUpload">
+      <ng-template matStepLabel>Zusatzdatei</ng-template>
+      <span class="info">
+        Diese Datei wird zum Download bereitgestellt. Hier finden z.B: Muttizettel o.ä. Platz.
+        <span>(Je kürzer und aussagekräftiger der Datei Name, desto besser)</span>
+      </span>
+      <button (click)="selectFile()" color="warn" mat-button>
+        <mat-icon>file_upload</mat-icon>
+        Hochladen
+      </button>
+      <br/>
+      <ul>
+        <li *ngFor="let file of files">
+          <span id="file-label">
+            {{file.file.name}}
+          </span>
+          <mat-progress-bar *ngIf="!file.done" mode="indeterminate"></mat-progress-bar>
+        </li>
+      </ul>
+      <input id="fileUpload" multiple="multiple" name="fileUpload" style="display:none;" type="file"/>
+    </mat-step>
+    <mat-step [stepControl]="doneGroup">
+      <form [formGroup]="doneGroup">
+        <ng-template matStepLabel>Fertig</ng-template>
+
+        <div class="tooltip-container">
+          <mat-checkbox formControlName="saveAsTemplate">
+            Als Vorlage Speichern
+          </mat-checkbox>
+          <!--suppress TypeScriptUnresolvedFunction -->
+          <mat-icon #templateTooltip="matTooltip"
+                    (click)="templateTooltip.toggle()"
+                    class="tooltip"
+                    matTooltip="{{'Die Kerndaten des Termins werden als Vorlage für schnelleres Erstellen eines Termins bereitgestellt.'}}">
+            info
+          </mat-icon>
+        </div>
+
+        <div class="stepper-navigation">
+          <button (click)="create()" mat-button mat-stroked-button>Erstellen</button>
+          <button mat-button matStepperPrevious>Zurück</button>
+        </div>
+      </form>
     </mat-step>
   </mat-vertical-stepper>
 </mat-card>

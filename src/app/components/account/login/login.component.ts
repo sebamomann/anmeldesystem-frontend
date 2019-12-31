@@ -1,7 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {AccountService} from '../../../services/account.service';
+import {AuthenticationService} from '../../../services/authentication.service';
+import {first} from 'rxjs/operators';
+import {AlertService} from '../../../services/alter.service';
 
 @Component({
   selector: 'app-login',
@@ -17,25 +20,31 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required]),
   });
 
-  constructor(private router: Router, private accountService: AccountService) {
+  private returnUrl: string;
+
+  constructor(private router: Router, private accountService: AccountService, private route: ActivatedRoute,
+              private authenticationService: AuthenticationService, private alertService: AlertService) {
   }
 
   ngOnInit() {
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/dashboard';
   }
 
-  login(): void {
+  async login(): Promise<void> {
     if (this.event.valid) {
 
-      const userCredentials = {
-        username: this.getUsername().value,
-        password: this.getPassword().value,
-      };
+      const username = this.getUsername().value;
+      const password = this.getPassword().value;
 
-      const response = this.accountService.login(userCredentials);
+      await this.authenticationService.login(username, password).pipe(first())
+        .subscribe(
+          data => {
+            this.router.navigate([this.returnUrl]);
+          },
+          error => {
+            this.alertService.error(error);
+          });
 
-      response.subscribe(res => {
-        this.router.navigateByUrl('');
-      });
     }
   }
 
