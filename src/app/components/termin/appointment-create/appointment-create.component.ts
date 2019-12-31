@@ -107,7 +107,7 @@ export class AppointmentCreateComponent implements OnInit {
     this.terminService.create(output).subscribe(result => {
         switch (result.status) {
           case HttpStatus.CREATED:
-            this.router.navigate([`${result.body.link}`]);
+            this.router.navigate([`enroll/?val=${result.body.link}`]);
             break;
         }
       }, error => {
