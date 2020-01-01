@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.model';
-import {HttpClient, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpEvent, HttpRequest, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
 import {IEnrollmentModel} from '../models/IEnrollment.model';
@@ -15,8 +15,12 @@ export class TerminService {
   constructor(private readonly httpClient: HttpClient) {
   }
 
-  getAppointment(link: string): Observable<HttpResponse<IAppointmentModel | any>> {
-    return this.httpClient.get<IAppointmentModel>(`${environment.api.url}appointment/${link}`, {observe: 'response'});
+  getAppointment(link: string): Observable<HttpEvent<IAppointmentModel>> {
+    const req = new HttpRequest('GET', `${environment.api.url}appointment/${link}`, {
+      observe: 'response',
+      reportProgress: true,
+    });
+    return this.httpClient.request(req);
   }
 
   getTermine(): Observable<IAppointmentModel[]> {

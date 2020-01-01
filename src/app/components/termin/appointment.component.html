@@ -109,5 +109,5 @@
 </ng-template>
 
 <ng-template #loadingBar>
-  <mat-progress-bar mode="query"></mat-progress-bar>
+  <mat-progress-bar [value]="percentDone" mode="determinate"></mat-progress-bar>
 </ng-template>

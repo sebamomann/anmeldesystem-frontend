@@ -7,6 +7,7 @@ import {CommentDialogComponent} from '../dialogs/comment/commentDialog.component
 import {IEnrollmentModel} from '../../models/IEnrollment.model';
 import {IAppointmentModel} from '../../models/IAppointment.model';
 import {ActivatedRoute, Router} from '@angular/router';
+import {HttpEventType} from '@angular/common/http';
 
 @Component({
   selector: 'app-appointment',
@@ -21,6 +22,7 @@ export class AppointmentComponent implements OnInit {
   public filter: any;
   public enrollments: IEnrollmentModel[];
   public allowModify = true;
+  public percentDone;
 
 
   constructor(private terminService: TerminService, public dialog: MatDialog, private route: ActivatedRoute, private router: Router) {
@@ -38,9 +40,13 @@ export class AppointmentComponent implements OnInit {
 
   ngOnInit() {
     this.terminService.getAppointment(this.link).subscribe(sAppointment => {
-        this.appointment = sAppointment.body;
-        this.enrollments = sAppointment.body.enrollments;
-        this.filter = this.initializeFilterObject(sAppointment.body);
+        if (sAppointment.type === HttpEventType.DownloadProgress) {
+          this.percentDone = Math.round(100 * sAppointment.loaded / sAppointment.total);
+        } else if (sAppointment.type === HttpEventType.Response) {
+          this.appointment = sAppointment.body;
+          this.enrollments = sAppointment.body.enrollments;
+          this.filter = this.initializeFilterObject(sAppointment.body);
+        }
       },
       error => {
         this.appointment = undefined;
