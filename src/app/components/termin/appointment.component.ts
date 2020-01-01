@@ -11,6 +11,7 @@ import {HttpEventType} from '@angular/common/http';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ConfirmationDialogComponent} from '../dialogs/confirmation-dialog/confirmation-dialog.component';
+import {EnrollmentService} from '../../services/enrollment.service';
 
 @Component({
   selector: 'app-appointment',
@@ -37,7 +38,7 @@ export class AppointmentComponent implements OnInit {
 
 
   constructor(private terminService: TerminService, public dialog: MatDialog, private route: ActivatedRoute, private router: Router,
-              private authenticationService: AuthenticationService) {
+              private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService) {
     this.route.queryParams.subscribe(params => {
       this.link = params.val;
     });
@@ -103,7 +104,7 @@ export class AppointmentComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        /* Clicked yes */
+        this.enrollmentService.delete(enrollment);
       }
     });
   }
