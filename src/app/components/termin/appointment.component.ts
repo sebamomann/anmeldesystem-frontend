@@ -205,7 +205,10 @@ export class AppointmentComponent implements OnInit {
     return i;
   }
 
-  // Util
+  /**
+   * Check for currentUser being allowed to modify current appointment </br>
+   * This Also applies editing and deleting enrollments
+   */
   modificationAllowed() {
     return (this.appointment.creator.username === this.authenticationService.currentUserValue.username)
       || (this.appointment.administrators.some(sAdministrator => {
