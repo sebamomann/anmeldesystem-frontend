@@ -24,7 +24,7 @@ import {EnrollmentService} from '../../services/enrollment.service';
         animate(400, style({opacity: 0}))
       ])
     ])
-  ]
+  ],
 })
 @NgModule({})
 export class AppointmentComponent implements OnInit {
