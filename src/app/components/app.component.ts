@@ -23,7 +23,7 @@ export class AppComponent {
     const date = new Date();
     this.now = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
 
-    particlesJS.load('particles-js', '/assets/particlesjs-config.json', null);
+    particlesJS.load('particles-js', './assets/particlesjs-config.json', null);
 
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
   }
