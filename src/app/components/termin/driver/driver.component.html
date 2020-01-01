@@ -46,7 +46,7 @@
   <div class="analysis-block-wrapper">
     <div class="analysis-block">
       <span class="title">Hinfahrt: {{data.gotTo}} Plätze</span>
-      <ng-container [ngTemplateOutletContext]="{nr1:data.gotFrom, nr2: data.neededFrom}"
+      <ng-container [ngTemplateOutletContext]="{nr1:data.gotTo, nr2: data.neededTo}"
                     [ngTemplateOutlet]="calculation">
       </ng-container>
     </div>
