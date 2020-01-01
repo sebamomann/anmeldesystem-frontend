@@ -78,6 +78,7 @@ export class DriverComponent implements OnInit {
             this.data.gotFrom += fAppointment.driver.seats;
           }
         }).length;
+
       }
     }, error => {
 
