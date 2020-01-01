@@ -9,7 +9,7 @@ import {WINDOW} from '../../../provider/window.provider';
 @Component({
   selector: 'app-appointment-data',
   templateUrl: './appointment-data.component.html',
-  styleUrls: ['./appointment-data.component.scss']
+  styleUrls: ['./appointment-data.component.scss'],
 })
 export class AppointmentDataComponent implements OnInit {
 

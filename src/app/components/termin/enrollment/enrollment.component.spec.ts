@@ -30,7 +30,7 @@ describe('EnrollmentComponent', () => {
         MatOptionModule, MatSelectModule,
         BrowserAnimationsModule, MatInputModule,
         MatProgressBarModule, HttpClientTestingModule,
-        RouterTestingModule],
+        RouterTestingModule, BrowserAnimationsModule],
       declarations: [EnrollmentComponent],
       providers: [{provide: Location, useClass: SpyLocation}],
     })

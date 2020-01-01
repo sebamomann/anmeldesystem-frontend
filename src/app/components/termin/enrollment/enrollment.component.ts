@@ -6,13 +6,23 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {IAdditionModel} from '../../../models/IAddition.model';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
+import {HttpEventType} from '@angular/common/http';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 const HttpStatus = require('http-status-codes');
 
 @Component({
   selector: 'app-enrollment',
   templateUrl: './enrollment.component.html',
-  styleUrls: ['./enrollment.component.scss']
+  styleUrls: ['./enrollment.component.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      state('in', style({opacity: 100})),
+      transition('* => void', [
+        animate(400, style({opacity: 0}))
+      ])
+    ])
+  ]
 })
 export class EnrollmentComponent implements OnInit {
   event = this.formBuilder.group({
@@ -29,6 +39,7 @@ export class EnrollmentComponent implements OnInit {
   additions = [];
 
   private link: string;
+  private percentDone;
 
   constructor(private terminService: TerminService, private location: Location,
               private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router) {
@@ -39,8 +50,12 @@ export class EnrollmentComponent implements OnInit {
 
   async ngOnInit() {
     await this.terminService.getAppointment(this.link).subscribe(sAppointment => {
-      this.appointment = sAppointment.body;
-      this.addCheckboxes();
+      if (sAppointment.type === HttpEventType.DownloadProgress) {
+        this.percentDone = Math.round(100 * sAppointment.loaded / sAppointment.total);
+      } else if (sAppointment.type === HttpEventType.Response) {
+        this.appointment = sAppointment.body;
+        this.addCheckboxes();
+      }
     }, error => {
       this.appointment = null;
     });

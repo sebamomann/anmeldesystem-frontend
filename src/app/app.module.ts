@@ -4,7 +4,7 @@ import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './components/app.component';
 import {LandingPageComponent} from './components/landing-page/landing-page.component';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MatAutocompleteModule,
   MatBadgeModule,
@@ -92,7 +92,8 @@ import {JwtInterceptor} from './_helper/interceptor/jwt.interceptor';
     MatTabsModule,
     MatProgressBarModule,
     HttpClientModule,
-    MatListModule
+    MatListModule,
+    NoopAnimationsModule
   ],
   providers: [WINDOW_PROVIDERS, MatDatepickerModule,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
