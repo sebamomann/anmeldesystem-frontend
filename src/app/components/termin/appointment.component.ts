@@ -8,11 +8,20 @@ import {IEnrollmentModel} from '../../models/IEnrollment.model';
 import {IAppointmentModel} from '../../models/IAppointment.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HttpEventType} from '@angular/common/http';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-appointment',
   templateUrl: './appointment.component.html',
-  styleUrls: ['./appointment.component.scss']
+  styleUrls: ['./appointment.component.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      state('in', style({opacity: 100})),
+      transition('* => void', [
+        animate(400, style({opacity: 0}))
+      ])
+    ])
+  ]
 })
 @NgModule({})
 export class AppointmentComponent implements OnInit {
