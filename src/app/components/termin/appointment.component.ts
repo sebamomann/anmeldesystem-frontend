@@ -9,6 +9,8 @@ import {IAppointmentModel} from '../../models/IAppointment.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HttpEventType} from '@angular/common/http';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {AuthenticationService} from '../../services/authentication.service';
+import {ConfirmationDialogComponent} from '../dialogs/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-appointment',
@@ -30,11 +32,12 @@ export class AppointmentComponent implements OnInit {
   public appointment: IAppointmentModel = null;
   public filter: any;
   public enrollments: IEnrollmentModel[];
-  public allowModify = true;
+  public allowModify = false;
   public percentDone;
 
 
-  constructor(private terminService: TerminService, public dialog: MatDialog, private route: ActivatedRoute, private router: Router) {
+  constructor(private terminService: TerminService, public dialog: MatDialog, private route: ActivatedRoute, private router: Router,
+              private authenticationService: AuthenticationService) {
     this.route.queryParams.subscribe(params => {
       this.link = params.val;
     });
@@ -55,6 +58,7 @@ export class AppointmentComponent implements OnInit {
           this.appointment = sAppointment.body;
           this.enrollments = sAppointment.body.enrollments;
           this.filter = this.initializeFilterObject(sAppointment.body);
+          this.allowModify = this.modificationAllowed();
         }
       },
       error => {
@@ -90,7 +94,18 @@ export class AppointmentComponent implements OnInit {
         }
       }
     });
+  }
 
+  openConfirmationDialog(enrollment: IEnrollmentModel): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '350px',
+      data: `Bist du sicher, dass du "${enrollment.name}" löschen möchtest?`
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        /* Clicked yes */
+      }
+    });
   }
 
   openCommentDialog(enrollment): void {
@@ -189,7 +204,21 @@ export class AppointmentComponent implements OnInit {
     return i;
   }
 
-  findIndex(enrollment: IEnrollmentModel, id: string) {
-    return enrollment.additions.findIndex(add => add.id === id);
+  // Util
+  modificationAllowed() {
+    return (this.appointment.creator.username === this.authenticationService.currentUserValue.username)
+      || (this.appointment.administrators.some(sAdministrator => {
+        return sAdministrator.mail === this.authenticationService.currentUserValue.mail;
+      }));
+  }
+
+  /**
+   * Check if id of addition is checked by enrollment.
+   *
+   * @param enrollment IEnrollmentModel Enrollment to search in
+   * @param id string ID of addition to check for
+   */
+  private enrollmentCheckedAddition(enrollment: IEnrollmentModel, id: string): boolean {
+    return enrollment.additions.findIndex(add => add.id === id) !== -1;
   }
 }

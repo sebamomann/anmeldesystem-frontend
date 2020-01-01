@@ -13,6 +13,7 @@ export interface IAppointmentModel {
   link: string;
   maxEnrollments: number | null;
   additions: IAdditionModel[];
+  administrators: { mail: string }[];
   driverAddition: boolean;
   enrollments: IEnrollmentModel[];
   files: IFileModel[];

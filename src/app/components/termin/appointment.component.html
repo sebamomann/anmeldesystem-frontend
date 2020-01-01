@@ -29,15 +29,17 @@
                                       class="enrollment-info">
             <span>{{enrollment.name}}</span>
             <span class="separator small colored bolder high"></span>
-            <span *ngIf="enrollment.comment !== null" class="comment-block">
+            <span *ngIf="enrollment.comment !== null"
+                  class="comment-block">
             {{ enrollment.comment }}
           </span>
-            <div *ngIf="appointment.additions.length > 0" class="addition-list">
+            <div *ngIf="appointment.additions.length > 0"
+                 class="addition-list">
             <span *ngIf="appointment.additions.length > 0 && enrollment.comment !== null"
                   class="separator small high"></span>
               <ng-container *ngFor="let addition of appointment.additions">
                 <div>
-                  <mat-icon *ngIf="findIndex(enrollment, addition.id) !== -1; else blank">
+                  <mat-icon *ngIf="enrollmentCheckedAddition(enrollment, addition.id); else blank">
                     check_box
                   </mat-icon>
                   <ng-template #blank>
@@ -60,8 +62,12 @@
               comment
             </mat-icon>
             <ng-container *ngIf="allowModify">
-              <mat-icon>edit</mat-icon>
-              <mat-icon>delete</mat-icon>
+              <mat-icon>
+                edit
+              </mat-icon>
+              <mat-icon (click)="openConfirmationDialog(enrollment)">
+                delete
+              </mat-icon>
             </ng-container>
           </div>
         </mat-expansion-panel>
@@ -72,8 +78,8 @@
       <div class="empty-list">
         <mat-icon>search</mat-icon>
         <span>
-        Dieser Filter liefert keine Ergebnisse
-      </span>
+          Dieser Filter liefert keine Ergebnisse
+        </span>
       </div>
     </ng-template>
   </div>
@@ -87,12 +93,14 @@
     </div>
   </ng-template>
 
-  <mat-icon [queryParams]="{val: link}" [routerLink]="['/enroll/add']"
+  <mat-icon [queryParams]="{val: link}"
+            [routerLink]="['/enroll/add']"
             class="floating-button right">
     person_add
   </mat-icon>
 
-  <mat-icon [queryParams]="{val: link}" [routerLink]="['/appointment/driver']"
+  <mat-icon [queryParams]="{val: link}"
+            [routerLink]="['/appointment/driver']"
             class="floating-button left decent">
     directions_car
   </mat-icon>

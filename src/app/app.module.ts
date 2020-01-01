@@ -4,7 +4,7 @@ import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './components/app.component';
 import {LandingPageComponent} from './components/landing-page/landing-page.component';
-import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MatAutocompleteModule,
   MatBadgeModule,
@@ -46,6 +46,7 @@ import {DriverComponent} from './components/termin/driver/driver.component';
 import {TemplateDialogComponent} from './components/dialogs/template-dialog/template-dialog.component';
 import {AuthInterceptor} from './_helper/interceptor/auth.interceptor';
 import {JwtInterceptor} from './_helper/interceptor/jwt.interceptor';
+import {ConfirmationDialogComponent} from './components/dialogs/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import {JwtInterceptor} from './_helper/interceptor/jwt.interceptor';
     DashboardComponent,
     DriverComponent,
     TemplateDialogComponent,
+    ConfirmationDialogComponent,
   ],
   imports: [
     MatDatepickerModule,
@@ -93,7 +95,6 @@ import {JwtInterceptor} from './_helper/interceptor/jwt.interceptor';
     MatProgressBarModule,
     HttpClientModule,
     MatListModule,
-    NoopAnimationsModule
   ],
   providers: [WINDOW_PROVIDERS, MatDatepickerModule,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
@@ -101,7 +102,12 @@ import {JwtInterceptor} from './_helper/interceptor/jwt.interceptor';
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent],
   exports: [FilterDialogComponent, CommentDialogComponent, UrlEncodePipe],
-  entryComponents: [FilterDialogComponent, CommentDialogComponent, TemplateDialogComponent],
+  entryComponents: [
+    FilterDialogComponent,
+    CommentDialogComponent,
+    TemplateDialogComponent,
+    ConfirmationDialogComponent
+  ],
 })
 export class AppModule {
 
