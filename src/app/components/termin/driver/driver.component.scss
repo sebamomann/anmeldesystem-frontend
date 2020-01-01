@@ -67,6 +67,7 @@ mat-card {
     display: inline-block;
     width: calc(50% - 20px);
     margin-top: 15px;
+    vertical-align: top;
 
     .title {
       font-weight: bolder;
