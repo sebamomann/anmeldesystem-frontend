@@ -1,6 +1,6 @@
 import {Component, NgModule, OnInit} from '@angular/core';
 import {TerminService} from '../../services/termin.service';
-import {MatDialog} from '@angular/material';
+import {MatDialog, MatSnackBar} from '@angular/material';
 import {FilterDialogComponent} from '../dialogs/filter/filterDialog.component';
 import {isObject} from 'util';
 import {CommentDialogComponent} from '../dialogs/comment/commentDialog.component';
@@ -12,6 +12,8 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ConfirmationDialogComponent} from '../dialogs/confirmation-dialog/confirmation-dialog.component';
 import {EnrollmentService} from '../../services/enrollment.service';
+
+const HttpStatus = require('http-status-codes');
 
 @Component({
   selector: 'app-appointment',
@@ -38,7 +40,8 @@ export class AppointmentComponent implements OnInit {
 
 
   constructor(private terminService: TerminService, public dialog: MatDialog, private route: ActivatedRoute, private router: Router,
-              private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService) {
+              private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
+              private snackBar: MatSnackBar) {
     this.route.queryParams.subscribe(params => {
       this.link = params.val;
     });
@@ -97,14 +100,44 @@ export class AppointmentComponent implements OnInit {
     });
   }
 
+  removeAppointment(enrollment: IEnrollmentModel) {
+    const index = this.appointment.enrollments.indexOf(enrollment);
+    this.appointment.enrollments.splice(index, 1);
+  }
+
   openConfirmationDialog(enrollment: IEnrollmentModel): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '350px',
       data: `Bist du sicher, dass du "${enrollment.name}" löschen möchtest?`
     });
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.enrollmentService.delete(enrollment);
+        this.enrollmentService.delete(enrollment).subscribe(deletionResult => {
+            if (deletionResult.type === HttpEventType.Response) {
+              switch (deletionResult.status) {
+                case HttpStatus.OK:
+                  this.snackBar.open(`"${enrollment.name}" gelöscht`, null, {
+                    duration: 2000,
+                    panelClass: 'snackbar-default'
+                  });
+                  this.removeAppointment(enrollment);
+                  break;
+                default:
+                  this.snackBar.open(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu löschen`, null, {
+                    duration: 2000,
+                    panelClass: 'snackbar-default'
+                  });
+                  break;
+              }
+            }
+          }, error => {
+            switch (HttpStatus.status) {
+              case HttpStatus.FORBIDDEN:
+                break;
+            }
+          }
+        );
       }
     });
   }
