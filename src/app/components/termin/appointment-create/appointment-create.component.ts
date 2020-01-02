@@ -2,7 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
 import {UrlService} from '../../../services/url.service';
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent, MatDialog, MatStepper} from '@angular/material';
-import {COMMA, SPACE} from '@angular/cdk/keycodes';
+import {COMMA, SPACE, TAB} from '@angular/cdk/keycodes';
 import {Observable, Subscription} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {CreateAppointmentModel} from '../../../models/createAppointment.model';
@@ -35,13 +35,13 @@ export class AppointmentCreateComponent implements OnInit {
   driverAddition = false;
 
   /* Administration Form */
-  users = [];
+  users: string[] = [];
   filteredUsers: Observable<string[]>;
 
   /* FILE UPLOAD */
   public files: Array<{ file: File, done: boolean }> = [];
   allUsers: string[] = ['benutzer1@sebamomann.de', 'text@example.de', 'mama@mia.com', 'foo@bar.tld', 'hallo@helmut.rofl'];
-  readonly separatorKeysCodes: number[] = [COMMA, SPACE];
+  readonly separatorKeysCodes: number[] = [COMMA, SPACE, TAB];
   @ViewChild('userInput', {static: false}) userInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
   private fileData: IFileModelUpload[] = [];
@@ -179,12 +179,10 @@ export class AppointmentCreateComponent implements OnInit {
       const input = event.input;
       const value = event.value;
 
-      // Add our fruit
       if ((value || '').trim()) {
-        this.users.push({mail: value.trim()});
+        this.users.push(value.trim());
       }
 
-      // Reset the input value
       if (input) {
         input.value = '';
       }
