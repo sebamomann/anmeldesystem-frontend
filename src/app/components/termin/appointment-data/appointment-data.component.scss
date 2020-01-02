@@ -66,6 +66,10 @@
         vertical-align: top;
         left: 0;
       }
+
+      span {
+        width: calc(100% - 40px);
+      }
     }
 
     p {

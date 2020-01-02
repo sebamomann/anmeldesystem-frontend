@@ -12,6 +12,7 @@ import {Observable} from 'rxjs';
 export class DashboardComponent implements OnInit {
 
   public appointments$: Observable<IAppointmentModel[]> = this.terminService.getTermine();
+  numbers = new Array(3);
 
   constructor(public terminService: TerminService, private router: Router) {
 
