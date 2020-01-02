@@ -111,20 +111,21 @@ export class AppointmentCreateComponent implements OnInit {
     };
 
 
-    this.terminService.create(output).subscribe(result => {
-      if (result.type === HttpEventType.UploadProgress) {
-        this.percentDone = Math.round(100 * result.loaded / result.total);
-      } else if (result.type === HttpEventType.Response) {
-        setTimeout(() => {
-          switch (result.status) {
-            case HttpStatus.CREATED:
-              this.router.navigate([`enroll`], {queryParams: {val: result.body.link}});
-              break;
-          }
-        }, 2000);
+    this.terminService.create(output).subscribe(
+      result => {
+        if (result.type === HttpEventType.UploadProgress) {
+          this.percentDone = Math.round(100 * result.loaded / result.total);
+        } else if (result.type === HttpEventType.Response) {
+          setTimeout(() => {
+            switch (result.status) {
+              case HttpStatus.CREATED:
+                this.router.navigate([`enroll`], {queryParams: {val: result.body.link}});
+                break;
+            }
+          }, 2000);
         }
-      }, error => {
-      console.log(error.status);
+      },
+      error => {
         switch (error.status) {
           case HttpStatus.BAD_REQUEST:
             error.error.error.columns.forEach(fColumn => {
