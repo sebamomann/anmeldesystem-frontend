@@ -67,12 +67,12 @@ export class TerminService {
 
   enroll(enrollment: IEnrollmentModel, appointment: IAppointmentModel): Observable<HttpEvent<IEnrollmentModel>> {
     const url = `${environment.api.url}enrollment?link=${appointment.link}`;
-    // const req = new HttpRequest('POST', url, {
-    //   data: enrollment,
-    //   observe: 'response',
-    //   reportProgress: true,
-    // });
-    // return this.httpClient.request(req);
-    return this.httpClient.post<any>(url, enrollment, {observe: 'response'});
+    const req = new HttpRequest('POST', url, {
+      data: enrollment,
+      observe: 'response',
+      reportProgress: true,
+    });
+    return this.httpClient.request(req);
+    // return this.httpClient.post<any>(url, enrollment, {observe: 'response'});
   }
 }
