@@ -238,11 +238,22 @@
   </mat-vertical-stepper>
 </mat-card>
 
-<ng-container *ngIf="percentDone !== 0">
-  <mat-progress-bar [value]="percentDone" mode="determinate"></mat-progress-bar>
-  Der Termin wird erstellt
-</ng-container>
+<div *ngIf="percentDone !== 0" class="upload-progress">
+  <span> Der Termin wird erstellt </span>
+  <ng-container *ngIf="percentDone !== 100">
+    <span>{{percentDone}}%</span>
+  </ng-container>
 
-<ng-container *ngIf="percentDone === 100">
-  Erledigt!
-</ng-container>
+  <ng-container *ngIf="percentDone === 100">
+    <span>
+      <mat-icon>
+        check_circle_outline
+      </mat-icon>
+    </span>
+  </ng-container>
+
+  <mat-progress-bar [value]="percentDone"
+                    mode="determinate">
+  </mat-progress-bar>
+</div>
+
