@@ -22,8 +22,14 @@
   }
 
   .enrollment {
+    margin: 1px auto;
+
+    &.mat-expansion-panel-spacing {
+      margin: 16px 0;
+    }
+
     .enrollment-info {
-      padding: 15px 24px;
+      padding: 10px 15px;
       font-size: 1em;
 
       span {

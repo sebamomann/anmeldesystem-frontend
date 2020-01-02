@@ -27,11 +27,12 @@ const HttpStatus = require('http-status-codes');
       ])
     ]),
     trigger('listAnimation', [
-      transition('* => *', [ // each time the binding value changes
+      transition('* => *', [
         query('mat-expansion-panel', [
           style({opacity: 0, transform: 'scale(0.9)'}),
-          stagger(100, [
-            animate('0.25s', style({opacity: 1, transform: 'scale(1)'})),
+          stagger(75, [
+            animate('0.15s', style({opacity: 1, transform: 'scale(1.05)'})),
+            animate('0.075s', style({opacity: 1, transform: 'scale(1)'})),
           ])
         ])
       ])

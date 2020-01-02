@@ -13,8 +13,8 @@ import {animate, query, stagger, style, transition, trigger} from '@angular/anim
         query('mat-card', [
           style({opacity: 0, transform: 'scale(0.5)'}),
           stagger(100, [
-            animate('0.25s', style({opacity: 1, transform: 'scale(1.15)'})),
-            animate('0.125s', style({opacity: 1, transform: 'scale(1)'}))
+            animate('0.15s', style({opacity: 1, transform: 'scale(1.05)'})),
+            animate('0.075s', style({opacity: 1, transform: 'scale(1)'})),
           ])
         ])
       ])

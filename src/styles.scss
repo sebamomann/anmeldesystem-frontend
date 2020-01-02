@@ -459,7 +459,7 @@ footer {
 
 .progress-bar {
   display: block;
-  position: absolute;
+  position: fixed;
   top: 0;
 }
 
@@ -467,9 +467,7 @@ footer {
   font-size: 1.25em;
   margin: 0 auto;
   background-color: white;
-  border-radius: 10px;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+  border-radius: 10px 10px 0 0;
   width: 75%;
   top: 50vh;
   display: block;

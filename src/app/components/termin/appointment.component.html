@@ -5,7 +5,8 @@
   <div *ngIf="enrollments.length > 0 || getNumberOfActiveFilter() > 0; else emptyList"
        class="enrollment-list block decent">
     <div class="header">
-      <h2 class="headline medium">Teilnehmer [{{appointment.enrollments.length}}{{appointment.maxEnrollments !== null
+      <h2 class="headline medium">
+        Teilnehmer [{{appointment.enrollments.length}}{{appointment.maxEnrollments !== null
           ? '/' + appointment.maxEnrollments : ''}}]
         <span *ngIf="getNumberOfActiveFilter() > 0">
         [<mat-icon>filter_list</mat-icon>: {{enrollments.length}}]
@@ -21,14 +22,18 @@
       filter_list
     </mat-icon>
 
-    <mat-accordion *ngIf="enrollments.length > 0" [@listAnimation]>
+    <mat-accordion *ngIf="enrollments.length > 0"
+                   [@listAnimation]>
       <ng-container *ngFor="let enrollment of enrollments">
-        <mat-expansion-panel [@.disabled]="disableAnimation" class="enrollment">
+        <mat-expansion-panel [@.disabled]="disableAnimation"
+                             class="enrollment">
           <mat-expansion-panel-header [collapsedHeight]="'auto'"
                                       [expandedHeight]="'auto'"
                                       class="enrollment-info">
-            <span>{{enrollment.name}}</span>
-            <span class="separator small colored bolder high"></span>
+            <span>
+              {{enrollment.name}}
+            </span>
+            <span class="separator small colored bolder higher"></span>
             <span *ngIf="enrollment.comment !== null"
                   class="comment-block">
             {{ enrollment.comment }}
@@ -36,7 +41,8 @@
             <div *ngIf="appointment.additions.length > 0"
                  class="addition-list">
             <span *ngIf="appointment.additions.length > 0 && enrollment.comment !== null"
-                  class="separator small high"></span>
+                  class="separator small high">
+            </span>
               <ng-container *ngFor="let addition of appointment.additions">
                 <div>
                   <mat-icon *ngIf="enrollmentCheckedAddition(enrollment, addition.id); else blank">
@@ -47,7 +53,9 @@
                       check_box_outline_blank
                     </mat-icon>
                   </ng-template>
-                  <span>{{addition.name}}</span>
+                  <span>
+                    {{addition.name}}
+                  </span>
                 </div>
               </ng-container>
             </div>
@@ -111,5 +119,6 @@
   <mat-progress-bar [@fadeInOut]
                     [value]="percentDone"
                     class="progress-bar"
-                    mode="determinate"></mat-progress-bar>
+                    mode="determinate">
+  </mat-progress-bar>
 </ng-template>
