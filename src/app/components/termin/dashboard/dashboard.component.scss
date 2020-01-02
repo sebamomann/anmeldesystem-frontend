@@ -20,7 +20,7 @@
   animation: AnimationName 3s ease infinite;
 
   &.hide {
-    animation: hide 1s;
+    animation: hide 0.5s;
   }
 
   mat-card-title {
@@ -91,7 +91,7 @@
     opacity: 1;
   }
   100% {
-    transform: scale(0);
+    transform: scale(0.75);
     opacity: 0;
   }
 }

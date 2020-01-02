@@ -11,7 +11,7 @@ import {animate, query, stagger, style, transition, trigger} from '@angular/anim
     trigger('listAnimation', [
       transition('* => *', [ // each time the binding value changes
         query('mat-card', [
-          style({opacity: 0, transform: 'scale(0.5)'}),
+          style({opacity: 0, transform: 'scale(0.75)'}),
           stagger(100, [
             animate('0.15s', style({opacity: 1, transform: 'scale(1.05)'})),
             animate('0.075s', style({opacity: 1, transform: 'scale(1)'})),
@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
       this.hide = true;
       setTimeout(() => {
         this.appointments = sAppointments;
-      }, 1000);
+      }, 500);
     });
   }
 
