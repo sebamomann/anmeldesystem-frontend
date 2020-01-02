@@ -8,7 +8,6 @@ import {IAdditionModel} from '../../../models/IAddition.model';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {throwError} from 'rxjs';
 
 const HttpStatus = require('http-status-codes');
 
@@ -65,6 +64,10 @@ export class EnrollmentComponent implements OnInit {
   }
 
   async create() {
+    if (!this.event.valid) {
+      return;
+    }
+
     let output: IEnrollmentModel;
     output = {
       additions: [],
@@ -121,10 +124,6 @@ export class EnrollmentComponent implements OnInit {
           }
         }
       );
-  }
-
-  handleError(error: HttpErrorResponse) {
-    return throwError(error);
   }
 
   getAdditionIdList(): IAdditionModel[] {
