@@ -10,6 +10,6 @@ export interface CreateAppointmentModel {
   maxEnrollments: number;
   additions: string[];
   driverAddition: boolean;
-  administrations: string[];
+  administrators: string[];
   files: IFileModelUpload[];
 }

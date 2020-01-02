@@ -6,7 +6,7 @@ import {COMMA, SPACE} from '@angular/cdk/keycodes';
 import {Observable, Subscription} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {CreateAppointmentModel} from '../../../models/createAppointment.model';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpEventType} from '@angular/common/http';
 import {DomSanitizer} from '@angular/platform-browser';
 import {TemplateDialogComponent} from '../../dialogs/template-dialog/template-dialog.component';
 import {isObject} from 'util';
@@ -44,8 +44,7 @@ export class AppointmentCreateComponent implements OnInit {
   @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
   private fileData: IFileModelUpload[] = [];
   private fileBlob: Blob;
-  private string;
-  private type;
+  private percentDone = 0;
 
   constructor(private formBuilder: FormBuilder, public urlService: UrlService, private http: HttpClient, private sanitizer: DomSanitizer,
               public dialog: MatDialog, private terminService: TerminService, private router: Router) {
@@ -98,19 +97,25 @@ export class AppointmentCreateComponent implements OnInit {
       maxEnrollments: this.overallDataFormGroup.get('maxEnrollments').value,
       additions,
       driverAddition: this.driverAddition,
-      administrations: this.users,
+      administrators: this.users,
       files: this.fileData,
     };
 
-    console.log(JSON.stringify(output));
 
     this.terminService.create(output).subscribe(result => {
-        switch (result.status) {
-          case HttpStatus.CREATED:
-            this.router.navigate([`enroll`], {queryParams: {val: result.body.link}});
-            break;
+      if (result.type === HttpEventType.UploadProgress) {
+        this.percentDone = Math.round(100 * result.loaded / result.total);
+      } else if (result.type === HttpEventType.Response) {
+        setTimeout(() => {
+          switch (result.status) {
+            case HttpStatus.CREATED:
+              this.router.navigate([`enroll`], {queryParams: {val: result.body.link}});
+              break;
+          }
+        }, 2000);
         }
       }, error => {
+      console.log(error.status);
         switch (error.status) {
           case HttpStatus.BAD_REQUEST:
             error.error.error.columns.forEach(fColumn => {

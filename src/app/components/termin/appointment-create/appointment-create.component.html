@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card *ngIf="percentDone === 0">
   <mat-card-title class="headline">
     Termin erstellen
   </mat-card-title>
@@ -237,3 +237,12 @@
     </mat-step>
   </mat-vertical-stepper>
 </mat-card>
+
+<ng-container *ngIf="percentDone !== 0">
+  <mat-progress-bar [value]="percentDone" mode="determinate"></mat-progress-bar>
+  Der Termin wird erstellt
+</ng-container>
+
+<ng-container *ngIf="percentDone === 100">
+  Erledigt!
+</ng-container>
