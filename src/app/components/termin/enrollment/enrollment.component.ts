@@ -91,30 +91,32 @@ export class EnrollmentComponent implements OnInit {
 
     output.additions = this.getAdditionIdList();
 
-
     this.terminService
       .enroll(output, this.appointment)
-      .subscribe(
-        result => {
+      .subscribe(result => {
           if (result.type === HttpEventType.Response) {
             switch (result.status) {
               case HttpStatus.CREATED:
-                this.router.navigate([`enroll`], {queryParams: {val: this.appointment.link}});
+                this.router.navigate([`enroll`], {
+                  queryParams: {
+                    val: this.appointment.link
+                  }
+                });
                 break;
             }
           }
-        },
-        (error: HttpErrorResponse) => {
-          console.log(error.error.error);
+        }, error => {
+          console.log(error);
           switch (error.status) {
             case HttpStatus.BAD_REQUEST:
-              error.error.columns.forEach(fColumn => {
-                if (fColumn.error === 'DUPLICATE_ENTRY') {
-                  const uppercaseName = fColumn.name.charAt(0).toUpperCase() + fColumn.name.substring(1);
-                  const fnName: string = 'get' + uppercaseName;
-                  this[fnName]().setErrors({inUse: true});
-                }
-              });
+              if (error.code === 'DUPLICATE_ENTRY') {
+                error.error.columns.forEach(fColumn => {
+                    const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
+                    const fnName: string = 'get' + uppercaseName;
+                    this[fnName]().setErrors({inUse: true});
+                  }
+                );
+              }
               break;
           }
         }
