@@ -241,7 +241,9 @@
 <div *ngIf="percentDone !== 0" class="upload-progress">
   <span> Der Termin wird erstellt </span>
   <ng-container *ngIf="percentDone !== 100">
-    <span>{{percentDone}}%</span>
+    <span>
+      {{percentDone}}%
+    </span>
   </ng-container>
 
   <ng-container *ngIf="percentDone === 100">
