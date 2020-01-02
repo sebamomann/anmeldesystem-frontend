@@ -118,7 +118,7 @@ export class AppointmentCreateComponent implements OnInit {
         setTimeout(() => {
           switch (result.status) {
             case HttpStatus.CREATED:
-              // this.router.navigate([`enroll`], {queryParams: {val: result.body.link}});
+              this.router.navigate([`enroll`], {queryParams: {val: result.body.link}});
               break;
           }
         }, 2000);
