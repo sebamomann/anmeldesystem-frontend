@@ -6,10 +6,12 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {IAdditionModel} from '../../../models/IAddition.model';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
-import {HttpEventType} from '@angular/common/http';
+import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {throwError} from 'rxjs';
 
 const HttpStatus = require('http-status-codes');
+
 
 @Component({
   selector: 'app-enrollment',
@@ -27,7 +29,7 @@ const HttpStatus = require('http-status-codes');
 export class EnrollmentComponent implements OnInit {
   event = this.formBuilder.group({
     name: new FormControl('', [Validators.required, Validators.min(2)]),
-    comment: new FormControl('', [Validators.required, Validators.min(2)]),
+    comment: new FormControl('', [Validators.min(2)]),
     additions: new FormArray([]),
     driver: new FormControl(false),
     seats: new FormControl('', [Validators.min(1)]),
@@ -89,26 +91,38 @@ export class EnrollmentComponent implements OnInit {
 
     output.additions = this.getAdditionIdList();
 
-    this.terminService.enroll(output, this.appointment).subscribe(result => {
-        switch (result.status) {
-          case HttpStatus.CREATED:
-            this.router.navigate([`enroll`], {queryParams: {val: this.appointment.link}});
-            break;
+
+    this.terminService
+      .enroll(output, this.appointment)
+      .subscribe(
+        result => {
+          if (result.type === HttpEventType.Response) {
+            switch (result.status) {
+              case HttpStatus.CREATED:
+                this.router.navigate([`enroll`], {queryParams: {val: this.appointment.link}});
+                break;
+            }
+          }
+        },
+        (error: HttpErrorResponse) => {
+          console.log(error.error.error);
+          switch (error.status) {
+            case HttpStatus.BAD_REQUEST:
+              error.error.columns.forEach(fColumn => {
+                if (fColumn.error === 'DUPLICATE_ENTRY') {
+                  const uppercaseName = fColumn.name.charAt(0).toUpperCase() + fColumn.name.substring(1);
+                  const fnName: string = 'get' + uppercaseName;
+                  this[fnName]().setErrors({inUse: true});
+                }
+              });
+              break;
+          }
         }
-      }, error => {
-        switch (error.status) {
-          case HttpStatus.BAD_REQUEST:
-            error.error.error.columns.forEach(fColumn => {
-              if (fColumn.error === 'duplicate') {
-                const uppercaseName = fColumn.name.charAt(0).toUpperCase() + fColumn.name.substring(1);
-                const fnName: string = 'get' + uppercaseName;
-                this[fnName]().setErrors({inUse: true});
-              }
-            });
-            break;
-        }
-      }
-    );
+      );
+  }
+
+  handleError(error: HttpErrorResponse) {
+    return throwError(error);
   }
 
   getAdditionIdList(): IAdditionModel[] {
