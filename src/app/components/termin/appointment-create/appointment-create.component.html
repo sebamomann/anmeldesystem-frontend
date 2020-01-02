@@ -6,10 +6,12 @@
     Vorlagen
     <mat-icon>file_copy</mat-icon>
   </span>
-  <mat-vertical-stepper #stepper [linear]="false">
+  <mat-vertical-stepper #stepper [linear]="true">
     <mat-step [stepControl]="overallDataFormGroup">
       <form [formGroup]="overallDataFormGroup">
-        <ng-template matStepLabel>Allgemein</ng-template>
+        <ng-template matStepLabel>
+          Allgemein
+        </ng-template>
         <span class="info">
           Allgemeine Informationen des Termins
         </span>
@@ -34,7 +36,9 @@
                  placeholder="Anmeldefrist"
                  formControlName="deadline"
                  id="deadline">
-          <mat-datepicker-toggle matSuffix [for]="deadline"></mat-datepicker-toggle>
+          <mat-datepicker-toggle [for]="deadline"
+                                 matSuffix>
+          </mat-datepicker-toggle>
           <mat-datepicker touchUi #deadline></mat-datepicker>
         </mat-form-field>
         <mat-form-field class="">
@@ -51,7 +55,9 @@
                  id="maxEnrollments">
         </mat-form-field>
         <div class="stepper-navigation">
-          <button mat-button mat-stroked-button matStepperNext>Weiter</button>
+          <button mat-button mat-stroked-button matStepperNext>
+            Weiter
+          </button>
         </div>
       </form>
     </mat-step>
@@ -99,8 +105,12 @@
         </button>
 
         <div class="stepper-navigation">
-          <button mat-button mat-stroked-button matStepperNext>{{hasAdditions() ? 'Weiter' : 'Nein danke'}}</button>
-          <button mat-button matStepperPrevious>Zurück</button>
+          <button mat-button mat-stroked-button matStepperNext>
+            {{hasAdditions() ? 'Weiter' : 'Nein danke'}}
+          </button>
+          <button mat-button matStepperPrevious>
+            Zurück
+          </button>
         </div>
       </form>
     </mat-step>
@@ -151,8 +161,12 @@
         </mat-form-field>
 
         <div class="stepper-navigation">
-          <button mat-button mat-stroked-button matStepperNext>Weiter</button>
-          <button mat-button matStepperPrevious>Zurück</button>
+          <button mat-button mat-stroked-button matStepperNext>
+            Weiter
+          </button>
+          <button mat-button matStepperPrevious>
+            Zurück
+          </button>
         </div>
       </form>
     </mat-step>

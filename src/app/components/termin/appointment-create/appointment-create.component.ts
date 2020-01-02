@@ -24,18 +24,20 @@ const HttpStatus = require('http-status-codes');
 export class AppointmentCreateComponent implements OnInit {
 
   @ViewChild('stepper', null) stepper: MatStepper;
-  public downloadUrl: any = '';
+  // FormGroups
   overallDataFormGroup: any;
   additionFormGroup: any;
   linkFormGroup: any;
-  fileUpload: any;
   doneGroup: any;
   administrationFormGroup: any;
+
   /* Addition Form */
   driverAddition = false;
+
   /* Administration Form */
   users = [];
   filteredUsers: Observable<string[]>;
+
   /* FILE UPLOAD */
   public files: Array<{ file: File, done: boolean }> = [];
   allUsers: string[] = ['benutzer1@sebamomann.de', 'text@example.de', 'mama@mia.com', 'foo@bar.tld', 'hallo@helmut.rofl'];
@@ -83,6 +85,13 @@ export class AppointmentCreateComponent implements OnInit {
   }
 
   async create() {
+    if (!this.overallDataFormGroup.valid ||
+      !this.additionFormGroup.valid ||
+      !this.linkFormGroup.valid ||
+      !this.doneGroup.valid ||
+      !this.administrationFormGroup.valid) {
+      return;
+    }
     const additions = [];
     this.additionFormGroup.controls.additions.controls.forEach(field => field.value != null ? additions.push({name: field.value}) : '');
 
