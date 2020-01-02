@@ -1,24 +1,43 @@
 import {Component, OnInit} from '@angular/core';
 import {TerminService} from '../../../services/termin.service';
-import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {Router} from '@angular/router';
-import {Observable} from 'rxjs';
+import {animate, query, stagger, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
+  animations: [
+    trigger('listAnimation', [
+      transition('* => *', [ // each time the binding value changes
+        query('mat-card', [
+          style({opacity: 0, transform: 'scale(0.5)'}),
+          stagger(100, [
+            animate('0.25s', style({opacity: 1, transform: 'scale(1.15)'})),
+            animate('0.125s', style({opacity: 1, transform: 'scale(1)'}))
+          ])
+        ])
+      ])
+    ])
+  ]
 })
 export class DashboardComponent implements OnInit {
 
-  public appointments$: Observable<IAppointmentModel[]> = this.terminService.getTermine();
+  hide: any;
   numbers = new Array(3);
+  private appointments = undefined;
 
   constructor(public terminService: TerminService, private router: Router) {
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.terminService.getTermine().subscribe(sAppointments => {
+      this.hide = true;
+      setTimeout(() => {
+        this.appointments = sAppointments;
+      }, 1000);
+    });
   }
 
 }

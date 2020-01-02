@@ -5,34 +5,40 @@
 </a>
 
 <!--<ng-container *ngIf="false; else appointmentdata">-->
-<ng-container *ngIf="appointments$ | async let appointments; else appointmentdata">
-  <ng-container *ngFor="let appointment of appointments">
-    <app-appointment-data [appointment]="appointment" [preview]="true"></app-appointment-data>
-  </ng-container>
+<ng-container *ngIf="appointments !== undefined; else appointmentdata">
+  <div [@listAnimation]="appointments.length">
+    <ng-container *ngFor="let appointment of appointments">
+      <app-appointment-data [appointment]="appointment" [preview]="true"></app-appointment-data>
+    </ng-container>
+  </div>
 </ng-container>
 
 <ng-template #appointmentdata>
-  <mat-card *ngFor="let number of numbers" class="template">
-    <mat-card-title class="headline">
-    </mat-card-title>
-    <mat-card-content>
+  <div>
+    <mat-card *ngFor="let number of numbers"
+              [ngClass]="{'hide': hide}"
+              class="template">
+      <mat-card-title class="headline">
+      </mat-card-title>
+      <mat-card-content>
       <span>
         <mat-icon></mat-icon>
         <span></span>
       </span>
-      <span>
+        <span>
         <mat-icon></mat-icon>
         <span></span>
       </span>
-      <span>
+        <span>
         <mat-icon></mat-icon>
         <span></span>
       </span>
-      <span>
+        <span>
         <mat-icon></mat-icon>
         <span></span>
       </span>
-      <p></p>
-    </mat-card-content>
-  </mat-card>
+        <p></p>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </ng-template>

@@ -7,16 +7,21 @@
 }
 
 .template {
+
   width: 80%;
   text-align: center;
-  margin: 15px auto 15px;
+  margin: 20px auto 10px;
   background-size: 500% 250%;
-  background: linear-gradient(324deg, #ffffff, #aaaaaa);
+  background: linear-gradient(324deg, #ffffff, #c8c8c8);
   background-size: 400% 400%;
 
   -webkit-animation: AnimationName 3s ease infinite;
   -moz-animation: AnimationName 3s ease infinite;
   animation: AnimationName 3s ease infinite;
+
+  &.hide {
+    animation: hide 1s;
+  }
 
   mat-card-title {
     height: 37px;
@@ -73,3 +78,21 @@
     background-position: 0% 36%
   }
 }
+
+@keyframes hide {
+  0% {
+    transform: scale(1.0);
+  }
+  25% {
+    transform: scale(0.95);
+  }
+  60% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
