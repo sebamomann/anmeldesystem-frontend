@@ -14,6 +14,11 @@
 </ng-container>
 
 <ng-template #appointmentdata>
+  <mat-progress-bar [@fadeInOut]
+                    [value]="percentDone"
+                    class="progress-bar"
+                    mode="determinate">
+  </mat-progress-bar>
   <div>
     <mat-card *ngFor="let number of numbers"
               [ngClass]="{'hide': hide}"

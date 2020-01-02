@@ -23,8 +23,12 @@ export class TerminService {
     return this.httpClient.request(req);
   }
 
-  getTermine(): Observable<IAppointmentModel[]> {
-    return this.httpClient.get<IAppointmentModel[]>(`${environment.api.url}appointment`);
+  getAppointments(): Observable<HttpEvent<IAppointmentModel[]>> {
+    const req = new HttpRequest('GET', `${environment.api.url}appointment/`, {
+      observe: 'response',
+      reportProgress: true,
+    });
+    return this.httpClient.request(req);
   }
 
   getTemplates(): IAppointmentTemplateModel[] {

@@ -23,7 +23,8 @@ const HttpStatus = require('http-status-codes');
     trigger('fadeInOut', [
       state('in', style({opacity: 100})),
       transition('* => void', [
-        animate(400, style({opacity: 0}))
+        animate(1000, style({opacity: 1})),
+        animate(500, style({opacity: 0}))
       ])
     ]),
     trigger('listAnimation', [
