@@ -61,7 +61,7 @@ export class TerminService {
     // );
   }
 
-  enroll(enrollment: IEnrollmentModel, appointment: IAppointmentModel): Observable<HttpEvent<IEnrollmentModel | any>> {
+  enroll(enrollment: IEnrollmentModel, appointment: IAppointmentModel): Observable<HttpEvent<IEnrollmentModel>> {
     const url = `${environment.api.url}enrollment?link=${appointment.link}`;
     // const req = new HttpRequest('POST', url, {
     //   data: enrollment,
