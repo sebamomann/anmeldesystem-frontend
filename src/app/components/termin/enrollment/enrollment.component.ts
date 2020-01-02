@@ -108,12 +108,12 @@ export class EnrollmentComponent implements OnInit {
                 break;
             }
           }
-        }, (error: HttpErrorResponse) => {
-          console.log(error);
-          switch (error.status) {
+        }, (err: HttpErrorResponse) => {
+          console.log(err);
+          switch (err.status) {
             case HttpStatus.BAD_REQUEST:
-              if (error.error.code === 'DUPLICATE_ENTRY') {
-                error.error.columns.forEach(fColumn => {
+              if (err.error.code === 'DUPLICATE_ENTRY') {
+                err.error.columns.forEach(fColumn => {
                     const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
                     const fnName: string = 'get' + uppercaseName;
                     this[fnName]().setErrors({inUse: true});
