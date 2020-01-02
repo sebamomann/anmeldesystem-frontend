@@ -460,8 +460,9 @@ footer {
 
 .progress-bar {
   display: block;
-  position: fixed;
+  position: fixed !important;
   top: 0;
+  z-index: 9999;
 }
 
 .upload-progress {
