@@ -12,7 +12,6 @@ import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 })
 export class CommentDialogComponent implements OnInit {
 
-  // Workaround for angular component issue #13870
   disableAnimation = true;
 
   public enrollment: any;
@@ -30,7 +29,6 @@ export class CommentDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    setTimeout(() => this.disableAnimation = false);
   }
 
   comment(enrollment: IEnrollmentModel): void {

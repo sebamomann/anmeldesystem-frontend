@@ -8,7 +8,7 @@ import {IEnrollmentModel} from '../../models/IEnrollment.model';
 import {IAppointmentModel} from '../../models/IAppointment.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {HttpEventType} from '@angular/common/http';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
 import {AuthenticationService} from '../../services/authentication.service';
 import {ConfirmationDialogComponent} from '../dialogs/confirmation-dialog/confirmation-dialog.component';
 import {EnrollmentService} from '../../services/enrollment.service';
@@ -25,6 +25,16 @@ const HttpStatus = require('http-status-codes');
       transition('* => void', [
         animate(400, style({opacity: 0}))
       ])
+    ]),
+    trigger('listAnimation', [
+      transition('* => *', [ // each time the binding value changes
+        query('mat-expansion-panel', [
+          style({opacity: 0, transform: 'scale(0.9)'}),
+          stagger(100, [
+            animate('0.25s', style({opacity: 1, transform: 'scale(1)'})),
+          ])
+        ])
+      ])
     ])
   ],
 })
@@ -37,6 +47,7 @@ export class AppointmentComponent implements OnInit {
   public enrollments: IEnrollmentModel[];
   public allowModify = false;
   public percentDone;
+  disableAnimation = true;
 
 
   constructor(private terminService: TerminService, public dialog: MatDialog, private route: ActivatedRoute, private router: Router,
@@ -63,6 +74,7 @@ export class AppointmentComponent implements OnInit {
           this.enrollments = sAppointment.body.enrollments;
           this.filter = this.initializeFilterObject(sAppointment.body);
           this.allowModify = this.modificationAllowed();
+          setTimeout(() => this.disableAnimation = false);
         }
       },
       error => {

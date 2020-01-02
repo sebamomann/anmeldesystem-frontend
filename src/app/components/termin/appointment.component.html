@@ -21,9 +21,9 @@
       filter_list
     </mat-icon>
 
-    <mat-accordion *ngIf="enrollments.length > 0; else emptyListFilter">
+    <mat-accordion *ngIf="enrollments.length > 0" [@listAnimation]>
       <ng-container *ngFor="let enrollment of enrollments">
-        <mat-expansion-panel class="enrollment">
+        <mat-expansion-panel [@.disabled]="disableAnimation" class="enrollment">
           <mat-expansion-panel-header [collapsedHeight]="'auto'"
                                       [expandedHeight]="'auto'"
                                       class="enrollment-info">
@@ -73,17 +73,7 @@
         </mat-expansion-panel>
       </ng-container>
     </mat-accordion>
-
-    <ng-template #emptyListFilter>
-      <div class="empty-list">
-        <mat-icon>search</mat-icon>
-        <span>
-          Dieser Filter liefert keine Ergebnisse
-        </span>
-      </div>
-    </ng-template>
   </div>
-
 
   <ng-template #emptyList>
     <div class="empty-list float">
