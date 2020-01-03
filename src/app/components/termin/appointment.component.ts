@@ -1,5 +1,5 @@
 import {Component, NgModule, OnInit} from '@angular/core';
-import {TerminService} from '../../services/termin.service';
+import {AppointmentService} from '../../services/appointment.service';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {FilterDialogComponent} from '../dialogs/filter/filterDialog.component';
 import {isObject} from 'util';
@@ -52,8 +52,8 @@ export class AppointmentComponent implements OnInit {
   disableAnimation = true;
 
 
-  constructor(private terminService: TerminService, public dialog: MatDialog, private route: ActivatedRoute, private router: Router,
-              private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
+  constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
+              private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
               private snackBar: MatSnackBar) {
     this.route.queryParams.subscribe(params => {
       this.link = params.val;
@@ -68,7 +68,7 @@ export class AppointmentComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.terminService.getAppointment(this.link).subscribe(sAppointment => {
+    this.appointmentService.getAppointment(this.link).subscribe(sAppointment => {
         if (sAppointment.type === HttpEventType.DownloadProgress) {
           this.percentDone = Math.round(100 * sAppointment.loaded / sAppointment.total);
         } else if (sAppointment.type === HttpEventType.Response) {

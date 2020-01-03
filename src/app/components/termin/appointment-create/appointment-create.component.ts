@@ -10,7 +10,7 @@ import {HttpClient, HttpEventType} from '@angular/common/http';
 import {DomSanitizer} from '@angular/platform-browser';
 import {TemplateDialogComponent} from '../../dialogs/template-dialog/template-dialog.component';
 import {isObject} from 'util';
-import {TerminService} from '../../../services/termin.service';
+import {AppointmentService} from '../../../services/appointment.service';
 import {IFileModelUpload} from '../../../models/IFileModelUpload.model';
 import {Router} from '@angular/router';
 
@@ -49,7 +49,7 @@ export class AppointmentCreateComponent implements OnInit {
   private percentDone = 0;
 
   constructor(private formBuilder: FormBuilder, public urlService: UrlService, private http: HttpClient, private sanitizer: DomSanitizer,
-              public dialog: MatDialog, private terminService: TerminService, private router: Router) {
+              public dialog: MatDialog, private appointmentService: AppointmentService, private router: Router) {
 
     this.overallDataFormGroup = this.formBuilder.group({
       title: ['', Validators.required],
@@ -111,7 +111,7 @@ export class AppointmentCreateComponent implements OnInit {
     };
 
 
-    this.terminService.create(output).subscribe(
+    this.appointmentService.create(output).subscribe(
       result => {
         if (result.type === HttpEventType.UploadProgress) {
           this.percentDone = Math.round(100 * result.loaded / result.total);

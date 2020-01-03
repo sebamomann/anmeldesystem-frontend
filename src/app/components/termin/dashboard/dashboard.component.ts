@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {TerminService} from '../../../services/termin.service';
+import {AppointmentService} from '../../../services/appointment.service';
 import {Router} from '@angular/router';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
 import {HttpEventType} from '@angular/common/http';
@@ -36,12 +36,12 @@ export class DashboardComponent implements OnInit {
   private percentDone;
   private appointments = undefined;
 
-  constructor(public terminService: TerminService, private router: Router) {
+  constructor(public appointmentService: AppointmentService, private router: Router) {
 
   }
 
   async ngOnInit() {
-    this.terminService.getAppointments().subscribe(result => {
+    this.appointmentService.getAppointments().subscribe(result => {
       if (result.type === HttpEventType.DownloadProgress) {
         this.percentDone = Math.round(100 * result.loaded / result.total);
       } else if (result.type === HttpEventType.Response) {

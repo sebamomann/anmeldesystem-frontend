@@ -10,7 +10,7 @@ import {environment} from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class TerminService {
+export class AppointmentService {
 
   constructor(private readonly httpClient: HttpClient) {
   }

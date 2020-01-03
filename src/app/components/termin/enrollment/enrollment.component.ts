@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
-import {TerminService} from '../../../services/termin.service';
+import {AppointmentService} from '../../../services/appointment.service';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
@@ -43,7 +43,7 @@ export class EnrollmentComponent implements OnInit {
   private link: string;
   private percentDone;
 
-  constructor(private terminService: TerminService, private location: Location,
+  constructor(private appointmentService: AppointmentService, private location: Location,
               private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router) {
     this.route.queryParams.subscribe(params => {
       this.link = params.val;
@@ -51,7 +51,7 @@ export class EnrollmentComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.terminService.getAppointment(this.link).subscribe(sAppointment => {
+    await this.appointmentService.getAppointment(this.link).subscribe(sAppointment => {
       if (sAppointment.type === HttpEventType.DownloadProgress) {
         this.percentDone = Math.round(100 * sAppointment.loaded / sAppointment.total);
       } else if (sAppointment.type === HttpEventType.Response) {
@@ -95,7 +95,7 @@ export class EnrollmentComponent implements OnInit {
 
     output.additions = this.getAdditionIdList();
 
-    this.terminService
+    this.appointmentService
       .enroll(output, this.appointment)
       .subscribe(result => {
           if (result.type === HttpEventType.Response) {
