@@ -72,19 +72,18 @@ export class EnrollmentComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.appointmentService.getAppointment(this.link).subscribe(sAppointment => {
+    this.appointmentService.getAppointment(this.link).subscribe(sAppointment => {
       if (sAppointment.type === HttpEventType.DownloadProgress) {
         this.percentDone = Math.round(100 * sAppointment.loaded / sAppointment.total);
       } else if (sAppointment.type === HttpEventType.Response) {
         this.appointment = sAppointment.body;
         this.addCheckboxes();
-      }
+        this.enrollmentOutputSet = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY) !== null;
 
-      this.enrollmentOutputSet = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY) !== null;
-
-      if (this.enrollmentOutputSet !== null
-        && this.userIsLoggedIn) {
-        this.sendEnrollment();
+        if (this.enrollmentOutputSet !== null
+          && this.userIsLoggedIn) {
+          this.sendEnrollment();
+        }
       }
     }, error => {
       this.appointment = null;
