@@ -8,6 +8,7 @@ import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AuthenticationService} from '../../../services/authentication.service';
+import {MatSnackBar} from '@angular/material';
 
 const HttpStatus = require('http-status-codes');
 
@@ -70,7 +71,7 @@ export class EnrollmentComponent implements OnInit {
 
   constructor(private appointmentService: AppointmentService, private location: Location,
               private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
-              private authenticationService: AuthenticationService) {
+              private authenticationService: AuthenticationService, private snackBar: MatSnackBar) {
 
     this.currentUrlSnapshotWithParameter = router.routerState.snapshot;
 
@@ -180,6 +181,13 @@ export class EnrollmentComponent implements OnInit {
                   this.router.navigate([`enroll`], {
                     queryParams: {
                       val: this.appointment.link
+                    }
+                  }).then((navigated: boolean) => {
+                    if (navigated) {
+                      this.snackBar.open('Erfolgreich angemeldet', '', {
+                        duration: 4000,
+                        panelClass: 'snackbar-default'
+                      });
                     }
                   });
                   break;
