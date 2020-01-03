@@ -1,8 +1,5 @@
 <div *ngIf="appointment; else loading">
-  <div class="header fixed">
-    <mat-icon (click)="goBack()" class="go_back">last_page</mat-icon>
-    <h2 class="headline">{{appointment.title}}</h2>
-  </div>
+  <app-go-back-header [appointment]="appointment"></app-go-back-header>
 
   <mat-card class="">
     <mat-card-title class="headline">

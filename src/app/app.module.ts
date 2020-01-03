@@ -47,6 +47,7 @@ import {TemplateDialogComponent} from './components/dialogs/template-dialog/temp
 import {AuthInterceptor} from './_helper/interceptor/auth.interceptor';
 import {JwtInterceptor} from './_helper/interceptor/jwt.interceptor';
 import {ConfirmationDialogComponent} from './components/dialogs/confirmation-dialog/confirmation-dialog.component';
+import {GoBackHeaderComponent} from './components/util/go-back-header/go-back-header.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import {ConfirmationDialogComponent} from './components/dialogs/confirmation-dia
     DriverComponent,
     TemplateDialogComponent,
     ConfirmationDialogComponent,
+    GoBackHeaderComponent,
   ],
   imports: [
     MatDatepickerModule,
