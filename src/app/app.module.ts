@@ -108,7 +108,7 @@ import {GoBackHeaderComponent} from './components/util/go-back-header/go-back-he
     FilterDialogComponent,
     CommentDialogComponent,
     TemplateDialogComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
   ],
 })
 export class AppModule {

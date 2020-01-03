@@ -51,7 +51,6 @@ export class AppointmentComponent implements OnInit {
   public percentDone;
   disableAnimation = true;
 
-
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
               private snackBar: MatSnackBar) {
