@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <div [formGroup]="driverEvent">
+        <div [formGroup]="driverPassengerEvent">
           <div *ngIf="appointment.driverAddition" class="driverAddition">
             <div>
               <mat-checkbox
@@ -41,7 +41,7 @@
               </mat-checkbox>
             </div>
 
-            <mat-form-field *ngIf="!driverEvent.get('driver').value; else driver">
+            <mat-form-field *ngIf="!driverPassengerEvent.get('driver').value; else driver">
               <mat-label>Mich bitte mitnehmen</mat-label>
               <mat-select formControlName="requirement" required>
                 <mat-option [value]="0"> ---</mat-option>
@@ -49,8 +49,8 @@
                 <mat-option [value]="2"> Nur Zurück</mat-option>
                 <mat-option [value]="3"> Hin und Zurück</mat-option>
               </mat-select>
-              <mat-error *ngIf="driverEvent.get('requirement').invalid">
-                {{ getSelectError() }}
+              <mat-error *ngIf="driverPassengerEvent.get('requirement').invalid">
+                {{ getSelectErrorMessage() }}
               </mat-error>
             </mat-form-field>
 
@@ -62,8 +62,8 @@
                   <mat-option [value]="2"> Nur Zurück</mat-option>
                   <mat-option [value]="3"> Hin und Zurück</mat-option>
                 </mat-select>
-                <mat-error *ngIf="driverEvent.get('service').invalid">
-                  {{ getSelectError() }}
+                <mat-error *ngIf="driverPassengerEvent.get('service').invalid">
+                  {{ getSelectErrorMessage() }}
                 </mat-error>
               </mat-form-field>
 
@@ -74,7 +74,7 @@
                        placeholder="FREIE Plätze"
                        required
                        type="number">
-                <mat-error *ngIf="driverEvent.get('seats').invalid">
+                <mat-error *ngIf="driverPassengerEvent.get('seats').invalid">
                   {{ getSeatsErrorMessage() }}
                 </mat-error>
               </mat-form-field>
@@ -108,7 +108,7 @@
       Logge dich ein um deine Anmeldung deinem Account zuzuordnen.
     </span>
     <mat-card-content>
-      <button [queryParams]="{returnUrl: this.snapshot.url}"
+      <button [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url}"
               [routerLink]="['/account/login']"
               color="primary"
               mat-raised-button>
@@ -121,17 +121,31 @@
     </span>
     <mat-card-content (ngSubmit)="sendEnrollment()"
                       [formGroup]="keyEvent">
+
       <mat-form-field>
-        <input formControlName="key"
-               id="key"
-               matInput
-               placeholder="Token"
-               required>
-        <mat-error *ngIf="keyEvent.get('key').invalid">
-          {{ getTokenError() }}
-        </mat-error>
+        <div class="tooltip-container">
+          <input [readonly]="keyReadonly"
+                 [value]="localStorageKey"
+                 formControlName="key"
+                 id="key"
+                 matInput
+                 placeholder="Token"
+                 required>
+          <mat-error *ngIf="keyEvent.get('key').invalid && !keyReadonly">
+            {{ getTokenErrorMessage() }}
+          </mat-error>
+          <!--suppress TypeScriptUnresolvedFunction -->
+          <mat-icon #templateTooltip="matTooltip"
+                    (click)="templateTooltip.toggle()"
+                    *ngIf="keyReadonly"
+                    class="tooltip"
+                    matTooltip="{{ 'Dieser Token kann nur in den Einstellungen geändert werden' }}">
+            info
+          </mat-icon>
+        </div>
       </mat-form-field>
-      <button mat-raised-button>
+      <button (click)="sendEnrollment()"
+              mat-raised-button>
         Absenden
       </button>
     </mat-card-content>

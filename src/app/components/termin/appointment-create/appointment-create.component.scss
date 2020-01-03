@@ -41,18 +41,6 @@ mat-chip-list {
   }
 }
 
-.tooltip-container {
-  margin-top: 5px;
-  position: relative;
-
-  .tooltip {
-    margin-left: 5px;
-    top: -5px;
-    position: absolute;
-    @include md-icon-size(20px);
-  }
-}
-
 .info {
   display: block;
   width: 100% !important;
