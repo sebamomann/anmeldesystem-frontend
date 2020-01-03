@@ -19,7 +19,9 @@
                    matInput
                    placeholder="Name"
                    required>
-            <mat-error *ngIf="event.get('name').invalid">{{ getNameErrorMessage() }}</mat-error>
+            <mat-error *ngIf="event.get('name').invalid">
+              {{ getNameErrorMessage() }}
+            </mat-error>
           </mat-form-field>
 
           <div class="additions">
@@ -50,6 +52,9 @@
                 <mat-option [value]="2"> Nur Zurück</mat-option>
                 <mat-option [value]="3"> Hin und Zurück</mat-option>
               </mat-select>
+              <mat-error *ngIf="driverEvent.get('requirement').invalid">
+                {{ getSelectError() }}
+              </mat-error>
             </mat-form-field>
 
             <ng-template #driver>
@@ -60,6 +65,9 @@
                   <mat-option [value]="2"> Nur Zurück</mat-option>
                   <mat-option [value]="3"> Hin und Zurück</mat-option>
                 </mat-select>
+                <mat-error *ngIf="driverEvent.get('service').invalid">
+                  {{ getSelectError() }}
+                </mat-error>
               </mat-form-field>
 
               <mat-form-field class="seats">
@@ -69,7 +77,9 @@
                        placeholder="FREIE Plätze"
                        required
                        type="number">
-                <mat-error *ngIf="driverEvent.get('seats').invalid">{{ getSeatsErrorMessage() }}</mat-error>
+                <mat-error *ngIf="driverEvent.get('seats').invalid">
+                  {{ getSeatsErrorMessage() }}
+                </mat-error>
               </mat-form-field>
             </ng-template>
           </div>

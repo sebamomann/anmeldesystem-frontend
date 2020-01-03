@@ -83,27 +83,16 @@ export class EnrollmentComponent implements OnInit {
       } else if (sAppointment.type === HttpEventType.Response) {
         this.appointment = sAppointment.body;
 
-        /* TODO parse output into form */
-        this.enrollmentOutputSet = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY) !== null;
+        // parse data into form
+        const localStroageOutput = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY);
+        this.enrollmentOutputSet = localStroageOutput !== null;
 
         if (this.enrollmentOutputSet === true
           && this.userIsLoggedIn) {
           // Refetch output from local storage
-          const output = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY);
-          this.output = JSON.parse(output);
+          this.output = JSON.parse(localStroageOutput);
 
-          // Parse output back into form
-          this.event.get('name').setValue(this.output.name);
-          this.event.get('comment').setValue(this.output.comment);
-          if (this.output.driver != null) {
-            this.driverEvent.get('driver').setValue(this.output.driver);
-            this.driverEvent.get('seats').setValue(this.output.driver.seats);
-            this.driverEvent.get('service').setValue(this.output.driver.service);
-          }
-
-          if (this.output.passenger != null) {
-            this.driverEvent.get('requirement').setValue(this.output.passenger.requirement);
-          }
+          this.parseStorageValuesIntoForm();
 
           this.sendEnrollment();
         }
@@ -117,6 +106,8 @@ export class EnrollmentComponent implements OnInit {
 
   async setupEnrollment() {
     if (!this.event.valid) {
+      this.event.markAllAsTouched();
+      this.driverEvent.markAllAsTouched();
       return;
     }
 
@@ -213,9 +204,10 @@ export class EnrollmentComponent implements OnInit {
     });
   }
 
+  // Error handling
   getNameErrorMessage(): string {
     if (this.getName().hasError('required')) {
-      return 'Bitte gebe einen Benutezrnamen an';
+      return 'Bitte gebe einen Namen an';
     }
 
     if (this.getName().hasError('inUse')) {
@@ -223,9 +215,36 @@ export class EnrollmentComponent implements OnInit {
     }
   }
 
+  getSelectError(): string {
+    if (this.getRequirement().hasError('required')) {
+      return 'Bitte auswählen';
+    }
+  }
+
   getTokenError() {
     if (this.getToken().hasError('required')) {
-      return 'Bitte einen Token angeben';
+      return 'Bitte geben einen Token an';
+    }
+  }
+
+  // Utility
+  private parseStorageValuesIntoForm() {
+    this.event.get('name').setValue(this.output.name);
+    this.event.get('comment').setValue(this.output.comment);
+    if (this.output.driver != null) {
+      this.driverEvent.get('driver').setValue(this.output.driver);
+      this.driverEvent.get('seats').setValue(this.output.driver.seats);
+      this.driverEvent.get('service').setValue(this.output.driver.service);
+    }
+
+    if (this.output.passenger != null) {
+      this.driverEvent.get('requirement').setValue(this.output.passenger.requirement);
+    }
+  }
+
+  private getSeatsErrorMessage() {
+    if (this.getSeats().hasError('required')) {
+      return 'Bite gebe die Anzahl FREIER Plätze an';
     }
   }
 
@@ -233,16 +252,20 @@ export class EnrollmentComponent implements OnInit {
     return this.keyEvent.get('key');
   }
 
+  private getSeats() {
+    return this.driverEvent.get('seats');
+  }
+
+  private getRequirement() {
+    return this.driverEvent.get('requirement');
+  }
+
   private getName() {
     return this.event.get('name');
   }
 
-  getAdditionsControls() {
+  private getAdditionsControls() {
     return (this.event.get('additions') as FormArray).controls;
-  }
-
-  getSeatsErrorMessage() {
-    return '';
   }
 
   goBack() {
