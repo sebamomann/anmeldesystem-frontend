@@ -33,20 +33,29 @@ export class EnrollmentComponent implements OnInit {
     name: new FormControl('', [Validators.required, Validators.min(2)]),
     comment: new FormControl('', [Validators.min(2)]),
     additions: new FormArray([]),
+  });
+
+  driverEvent = this.formBuilder.group({
     driver: new FormControl(false),
     seats: new FormControl('', [Validators.min(1)]),
     requirement: new FormControl('', []),
     service: new FormControl('', [])
   });
 
-  appointment: IAppointmentModel;
-  additions = [];
+  keyEvent = this.formBuilder.group({
+    key: new FormControl('', [Validators.required])
+  });
 
-  private link: string;
-  private percentDone;
-  keyEvent: any;
-  snapshot: RouterStateSnapshot;
   private ENROLLMENT_OUTPUT_KEY = 'enrollmentOutput';
+  private enrollmentOutputSet: boolean;
+  private link: string;
+
+  private percentDone: number;
+
+  appointment: IAppointmentModel;
+
+  snapshot: RouterStateSnapshot;
+
   private output = {
     name: '',
     comment: null,
@@ -54,20 +63,16 @@ export class EnrollmentComponent implements OnInit {
     driver: null,
     passenger: null,
   };
-  private enrollmentOutputSet: boolean;
 
   constructor(private appointmentService: AppointmentService, private location: Location,
               private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
               private authenticationService: AuthenticationService) {
 
+    // Current router URL for redirect when not logged in
     this.snapshot = router.routerState.snapshot;
 
     this.route.queryParams.subscribe(params => {
       this.link = params.val;
-    });
-
-    this.keyEvent = this.formBuilder.group({
-      key: new FormControl('', [Validators.required])
     });
   }
 
@@ -77,18 +82,37 @@ export class EnrollmentComponent implements OnInit {
         this.percentDone = Math.round(100 * sAppointment.loaded / sAppointment.total);
       } else if (sAppointment.type === HttpEventType.Response) {
         this.appointment = sAppointment.body;
-        this.addCheckboxes();
+
+        /* TODO parse output into form */
         this.enrollmentOutputSet = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY) !== null;
 
-        if (this.enrollmentOutputSet !== null
+        if (this.enrollmentOutputSet === true
           && this.userIsLoggedIn) {
+          // Refetch output from local storage
+          const output = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY);
+          this.output = JSON.parse(output);
+
+          // Parse output back into form
+          this.event.get('name').setValue(this.output.name);
+          this.event.get('comment').setValue(this.output.comment);
+          if (this.output.driver != null) {
+            this.driverEvent.get('driver').setValue(this.output.driver);
+            this.driverEvent.get('seats').setValue(this.output.driver.seats);
+            this.driverEvent.get('service').setValue(this.output.driver.service);
+          }
+
+          if (this.output.passenger != null) {
+            this.driverEvent.get('requirement').setValue(this.output.passenger.requirement);
+          }
+
           this.sendEnrollment();
         }
+
+        this.addCheckboxes();
       }
     }, error => {
       this.appointment = null;
     });
-
   }
 
   async setupEnrollment() {
@@ -96,19 +120,26 @@ export class EnrollmentComponent implements OnInit {
       return;
     }
 
+    if (this.driverEvent.get('driver').value) {
+      if ((this.driverEvent.get('service').valid && this.driverEvent.get('seats').valid)) {
+      }
+    } else if (!this.driverEvent.get('requirement').valid) {
+      return;
+    }
+
     this.output.name = this.event.get('name').value;
     this.output.comment = this.event.get('comment').value;
 
     if (this.appointment.driverAddition) {
-      if (this.event.get('driver').value) {
+      if (this.driverEvent.get('driver').value) {
         this.output.driver = {
-          service: this.event.get('service').value,
-          seats: this.event.get('seats').value,
+          service: this.driverEvent.get('service').value,
+          seats: this.driverEvent.get('seats').value,
         };
         this.output.passenger = null;
       } else {
         this.output.passenger = {
-          requirement: this.event.get('requirement').value,
+          requirement: this.driverEvent.get('requirement').value,
         };
         this.output.driver = null;
       }
@@ -126,9 +157,6 @@ export class EnrollmentComponent implements OnInit {
 
   async sendEnrollment() {
     if (this.userIsLoggedIn || this.keyEvent.valid) {
-      const output = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY);
-      this.output = JSON.parse(output);
-
       this.appointmentService
         .enroll(this.output, this.appointment)
         .subscribe(result => {
@@ -180,7 +208,7 @@ export class EnrollmentComponent implements OnInit {
 
   private addCheckboxes() {
     this.appointment.additions.forEach((o, i) => {
-      const control = new FormControl(); // if first item set to true, else false
+      const control = new FormControl(this.output.additions.some(iAddition => iAddition.id === o.id));
       (this.event.controls.additions as FormArray).push(control);
     });
   }

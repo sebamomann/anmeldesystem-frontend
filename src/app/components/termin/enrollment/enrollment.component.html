@@ -11,74 +11,78 @@
 
     <mat-card-content>
       <form (ngSubmit)="setupEnrollment()"
-            class="register-form"
-            [formGroup]="event">
-        <mat-form-field class="name">
-          <input matInput
-                 id="name"
-                 placeholder="Name"
-                 formControlName="name"
-                 required>
-          <mat-error *ngIf="event.get('name').invalid">{{ getNameErrorMessage() }}</mat-error>
-        </mat-form-field>
+            class="register-form">
+        <div [formGroup]="event">
+          <mat-form-field class="name">
+            <input formControlName="name"
+                   id="name"
+                   matInput
+                   placeholder="Name"
+                   required>
+            <mat-error *ngIf="event.get('name').invalid">{{ getNameErrorMessage() }}</mat-error>
+          </mat-form-field>
 
-        <div class="additions">
-          <div *ngFor="let addition of getAdditionsControls(); let i = index;"
-               formArrayName="additions">
-            <mat-checkbox
-              [formControlName]="i">
-              {{appointment.additions[i].name}}
-            </mat-checkbox>
+          <div class="additions">
+            <div *ngFor="let addition of getAdditionsControls(); let i = index;"
+                 formArrayName="additions">
+              <mat-checkbox
+                [formControlName]="i">
+                {{appointment.additions[i].name}}
+              </mat-checkbox>
+            </div>
           </div>
         </div>
 
-        <div class="driverAddition" *ngIf="appointment.driverAddition">
-          <div>
-            <mat-checkbox
-              formControlName="driver">
-              Fahrer
-            </mat-checkbox>
-          </div>
+        <div [formGroup]="driverEvent">
+          <div *ngIf="appointment.driverAddition" class="driverAddition">
+            <div>
+              <mat-checkbox
+                formControlName="driver">
+                Fahrer
+              </mat-checkbox>
+            </div>
 
-          <mat-form-field *ngIf="!event.get('driver').value; else driver">
-            <mat-label>Mich bitte mitnehmen</mat-label>
-            <mat-select formControlName="requirement" required>
-              <mat-option [value]="0"> ---</mat-option>
-              <mat-option [value]="1"> Nur Hin</mat-option>
-              <mat-option [value]="2"> Nur Zurück</mat-option>
-              <mat-option [value]="3"> Hin und Zurück</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <ng-template #driver>
-            <mat-form-field>
-              <mat-label>Ich fahre</mat-label>
-              <mat-select formControlName="service" required>
+            <mat-form-field *ngIf="!driverEvent.get('driver').value; else driver">
+              <mat-label>Mich bitte mitnehmen</mat-label>
+              <mat-select formControlName="requirement" required>
+                <mat-option [value]="0"> ---</mat-option>
                 <mat-option [value]="1"> Nur Hin</mat-option>
                 <mat-option [value]="2"> Nur Zurück</mat-option>
                 <mat-option [value]="3"> Hin und Zurück</mat-option>
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field class="seats">
-              <input matInput
-                     id="seats"
-                     placeholder="FREIE Plätze"
-                     formControlName="seats"
-                     type="number"
-                     required>
-              <mat-error *ngIf="event.get('seats').invalid">{{ getSeatsErrorMessage() }}</mat-error>
-            </mat-form-field>
-          </ng-template>
+            <ng-template #driver>
+              <mat-form-field>
+                <mat-label>Ich fahre</mat-label>
+                <mat-select formControlName="service" required>
+                  <mat-option [value]="1"> Nur Hin</mat-option>
+                  <mat-option [value]="2"> Nur Zurück</mat-option>
+                  <mat-option [value]="3"> Hin und Zurück</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field class="seats">
+                <input formControlName="seats"
+                       id="seats"
+                       matInput
+                       placeholder="FREIE Plätze"
+                       required
+                       type="number">
+                <mat-error *ngIf="driverEvent.get('seats').invalid">{{ getSeatsErrorMessage() }}</mat-error>
+              </mat-form-field>
+            </ng-template>
+          </div>
         </div>
 
-        <mat-form-field>
-        <textarea matInput
-                  formControlName="comment"
-                  id="comment"
-                  cdkTextareaAutosize
-                  cdkAutosizeMinRows="1"
-                  cdkAutosizeMaxRows="5" placeholder="Kommentar"></textarea>
+        <mat-form-field [formGroup]="event">
+          <textarea cdkAutosizeMaxRows="5"
+                    cdkAutosizeMinRows="1"
+                    cdkTextareaAutosize
+                    formControlName="comment"
+                    id="comment"
+                    matInput placeholder="Kommentar">
+          </textarea>
         </mat-form-field>
 
         <mat-card-actions>
