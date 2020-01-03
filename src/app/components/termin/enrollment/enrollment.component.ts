@@ -268,7 +268,4 @@ export class EnrollmentComponent implements OnInit {
     return (this.event.get('additions') as FormArray).controls;
   }
 
-  goBack() {
-    this.location.back();
-  }
 }

@@ -1,8 +1,5 @@
 <div *ngIf="appointment && !enrollmentOutputSet; else loading">
-  <div class="header fixed">
-    <mat-icon class="go_back" (click)="goBack()">last_page</mat-icon>
-    <h2 class="headline">{{appointment.title}}</h2>
-  </div>
+  <app-go-back-header [appointment]="appointment"></app-go-back-header>
 
   <mat-card class="form float">
     <mat-card-title class="headline">

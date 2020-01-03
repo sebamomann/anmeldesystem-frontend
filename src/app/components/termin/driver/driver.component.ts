@@ -86,10 +86,6 @@ export class DriverComponent implements OnInit {
     });
   }
 
-  goBack() {
-    this.location.back();
-  }
-
   compare(nr1: number, nr2: number) {
     if (nr1 > nr2) {
       return 1;
