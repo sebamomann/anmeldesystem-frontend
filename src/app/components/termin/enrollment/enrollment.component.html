@@ -1,4 +1,4 @@
-<div *ngIf="appointment; else loading">
+<div *ngIf="appointment && !enrollmentOutputSet; else loading">
   <div class="header fixed">
     <mat-icon class="go_back" (click)="goBack()">last_page</mat-icon>
     <h2 class="headline">{{appointment.title}}</h2>
@@ -10,7 +10,7 @@
     </mat-card-title>
 
     <mat-card-content>
-      <form (ngSubmit)="create()"
+      <form (ngSubmit)="setupEnrollment()"
             class="register-form"
             [formGroup]="event">
         <mat-form-field class="name">
@@ -91,6 +91,43 @@
   </mat-card>
 </div>
 
+<ng-container *ngIf="enrollmentOutputSet">
+  <mat-card class="float card-small">
+    <span>
+      Logge dich ein um deine Anmeldung deinem Account zuzuordnen.
+    </span>
+    <mat-card-content>
+      <button [queryParams]="{returnUrl: this.snapshot.url}"
+              [routerLink]="['/account/login']"
+              color="primary"
+              mat-raised-button>
+        Login
+      </button>
+    </mat-card-content>
+    <span class="separator middle center"></span>
+    <span>
+      Oder gib einen Token an, um später deine Anmeldung zu verwalten.
+    </span>
+    <mat-card-content (ngSubmit)="sendEnrollment()"
+                      [formGroup]="keyEvent">
+      <mat-form-field>
+        <input formControlName="key"
+               id="key"
+               matInput
+               placeholder="Token"
+               required>
+        <mat-error *ngIf="keyEvent.get('key').invalid">
+          {{ getTokenError() }}
+        </mat-error>
+      </mat-form-field>
+      <button mat-raised-button>
+        Absenden
+      </button>
+    </mat-card-content>
+
+  </mat-card>
+</ng-container>
+
 <ng-template #loading>
   <ng-container *ngIf="appointment === null; else loadingBar">
     <div class="error empty">
@@ -102,6 +139,10 @@
 </ng-template>
 
 <ng-template #loadingBar>
-  <mat-progress-bar [@fadeInOut] [value]="percentDone" class="progress-bar" mode="determinate"></mat-progress-bar>
+  <mat-progress-bar [@fadeInOut]
+                    [value]="percentDone"
+                    class="progress-bar"
+                    mode="determinate">
+  </mat-progress-bar>
 </ng-template>
 

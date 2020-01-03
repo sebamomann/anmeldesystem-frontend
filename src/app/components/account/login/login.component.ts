@@ -36,10 +36,12 @@ export class LoginComponent implements OnInit {
       const username = this.getUsername().value;
       const password = this.getPassword().value;
 
+      const retUrl = decodeURIComponent(this.returnUrl);
+
       await this.authenticationService.login(username, password).pipe(first())
         .subscribe(
           data => {
-            this.router.navigate([this.returnUrl]);
+            this.router.navigateByUrl(retUrl);
           },
           error => {
             this.alertService.error(error);

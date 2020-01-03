@@ -237,12 +237,13 @@ a {
     margin: 5px 0;
   }
 
-  &.tall:after {
-    margin: 10px 0;
-  }
 
   &.tall:after {
     margin: 7px 0;
+  }
+
+  &.extra-tall:after {
+    margin: 10px 0;
   }
 
   &.center:after {
@@ -263,6 +264,16 @@ mat-card {
   margin: 0 auto;
   background-color: white !important;
   padding: 10px;
+
+  &.card-small {
+    text-align: center;
+
+    & > span {
+      display: block;
+      font-size: 1em;
+      margin: 0 auto 25px auto;
+    }
+  }
 
   &.main {
     margin: 25px auto;

@@ -256,10 +256,20 @@ export class AppointmentComponent implements OnInit {
    * This Also applies editing and deleting enrollments
    */
   modificationAllowed() {
-    return (this.appointment.creator.username === this.authenticationService.currentUserValue.username)
-      || (this.appointment.administrators.some(sAdministrator => {
-        return sAdministrator.mail === this.authenticationService.currentUserValue.mail;
-      }));
+    if (this.authenticationService.currentUserValue !== null) {
+      if ((this.appointment.creator.username === this.authenticationService.currentUserValue.username)
+        || (this.appointment.administrators.some(sAdministrator => {
+          return sAdministrator.mail === this.authenticationService.currentUserValue.mail;
+        }))) {
+        return true;
+      }
+
+      if (EnrollmentUtil.getKey !== null) {
+        return true;
+      }
+    } else {
+      return false;
+    }
   }
 
   /**

@@ -2,12 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
 import {AppointmentService} from '../../../services/appointment.service';
 import {Location} from '@angular/common';
-import {ActivatedRoute, Router} from '@angular/router';
-import {IEnrollmentModel} from '../../../models/IEnrollment.model';
+import {ActivatedRoute, Router, RouterStateSnapshot} from '@angular/router';
 import {IAdditionModel} from '../../../models/IAddition.model';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {AuthenticationService} from '../../../services/authentication.service';
 
 const HttpStatus = require('http-status-codes');
 
@@ -27,6 +27,8 @@ const HttpStatus = require('http-status-codes');
   ]
 })
 export class EnrollmentComponent implements OnInit {
+  userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
+
   event = this.formBuilder.group({
     name: new FormControl('', [Validators.required, Validators.min(2)]),
     comment: new FormControl('', [Validators.min(2)]),
@@ -42,11 +44,30 @@ export class EnrollmentComponent implements OnInit {
 
   private link: string;
   private percentDone;
+  keyEvent: any;
+  snapshot: RouterStateSnapshot;
+  private ENROLLMENT_OUTPUT_KEY = 'enrollmentOutput';
+  private output = {
+    name: '',
+    comment: null,
+    additions: [],
+    driver: null,
+    passenger: null,
+  };
+  private enrollmentOutputSet: boolean;
 
   constructor(private appointmentService: AppointmentService, private location: Location,
-              private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router) {
+              private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
+              private authenticationService: AuthenticationService) {
+
+    this.snapshot = router.routerState.snapshot;
+
     this.route.queryParams.subscribe(params => {
       this.link = params.val;
+    });
+
+    this.keyEvent = this.formBuilder.group({
+      key: new FormControl('', [Validators.required])
     });
   }
 
@@ -58,73 +79,90 @@ export class EnrollmentComponent implements OnInit {
         this.appointment = sAppointment.body;
         this.addCheckboxes();
       }
+
+      this.enrollmentOutputSet = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY) !== null;
+
+      if (this.enrollmentOutputSet !== null
+        && this.userIsLoggedIn) {
+        this.sendEnrollment();
+      }
     }, error => {
       this.appointment = null;
     });
 
   }
 
-  async create() {
+  async setupEnrollment() {
     if (!this.event.valid) {
       return;
     }
 
-    let output: IEnrollmentModel;
-    output = {
-      additions: [],
-      driver: null,
-      passenger: null,
-      name: this.event.get('name').value,
-      comment: this.event.get('comment').value
-    };
+    this.output.name = this.event.get('name').value;
+    this.output.comment = this.event.get('comment').value;
 
     if (this.appointment.driverAddition) {
       if (this.event.get('driver').value) {
-        output.driver = {
+        this.output.driver = {
           service: this.event.get('service').value,
           seats: this.event.get('seats').value,
         };
-        output.passenger = null;
+        this.output.passenger = null;
       } else {
-        output.passenger = {
+        this.output.passenger = {
           requirement: this.event.get('requirement').value,
         };
-        output.driver = null;
+        this.output.driver = null;
       }
     }
 
-    output.additions = this.getAdditionIdList();
+    this.output.additions = this.getAdditionIdList();
 
-    this.appointmentService
-      .enroll(output, this.appointment)
-      .subscribe(result => {
-          if (result.type === HttpEventType.Response) {
-            switch (result.status) {
-              case HttpStatus.CREATED:
-                this.router.navigate([`enroll`], {
-                  queryParams: {
-                    val: this.appointment.link
-                  }
-                });
+    localStorage.setItem(this.ENROLLMENT_OUTPUT_KEY, JSON.stringify(this.output));
+    this.enrollmentOutputSet = true;
+
+    if (this.userIsLoggedIn) {
+      this.sendEnrollment();
+    }
+  }
+
+  async sendEnrollment() {
+    if (this.userIsLoggedIn || this.keyEvent.valid) {
+      const output = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY);
+      this.output = JSON.parse(output);
+
+      this.appointmentService
+        .enroll(this.output, this.appointment)
+        .subscribe(result => {
+            localStorage.removeItem(this.ENROLLMENT_OUTPUT_KEY);
+            this.enrollmentOutputSet = false;
+            if (result.type === HttpEventType.Response) {
+              switch (result.status) {
+                case HttpStatus.CREATED:
+                  this.router.navigate([`enroll`], {
+                    queryParams: {
+                      val: this.appointment.link
+                    }
+                  });
+                  break;
+              }
+            }
+          }, (err: HttpErrorResponse) => {
+            console.log(err);
+            switch (err.status) {
+              case HttpStatus.BAD_REQUEST:
+                if (err.error.code === 'DUPLICATE_ENTRY') {
+                  err.error.columns.forEach(fColumn => {
+                      const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
+                      const fnName: string = 'get' + uppercaseName;
+                      this[fnName]().setErrors({inUse: true});
+                    }
+                  );
+                }
                 break;
             }
           }
-        }, (err: HttpErrorResponse) => {
-          console.log(err);
-          switch (err.status) {
-            case HttpStatus.BAD_REQUEST:
-              if (err.error.code === 'DUPLICATE_ENTRY') {
-                err.error.columns.forEach(fColumn => {
-                    const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
-                    const fnName: string = 'get' + uppercaseName;
-                    this[fnName]().setErrors({inUse: true});
-                  }
-                );
-              }
-              break;
-          }
-        }
-      );
+        );
+    }
   }
 
   getAdditionIdList(): IAdditionModel[] {
@@ -156,6 +194,16 @@ export class EnrollmentComponent implements OnInit {
     if (this.getName().hasError('inUse')) {
       return 'Es besteht bereits eine Anmeldung mit diesem Namen.';
     }
+  }
+
+  getTokenError() {
+    if (this.getToken().hasError('required')) {
+      return 'Bitte einen Token angeben';
+    }
+  }
+
+  private getToken() {
+    return this.keyEvent.get('key');
   }
 
   private getName() {

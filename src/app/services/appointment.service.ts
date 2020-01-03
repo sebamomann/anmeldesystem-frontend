@@ -67,9 +67,7 @@ export class AppointmentService {
 
   enroll(enrollment: IEnrollmentModel, appointment: IAppointmentModel): Observable<HttpEvent<IEnrollmentModel>> {
     const url = `${environment.api.url}enrollment?link=${appointment.link}`;
-    const req = new HttpRequest('POST', url, {
-      data: enrollment,
-      observe: 'response',
+    const req = new HttpRequest('POST', url, enrollment, {
       reportProgress: true,
     });
     return this.httpClient.request(req);
