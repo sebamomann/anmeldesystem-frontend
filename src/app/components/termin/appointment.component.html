@@ -14,7 +14,7 @@
       </h2>
     </div>
 
-    <mat-icon (click)="openFilterDialog()"
+    <mat-icon (click)="_openFilterDialog()"
               class="filter-open"
               matBadge="{{getNumberOfActiveFilter() > 0 ? getNumberOfActiveFilter() : ''}}"
               matBadgeColor="info"
@@ -63,7 +63,7 @@
 
           <div class="enrollment-additions">
             <mat-icon
-              (click)="openCommentDialog(enrollment)"
+              (click)="_openCommentDialog(enrollment)"
               matBadge="{{enrollment.comments != null && enrollment.comments.length > 0 ? enrollment.comments.length : ''}}"
               matBadgeColor="info"
               matBadgeSize="small">
@@ -73,7 +73,7 @@
               <mat-icon>
                 edit
               </mat-icon>
-              <mat-icon (click)="openConfirmationDialog(enrollment)">
+              <mat-icon (click)="_openConfirmationDialog(enrollment)">
                 delete
               </mat-icon>
             </ng-container>

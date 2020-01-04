@@ -43,13 +43,14 @@ const HttpStatus = require('http-status-codes');
 @NgModule({})
 export class AppointmentComponent implements OnInit {
 
-  public link: string;
   public appointment: IAppointmentModel = null;
-  public filter: any;
+  // List to show (enrollments left after filter is applied)
   public enrollments: IEnrollmentModel[];
+  public link: string;
+  public filter: any;
   public allowModify = false;
   public percentDone;
-  disableAnimation = true;
+  private disableAnimation = true;
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
@@ -84,7 +85,107 @@ export class AppointmentComponent implements OnInit {
       });
   }
 
-  openFilterDialog(error: boolean = false): void {
+  /**
+   * Remove enrollment from appointment list. Used for eliminating the need of re-fetching the entire appointment after enrollment deletion
+   *
+   * @param enrollment IEnrollmentModel Enrollment to delete from list
+   */
+  removeAppointment: (enrollment: IEnrollmentModel) => void
+    = (enrollment: IEnrollmentModel) => {
+    const index = this.appointment.enrollments.indexOf(enrollment);
+    this.appointment.enrollments.splice(index, 1);
+  };
+
+
+  /**
+   * Filter enrollment list for applying filters set by filterDialog.
+   */
+  filterEnrollments: () => IEnrollmentModel[] = () => {
+    // Reset enrollment list to original list
+    this.enrollments = this.appointment.enrollments;
+
+    const numberOfAdditionFilters = this.filter.additions.filter(val => val.active).length;
+    if (numberOfAdditionFilters > 0
+      || this.filter.driverPassenger !== '') {
+      const output: IEnrollmentModel[] = [];
+
+      this.enrollments.forEach(eEnrollment => {
+        try {
+          if (numberOfAdditionFilters > 0) {
+            let contains = 0;
+            this.filter.additions.forEach(eFilterAddition => {
+              let valid = true;
+
+              if (eFilterAddition.active === true
+                && eEnrollment.additions.some(iAddition => iAddition.id === eFilterAddition.id)) {
+                contains++;
+              }
+
+              eEnrollment.additions.forEach(eAddition => {
+                if (eAddition.id === eFilterAddition.id
+                  && !eFilterAddition.active
+                  && this.filter.explicitly === 'explicit') {
+                  valid = false;
+                }
+              });
+
+              if ((this.filter.explicitly === 'explicit' || this.filter.explicitly === 'semiExplicit')
+                && eFilterAddition.active === true
+                && !eEnrollment.additions.some(sAddition => sAddition.id === eFilterAddition.id)) {
+                valid = false;
+              }
+
+              if (!valid) {
+                return;
+              }
+            });
+
+            if (contains === 0) {
+              return;
+            }
+          }
+
+          if (this.filter.driverPassenger !== ''
+            && ((eEnrollment.driver === null
+              && this.filter.driverPassenger === 'driver')
+              || (eEnrollment.passenger === null
+                && this.filter.driverPassenger === 'passenger'))) {
+            return;
+          }
+
+          output.push(eEnrollment);
+        } catch (e) {
+          //
+        }
+      });
+      return output;
+    }
+  };
+
+  /**
+   * Count number of active filter options. <br />
+   * #selectedAdditions + (driverPassengerFilter ? 1 : 0) + (explicit ? 1 : 0)
+   */
+  getNumberOfActiveFilter: () => number = () => {
+    let i = 0;
+    this.filter.additions.forEach(filter => {
+      if (filter.active) {
+        i++;
+      }
+    });
+    if (this.filter.driverPassenger === 'driver' || this.filter.driverPassenger === 'passenger') {
+      i++;
+    }
+    return i;
+  };
+
+  /**
+   * Open dialog for setting filters for enrollment list. <br />
+   * After closing, filter instantly applies and updates list of enrollments.
+   *
+   * @param error If error is true, then show error message, that no filter applies.
+   */
+  public _openFilterDialog = (error: boolean = false): void => {
     const dialogRef = this.dialog.open(FilterDialogComponent, {
       width: '75%',
       height: 'auto',
@@ -105,21 +206,24 @@ export class AppointmentComponent implements OnInit {
 
         if (tmpEnrollments.length === 0 && this.getNumberOfActiveFilter() > 0) {
           this.enrollments = oldEnrollments;
-          this.openFilterDialog(true);
+          // Reopen filter if filter shows no results
+          this._openFilterDialog(true);
+          // Reset filter
           this.filter = oldFilter;
         } else {
           this.enrollments = tmpEnrollments;
         }
       }
     });
-  }
+  };
 
-  removeAppointment(enrollment: IEnrollmentModel) {
-    const index = this.appointment.enrollments.indexOf(enrollment);
-    this.appointment.enrollments.splice(index, 1);
-  }
-
-  openConfirmationDialog(enrollment: IEnrollmentModel): void {
+  /**
+   * Check for confirmation to delete the enrollment. <br />
+   * On success/error show appropriate snackbar and delete enrollment from list so no re-fetch is needed
+   *
+   * @param enrollment Enrollment to delete
+   */
+  public _openConfirmationDialog = (enrollment: IEnrollmentModel): void => {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '350px',
       data: `Bist du sicher, dass du "${enrollment.name}" löschen möchtest?`
@@ -140,7 +244,8 @@ export class AppointmentComponent implements OnInit {
                   this.removeAppointment(enrollment);
                 }
               }
-            }, error => {
+            },
+            error => {
               if (error.status === HttpStatus.FORBIDDEN) {
                 this.snackBar.open(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu löschen`, 'Okay', {
                   duration: 4000,
@@ -151,9 +256,15 @@ export class AppointmentComponent implements OnInit {
           );
       }
     });
-  }
+  };
 
-  openCommentDialog(enrollment): void {
+  /**
+   * Open dialog in order to see comments of enrollment. <br />
+   * Dialog also gives the opportunity to create a comment.
+   *
+   * @param enrollment Enrollment To get comment list from and sending comments to
+   */
+  public _openCommentDialog = (enrollment: IEnrollmentModel): void => {
     const dialogRef = this.dialog.open(CommentDialogComponent, {
       width: '90%',
       maxWidth: 'initial',
@@ -162,97 +273,16 @@ export class AppointmentComponent implements OnInit {
       data: {enrollment},
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(() => {
     });
-  }
+  };
 
-  initializeFilterObject(appointment: IAppointmentModel): any {
-    const additions = [];
-    appointment.additions.forEach(value => additions.push({id: value.id, name: value.name, active: false}));
-    return {additions, explicitly: 'dynamic', driverPassenger: ''};
-  }
-
-  filterEnrollments() {
-    /* RESET */
-    this.enrollments = this.appointment.enrollments;
-
-    const BreakException = {};
-    const numberOfAdditionFilters = this.filter.additions.filter(val => val.active).length;
-    if (numberOfAdditionFilters > 0
-      || this.filter.driverPassenger !== '') {
-      const output = [];
-
-      this.enrollments.forEach(eEnrollment => {
-        try {
-          if (numberOfAdditionFilters > 0) {
-            let contains = 0;
-            this.filter.additions.forEach(eFilterAddition => {
-              let valid = true;
-
-              if (eFilterAddition.active === true) {
-                if (eEnrollment.additions.some(iAddition => iAddition.id === eFilterAddition.id)) {
-                  contains++;
-                }
-              }
-
-              eEnrollment.additions.forEach(eAddition => {
-                if (eAddition.id === eFilterAddition.id
-                  && !eFilterAddition.active
-                  && this.filter.explicitly === 'explicit') {
-                  valid = false;
-                }
-              });
-
-              if ((this.filter.explicitly === 'explicit' || this.filter.explicitly === 'semiExplicit')
-                && eFilterAddition.active === true
-                && !eEnrollment.additions.some(sAddition => sAddition.id === eFilterAddition.id)) {
-                valid = false;
-              }
-
-              if (!valid) {
-                throw BreakException;
-              }
-            });
-
-            if (contains === 0) {
-              throw BreakException;
-            }
-          }
-
-          if (this.filter.driverPassenger !== '') {
-            if ((eEnrollment.driver === null && this.filter.driverPassenger === 'driver')
-              || (eEnrollment.passenger === null && this.filter.driverPassenger === 'passenger')) {
-              throw BreakException;
-            }
-          }
-
-          output.push(eEnrollment);
-        } catch (e) {
-          //
-        }
-      });
-      return output;
-    }
-  }
-
-  getNumberOfActiveFilter() {
-    let i = 0;
-    this.filter.additions.forEach(filter => {
-      if (filter.active) {
-        i++;
-      }
-    });
-    if (this.filter.driverPassenger === 'driver' || this.filter.driverPassenger === 'passenger') {
-      i++;
-    }
-    return i;
-  }
 
   /**
    * Check for currentUser being allowed to modify current appointment </br>
    * This Also applies editing and deleting enrollments
    */
-  modificationAllowed() {
+  modificationAllowed: () => (boolean) = () => {
     if (this.authenticationService.currentUserValue !== null) {
       if ((this.appointment.creator.username === this.authenticationService.currentUserValue.username)
         || (this.appointment.administrators.some(sAdministrator => {
@@ -267,7 +297,7 @@ export class AppointmentComponent implements OnInit {
     } else {
       return false;
     }
-  }
+  };
 
   /**
    * Check if id of addition is checked by enrollment.
@@ -275,7 +305,22 @@ export class AppointmentComponent implements OnInit {
    * @param enrollment IEnrollmentModel Enrollment to search in
    * @param id string ID of addition to check for
    */
-  private enrollmentCheckedAddition(enrollment: IEnrollmentModel, id: string): boolean {
+  private enrollmentCheckedAddition: (enrollment: IEnrollmentModel, id: string) => boolean
+    = (enrollment: IEnrollmentModel, id: string): boolean => {
     return enrollment.additions.findIndex(add => add.id === id) !== -1;
-  }
+  };
+
+  /**
+   * Create filter object with to appointment corresponding addition list.
+   *
+   * @param appointment IAppointmentModel of appointment to set filter for
+   *
+   * // TODO set return type
+   */
+  private initializeFilterObject: (appointment: IAppointmentModel) => any
+    = (appointment: IAppointmentModel): any => {
+    const additions = [];
+    appointment.additions.forEach(value => additions.push({id: value.id, name: value.name, active: false}));
+    return {additions, explicitly: 'dynamic', driverPassenger: ''};
+  };
 }

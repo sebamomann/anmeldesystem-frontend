@@ -1,6 +1,16 @@
 {
   "extends": "tslint:recommended",
   "rules": {
+    "semicolon": false,
+    "variable-name": {
+      "options": [
+        "ban-keywords",
+        "check-format",
+        "allow-leading-underscore",
+        "allow-pascal-case",
+        "require-const-for-all-caps"
+      ]
+    },
     "array-type": false,
     "arrow-parens": false,
     "deprecation": {
@@ -71,7 +81,7 @@
       true,
       "single"
     ],
-    "trailing-comma": false,
+    "trailing-comma": true,
     "no-conflicting-lifecycle": true,
     "no-host-metadata-property": true,
     "no-input-rename": true,
