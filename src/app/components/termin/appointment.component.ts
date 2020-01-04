@@ -74,7 +74,8 @@ export class AppointmentComponent implements OnInit {
           this.appointment = sAppointment.body;
           this.enrollments = sAppointment.body.enrollments;
           this.filter = this.initializeFilterObject(sAppointment.body);
-          this.allowModify = this.modificationAllowed();
+          // this.allowModify = this.modificationAllowed();
+          this.allowModify = true;
           setTimeout(() => this.disableAnimation = false);
         }
       },
@@ -126,31 +127,28 @@ export class AppointmentComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.enrollmentService.delete(enrollment).subscribe(deletionResult => {
-            if (deletionResult.type === HttpEventType.Response) {
-              switch (deletionResult.status) {
-                case HttpStatus.OK:
+        this.enrollmentService
+          .delete(enrollment)
+          .subscribe(
+            deletionResult => {
+              if (deletionResult.type === HttpEventType.Response) {
+                if (deletionResult.status === HttpStatus.OK) {
                   this.snackBar.open(`"${enrollment.name}" gelöscht`, null, {
                     duration: 2000,
                     panelClass: 'snackbar-default'
                   });
                   this.removeAppointment(enrollment);
-                  break;
-                default:
-                  this.snackBar.open(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu löschen`, null, {
-                    duration: 2000,
-                    panelClass: 'snackbar-default'
-                  });
-                  break;
+                }
+              }
+            }, error => {
+              if (error.status === HttpStatus.FORBIDDEN) {
+                this.snackBar.open(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu löschen`, 'Okay', {
+                  duration: 4000,
+                  panelClass: 'snackbar-default'
+                });
               }
             }
-          }, error => {
-            switch (HttpStatus.status) {
-              case HttpStatus.FORBIDDEN:
-                break;
-            }
-          }
-        );
+          );
       }
     });
   }
