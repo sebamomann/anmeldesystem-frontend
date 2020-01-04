@@ -81,37 +81,41 @@ export class EnrollmentComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.appointmentService.getAppointment(this.appointmentLink).subscribe(sAppointment => {
-      if (sAppointment.type === HttpEventType.DownloadProgress) {
-        this.percentDone = Math.round(100 * sAppointment.loaded / sAppointment.total);
-      } else if (sAppointment.type === HttpEventType.Response) {
-        this.appointment = sAppointment.body;
+    this.appointmentService
+      .getAppointment(this.appointmentLink)
+      .subscribe(
+        sAppointment => {
+          if (sAppointment.type === HttpEventType.DownloadProgress) {
+            this.percentDone = Math.round(100 * sAppointment.loaded / sAppointment.total);
+          } else if (sAppointment.type === HttpEventType.Response) {
+            this.appointment = sAppointment.body;
 
-        // Fetch output from localStorage
-        const localStroageOutput = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY);
-        this.enrollmentOutputInStorage = localStroageOutput !== null;
+            // Fetch output from localStorage
+            const localStorageOutput = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY);
+            this.enrollmentOutputInStorage = localStorageOutput !== null;
 
-        // Fetch key from LocalStorage
-        this.localStorageKey = localStorage.getItem(this.ENROLLMENT_KEY_KEY);
-        this.keyReadonly = this.localStorageKey !== null && this.localStorageKey !== '';
+            // Fetch key from LocalStorage
+            this.localStorageKey = localStorage.getItem(this.ENROLLMENT_KEY_KEY);
+            this.keyReadonly = this.localStorageKey !== null && this.localStorageKey !== '';
 
-        // When e.g. coming from login
-        if (this.enrollmentOutputInStorage === true) {
-          // Refetch output from local storage
-          this.output = JSON.parse(localStroageOutput);
-          this.parseStorageValuesIntoForm();
+            // When e.g. coming from login
+            if (this.enrollmentOutputInStorage === true) {
+              // Re-fetch output from local storage
+              this.output = JSON.parse(localStorageOutput);
+              this.parseStorageValuesIntoForm();
 
-          // Auto send if logged in
-          if (this.userIsLoggedIn) {
-            this.sendEnrollment();
+              // Auto send if logged in
+              if (this.userIsLoggedIn) {
+                this.sendEnrollment();
+              }
+            }
+
+            this.buildFormCheckboxes();
           }
+        }, () => {
+          this.appointment = null;
         }
-
-        this.buildFormCheckboxes();
-      }
-    }, error => {
-      this.appointment = null;
-    });
+      );
   }
 
   async parseDataFromEnrollForm() {
@@ -150,14 +154,7 @@ export class EnrollmentComponent implements OnInit {
 
     this.output.additions = this.getAdditionIdList();
 
-    // If user is logged in dont ask for login or token. Just send
-    if (this.userIsLoggedIn) {
-      this.sendEnrollment();
-    } else {
-      // TempStore item for possible login redirect
-      localStorage.setItem(this.ENROLLMENT_OUTPUT_KEY, JSON.stringify(this.output));
-      this.enrollmentOutputInStorage = true;
-    }
+    this.checkForAutomaticalSubmit();
   }
 
   async sendEnrollment() {
@@ -171,8 +168,6 @@ export class EnrollmentComponent implements OnInit {
     if (!this.userIsLoggedIn) {
       this.output.editKey = this.localStorageKey;
     }
-
-    console.log(JSON.stringify(this.output));
 
     if (this.userIsLoggedIn || this.keyEvent.valid || this.keyReadonly) {
       this.appointmentService
@@ -309,5 +304,16 @@ export class EnrollmentComponent implements OnInit {
   private clearLoginAndTokenIntercept() {
     localStorage.removeItem(this.ENROLLMENT_OUTPUT_KEY);
     this.enrollmentOutputInStorage = false;
+  }
+
+  private checkForAutomaticalSubmit() {
+    // If user is logged in dont ask for login or token. Just send
+    if (this.userIsLoggedIn) {
+      this.sendEnrollment();
+    } else {
+      // TempStore item for possible login redirect
+      localStorage.setItem(this.ENROLLMENT_OUTPUT_KEY, JSON.stringify(this.output));
+      this.enrollmentOutputInStorage = true;
+    }
   }
 }
