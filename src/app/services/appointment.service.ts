@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.model';
-import {HttpClient, HttpEvent, HttpHeaders, HttpRequest, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpEvent, HttpRequest, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
 import {IEnrollmentModel} from '../models/IEnrollment.model';
@@ -54,7 +54,7 @@ export class AppointmentService {
 
   create(appointment: CreateAppointmentModel): Observable<HttpEvent<IAppointmentModel>> {
     const req = new HttpRequest('POST', `${environment.api.url}appointment`, appointment, {
-      reportProgress: true
+      reportProgress: true,
     });
     return this.httpClient.request(req);
     // return this.httpClient.post<IAppointmentModel>(`${environment.api.url}appointment`, appointment,
@@ -76,8 +76,6 @@ export class AppointmentService {
 
   enroll(enrollment: IEnrollmentModel, appointment: IAppointmentModel): Observable<HttpResponse<IEnrollmentModel>> {
     const url = `${environment.api.url}enrollment?link=${appointment.link}`;
-    const headers = new HttpHeaders();
-    headers.append('Content-Type', 'application/json');
-    return this.httpClient.post<IEnrollmentModel>(url, enrollment, {observe: 'response', reportProgress: true, headers});
+    return this.httpClient.post<IEnrollmentModel>(url, enrollment, {observe: 'response', reportProgress: true});
   }
 }

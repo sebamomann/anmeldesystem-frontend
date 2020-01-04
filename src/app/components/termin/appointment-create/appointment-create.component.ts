@@ -6,7 +6,7 @@ import {COMMA, SPACE, TAB} from '@angular/cdk/keycodes';
 import {Observable, Subscription} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {CreateAppointmentModel} from '../../../models/createAppointment.model';
-import {HttpClient, HttpEventType} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import {DomSanitizer} from '@angular/platform-browser';
 import {TemplateDialogComponent} from '../../dialogs/template-dialog/template-dialog.component';
 import {isObject} from 'util';
@@ -111,36 +111,36 @@ export class AppointmentCreateComponent implements OnInit {
     };
 
 
-    this.appointmentService.create(output).subscribe(
-      result => {
-        if (result.type === HttpEventType.UploadProgress) {
-          this.percentDone = Math.round(100 * result.loaded / result.total);
-        } else if (result.type === HttpEventType.Response) {
-          setTimeout(() => {
-            switch (result.status) {
-              case HttpStatus.CREATED:
+    this.appointmentService
+      .create(output)
+      .subscribe(
+        result => {
+          if (result.type === HttpEventType.UploadProgress) {
+            this.percentDone = Math.round(100 * result.loaded / result.total);
+            console.log(result.loaded);
+          } else if (result.type === HttpEventType.Response) {
+            setTimeout(() => {
+              if (result.status === HttpStatus.CREATED) {
                 this.router.navigate([`enroll`], {queryParams: {val: result.body.link}});
-                break;
-            }
-          }, 2000);
-        }
-      },
-      error => {
-        switch (error.status) {
-          case HttpStatus.BAD_REQUEST:
-            error.error.error.columns.forEach(fColumn => {
-              if (fColumn.error === 'duplicate') {
-                const uppercaseName = fColumn.name.charAt(0).toUpperCase() + fColumn.name.substring(1);
-                const fnName: string = 'get' + uppercaseName;
-                this[fnName]().setErrors({inUse: true});
-                const fnNameForIndex = 'getFormGroupIndexOf' + uppercaseName;
-                this.stepper.selectedIndex = this[fnNameForIndex]();
               }
-            });
-            break;
+            }, 2000);
+          }
+        },
+        (err: HttpErrorResponse) => {
+          if (err.status === HttpStatus.BAD_REQUEST) {
+            if (err.error.code === 'DUPLICATE_ENTRY') {
+              err.error.error.forEach(fColumn => {
+                  const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
+                  const fnName: string = 'get' + uppercaseName;
+                  this[fnName]().setErrors({inUse: true});
+                  const fnNameForIndex = 'getFormGroupIndexOf' + uppercaseName;
+                  this.stepper.selectedIndex = this[fnNameForIndex]();
+                }
+              );
+            }
+          }
         }
-      }
-    );
+      );
   }
 
   ngOnInit() {
