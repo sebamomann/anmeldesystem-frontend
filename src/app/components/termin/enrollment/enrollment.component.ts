@@ -180,37 +180,32 @@ export class EnrollmentComponent implements OnInit {
         .subscribe(result => {
           this.clearLoginAndTokenIntercept();
             if (result.type === HttpEventType.Response) {
-              switch (result.status) {
-                case HttpStatus.CREATED:
-                  this.router.navigate([`enroll`], {
-                    queryParams: {
-                      val: this.appointment.link
-                    }
-                  }).then((navigated: boolean) => {
-                    if (navigated) {
-                      this.snackBar.open('Erfolgreich angemeldet', '', {
-                        duration: 4000,
-                        panelClass: 'snackbar-default'
-                      });
-                    }
-                  });
-                  break;
+              if (result.status === HttpStatus.CREATED) {
+                this.router.navigate([`enroll`], {
+                  queryParams: {
+                    val: this.appointment.link
+                  }
+                }).then((navigated: boolean) => {
+                  if (navigated) {
+                    this.snackBar.open('Erfolgreich angemeldet', '', {
+                      duration: 4000,
+                      panelClass: 'snackbar-default'
+                    });
+                  }
+                });
               }
             }
           }, (err: HttpErrorResponse) => {
           this.clearLoginAndTokenIntercept();
-            console.log(err);
-            switch (err.status) {
-              case HttpStatus.BAD_REQUEST:
-                if (err.error.code === 'DUPLICATE_ENTRY') {
-                  err.error.columns.forEach(fColumn => {
-                      const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
-                      const fnName: string = 'get' + uppercaseName;
-                      this[fnName]().setErrors({inUse: true});
-                    }
-                  );
+          if (err.status === HttpStatus.BAD_REQUEST) {
+            if (err.error.code === 'DUPLICATE_ENTRY') {
+              err.error.error.forEach(fColumn => {
+                  const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
+                  const fnName: string = 'get' + uppercaseName;
+                  this[fnName]().setErrors({inUse: true});
                 }
-                break;
+              );
+            }
             }
           }
         );
