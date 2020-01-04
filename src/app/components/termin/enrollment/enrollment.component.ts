@@ -154,7 +154,7 @@ export class EnrollmentComponent implements OnInit {
 
     this.output.additions = this.getAdditionIdList();
 
-    this.checkForAutomaticalSubmit();
+    this.checkForAutomaticSubmit();
   }
 
   async sendEnrollment() {
@@ -223,7 +223,7 @@ export class EnrollmentComponent implements OnInit {
   }
 
   private buildFormCheckboxes() {
-    this.appointment.additions.forEach((o, i) => {
+    this.appointment.additions.forEach((o) => {
       const control = new FormControl(this.output.additions.some(iAddition => iAddition.id === o.id));
       (this.event.controls.additions as FormArray).push(control);
     });
@@ -306,10 +306,10 @@ export class EnrollmentComponent implements OnInit {
     this.enrollmentOutputInStorage = false;
   }
 
-  private checkForAutomaticalSubmit() {
+  private checkForAutomaticSubmit() {
     // If user is logged in dont ask for login or token. Just send
     if (this.userIsLoggedIn) {
-      this.sendEnrollment();
+      this.sendEnrollment().then(() => '');
     } else {
       // TempStore item for possible login redirect
       localStorage.setItem(this.ENROLLMENT_OUTPUT_KEY, JSON.stringify(this.output));
