@@ -1,3 +1,4 @@
+<!--suppress HtmlFormInputWithoutLabel, AngularInvalidExpressionResultType, TypeScriptUnresolvedVariable -->
 <mat-card *ngIf="percentDone === 0">
   <mat-card-title class="headline">
     Termin erstellen
@@ -7,14 +8,11 @@
     <mat-icon>file_copy</mat-icon>
   </span>
   <mat-vertical-stepper #stepper [linear]="true">
+    <!-- OVERALL DATA-->
     <mat-step [stepControl]="overallDataFormGroup">
       <form [formGroup]="overallDataFormGroup">
-        <ng-template matStepLabel>
-          Allgemein
-        </ng-template>
-        <span class="info">
-          Allgemeine Informationen des Termins
-        </span>
+        <ng-template matStepLabel>Allgemein</ng-template>
+        <span class="info">Allgemeine Informationen des Termins</span>
         <mat-form-field class="">
           <input matInput
                  placeholder="Titel"
@@ -32,13 +30,12 @@
           <mat-datepicker touchUi #date></mat-datepicker>
         </mat-form-field>
         <mat-form-field class="example-full-width">
-          <input matInput [matDatepicker]="deadline"
+          <input [matDatepicker]="deadline"
+                 matInput
                  placeholder="Anmeldefrist"
                  formControlName="deadline"
                  id="deadline">
-          <mat-datepicker-toggle [for]="deadline"
-                                 matSuffix>
-          </mat-datepicker-toggle>
+          <mat-datepicker-toggle [for]="deadline" matSuffix></mat-datepicker-toggle>
           <mat-datepicker touchUi #deadline></mat-datepicker>
         </mat-form-field>
         <mat-form-field class="">
@@ -55,20 +52,16 @@
                  id="maxEnrollments">
         </mat-form-field>
         <div class="stepper-navigation">
-          <button mat-button mat-stroked-button matStepperNext>
-            Weiter
-          </button>
+          <button mat-button mat-stroked-button matStepperNext>Weiter</button>
         </div>
       </form>
     </mat-step>
+
+    <!-- ADDITIONS-->
     <mat-step [stepControl]="additionFormGroup">
       <form [formGroup]="additionFormGroup">
         <ng-template matStepLabel>Zusätze</ng-template>
-
-        <span class="info">
-          Zusätze, welche beim Anmelden mit Ja/Nein beantwortet werden.
-        </span>
-
+        <span class="info"> Zusätze, welche beim Anmelden mit Ja/Nein beantwortet werden.</span>
         <ng-container id="additionList">
           <div class="tooltip-container">
             <mat-checkbox formControlName="driverAddition">
@@ -78,50 +71,38 @@
             <mat-icon #driverAdditionTooltip="matTooltip"
                       (click)="driverAdditionTooltip.toggle()"
                       class="tooltip"
-                      matTooltip="{{'Hierbei können sich Teilnehmer als Fahrer melden. Sie geben unter Anderem die Anzahl freier Plätze ein und in welche Richtung sie fahren.'}}">
+                      matTooltip="{{ 'Hierbei können sich Teilnehmer als Fahrer melden. Sie geben unter Anderem die ' +
+                       'Anzahl freier Plätze ein und in welche Richtung sie fahren.'}}">
               info
             </mat-icon>
           </div>
-
+          <!--suppress AngularInvalidExpressionResultType, JSUnusedGlobalSymbols -->
           <div *ngFor="let addition of additionFormGroup.controls.additions.controls; let i = index"
                formArrayName="additions">
             <mat-form-field class="">
               <input matInput
-                     [formControlName]="i"
+                     [formControlName]="i.toString()"
                      placeholder="Zusatz {{i + 1}}"
                      id="i">
-              <mat-icon matSuffix
-                        (click)="removeAddition(i)">
-                clear
-              </mat-icon>
+              <mat-icon (click)="removeAddition(i)" matSuffix>clear</mat-icon>
             </mat-form-field>
           </div>
         </ng-container>
-
-        <button mat-button mat-stroked-button
-                (click)="addAddition()"
-                class="solo">
-          Hinzufügen
-        </button>
-
+        <button (click)="addAddition()" class="solo" mat-button mat-stroked-button>Hinzufügen</button>
         <div class="stepper-navigation">
           <button mat-button mat-stroked-button matStepperNext>
             {{hasAdditions() ? 'Weiter' : 'Nein danke'}}
           </button>
-          <button mat-button matStepperPrevious>
-            Zurück
-          </button>
+          <button mat-button matStepperPrevious>Zurück</button>
         </div>
       </form>
     </mat-step>
+
+    <!-- LINK DATA -->
     <mat-step [stepControl]=" linkFormGroup">
       <form [formGroup]="linkFormGroup">
         <ng-template matStepLabel>Link</ng-template>
-
-        <span class="info">
-          Eigener URL Pfad zum Termin
-        </span>
-
+        <span class="info">Eigener URL Pfad zum Termin</span>
         <mat-form-field class="">
           <input matInput
                  placeholder="Wunschlink"
@@ -134,7 +115,6 @@
           </mat-hint>
           <mat-error>{{ this.getLinkErrorMessage() }}</mat-error>
         </mat-form-field>
-
         <mat-form-field>
           <div class="tooltip-container">
             <textarea #description
@@ -153,29 +133,23 @@
               info
             </mat-icon>
           </div>
-
           <mat-hint align="start"
                     *ngIf="description.value.length < 10">
             Noch mindestens {{10 - description.value.length}} Zeichen
           </mat-hint>
         </mat-form-field>
-
         <div class="stepper-navigation">
-          <button mat-button mat-stroked-button matStepperNext>
-            Weiter
-          </button>
-          <button mat-button matStepperPrevious>
-            Zurück
-          </button>
+          <button mat-button mat-stroked-button matStepperNext>Weiter</button>
+          <button mat-button matStepperPrevious>Zurück</button>
         </div>
       </form>
     </mat-step>
+
+    <!-- ADMINISTRATIONS -->
     <mat-step [stepControl]="administrationFormGroup">
       <form [formGroup]="administrationFormGroup">
         <ng-template matStepLabel>Administration</ng-template>
-        <span class="info">
-          Erlaube jemandem die Administration dieses Termins
-        </span>
+        <span class="info">Erlaube jemandem die Administration dieses Termins</span>
         <mat-form-field>
           <mat-chip-list #chipList aria-label="Berechtigungen">
             <mat-chip *ngFor="let user of users"
@@ -193,8 +167,10 @@
                    [matChipInputAddOnBlur]="true"
                    (matChipInputTokenEnd)="add($event)">
           </mat-chip-list>
-          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-            <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+          <mat-autocomplete #auto="matAutocomplete"
+                            (optionSelected)="selected($event)">
+            <mat-option *ngFor="let user of filteredUsers | async"
+                        [value]="user">
               {{user}}
             </mat-option>
           </mat-autocomplete>
@@ -205,13 +181,17 @@
         </div>
       </form>
     </mat-step>
+
+    <!-- FILE UPLOAD -->
     <mat-step [stepControl]="fileUpload">
       <ng-template matStepLabel>Zusatzdatei</ng-template>
       <span class="info">
         Diese Datei wird zum Download bereitgestellt. Hier finden z.B: Muttizettel o.ä. Platz.
         <span>(Je kürzer und aussagekräftiger der Datei Name, desto besser)</span>
       </span>
-      <button (click)="selectFile()" color="warn" mat-button>
+      <button (click)="selectFile()"
+              color="warn"
+              mat-button>
         <mat-icon>file_upload</mat-icon>
         Hochladen
       </button>
@@ -224,12 +204,17 @@
           <mat-progress-bar *ngIf="!file.done" mode="indeterminate"></mat-progress-bar>
         </li>
       </ul>
-      <input id="fileUpload" multiple="multiple" name="fileUpload" style="display:none;" type="file"/>
+      <input id="fileUpload"
+             multiple="multiple"
+             name="fileUpload"
+             style="display:none;"
+             type="file"/>
     </mat-step>
+
+    <!-- DONE -->
     <mat-step [stepControl]="doneGroup">
       <form [formGroup]="doneGroup">
-        <ng-template matStepLabel>Fertig</ng-template>
-
+        <ng-template matStepLabel> Fertig</ng-template>
         <div class="tooltip-container">
           <mat-checkbox formControlName="saveAsTemplate">
             Als Vorlage Speichern
@@ -242,7 +227,6 @@
             info
           </mat-icon>
         </div>
-
         <div class="stepper-navigation">
           <button (click)="create()" mat-button mat-stroked-button>Erstellen</button>
           <button mat-button matStepperPrevious>Zurück</button>
@@ -253,23 +237,15 @@
 </mat-card>
 
 <div *ngIf="percentDone !== 0" class="upload-progress">
-  <span> Der Termin wird erstellt </span>
+  <span>Der Termin wird erstellt</span>
   <ng-container *ngIf="percentDone !== 100">
-    <span>
-      {{percentDone}}%
-    </span>
+    <span>{{ percentDone }}%</span>
   </ng-container>
-
   <ng-container *ngIf="percentDone === 100">
     <span>
-      <mat-icon>
-        check_circle_outline
-      </mat-icon>
+      <mat-icon>check_circle_outline</mat-icon>
     </span>
   </ng-container>
-
-  <mat-progress-bar [value]="percentDone"
-                    mode="determinate">
-  </mat-progress-bar>
+  <mat-progress-bar [value]="percentDone" mode="determinate"></mat-progress-bar>
 </div>
 
