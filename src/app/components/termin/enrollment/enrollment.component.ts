@@ -125,28 +125,28 @@ export class EnrollmentComponent implements OnInit {
       return;
     }
 
-    if (this.driverPassengerEvent.get('driver').value) {
-      if ((this.driverPassengerEvent.get('service').valid && this.driverPassengerEvent.get('seats').valid)) {
+    if (this.getDriver().value) {
+      if ((this.getService().valid && this.getSeats().valid)) {
       }
-    } else if (!this.driverPassengerEvent.get('requirement').valid) {
+    } else if (!this.getRequirement().valid) {
       this.driverPassengerEvent.markAllAsTouched();
       return;
     }
 
     // Parse data from form into object
-    this.output.name = this.event.get('name').value;
-    this.output.comment = this.event.get('comment').value;
+    this.output.name = this.getName().value;
+    this.output.comment = this.getComment().value;
 
     if (this.appointment.driverAddition) {
-      if (this.driverPassengerEvent.get('driver').value) {
+      if (this.getDriver().value) {
         this.output.driver = {
-          service: this.driverPassengerEvent.get('service').value,
-          seats: this.driverPassengerEvent.get('seats').value,
+          service: this.getService().value,
+          seats: this.getSeats().value,
         };
         this.output.passenger = null;
       } else {
         this.output.passenger = {
-          requirement: this.driverPassengerEvent.get('requirement').value,
+          requirement: this.getRequirement().value,
         };
         this.output.driver = null;
       }
@@ -270,8 +270,20 @@ export class EnrollmentComponent implements OnInit {
     return this.driverPassengerEvent.get('requirement');
   }
 
+  private getService() {
+    return this.driverPassengerEvent.get('service');
+  }
+
+  private getDriver() {
+    return this.driverPassengerEvent.get('driver');
+  }
+
   private getName() {
     return this.event.get('name');
+  }
+
+  private getComment() {
+    return this.event.get('comment');
   }
 
   private getAdditionsControls() {
