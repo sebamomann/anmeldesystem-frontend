@@ -18,8 +18,10 @@ export class AuthInterceptor implements HttpInterceptor {
         location.reload();
       }
 
-      const error = err.error.message || err.statusText;
-      return throwError(error);
+      // const error = err.error.message || err.statusText;     <----- This Line
+      // return throwError(err);
+
+      return throwError(err);
     }));
   }
 }
