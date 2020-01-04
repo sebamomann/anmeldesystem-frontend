@@ -1,4 +1,4 @@
-<div *ngIf="appointment && !enrollmentOutputSet; else loading">
+<div *ngIf="appointment && !enrollmentOutputInStorage; else loading">
   <app-go-back-header [appointment]="appointment"></app-go-back-header>
 
   <mat-card class="form float">
@@ -7,7 +7,7 @@
     </mat-card-title>
 
     <mat-card-content>
-      <form (ngSubmit)="setupEnrollment()"
+      <form (ngSubmit)="parseDataFromEnrollForm()"
             class="register-form">
         <div [formGroup]="event">
           <mat-form-field class="name">
@@ -102,7 +102,7 @@
   </mat-card>
 </div>
 
-<ng-container *ngIf="enrollmentOutputSet">
+<ng-container *ngIf="enrollmentOutputInStorage">
   <mat-card class="float card-small">
     <span>
       Logge dich ein um deine Anmeldung deinem Account zuzuordnen.

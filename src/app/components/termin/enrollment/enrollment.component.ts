@@ -51,7 +51,7 @@ export class EnrollmentComponent implements OnInit {
   private percentDone: number;
   // Preparation for login redirect fields
   private ENROLLMENT_KEY_KEY = 'enrollmentKey';
-  private enrollmentOutputSet: boolean;
+  private enrollmentOutputInStorage: boolean;
   private currentUrlSnapshotWithParameter: RouterStateSnapshot;
   // Key fields
   private ENROLLMENT_OUTPUT_KEY = 'enrollmentOutput';
@@ -65,7 +65,7 @@ export class EnrollmentComponent implements OnInit {
     additions: [],
     driver: null,
     passenger: null,
-    key: ''
+    editKey: ''
   };
 
 
@@ -89,31 +89,32 @@ export class EnrollmentComponent implements OnInit {
 
         // Fetch output from localStorage
         const localStroageOutput = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY);
-        this.enrollmentOutputSet = localStroageOutput !== null;
+        this.enrollmentOutputInStorage = localStroageOutput !== null;
 
         // Fetch key from LocalStorage
         this.localStorageKey = localStorage.getItem(this.ENROLLMENT_KEY_KEY);
         this.keyReadonly = this.localStorageKey !== null && this.localStorageKey !== '';
 
-        if (this.enrollmentOutputSet === true) {
+        // When e.g. coming from login
+        if (this.enrollmentOutputInStorage === true) {
           // Refetch output from local storage
           this.output = JSON.parse(localStroageOutput);
-
           this.parseStorageValuesIntoForm();
 
+          // Auto send if logged in
           if (this.userIsLoggedIn) {
             this.sendEnrollment();
           }
         }
 
-        this.addCheckboxes();
+        this.buildFormCheckboxes();
       }
     }, error => {
       this.appointment = null;
     });
   }
 
-  async setupEnrollment() {
+  async parseDataFromEnrollForm() {
     if (!this.event.valid) {
       this.event.markAllAsTouched();
       this.driverPassengerEvent.markAllAsTouched();
@@ -124,9 +125,11 @@ export class EnrollmentComponent implements OnInit {
       if ((this.driverPassengerEvent.get('service').valid && this.driverPassengerEvent.get('seats').valid)) {
       }
     } else if (!this.driverPassengerEvent.get('requirement').valid) {
+      this.driverPassengerEvent.markAllAsTouched();
       return;
     }
 
+    // Parse data from form into object
     this.output.name = this.event.get('name').value;
     this.output.comment = this.event.get('comment').value;
 
@@ -147,11 +150,13 @@ export class EnrollmentComponent implements OnInit {
 
     this.output.additions = this.getAdditionIdList();
 
-    localStorage.setItem(this.ENROLLMENT_OUTPUT_KEY, JSON.stringify(this.output));
-    this.enrollmentOutputSet = true;
-
+    // If user is logged in dont ask for login or token. Just send
     if (this.userIsLoggedIn) {
       this.sendEnrollment();
+    } else {
+      // TempStore item for possible login redirect
+      localStorage.setItem(this.ENROLLMENT_OUTPUT_KEY, JSON.stringify(this.output));
+      this.enrollmentOutputInStorage = true;
     }
   }
 
@@ -164,7 +169,7 @@ export class EnrollmentComponent implements OnInit {
     this.setTokenIfNotSet();
 
     if (!this.userIsLoggedIn) {
-      this.output.key = this.localStorageKey;
+      this.output.editKey = this.localStorageKey;
     }
 
     console.log(JSON.stringify(this.output));
@@ -173,8 +178,7 @@ export class EnrollmentComponent implements OnInit {
       this.appointmentService
         .enroll(this.output, this.appointment)
         .subscribe(result => {
-            localStorage.removeItem(this.ENROLLMENT_OUTPUT_KEY);
-            this.enrollmentOutputSet = false;
+          this.clearLoginAndTokenIntercept();
             if (result.type === HttpEventType.Response) {
               switch (result.status) {
                 case HttpStatus.CREATED:
@@ -194,6 +198,7 @@ export class EnrollmentComponent implements OnInit {
               }
             }
           }, (err: HttpErrorResponse) => {
+          this.clearLoginAndTokenIntercept();
             console.log(err);
             switch (err.status) {
               case HttpStatus.BAD_REQUEST:
@@ -212,7 +217,7 @@ export class EnrollmentComponent implements OnInit {
     }
   }
 
-  getAdditionIdList(): IAdditionModel[] {
+  private getAdditionIdList(): IAdditionModel[] {
     const additionListRaw = this.event.value.additions
       .map((v, i) => v ? this.appointment.additions[i].id : null)
       .filter(v => v !== null);
@@ -226,7 +231,7 @@ export class EnrollmentComponent implements OnInit {
     return additionList;
   }
 
-  private addCheckboxes() {
+  private buildFormCheckboxes() {
     this.appointment.additions.forEach((o, i) => {
       const control = new FormControl(this.output.additions.some(iAddition => iAddition.id === o.id));
       (this.event.controls.additions as FormArray).push(control);
@@ -303,5 +308,10 @@ export class EnrollmentComponent implements OnInit {
     if (this.localStorageKey === '' || this.localStorageKey === null) {
       localStorage.setItem(this.ENROLLMENT_KEY_KEY, value);
     }
+  }
+
+  private clearLoginAndTokenIntercept() {
+    localStorage.removeItem(this.ENROLLMENT_OUTPUT_KEY);
+    this.enrollmentOutputInStorage = false;
   }
 }

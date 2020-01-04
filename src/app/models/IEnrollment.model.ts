@@ -12,4 +12,5 @@ export interface IEnrollmentModel {
   passenger: IPassengerModel | null;
   additions?: IAdditionModel[];
   iat?: string;
+  editKey: string;
 }
