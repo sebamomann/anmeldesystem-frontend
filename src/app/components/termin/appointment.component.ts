@@ -61,7 +61,7 @@ export class AppointmentComponent implements OnInit {
     this.route.params.subscribe(params => {
       if (params.link !== undefined) {
         this.link = params.link;
-        this.router.navigate(['/enroll'], {queryParams: {val: this.link}});
+        this.router.navigate(['/enroll'], {queryParams: {val: this.link}}).then(() => '');
       }
     });
   }
@@ -79,7 +79,7 @@ export class AppointmentComponent implements OnInit {
           setTimeout(() => this.disableAnimation = false);
         }
       },
-      error => {
+      () => {
         this.appointment = undefined;
       });
   }
