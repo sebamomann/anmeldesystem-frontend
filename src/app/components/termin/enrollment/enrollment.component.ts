@@ -177,8 +177,9 @@ export class EnrollmentComponent implements OnInit {
     if (this.userIsLoggedIn || this.keyEvent.valid || this.keyReadonly) {
       this.appointmentService
         .enroll(this.output, this.appointment)
-        .subscribe(result => {
-          this.clearLoginAndTokenIntercept();
+        .subscribe(
+          result => {
+            this.clearLoginAndTokenIntercept();
             if (result.type === HttpEventType.Response) {
               if (result.status === HttpStatus.CREATED) {
                 this.router.navigate([`enroll`], {
@@ -196,16 +197,16 @@ export class EnrollmentComponent implements OnInit {
               }
             }
           }, (err: HttpErrorResponse) => {
-          this.clearLoginAndTokenIntercept();
-          if (err.status === HttpStatus.BAD_REQUEST) {
-            if (err.error.code === 'DUPLICATE_ENTRY') {
-              err.error.error.forEach(fColumn => {
-                  const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
-                  const fnName: string = 'get' + uppercaseName;
-                  this[fnName]().setErrors({inUse: true});
-                }
-              );
-            }
+            this.clearLoginAndTokenIntercept();
+            if (err.status === HttpStatus.BAD_REQUEST) {
+              if (err.error.code === 'DUPLICATE_ENTRY') {
+                err.error.error.forEach(fColumn => {
+                    const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
+                    const fnName: string = 'get' + uppercaseName;
+                    this[fnName]().setErrors({inUse: true});
+                  }
+                );
+              }
             }
           }
         );
