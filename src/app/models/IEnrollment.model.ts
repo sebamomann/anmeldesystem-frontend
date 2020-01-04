@@ -4,7 +4,7 @@ import {IAdditionModel} from './IAddition.model';
 import {IPassengerModel} from './IPassengerModel.model';
 
 export interface IEnrollmentModel {
-  id?: number;
+  id?: string;
   name: string;
   comment: string;
   comments?: ICommentModel[];
