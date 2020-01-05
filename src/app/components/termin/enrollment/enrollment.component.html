@@ -1,13 +1,13 @@
-<div *ngIf="appointment && !enrollmentOutputInStorage; else loading">
+<div *ngIf="appointment && !showLoginAndTokenForm; else loading">
   <app-go-back-header [appointment]="appointment"></app-go-back-header>
 
   <mat-card class="form float">
     <mat-card-title class="headline">
-      Anmelden
+      {{ edit ? 'Bearbeiten' : 'Anmelden' }}
     </mat-card-title>
 
     <mat-card-content>
-      <form (ngSubmit)="parseDataFromEnrollForm()"
+      <form (ngSubmit)="parseDataFromEnrollmentForm()"
             class="register-form">
         <div [formGroup]="event">
           <mat-form-field class="name">
@@ -94,7 +94,7 @@
 
         <mat-card-actions>
           <button id="submit" mat-raised-button color="primary">
-            Anmelden
+            {{ edit ? 'Speichern' : 'Anmelden' }}
           </button>
         </mat-card-actions>
       </form>
@@ -102,7 +102,7 @@
   </mat-card>
 </div>
 
-<ng-container *ngIf="enrollmentOutputInStorage">
+<ng-container *ngIf="showLoginAndTokenForm">
   <mat-card class="float card-small">
     <span>
       Logge dich ein um deine Anmeldung deinem Account zuzuordnen.
