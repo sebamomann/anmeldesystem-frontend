@@ -131,9 +131,6 @@
                  matInput
                  placeholder="Token"
                  required>
-          <mat-error *ngIf="keyEvent.get('key').invalid && !keyReadonly">
-            {{ getTokenErrorMessage() }}
-          </mat-error>
           <!--suppress TypeScriptUnresolvedFunction -->
           <mat-icon #templateTooltip="matTooltip"
                     (click)="templateTooltip.toggle()"
@@ -143,6 +140,9 @@
             info
           </mat-icon>
         </div>
+        <mat-error *ngIf="keyEvent.get('key').invalid && !keyReadonly">
+          {{ getTokenErrorMessage() }}
+        </mat-error>
       </mat-form-field>
       <button (click)="sendEnrollment()"
               mat-raised-button>
