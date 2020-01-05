@@ -3,7 +3,7 @@
   <mat-card-title class="headline">
     Termin erstellen
   </mat-card-title>
-  <span (click)="openAppointmentTemplateDialog()">
+  <span (click)="_openAppointmentTemplateDialog()">
     Vorlagen
     <mat-icon>file_copy</mat-icon>
   </span>
@@ -84,14 +84,15 @@
                      [formControlName]="i.toString()"
                      placeholder="Zusatz {{i + 1}}"
                      id="i">
-              <mat-icon (click)="removeAddition(i)" matSuffix>clear</mat-icon>
+              <mat-icon (click)="removeAdditionFromFormArray(i)" matSuffix>clear</mat-icon>
             </mat-form-field>
           </div>
         </ng-container>
-        <button (click)="addAddition()" class="solo" mat-button mat-stroked-button>Hinzufügen</button>
+        <button (click)="addAdditionFormControlToFormArray()" class="solo" mat-button mat-stroked-button>Hinzufügen
+        </button>
         <div class="stepper-navigation">
           <button mat-button mat-stroked-button matStepperNext>
-            {{hasAdditions() ? 'Weiter' : 'Nein danke'}}
+            {{ formHavingAdditions() ? 'Weiter' : 'Nein danke' }}
           </button>
           <button mat-button matStepperPrevious>Zurück</button>
         </div>
@@ -152,9 +153,9 @@
         <span class="info">Erlaube jemandem die Administration dieses Termins</span>
         <mat-form-field>
           <mat-chip-list #chipList aria-label="Berechtigungen">
-            <mat-chip *ngFor="let user of users"
+            <mat-chip (removed)="removeAdministratorFromList(user)"
                       [removable]="true"
-                      (removed)="removeUser(user)">
+                      *ngFor="let user of administrators">
               {{user}}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
@@ -165,10 +166,10 @@
                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                    [matAutocomplete]="auto"
                    [matChipInputAddOnBlur]="true"
-                   (matChipInputTokenEnd)="add($event)">
+                   (matChipInputTokenEnd)="addAdministratorToList($event)">
           </mat-chip-list>
           <mat-autocomplete #auto="matAutocomplete"
-                            (optionSelected)="selected($event)">
+                            (optionSelected)="selectedAdministratorFromAutocomplete($event)">
             <mat-option *ngFor="let user of filteredUsers | async"
                         [value]="user">
               {{user}}
@@ -189,7 +190,7 @@
         Diese Datei wird zum Download bereitgestellt. Hier finden z.B: Muttizettel o.ä. Platz.
         <span>(Je kürzer und aussagekräftiger der Datei Name, desto besser)</span>
       </span>
-      <button (click)="selectFile()"
+      <button (click)="selectFilesFromComputer()"
               color="warn"
               mat-button>
         <mat-icon>file_upload</mat-icon>
