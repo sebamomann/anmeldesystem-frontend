@@ -11,6 +11,7 @@ import {AuthenticationService} from '../../../services/authentication.service';
 import {MatSnackBar} from '@angular/material';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {EnrollmentService} from '../../../services/enrollment.service';
+import {EnrollmentModel} from '../../../models/EnrollmentModel.model';
 
 const HttpStatus = require('http-status-codes');
 
@@ -56,14 +57,7 @@ export class EnrollmentComponent implements OnInit {
   // Preparation for login redirect fields
   private ENROLLMENT_KEY_KEY = 'enrollmentKey';
   private outputRawFromStorage: string;
-  private output: IEnrollmentModel = {
-    name: '',
-    comment: null,
-    additions: [],
-    driver: null,
-    passenger: null,
-    editKey: ''
-  };
+  private output: IEnrollmentModel = new EnrollmentModel();
   private showLoginAndTokenForm: boolean;
   private currentUrlSnapshotWithParameter: RouterStateSnapshot;
   // Key fields
@@ -191,20 +185,18 @@ export class EnrollmentComponent implements OnInit {
 
     if (this.userIsLoggedIn || this.keyEvent.valid || this.keyReadonly) {
       if (this.edit) {
-        this.editEnrollment();
+        this.sendEnrollmentRequest('change');
       } else {
-        this.saveEnrollment();
+        this.sendEnrollmentRequest('create');
       }
     }
   };
 
-
-  private editEnrollment() {
-    this.enrollmentService
-      .create(this.output, this.appointment)
+  private sendEnrollmentRequest(functionName: string) {
+    this.enrollmentService[functionName](this.output)
       .subscribe(
         result => {
-          this.clearLoginAndTokenIntercept();
+          this.clearLoginAndTokenFormIntercepting();
           if (result.type === HttpEventType.Response) {
             if (result.status === HttpStatus.CREATED) {
               this.router.navigate([`enroll`], {
@@ -213,16 +205,18 @@ export class EnrollmentComponent implements OnInit {
                 }
               }).then((navigated: boolean) => {
                 if (navigated) {
-                  this.snackBar.open('Erfolgreich angemeldet', '', {
-                    duration: 4000,
-                    panelClass: 'snackbar-default'
-                  });
+                  this.snackBar.open(`Erfolgreich ` + this.edit ? 'bearbeitet' : 'angemeldet',
+                    '',
+                    {
+                      duration: 4000,
+                      panelClass: 'snackbar-default'
+                    });
                 }
               });
             }
           }
         }, (err: HttpErrorResponse) => {
-          this.clearLoginAndTokenIntercept();
+          this.clearLoginAndTokenFormIntercepting();
           if (err.status === HttpStatus.BAD_REQUEST) {
             if (err.error.code === 'DUPLICATE_ENTRY') {
               err.error.error.forEach(fColumn => {
@@ -236,44 +230,6 @@ export class EnrollmentComponent implements OnInit {
         }
       );
   }
-
-  private saveEnrollment: () => void = () => {
-    this.enrollmentService
-      .update(this.output)
-      .subscribe(
-        result => {
-          this.clearLoginAndTokenIntercept();
-          if (result.type === HttpEventType.Response) {
-            if (result.status === HttpStatus.CREATED) {
-              this.router.navigate([`enroll`], {
-                queryParams: {
-                  a: this.appointment.link
-                }
-              }).then((navigated: boolean) => {
-                if (navigated) {
-                  this.snackBar.open('Erfolgreich angemeldet', '', {
-                    duration: 4000,
-                    panelClass: 'snackbar-default'
-                  });
-                }
-              });
-            }
-          }
-        }, (err: HttpErrorResponse) => {
-          this.clearLoginAndTokenIntercept();
-          if (err.status === HttpStatus.BAD_REQUEST) {
-            if (err.error.code === 'DUPLICATE_ENTRY') {
-              err.error.error.forEach(fColumn => {
-                  const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
-                  const fnName: string = 'get' + uppercaseName;
-                  this[fnName]().setErrors({inUse: true});
-                }
-              );
-            }
-          }
-        }
-      );
-  };
 
   private getAdditionIdList: () => IAdditionModel[] = () => {
     const additionListRaw = this.event.value.additions
@@ -389,7 +345,7 @@ export class EnrollmentComponent implements OnInit {
     }
   }
 
-  private clearLoginAndTokenIntercept() {
+  private clearLoginAndTokenFormIntercepting() {
     localStorage.removeItem(this.ENROLLMENT_OUTPUT_KEY);
     this.showLoginAndTokenForm = false;
   }
