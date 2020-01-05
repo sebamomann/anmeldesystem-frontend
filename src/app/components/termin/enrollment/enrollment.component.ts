@@ -185,7 +185,7 @@ export class EnrollmentComponent implements OnInit {
 
     if (this.userIsLoggedIn || this.keyEvent.valid || this.keyReadonly) {
       if (this.edit) {
-        this.sendEnrollmentRequest('change');
+        this.sendEnrollmentRequest('update');
       } else {
         this.sendEnrollmentRequest('create');
       }
