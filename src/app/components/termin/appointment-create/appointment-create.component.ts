@@ -127,7 +127,7 @@ export class AppointmentCreateComponent implements OnInit {
               if (result.status === HttpStatus.CREATED) {
                 this.router.navigate([`enroll`], {
                   queryParams: {
-                    val: result.body.link
+                    a: result.body.link
                   }
                 });
               }

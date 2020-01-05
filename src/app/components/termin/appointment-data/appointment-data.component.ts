@@ -50,7 +50,7 @@ export class AppointmentDataComponent implements OnInit {
 
 
   redirectToAppointment(appointment: IAppointmentModel) {
-    this.router.navigate(['/enroll'], {queryParams: {val: appointment.link}});
+    this.router.navigate(['/enroll'], {queryParams: {a: appointment.link}});
   }
 
   b64toBlob(base64, type = 'application/octet-stream') {
