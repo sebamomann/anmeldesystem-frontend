@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.model';
-import {HttpClient, HttpEvent, HttpRequest, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
-import {IEnrollmentModel} from '../models/IEnrollment.model';
 import {environment} from '../../environments/environment';
 
 @Injectable({
@@ -73,9 +72,4 @@ export class AppointmentService {
   //   return this.httpClient.request(req);
   //   // return this.httpClient.post<any>(url, enrollment, {observe: 'response'});
   // }
-
-  enroll(enrollment: IEnrollmentModel, appointment: IAppointmentModel): Observable<HttpResponse<IEnrollmentModel>> {
-    const url = `${environment.api.url}enrollment?link=${appointment.link}`;
-    return this.httpClient.post<IEnrollmentModel>(url, enrollment, {observe: 'response', reportProgress: true});
-  }
 }
