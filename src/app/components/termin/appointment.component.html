@@ -60,7 +60,10 @@
               comment
             </mat-icon>
             <ng-container *ngIf="allowModify">
-              <mat-icon>edit</mat-icon>
+              <mat-icon [queryParams]="{a: appointment.link, e: enrollment.id}"
+                        [routerLink]="['/enrollment']">
+                edit
+              </mat-icon>
               <mat-icon (click)="_openConfirmationDialog(enrollment)">delete</mat-icon>
             </ng-container>
           </div>

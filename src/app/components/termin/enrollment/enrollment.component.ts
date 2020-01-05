@@ -9,6 +9,7 @@ import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {MatSnackBar} from '@angular/material';
+import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 
 const HttpStatus = require('http-status-codes');
 
@@ -46,8 +47,10 @@ export class EnrollmentComponent implements OnInit {
   keyEvent = this.formBuilder.group({
     key: new FormControl('', [Validators.required, Validators.min(4)])
   });
-  appointment: IAppointmentModel;
+  public appointment: IAppointmentModel;
+  private edit: any;
   private appointmentLink: string;
+  private enrollmentId: string;
   private percentDone: number;
   // Preparation for login redirect fields
   private ENROLLMENT_KEY_KEY = 'enrollmentKey';
@@ -59,7 +62,7 @@ export class EnrollmentComponent implements OnInit {
   private keyReadonly = false;
 
 
-  private output = {
+  private output: IEnrollmentModel = {
     name: '',
     comment: null,
     additions: [],
@@ -68,7 +71,6 @@ export class EnrollmentComponent implements OnInit {
     editKey: ''
   };
 
-
   constructor(private appointmentService: AppointmentService, private location: Location,
               private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
               private authenticationService: AuthenticationService, private snackBar: MatSnackBar) {
@@ -76,11 +78,16 @@ export class EnrollmentComponent implements OnInit {
     this.currentUrlSnapshotWithParameter = router.routerState.snapshot;
 
     this.route.queryParams.subscribe(params => {
-      this.appointmentLink = params.val;
+      this.appointmentLink = params.a;
+      this.enrollmentId = params.e;
     });
   }
 
   async ngOnInit() {
+    await this.route
+      .data
+      .subscribe(v => this.edit = v.edit);
+
     this.appointmentService
       .getAppointment(this.appointmentLink)
       .subscribe(
@@ -90,32 +97,90 @@ export class EnrollmentComponent implements OnInit {
           } else if (sAppointment.type === HttpEventType.Response) {
             this.appointment = sAppointment.body;
 
-            // Fetch output from localStorage
-            const localStorageOutput = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY);
-            this.enrollmentOutputInStorage = localStorageOutput !== null;
-
-            // Fetch key from LocalStorage
-            this.localStorageKey = localStorage.getItem(this.ENROLLMENT_KEY_KEY);
-            this.keyReadonly = this.localStorageKey !== null && this.localStorageKey !== '';
-
-            // When e.g. coming from login
-            if (this.enrollmentOutputInStorage === true) {
-              // Re-fetch output from local storage
-              this.output = JSON.parse(localStorageOutput);
-              this.parseStorageValuesIntoForm();
-
-              // Auto send if logged in
-              if (this.userIsLoggedIn) {
-                this.sendEnrollment();
-              }
+            if (this.edit) {
+              this.ngOnInitChangeEnrollment();
+            } else {
+              this.ngOnInitAddEnrollment();
             }
-
             this.buildFormCheckboxes();
           }
         }, () => {
           this.appointment = null;
         }
       );
+  }
+
+  async sendEnrollment() {
+    if (this.keyEvent.invalid && !this.userIsLoggedIn && !this.keyReadonly) {
+      this.keyEvent.markAllAsTouched();
+      return;
+    }
+
+    this.setTokenIfNotSet();
+
+    if (!this.userIsLoggedIn) {
+      this.output.editKey = this.localStorageKey;
+    }
+
+    if (this.userIsLoggedIn || this.keyEvent.valid || this.keyReadonly) {
+      this.appointmentService
+        .enroll(this.output, this.appointment)
+        .subscribe(
+          result => {
+            this.clearLoginAndTokenIntercept();
+            if (result.type === HttpEventType.Response) {
+              if (result.status === HttpStatus.CREATED) {
+                this.router.navigate([`enroll`], {
+                  queryParams: {
+                    a: this.appointment.link
+                  }
+                }).then((navigated: boolean) => {
+                  if (navigated) {
+                    this.snackBar.open('Erfolgreich angemeldet', '', {
+                      duration: 4000,
+                      panelClass: 'snackbar-default'
+                    });
+                  }
+                });
+              }
+            }
+          }, (err: HttpErrorResponse) => {
+            this.clearLoginAndTokenIntercept();
+            if (err.status === HttpStatus.BAD_REQUEST) {
+              if (err.error.code === 'DUPLICATE_ENTRY') {
+                err.error.error.forEach(fColumn => {
+                    const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
+                    const fnName: string = 'get' + uppercaseName;
+                    this[fnName]().setErrors({inUse: true});
+                  }
+                );
+              }
+            }
+          }
+        );
+    }
+  }
+
+  private ngOnInitAddEnrollment() {
+    // Fetch output from localStorage
+    const localStorageOutput = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY);
+    this.enrollmentOutputInStorage = localStorageOutput !== null;
+
+    // Fetch key from LocalStorage
+    this.localStorageKey = localStorage.getItem(this.ENROLLMENT_KEY_KEY);
+    this.keyReadonly = this.localStorageKey !== null && this.localStorageKey !== '';
+
+    // When e.g. coming from login
+    if (this.enrollmentOutputInStorage === true) {
+      // Re-fetch output from local storage
+      this.output = JSON.parse(localStorageOutput);
+      this.parseValuesIntoForm(this.output);
+
+      // Auto send if logged in
+      if (this.userIsLoggedIn) {
+        this.sendEnrollment();
+      }
+    }
   }
 
   async parseDataFromEnrollForm() {
@@ -157,54 +222,14 @@ export class EnrollmentComponent implements OnInit {
     this.checkForAutomaticSubmit();
   }
 
-  async sendEnrollment() {
-    if (this.keyEvent.invalid && !this.userIsLoggedIn && !this.keyReadonly) {
-      this.keyEvent.markAllAsTouched();
-      return;
-    }
+  private ngOnInitChangeEnrollment() {
+    const enrollment: IEnrollmentModel = this.appointment.enrollments.filter(fEnrollment => {
+      return fEnrollment.id === this.enrollmentId;
+    })[0];
 
-    this.setTokenIfNotSet();
-
-    if (!this.userIsLoggedIn) {
-      this.output.editKey = this.localStorageKey;
-    }
-
-    if (this.userIsLoggedIn || this.keyEvent.valid || this.keyReadonly) {
-      this.appointmentService
-        .enroll(this.output, this.appointment)
-        .subscribe(
-          result => {
-            this.clearLoginAndTokenIntercept();
-            if (result.type === HttpEventType.Response) {
-              if (result.status === HttpStatus.CREATED) {
-                this.router.navigate([`enroll`], {
-                  queryParams: {
-                    val: this.appointment.link
-                  }
-                }).then((navigated: boolean) => {
-                  if (navigated) {
-                    this.snackBar.open('Erfolgreich angemeldet', '', {
-                      duration: 4000,
-                      panelClass: 'snackbar-default'
-                    });
-                  }
-                });
-              }
-            }
-          }, (err: HttpErrorResponse) => {
-            this.clearLoginAndTokenIntercept();
-            if (err.status === HttpStatus.BAD_REQUEST) {
-              if (err.error.code === 'DUPLICATE_ENTRY') {
-                err.error.error.forEach(fColumn => {
-                    const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
-                    const fnName: string = 'get' + uppercaseName;
-                    this[fnName]().setErrors({inUse: true});
-                  }
-                );
-              }
-            }
-          }
-        );
+    if (enrollment !== null) {
+      this.output = enrollment;
+      this.parseValuesIntoForm(enrollment);
     }
   }
 
@@ -290,19 +315,18 @@ export class EnrollmentComponent implements OnInit {
     return (this.event.get('additions') as FormArray).controls;
   }
 
-
   // Utility
-  private parseStorageValuesIntoForm() {
-    this.event.get('name').setValue(this.output.name);
-    this.event.get('comment').setValue(this.output.comment);
-    if (this.output.driver != null) {
-      this.driverPassengerEvent.get('driver').setValue(this.output.driver);
-      this.driverPassengerEvent.get('seats').setValue(this.output.driver.seats);
-      this.driverPassengerEvent.get('service').setValue(this.output.driver.service);
+  private parseValuesIntoForm(enrollment: IEnrollmentModel) {
+    this.event.get('name').setValue(enrollment.name);
+    this.event.get('comment').setValue(enrollment.comment);
+    if (enrollment.driver != null) {
+      this.driverPassengerEvent.get('driver').setValue(enrollment.driver);
+      this.driverPassengerEvent.get('seats').setValue(enrollment.driver.seats);
+      this.driverPassengerEvent.get('service').setValue(enrollment.driver.service);
     }
 
-    if (this.output.passenger != null) {
-      this.driverPassengerEvent.get('requirement').setValue(this.output.passenger.requirement);
+    if (enrollment.passenger != null) {
+      this.driverPassengerEvent.get('requirement').setValue(enrollment.passenger.requirement);
     }
   }
 

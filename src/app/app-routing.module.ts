@@ -30,9 +30,9 @@ const routes: Routes = [
     path: 'enroll', children: [
       {path: '', pathMatch: 'full', component: AppointmentComponent},
       {path: 'add', pathMatch: 'full', component: EnrollmentComponent},
-      {path: 'change', pathMatch: 'full', component: EnrollmentComponent}
     ]
   },
+  {path: 'enrollment', pathMatch: 'full', component: EnrollmentComponent, data: {edit: true}},
   {path: ':link', component: AppointmentComponent},
 ];
 

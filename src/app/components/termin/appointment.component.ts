@@ -56,13 +56,13 @@ export class AppointmentComponent implements OnInit {
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
               private snackBar: MatSnackBar) {
     this.route.queryParams.subscribe(params => {
-      this.link = params.val;
+      this.link = params.a;
     });
 
     this.route.params.subscribe(params => {
       if (params.link !== undefined) {
         this.link = params.link;
-        this.router.navigate(['/enroll'], {queryParams: {val: this.link}}).then(() => '');
+        this.router.navigate(['/enroll'], {queryParams: {a: this.link}}).then(() => '');
       }
     });
   }
