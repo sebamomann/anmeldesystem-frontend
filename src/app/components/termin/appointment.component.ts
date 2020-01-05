@@ -247,9 +247,9 @@ export class AppointmentComponent implements OnInit {
             },
             error => {
               if (error.status === HttpStatus.FORBIDDEN) {
-                this.snackBar.open(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu löschen`, 'Okay', {
+                this.snackBar.open(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu löschen`, null, {
                   duration: 4000,
-                  panelClass: 'snackbar-default'
+                  panelClass: 'snackbar-error'
                 });
               }
             }
