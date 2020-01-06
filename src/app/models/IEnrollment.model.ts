@@ -10,7 +10,7 @@ export interface IEnrollmentModel {
   comments?: ICommentModel[];
   driver: IDriverModel | null;
   passenger: IPassengerModel | null;
-  additions?: IAdditionModel[];
+  additions: IAdditionModel[];
   iat?: string;
   editKey: string;
 }

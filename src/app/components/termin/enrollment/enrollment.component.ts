@@ -15,7 +15,6 @@ import {EnrollmentModel} from '../../../models/EnrollmentModel.model';
 
 const HttpStatus = require('http-status-codes');
 
-
 @Component({
   selector: 'app-enrollment',
   templateUrl: './enrollment.component.html',
@@ -49,6 +48,7 @@ export class EnrollmentComponent implements OnInit {
   keyEvent = this.formBuilder.group({
     key: new FormControl('', [Validators.required, Validators.min(4)])
   });
+
   public appointment: IAppointmentModel;
   private edit: any;
   private appointmentLink: string;
@@ -193,7 +193,8 @@ export class EnrollmentComponent implements OnInit {
   };
 
   private sendEnrollmentRequest(functionName: string) {
-    this.enrollmentService[functionName](this.output)
+    console.log(JSON.stringify(this.output));
+    this.enrollmentService[functionName](this.output, this.appointment)
       .subscribe(
         result => {
           this.clearLoginAndTokenFormIntercepting();
@@ -205,7 +206,7 @@ export class EnrollmentComponent implements OnInit {
                 }
               }).then((navigated: boolean) => {
                 if (navigated) {
-                  this.snackBar.open(`Erfolgreich ` + this.edit ? 'bearbeitet' : 'angemeldet',
+                  this.snackBar.open(`Erfolgreich ` + (this.edit ? 'bearbeitet' : 'angemeldet'),
                     '',
                     {
                       duration: 4000,
