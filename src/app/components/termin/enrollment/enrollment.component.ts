@@ -193,7 +193,6 @@ export class EnrollmentComponent implements OnInit {
   };
 
   private sendEnrollmentRequest(functionName: string) {
-    console.log(JSON.stringify(this.output));
     this.enrollmentService[functionName](this.output, this.appointment)
       .subscribe(
         result => {
