@@ -84,7 +84,7 @@ export class EnrollmentComponent implements OnInit {
       .subscribe(v => this.edit = v.edit);
 
     this.appointmentService
-      .getAppointment(this.appointmentLink)
+      .getAppointment(this.appointmentLink, true)
       .subscribe(
         sAppointment => {
           if (sAppointment.type === HttpEventType.DownloadProgress) {

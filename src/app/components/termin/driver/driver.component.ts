@@ -38,7 +38,7 @@ export class DriverComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.appointmentService.getAppointment(this.link).subscribe(sAppointment => {
+    await this.appointmentService.getAppointment(this.link, true).subscribe(sAppointment => {
       if (sAppointment.type === HttpEventType.DownloadProgress) {
         this.percentDone = Math.round(100 * sAppointment.loaded / sAppointment.total);
       } else if (sAppointment.type === HttpEventType.Response) {

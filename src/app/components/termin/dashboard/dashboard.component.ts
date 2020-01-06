@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.appointmentService.getAppointments().subscribe(result => {
+    this.appointmentService.getAppointments(true).subscribe(result => {
       if (result.type === HttpEventType.DownloadProgress) {
         this.percentDone = Math.round(100 * result.loaded / result.total);
       } else if (result.type === HttpEventType.Response) {

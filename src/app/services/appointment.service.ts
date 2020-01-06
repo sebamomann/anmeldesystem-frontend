@@ -14,16 +14,26 @@ export class AppointmentService {
   constructor(private readonly httpClient: HttpClient) {
   }
 
-  getAppointment(link: string): Observable<HttpEvent<IAppointmentModel>> {
-    const req = new HttpRequest('GET', `${environment.api.url}appointment/${link}`, {
+  getAppointment(link: string, slim: boolean = false): Observable<HttpEvent<IAppointmentModel>> {
+    let url = `${environment.api.url}appointment/${link}`;
+
+    if (slim) {
+      url += '?slim=true';
+    }
+
+    const req = new HttpRequest('GET', url, {
       observe: 'response',
       reportProgress: true,
     });
     return this.httpClient.request(req);
   }
 
-  getAppointments(): Observable<HttpEvent<IAppointmentModel[]>> {
-    const req = new HttpRequest('GET', `${environment.api.url}appointment/`, {
+  getAppointments(slim: boolean = false): Observable<HttpEvent<IAppointmentModel[]>> {
+    let url = `${environment.api.url}appointment/`;
+    if (slim) {
+      url = url + '?slim=true';
+    }
+    const req = new HttpRequest('GET', url, {
       observe: 'response',
       reportProgress: true,
     });
