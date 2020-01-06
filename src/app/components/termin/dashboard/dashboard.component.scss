@@ -43,6 +43,30 @@
   }
 }
 
+.appointment-data {
+  padding: 10px;
+  width: 80%;
+  text-align: center;
+  margin: 5px auto !important;
+
+  span {
+    width: 50%;
+    display: inline-block;
+
+    &:first-of-type {
+      text-align: left;
+      font-weight: bolder;
+    }
+
+    &:last-of-type {
+      text-align: right;
+      font-style: italic;
+      font-size: 0.75em;
+      vertical-align: bottom;
+    }
+  }
+}
+
 @-webkit-keyframes AnimationName {
   0% {
     background-position: 0% 36%

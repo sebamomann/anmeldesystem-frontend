@@ -11,6 +11,21 @@
       <app-appointment-data [appointment]="appointment" [preview]="true"></app-appointment-data>
     </ng-container>
   </div>
+
+
+  <ng-container *ngIf="appointmentsArchive.length > 0">
+    <h2 class="title">Archiv</h2>
+    <div [@listAnimation]="appointments.length">
+      <ng-container *ngFor="let appointment of appointmentsArchive">
+        <mat-card (click)="redirectToAppointment(appointment)" class="appointment-data">
+          <mat-card-content>
+            <span> {{ appointment.title }}</span>
+            <span>{{ appointment.date | date: 'dd.MM.y, HH:mm'}}</span>
+          </mat-card-content>
+        </mat-card>
+      </ng-container>
+    </div>
+  </ng-container>
 </ng-container>
 
 <ng-template #appointmentdata>

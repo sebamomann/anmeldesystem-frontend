@@ -3,6 +3,7 @@ import {AppointmentService} from '../../../services/appointment.service';
 import {Router} from '@angular/router';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
 import {HttpEventType} from '@angular/common/http';
+import {IAppointmentModel} from '../../../models/IAppointment.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,6 +36,7 @@ export class DashboardComponent implements OnInit {
   numbers = new Array(3);
   private percentDone;
   private appointments = undefined;
+  private appointmentsArchive = undefined;
 
   constructor(public appointmentService: AppointmentService, private router: Router) {
 
@@ -46,11 +48,18 @@ export class DashboardComponent implements OnInit {
         this.percentDone = Math.round(100 * result.loaded / result.total);
       } else if (result.type === HttpEventType.Response) {
         this.appointments = [];
+        this.appointmentsArchive = [];
         this.hide = true;
         setTimeout(() => {
           this.appointments = result.body;
+          this.appointmentsArchive = this.appointments.filter(fAppointment => Date.parse(fAppointment.date) < Date.now());
+          this.appointments = this.appointments.filter(fAppointment => Date.parse(fAppointment.date) > Date.now());
         }, 500);
       }
     });
+  }
+
+  redirectToAppointment(appointment: IAppointmentModel) {
+    this.router.navigate(['/enroll'], {queryParams: {a: appointment.link}});
   }
 }
