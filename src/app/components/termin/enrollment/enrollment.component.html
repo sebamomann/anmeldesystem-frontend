@@ -122,26 +122,26 @@
     <mat-card-content (ngSubmit)="sendEnrollment()"
                       [formGroup]="keyEvent">
 
+      <ng-container *ngIf="localStorageKeys.length > 0">
+        <mat-form-field>
+          <mat-label>Bestehender Token</mat-label>
+          <mat-select formControlName="existingKey" id="existingKey">
+            <mat-option *ngFor="let key of localStorageKeys" [value]="key">{{ key }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="keyEvent.get('existingKey').invalid">
+            {{ getExistingKeyErrorMessage() }}
+          </mat-error>
+        </mat-form-field>
+        <span class="divider">Oder</span>
+      </ng-container>
       <mat-form-field>
-        <div class="tooltip-container">
-          <input [readonly]="keyReadonly"
-                 [value]="localStorageKey"
-                 formControlName="key"
-                 id="key"
-                 matInput
-                 placeholder="Token"
-                 required>
-          <!--suppress TypeScriptUnresolvedFunction -->
-          <mat-icon #templateTooltip="matTooltip"
-                    (click)="templateTooltip.toggle()"
-                    *ngIf="keyReadonly"
-                    class="tooltip"
-                    matTooltip="{{ 'Dieser Token kann nur in den Einstellungen geändert werden' }}">
-            info
-          </mat-icon>
-        </div>
-        <mat-error *ngIf="keyEvent.get('key').invalid && !keyReadonly">
-          {{ getTokenErrorMessage() }}
+        <input formControlName="key"
+               id="key"
+               matInput
+               placeholder="Token"
+               required>
+        <mat-error *ngIf="keyEvent.get('key').invalid">
+          {{ getKeyErrorMessage() }}
         </mat-error>
       </mat-form-field>
       <button (click)="sendEnrollment()"
@@ -149,7 +149,6 @@
         Absenden
       </button>
     </mat-card-content>
-
   </mat-card>
 </ng-container>
 

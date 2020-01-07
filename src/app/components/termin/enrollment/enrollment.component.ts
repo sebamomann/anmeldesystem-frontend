@@ -46,7 +46,8 @@ export class EnrollmentComponent implements OnInit {
   });
 
   keyEvent = this.formBuilder.group({
-    key: new FormControl('', [Validators.required, Validators.min(4)])
+    key: new FormControl('', [Validators.required, Validators.min(4)]),
+    existingKey: new FormControl(),
   });
 
   public appointment: IAppointmentModel;
@@ -55,15 +56,14 @@ export class EnrollmentComponent implements OnInit {
   private enrollmentId: string;
   private percentDone: number;
   // Preparation for login redirect fields
-  private ENROLLMENT_KEY_KEY = 'enrollmentKey';
+  private ENROLLMENT_KEY_KEY = 'enrollmentKeys';
   private outputRawFromStorage: string;
   private output: IEnrollmentModel = new EnrollmentModel();
   private showLoginAndTokenForm: boolean;
   private currentUrlSnapshotWithParameter: RouterStateSnapshot;
   // Key fields
   private ENROLLMENT_OUTPUT_KEY = 'enrollmentOutput';
-  private localStorageKey: string;
-  private keyReadonly = false;
+  private localStorageKeys: string[];
 
   constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
               private location: Location,
@@ -172,18 +172,19 @@ export class EnrollmentComponent implements OnInit {
    * Eventually sending/updating Enrollment
    */
   sendEnrollment: () => Promise<void> = async () => {
-    if (this.keyEvent.invalid && !this.userIsLoggedIn && !this.keyReadonly) {
+    if (!this.keyEventValid()
+      && !this.userIsLoggedIn) {
       this.keyEvent.markAllAsTouched();
       return;
     }
 
-    this.setTokenIfNotSet();
+    const key = this.addKeyIfNotExisting();
 
     if (!this.userIsLoggedIn) {
-      this.output.editKey = this.localStorageKey;
+      this.output.editKey = key;
     }
 
-    if (this.userIsLoggedIn || this.keyEvent.valid || this.keyReadonly) {
+    if (this.userIsLoggedIn || this.keyEventValid()) {
       if (this.edit) {
         this.sendEnrollmentRequest('update');
       } else {
@@ -191,6 +192,11 @@ export class EnrollmentComponent implements OnInit {
       }
     }
   };
+
+  private keyEventValid() {
+    return this.keyEvent.get('key').value !== ''
+      || this.keyEvent.get('existingKey').value !== null;
+  }
 
   private sendEnrollmentRequest(functionName: string) {
     this.enrollmentService[functionName](this.output, this.appointment)
@@ -269,9 +275,15 @@ export class EnrollmentComponent implements OnInit {
     }
   }
 
-  private getTokenErrorMessage(): string {
-    if (this.getToken().hasError('required')) {
-      return 'Bitte geben einen Token an';
+  private getKeyErrorMessage(): string {
+    if (this.getKey().hasError('required')) {
+      return 'Bitte angeben';
+    }
+  }
+
+  private getExistingKeyErrorMessage(): string {
+    if (this.getKey().hasError('required')) {
+      return 'Bitte auswählen';
     }
   }
 
@@ -281,8 +293,12 @@ export class EnrollmentComponent implements OnInit {
     }
   }
 
-  private getToken() {
+  private getKey() {
     return this.keyEvent.get('key');
+  }
+
+  private getExistingKey() {
+    return this.keyEvent.get('existingKey');
   }
 
   private getSeats() {
@@ -334,15 +350,27 @@ export class EnrollmentComponent implements OnInit {
     this.showLoginAndTokenForm = this.outputRawFromStorage !== null;
 
     // Fetch key from LocalStorage
-    this.localStorageKey = localStorage.getItem(this.ENROLLMENT_KEY_KEY);
-    this.keyReadonly = this.localStorageKey !== null && this.localStorageKey !== '';
+    this.localStorageKeys = JSON.parse(localStorage.getItem(this.ENROLLMENT_KEY_KEY));
+    if (this.localStorageKeys === null) {
+      this.localStorageKeys = [];
+    }
   }
 
-  private setTokenIfNotSet() {
-    const value = this.keyEvent.get('key').value;
-    if (this.localStorageKey === '' || this.localStorageKey === null) {
-      localStorage.setItem(this.ENROLLMENT_KEY_KEY, value);
+  private addKeyIfNotExisting() {
+    let value;
+    if (this.keyEvent.get('key').value !== '') {
+      value = this.keyEvent.get('key').value;
+    } else {
+      value = this.keyEvent.get('existingKey').value;
     }
+
+    if (!this.localStorageKeys.includes(value)) {
+      this.localStorageKeys.push(value);
+    }
+
+    localStorage.setItem(this.ENROLLMENT_KEY_KEY, JSON.stringify(this.localStorageKeys));
+
+    return value;
   }
 
   private clearLoginAndTokenFormIntercepting() {
