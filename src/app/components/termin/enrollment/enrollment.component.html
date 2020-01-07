@@ -138,8 +138,7 @@
         <input formControlName="key"
                id="key"
                matInput
-               placeholder="Token"
-               required>
+               placeholder="Neuer Token">
         <mat-error *ngIf="keyEvent.get('key').invalid">
           {{ getKeyErrorMessage() }}
         </mat-error>
