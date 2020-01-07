@@ -187,7 +187,7 @@ export class AppointmentComponent implements OnInit {
    */
   public _openFilterDialog = (error: boolean = false): void => {
     const dialogRef = this.dialog.open(FilterDialogComponent, {
-      width: '75%',
+      width: '80%',
       height: 'auto',
       data: {
         appointment: this.appointment,
