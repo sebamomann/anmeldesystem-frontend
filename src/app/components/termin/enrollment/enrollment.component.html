@@ -104,50 +104,82 @@
 
 <ng-container *ngIf="showLoginAndTokenForm">
   <mat-card class="float card-small">
-    <span>
-      Logge dich ein um deine Anmeldung deinem Account zuzuordnen.
-    </span>
-    <mat-card-content>
-      <button [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url}"
-              [routerLink]="['/account/login']"
+    <ng-container *ngIf="!userIsLoggedIn; else loggedIn">
+      <mat-card-content>
+        <span>
+          Logge dich ein um deine Anmeldung deinem Account zuzuordnen.
+        </span>
+        <button [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url + '&send=true'}"
+                [routerLink]="['/account/login']"
+                color="primary"
+                mat-raised-button>
+          Login
+        </button>
+      </mat-card-content>
+    </ng-container>
+    <ng-template #loggedIn>
+      <span>
+        Als {{this.authenticationService.currentUserValue.username}} eingeloggt.
+      </span>
+      <mat-card-content>
+        <button [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url}"
+                [routerLink]="['/account/login']"
+                color="primary"
+                mat-raised-button>
+          Absenden
+        </button>
+      </mat-card-content>
+    </ng-template>
+
+    <ng-template>
+      <button *ngIf="userIsLoggedIn"
               color="primary"
               mat-raised-button>
-        Login
+        Als
       </button>
-    </mat-card-content>
+      (ngSubmit)="sendEnrollment()"
+    </ng-template>
     <span class="separator middle center"></span>
-    <span>
-      Oder gib einen Token an, um später deine Anmeldung zu verwalten.
-    </span>
-    <mat-card-content (ngSubmit)="sendEnrollment()"
-                      [formGroup]="keyEvent">
 
-      <ng-container *ngIf="localStorageKeys.length > 0">
+    <mat-expansion-panel class="integrated">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Token
+        </mat-panel-title>
+        <mat-panel-description>
+          Benutze einen Token als Zuordnung
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-card-content (ngSubmit)="sendEnrollment()"
+                        [formGroup]="keyEvent">
+
+        <ng-container *ngIf="localStorageKeys.length > 0">
+          <mat-form-field>
+            <mat-label>Bestehender Token</mat-label>
+            <mat-select formControlName="existingKey" id="existingKey">
+              <mat-option *ngFor="let key of localStorageKeys" [value]="key">{{ key }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="keyEvent.get('existingKey').invalid">
+              {{ getExistingKeyErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+          <span class="divider">Oder</span>
+        </ng-container>
         <mat-form-field>
-          <mat-label>Bestehender Token</mat-label>
-          <mat-select formControlName="existingKey" id="existingKey">
-            <mat-option *ngFor="let key of localStorageKeys" [value]="key">{{ key }}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="keyEvent.get('existingKey').invalid">
-            {{ getExistingKeyErrorMessage() }}
+          <input formControlName="key"
+                 id="key"
+                 matInput
+                 placeholder="Neuer Token">
+          <mat-error *ngIf="keyEvent.get('key').invalid">
+            {{ getKeyErrorMessage() }}
           </mat-error>
         </mat-form-field>
-        <span class="divider">Oder</span>
-      </ng-container>
-      <mat-form-field>
-        <input formControlName="key"
-               id="key"
-               matInput
-               placeholder="Neuer Token">
-        <mat-error *ngIf="keyEvent.get('key').invalid">
-          {{ getKeyErrorMessage() }}
-        </mat-error>
-      </mat-form-field>
-      <button (click)="sendEnrollment()"
-              mat-raised-button>
-        Absenden
-      </button>
-    </mat-card-content>
+        <button (click)="sendEnrollment()"
+                mat-raised-button>
+          Absenden
+        </button>
+      </mat-card-content>
+    </mat-expansion-panel>
   </mat-card>
 </ng-container>
 

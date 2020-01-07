@@ -230,7 +230,11 @@ export class AppointmentComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (result.send) {
+        if (result.key != null) {
+          enrollment.editKey = result.key;
+        }
+
         this.enrollmentService
           .delete(enrollment)
           .subscribe(

@@ -64,6 +64,9 @@ export class EnrollmentComponent implements OnInit {
   // Key fields
   private ENROLLMENT_OUTPUT_KEY = 'enrollmentOutput';
   private localStorageKeys: string[];
+  // Sending options
+  private autoSend = false;
+  private autoSubmitBySetting = false;
 
   constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
               private location: Location,
@@ -75,6 +78,7 @@ export class EnrollmentComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.appointmentLink = params.a;
       this.enrollmentId = params.e;
+      this.autoSend = params.send === 'true';
     });
   }
 
@@ -101,7 +105,7 @@ export class EnrollmentComponent implements OnInit {
               this.parseOutputIntoForm();
 
               // Auto send if logged in
-              if (this.userIsLoggedIn) {
+              if (this.autoSend) {
                 this.sendEnrollment();
               }
             } else if (this.edit) {
@@ -202,9 +206,10 @@ export class EnrollmentComponent implements OnInit {
     this.enrollmentService[functionName](this.output, this.appointment)
       .subscribe(
         result => {
+          console.log(result);
           this.clearLoginAndTokenFormIntercepting();
           if (result.type === HttpEventType.Response) {
-            if (result.status === HttpStatus.CREATED) {
+            if (result.status === HttpStatus.CREATED || result.status === HttpStatus.OK) {
               this.router.navigate([`enroll`], {
                 queryParams: {
                   a: this.appointment.link
@@ -385,7 +390,7 @@ export class EnrollmentComponent implements OnInit {
    */
   private checkForAutomaticSubmit() {
     // If user is logged in dont ask for login or token. Just send
-    if (this.userIsLoggedIn) {
+    if (this.autoSubmitBySetting) {
       this.sendEnrollment().then(() => '');
     } else {
       // TempStore item for possible login redirect

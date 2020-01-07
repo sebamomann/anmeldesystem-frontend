@@ -347,6 +347,12 @@ mat-card {
   }
 }
 
+mat-expansion-panel {
+  &.integrated {
+    box-shadow: none !important;
+  }
+}
+
 .mat-button {
   &.solo {
     margin: 5px auto 15px auto;
