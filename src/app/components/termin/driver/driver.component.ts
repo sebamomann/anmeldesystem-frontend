@@ -33,7 +33,7 @@ export class DriverComponent implements OnInit {
 
   constructor(private appointmentService: AppointmentService, private location: Location, private route: ActivatedRoute) {
     this.route.queryParams.subscribe(params => {
-      this.link = params.val;
+      this.link = params.a;
     });
   }
 
