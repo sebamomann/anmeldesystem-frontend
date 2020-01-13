@@ -32,6 +32,10 @@ const HttpStatus = require('http-status-codes');
 export class EnrollmentComponent implements OnInit {
   userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
 
+  selfEnrollment = this.formBuilder.group({
+    selfEnrollment: new FormControl('true', []),
+  });
+
   event = this.formBuilder.group({
     name: new FormControl('', [Validators.required, Validators.min(2)]),
     comment: new FormControl('', [Validators.min(2)]),
@@ -46,7 +50,7 @@ export class EnrollmentComponent implements OnInit {
   });
 
   keyEvent = this.formBuilder.group({
-    key: new FormControl('', [Validators.required, Validators.min(4)]),
+    key: new FormControl('', []),
     existingKey: new FormControl(),
   });
 
@@ -83,6 +87,11 @@ export class EnrollmentComponent implements OnInit {
   }
 
   async ngOnInit() {
+    // Needed due to error permanent trigger, if value is put in via form [value]
+    if (this.userIsLoggedIn) {
+      this.getName().markAsTouched();
+      this.getName().setValue(this.authenticationService.currentUserValue.username);
+    }
     await this.route
       .data
       .subscribe(v => this.edit = v.edit);
@@ -146,6 +155,19 @@ export class EnrollmentComponent implements OnInit {
     } else if (!this.getRequirement().valid) {
       this.driverPassengerEvent.markAllAsTouched();
       return;
+    }
+
+    if (this.userIsLoggedIn &&
+      !this.getSelfEnrollment().value) {
+      if (this.keyEventValid()) {
+        console.log('Key event valid');
+        this.output.editKey = this.addKeyIfNotExisting();
+      } else {
+        console.log('Key event invalid');
+        this.keyEvent.markAllAsTouched();
+        this.getKey().setErrors({invalid: true});
+        return;
+      }
     }
 
     // Parse data from form into object
@@ -292,6 +314,12 @@ export class EnrollmentComponent implements OnInit {
     }
   }
 
+  private getKeyEventErrorMessage(): string {
+    if (this.keyEvent.hasError('required')) {
+      return 'Bitte spezifiziere einen Token';
+    }
+  }
+
   private getSeatsErrorMessage() {
     if (this.getSeats().hasError('required')) {
       return 'Bite gebe die Anzahl FREIER Plätze an';
@@ -332,6 +360,10 @@ export class EnrollmentComponent implements OnInit {
 
   private getAdditionsControls() {
     return (this.event.get('additions') as FormArray).controls;
+  }
+
+  private getSelfEnrollment() {
+    return this.selfEnrollment.get('selfEnrollment');
   }
 
   // Utility
@@ -389,8 +421,11 @@ export class EnrollmentComponent implements OnInit {
    * For the possible redirect to the login page, the data needs to be stored locally, to be fetched later.
    */
   private checkForAutomaticSubmit() {
-    // If user is logged in dont ask for login or token. Just send
-    if (this.autoSubmitBySetting) {
+    // If user selected selfEnrollment
+    // Or if key is set
+    if (this.getSelfEnrollment().value
+      || this.output.editKey !== undefined) {
+      console.log('autoSubmit');
       this.sendEnrollment().then(() => '');
     } else {
       // TempStore item for possible login redirect

@@ -556,3 +556,7 @@ footer {
     @include md-icon-size(20px);
   }
 }
+
+.mat-tooltip {
+  font-size: 0.75em;
+}

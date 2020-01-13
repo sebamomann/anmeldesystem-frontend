@@ -9,6 +9,22 @@
     <mat-card-content>
       <form (ngSubmit)="parseDataFromEnrollmentForm()"
             class="register-form">
+        <div *ngIf="userIsLoggedIn"
+             [formGroup]="selfEnrollment"
+             class="additions tooltip-container">
+          <mat-checkbox formControlName="selfEnrollment">
+            Ich melde mich selber an
+          </mat-checkbox>
+          <!--suppress TypeScriptUnresolvedFunction -->
+          <mat-icon #tooltip="matTooltip"
+                    (click)="tooltip.toggle()"
+                    class="tooltip"
+                    matTooltip="{{'Diese Anmeldung wird mit deinem Account verbunden. ' +
+                     'Somit kannst du von überall deine Anmeldung bearbeiten oder löschen.'}}">
+            info
+          </mat-icon>
+        </div>
+
         <div [formGroup]="event">
           <mat-form-field class="name">
             <input formControlName="name"
@@ -41,7 +57,7 @@
               </mat-checkbox>
             </div>
 
-            <mat-form-field *ngIf="!driverPassengerEvent.get('driver').value; else driver">
+            <mat-form-field *ngIf="!getDriver().value; else driver">
               <mat-label>Mich bitte mitnehmen</mat-label>
               <mat-select formControlName="requirement" required>
                 <mat-option [value]="0"> ---</mat-option>
@@ -91,6 +107,33 @@
                     matInput placeholder="Kommentar">
           </textarea>
         </mat-form-field>
+
+
+        <div *ngIf="!getSelfEnrollment().value"
+             [formGroup]="keyEvent"
+             class="token-select">
+          <div class="separator colored extra-tall bold middle center"></div>
+          <mat-form-field>
+            <mat-label>Bestehender Token</mat-label>
+            <mat-select formControlName="existingKey">
+              <mat-option *ngFor="let key of localStorageKeys" [value]="key">{{ key }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="keyEvent.get('existingKey').invalid">
+              {{ getExistingKeyErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input formControlName="key"
+                   matInput
+                   placeholder="Neuer Token">
+            <mat-error *ngIf="!keyEventValid()">
+              {{ getKeyErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div *ngIf="keyEvent.invalid">
+          {{ getKeyEventErrorMessage() }}
+        </div>
 
         <mat-card-actions>
           <button id="submit" mat-raised-button color="primary">
@@ -180,6 +223,10 @@
         </button>
       </mat-card-content>
     </mat-expansion-panel>
+    <button (click)="clearLoginAndTokenFormIntercepting()"
+            mat-raised-button>
+      Zurück
+    </button>
   </mat-card>
 </ng-container>
 
