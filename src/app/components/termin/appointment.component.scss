@@ -22,7 +22,7 @@
   }
 
   .enrollment {
-    margin: 1px auto;
+    margin: 2px auto;
 
     &.mat-expansion-panel-spacing {
       margin: 16px 0;
@@ -30,7 +30,7 @@
 
     .enrollment-info {
       padding: 10px 15px;
-      font-size: 1em;
+      font-size: 0.95em;
 
       span {
         display: block;
@@ -38,6 +38,7 @@
 
         &.comment-block {
           font-size: 0.9em;
+          font-style: italic;
         }
 
         &:first-of-type {
@@ -60,11 +61,17 @@
     }
 
     .addition-list {
-      font-size: 0.85em;
+      font-size: 0.75em;
 
       & > div {
         display: inline-block;
         min-width: 50%;
+        width: 50%;
+
+        span {
+          width: 81% !important;
+          text-align: left;
+        }
 
         span, mat-icon {
           display: inline-block;
@@ -73,8 +80,9 @@
         }
 
         mat-icon {
-          @include md-icon-size(22px);
+          @include md-icon-size(19px);
           margin-right: 5px;
+          color: #00126e;
         }
       }
     }
