@@ -213,6 +213,10 @@ a {
   }
 
   /* WIDTH */
+  &.semi:after {
+    width: 75%;
+  }
+
   &.middle:after {
     width: 50%;
   }

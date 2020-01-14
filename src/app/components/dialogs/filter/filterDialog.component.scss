@@ -1,13 +1,21 @@
 .filter {
+  .mat-dialog-title {
+    margin: 0;
+  }
+
+  .separator.tall:after {
+    margin: 15px auto;
+  }
+
   .filter-element {
-    font-size: 0.9em;
+    font-size: 0.85em;
     width: 50%;
-    margin: 5px 0;
+    margin: 2.5px 0;
     display: inline-block;
   }
 
   .mat-dialog-content {
-    padding: 10px 24px;
+    padding: 8px 24px;
   }
 
   .filter-block {
@@ -15,7 +23,7 @@
 
     .tooltip {
       position: absolute;
-      right: -20px;
+      right: 0px;
       top: -11px;
       height: auto;
       white-space: pre-line;

@@ -12,7 +12,7 @@
     </ng-container>
 
     <ng-container *ngIf="data.appointment.driverAddition">
-      <div class="separator tall brighter"></div>
+      <div class="separator tall brighter center semi"></div>
       <mat-radio-group [(ngModel)]="dialogFilter.driverPassenger">
         <mat-radio-button [value]="'driver'"
                           class="filter-element">
@@ -23,7 +23,7 @@
           Passagier
         </mat-radio-button>
         <mat-radio-button (click)="dialogFilter.driverPassenger = ''"
-                          [value]="''">
+                          [value]="''" class="filter-element">
           Beide
         </mat-radio-button>
       </mat-radio-group>
@@ -31,7 +31,7 @@
 
 
     <div class="filter-block" *ngIf="isFilterActive">
-      <div class="separator tall brighter"></div>
+      <div class="separator tall brighter center semi"></div>
       <!--suppress TypeScriptUnresolvedFunction -->
       <mat-icon class="tooltip"
                 #tooltip="matTooltip"
