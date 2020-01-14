@@ -143,6 +143,8 @@ export class EnrollmentComponent implements OnInit {
    * Main function on initializing sending of data to API
    */
   parseDataFromEnrollmentForm: () => Promise<void> = async () => {
+    // TODO
+    // refactor
     if (!this.event.valid) {
       this.event.markAllAsTouched();
       this.driverPassengerEvent.markAllAsTouched();
