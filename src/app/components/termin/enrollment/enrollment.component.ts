@@ -206,10 +206,10 @@ export class EnrollmentComponent implements OnInit {
       return;
     }
 
-    const key = this.addKeyIfNotExisting();
-
-    if (!this.userIsLoggedIn) {
-      this.output.editKey = key;
+    // Set key, if logged ind but not selfenroll
+    // Set key if not logged in and token specified by after enroll screen
+    if (!this.userIsLoggedIn || (this.userIsLoggedIn && !this.getSelfEnrollment().value)) {
+      this.output.editKey = this.addKeyIfNotExisting();
     }
 
     if (this.userIsLoggedIn || this.keyEventValid()) {
@@ -425,11 +425,11 @@ export class EnrollmentComponent implements OnInit {
   private checkForAutomaticSubmit() {
     // If user selected selfEnrollment
     // Or if key is set
-    if (this.getSelfEnrollment().value
+    if ((this.getSelfEnrollment().value && this.userIsLoggedIn)
       || this.output.editKey !== undefined) {
-      console.log('autoSubmit');
       this.sendEnrollment().then(() => '');
     } else {
+      console.log('no automatic submit');
       // TempStore item for possible login redirect
       localStorage.setItem(this.ENROLLMENT_OUTPUT_KEY, JSON.stringify(this.output));
       this.showLoginAndTokenForm = true;

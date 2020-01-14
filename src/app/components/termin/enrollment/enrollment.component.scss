@@ -23,14 +23,25 @@
 }
 
 .card-small {
+  mat-card-content {
+    span {
+      display: block;
+      margin: 0 auto 20px auto;
+    }
+  }
+
   .separator:after {
     margin-top: 30px;
     margin-bottom: 30px;
   }
 
-  button {
+  & > button {
     display: block;
     margin: 0 auto;
+
+    &:last-of-type {
+      margin-top: 20px;
+    }
   }
 
   .divider {

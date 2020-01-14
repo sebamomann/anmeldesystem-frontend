@@ -147,7 +147,6 @@
 
 <ng-container *ngIf="showLoginAndTokenForm">
   <mat-card class="float card-small">
-    <ng-container *ngIf="!userIsLoggedIn; else loggedIn">
       <mat-card-content>
         <span>
           Logge dich ein um deine Anmeldung deinem Account zuzuordnen.
@@ -159,29 +158,7 @@
           Login
         </button>
       </mat-card-content>
-    </ng-container>
-    <ng-template #loggedIn>
-      <span>
-        Als {{this.authenticationService.currentUserValue.username}} eingeloggt.
-      </span>
-      <mat-card-content>
-        <button [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url}"
-                [routerLink]="['/account/login']"
-                color="primary"
-                mat-raised-button>
-          Absenden
-        </button>
-      </mat-card-content>
-    </ng-template>
 
-    <ng-template>
-      <button *ngIf="userIsLoggedIn"
-              color="primary"
-              mat-raised-button>
-        Als
-      </button>
-      (ngSubmit)="sendEnrollment()"
-    </ng-template>
     <span class="separator middle center"></span>
 
     <mat-expansion-panel class="integrated">
@@ -196,33 +173,33 @@
       <mat-card-content (ngSubmit)="sendEnrollment()"
                         [formGroup]="keyEvent">
 
-        <ng-container *ngIf="localStorageKeys.length > 0">
-          <mat-form-field>
+        <div [formGroup]="keyEvent"
+             class="token-select">
+          <mat-form-field *ngIf="localStorageKeys.length > 0">
             <mat-label>Bestehender Token</mat-label>
-            <mat-select formControlName="existingKey" id="existingKey">
+            <mat-select formControlName="existingKey">
               <mat-option *ngFor="let key of localStorageKeys" [value]="key">{{ key }}</mat-option>
             </mat-select>
             <mat-error *ngIf="keyEvent.get('existingKey').invalid">
               {{ getExistingKeyErrorMessage() }}
             </mat-error>
           </mat-form-field>
-          <span class="divider">Oder</span>
-        </ng-container>
-        <mat-form-field>
-          <input formControlName="key"
-                 id="key"
-                 matInput
-                 placeholder="Neuer Token">
-          <mat-error *ngIf="keyEvent.get('key').invalid">
-            {{ getKeyErrorMessage() }}
-          </mat-error>
-        </mat-form-field>
+          <mat-form-field>
+            <input formControlName="key"
+                   matInput
+                   placeholder="Neuer Token">
+            <mat-error *ngIf="!keyEventValid()">
+              {{ getKeyErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+        </div>
         <button (click)="sendEnrollment()"
                 mat-raised-button>
           Absenden
         </button>
       </mat-card-content>
     </mat-expansion-panel>
+
     <button (click)="clearLoginAndTokenFormIntercepting()"
             mat-raised-button>
       Zurück
