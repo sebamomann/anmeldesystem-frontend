@@ -11,7 +11,7 @@
   margin: 25px auto 50px;
 
   mat-card-title {
-    font-size: 1.75em;
+    font-size: 1.4em;
   }
 
   & > * {
@@ -39,7 +39,7 @@
           line-height: 2.25em;
           line-break: anywhere;
           font-size: 0.8em;
-          padding: 5px auto;
+          padding: 5px 0;
           margin: 0 15px 0 0;
           min-width: 0;
           max-width: 200px;
@@ -48,6 +48,7 @@
     }
 
     span {
+      font-size: 0.95em;
       margin: 3px 10px;
       display: inline-block;
       width: calc(50% - 20px);
@@ -61,7 +62,7 @@
       }
 
       mat-icon {
-        @include md-icon-size(20px);
+        @include md-icon-size(18px);
         vertical-align: top;
         left: 0;
       }
