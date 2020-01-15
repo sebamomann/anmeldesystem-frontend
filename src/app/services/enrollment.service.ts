@@ -36,4 +36,14 @@ export class EnrollmentService {
     const req = new HttpRequest('DELETE', `${environment.api.url}enrollment/${enrollment.id}`, body, {});
     return this.httpClient.request(req);
   }
+
+  allowEdit(enrollment: IEnrollmentModel): Observable<HttpResponse<void>> {
+    const url = `${environment.api.url}enrollment/${enrollment.id}/allowEdit`;
+    return this.httpClient.get<void>(url, {observe: 'response', reportProgress: true});
+  }
+
+  validateKey(enrollment: IEnrollmentModel, key: string): Observable<HttpResponse<void>> {
+    const url = `${environment.api.url}enrollment/${enrollment.id}/validateKey`;
+    return this.httpClient.post<void>(url, {key}, {observe: 'response', reportProgress: true});
+  }
 }

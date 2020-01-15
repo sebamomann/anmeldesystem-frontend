@@ -12,6 +12,7 @@ import {animate, query, stagger, state, style, transition, trigger} from '@angul
 import {AuthenticationService} from '../../services/authentication.service';
 import {ConfirmationDialogComponent} from '../dialogs/confirmation-dialog/confirmation-dialog.component';
 import {EnrollmentService} from '../../services/enrollment.service';
+import {KeyDialogComponent} from '../dialogs/key-dialog/key-dialog.component';
 
 const HttpStatus = require('http-status-codes');
 
@@ -42,6 +43,7 @@ const HttpStatus = require('http-status-codes');
 })
 @NgModule({})
 export class AppointmentComponent implements OnInit {
+  userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
 
   public appointment: IAppointmentModel = null;
   // List to show (enrollments left after filter is applied)
@@ -51,12 +53,17 @@ export class AppointmentComponent implements OnInit {
   public allowModify = false;
   public percentDone;
   private disableAnimation = true;
+  private dialogKey = '';
+  private autoDelete = false;
+  private deleteId = '';
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
               private snackBar: MatSnackBar) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
+      this.autoDelete = params.delete;
+      this.deleteId = params.deleteId;
     });
 
     this.route.params.subscribe(params => {
@@ -77,6 +84,14 @@ export class AppointmentComponent implements OnInit {
           this.filter = this.initializeFilterObject(sAppointment.body);
           // this.allowModify = this.modificationAllowed();
           this.allowModify = true;
+          // Auto send if logged in
+          if (this.autoDelete) {
+            this.precheckOpenConfirmationDialog(this.enrollments.filter(fEnrollment => {
+              if (fEnrollment.id === this.deleteId) {
+                return fEnrollment;
+              }
+            })[0]);
+          }
           setTimeout(() => this.disableAnimation = false);
         }
       },
@@ -217,21 +232,93 @@ export class AppointmentComponent implements OnInit {
     });
   };
 
+  public precheckOpenConfirmationDialog = async (enrollment: IEnrollmentModel): Promise<void> => {
+    this.allowedToEditByUserId(enrollment)
+      .then(value => {
+        this._openConfirmationDialog(enrollment);
+        return;
+      })
+      .catch(err => {
+        console.log(err);
+        return this.allowedToEditByToken(enrollment);
+      })
+      .then(value => {
+        this._openConfirmationDialog(enrollment);
+      })
+      .catch(err2 => {
+        console.log('final: ' + err2);
+        if (err2 !== null) {
+          this.snackBar.open('Du hast nicht die benötigte Berechtigung diese Anmeldung zu löschen', 'OK', {
+            duration: 2000,
+            panelClass: 'snackbar-error'
+          });
+        }
+      });
+
+  };
+
+  public _openAskForKeyDialog = (enrollment: IEnrollmentModel): Promise<boolean> => {
+    const dialogRef = this.dialog.open(KeyDialogComponent, {
+      width: '90%',
+      maxWidth: 'initial',
+      height: 'auto',
+      maxHeight: '80vh',
+      data: enrollment
+    });
+
+    return new Promise<boolean>(async (resolve, reject) => {
+      const result = await dialogRef.afterClosed().toPromise();
+
+      console.log(result);
+
+      if (result !== undefined) {
+        this.enrollmentService
+          .validateKey(enrollment, result)
+          .subscribe(sResult => {
+            if (sResult.type === HttpEventType.Response) {
+              return resolve(sResult.status === HttpStatus.OK);
+            }
+          });
+      } else {
+        reject(null);
+      }
+    });
+  };
+
+  /**
+   * Open dialog in order to see comments of enrollment. <br />
+   * Dialog also gives the opportunity to create a comment.
+   *
+   * @param enrollment Enrollment To get comment list from and sending comments to
+   */
+  public _openCommentDialog = (enrollment: IEnrollmentModel): void => {
+    const dialogRef = this.dialog.open(CommentDialogComponent, {
+      width: '90%',
+      maxWidth: 'initial',
+      height: 'auto',
+      maxHeight: '80vh',
+      data: {enrollment},
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+    });
+  };
+
   /**
    * Check for confirmation to delete the enrollment. <br />
    * On success/error show appropriate snackbar and delete enrollment from list so no re-fetch is needed
    *
    * @param enrollment Enrollment to delete
    */
-  public _openConfirmationDialog = (enrollment: IEnrollmentModel): void => {
+  private _openConfirmationDialog = (enrollment: IEnrollmentModel): void => {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '350px',
       data: `Bist du sicher, dass du "${enrollment.name}" löschen möchtest?`
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.send) {
-        if (result.key != null) {
+      if (result) {
+        if (this.dialogKey !== '') {
           enrollment.editKey = result.key;
         }
 
@@ -259,25 +346,6 @@ export class AppointmentComponent implements OnInit {
             }
           );
       }
-    });
-  };
-
-  /**
-   * Open dialog in order to see comments of enrollment. <br />
-   * Dialog also gives the opportunity to create a comment.
-   *
-   * @param enrollment Enrollment To get comment list from and sending comments to
-   */
-  public _openCommentDialog = (enrollment: IEnrollmentModel): void => {
-    const dialogRef = this.dialog.open(CommentDialogComponent, {
-      width: '90%',
-      maxWidth: 'initial',
-      height: 'auto',
-      maxHeight: '80vh',
-      data: {enrollment},
-    });
-
-    dialogRef.afterClosed().subscribe(() => {
     });
   };
 
@@ -327,4 +395,24 @@ export class AppointmentComponent implements OnInit {
     appointment.additions.forEach(value => additions.push({id: value.id, name: value.name, active: false}));
     return {additions, explicitly: 'dynamic', driverPassenger: ''};
   };
+
+  private allowedToEditByUserId(enrollment: IEnrollmentModel) {
+    return new Promise<boolean>((resolve, reject) => {
+      if (this.userIsLoggedIn) {
+        this.enrollmentService
+          .allowEdit(enrollment)
+          .subscribe(result => {
+            if (result.type === HttpEventType.Response) {
+              resolve(result.status === HttpStatus.OK);
+            }
+          });
+      } else {
+        reject(false);
+      }
+    });
+  }
+
+  private allowedToEditByToken(enrollment: IEnrollmentModel) {
+    return this._openAskForKeyDialog(enrollment);
+  }
 }

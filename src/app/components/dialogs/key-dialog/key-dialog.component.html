@@ -1,0 +1,60 @@
+<div class="key-dialog">
+  <h2 mat-dialog-title>
+    Berechtigungen
+  </h2>
+  <div *ngIf="!userIsLoggedIn"
+       mat-dialog-content>
+  <span>
+    Logge dich ein um, um ggf mehr Berechtigungen zu haben.
+  </span>
+    <button
+      (click)="this.matDialogRef.close(false)"
+      [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url + '&delete=true&deleteId=' + enrollment.id}"
+      [routerLink]="['/account/login']"
+      color="primary"
+      mat-raised-button>
+      Login
+    </button>
+  </div>
+
+  <div *ngIf="userIsLoggedIn" mat-dialog-content>
+  <span>
+    Sorry, als {{ this.authenticationService.currentUserValue.username }} hast du keine Berechtigung für diese Anmeldung.
+  </span>
+  </div>
+
+  <div class="separator colored tall center bold middle"></div>
+
+  <div (ngSubmit)="setToken()"
+       [formGroup]="keyEvent"
+       class="token-select"
+       mat-dialog-content>
+    <span *ngIf="!userIsLoggedIn">Oder gebe einen Token an</span>
+    <span *ngIf="userIsLoggedIn">Bitte gebe einen Token an</span>
+    <mat-form-field *ngIf="localStorageKeys.length > 0">
+      <mat-label>Bestehender Token</mat-label>
+      <mat-select formControlName="existingKey">
+        <mat-option *ngFor="let key of localStorageKeys" [value]="key">{{ key }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="keyEvent.get('existingKey').invalid">
+        {{ getExistingKeyErrorMessage() }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field [ngClass]="localStorageKeys.length === 0 ? 'solo' : ''">
+      <input formControlName="key"
+             matInput
+             placeholder="Neuer Token">
+      <mat-error *ngIf="!keyEventValid()">
+        {{ getKeyErrorMessage() }}
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div *ngIf="keyEvent.invalid">
+    {{ getKeyEventErrorMessage() }}
+  </div>
+
+  <div mat-dialog-actions>
+    <button (click)="onNoClick()" mat-button>Abbrechen</button>
+    <button (click)="setToken()" cdkFocusInitial mat-button>Absenden</button>
+  </div>
+</div>
