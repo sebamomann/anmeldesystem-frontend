@@ -27,11 +27,12 @@ export class EnrollmentService {
 
   delete(enrollment: IEnrollmentModel) {
     let body = null;
-    const localStorageKey = localStorage.getItem(this.ENROLLMENT_KEY_KEY);
-    if (localStorageKey !== null
-      && localStorageKey !== '') {
+    const localStorageKey = localStorage.getItem('editKeyByKeyDialog');
+    if (localStorageKey !== null) {
       body = {key: localStorageKey};
     }
+
+    localStorage.removeItem('editKeyByKeyDialog');
 
     const req = new HttpRequest('DELETE', `${environment.api.url}enrollment/${enrollment.id}`, body, {});
     return this.httpClient.request(req);

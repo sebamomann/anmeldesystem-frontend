@@ -47,18 +47,18 @@
       }
     }
 
-
     .enrollment-additions {
       margin: 5px auto;
       display: flex;
       flex: 3;
 
       mat-icon {
-        @include md-icon-size(20px);
+        @include md-icon-size(18px);
         margin: 0 10% 0 0;
         text-align: center;
       }
     }
+
 
     .addition-list {
       font-size: 0.75em;
@@ -88,7 +88,6 @@
     }
   }
 }
-
 
 .filter {
   width: calc(95% - 32px);
