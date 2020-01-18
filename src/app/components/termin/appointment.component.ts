@@ -13,6 +13,7 @@ import {AuthenticationService} from '../../services/authentication.service';
 import {ConfirmationDialogComponent} from '../dialogs/confirmation-dialog/confirmation-dialog.component';
 import {EnrollmentService} from '../../services/enrollment.service';
 import {KeyDialogComponent} from '../dialogs/key-dialog/key-dialog.component';
+import {Location} from '@angular/common';
 
 const HttpStatus = require('http-status-codes');
 
@@ -59,7 +60,7 @@ export class AppointmentComponent implements OnInit {
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar, private location: Location) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
       this.editId = params.editId;
@@ -92,10 +93,11 @@ export class AppointmentComponent implements OnInit {
               }
             })[0];
             if (enrollmentToEdit !== undefined) {
+              this.location.replaceState('/enroll?a=' + this.link);
               if (this.editOperation === 'delete') {
                 this.precheckOpenConfirmationDialog(enrollmentToEdit, 'delete');
               } else if (this.editOperation === 'edit') {
-
+                this.precheckOpenConfirmationDialog(enrollmentToEdit, 'edit');
               }
             }
           }
