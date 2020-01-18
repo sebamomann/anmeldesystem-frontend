@@ -91,8 +91,6 @@ export class AppointmentComponent implements OnInit {
             })[0];
             if (enrollmentToDelete !== undefined) {
               this.precheckOpenConfirmationDialog(enrollmentToDelete);
-            } else {
-              console.log('No enrollment found to delete');
             }
           }
           setTimeout(() => this.disableAnimation = false);
@@ -242,14 +240,14 @@ export class AppointmentComponent implements OnInit {
         return;
       })
       .catch(err => {
-        console.log(err);
         return this.allowedToEditByToken(enrollment);
       })
       .then(value => {
-        this._openConfirmationDialog(enrollment);
+        if (typeof value === 'boolean') {
+          this._openConfirmationDialog(enrollment);
+        }
       })
       .catch(err2 => {
-        console.log('final: ' + err2);
         if (err2 !== null) {
           this.snackBar.open('Du hast nicht die benötigte Berechtigung diese Anmeldung zu löschen', 'OK', {
             duration: 2000,
@@ -272,16 +270,17 @@ export class AppointmentComponent implements OnInit {
     return new Promise<boolean>(async (resolve, reject) => {
       const result = await dialogRef.afterClosed().toPromise();
 
-      console.log(result);
-
       if (result !== undefined) {
         this.enrollmentService
           .validateKey(enrollment, result)
-          .subscribe(sResult => {
-            if (sResult.type === HttpEventType.Response) {
-              return resolve(sResult.status === HttpStatus.OK);
-            }
-          });
+          .subscribe(
+            sResult => {
+              if (sResult.type === HttpEventType.Response) {
+                return resolve(sResult.status === HttpStatus.OK);
+              }
+            }, error => {
+              reject(false);
+            });
       } else {
         reject(null);
       }
@@ -404,11 +403,15 @@ export class AppointmentComponent implements OnInit {
       if (this.userIsLoggedIn) {
         this.enrollmentService
           .allowEdit(enrollment)
-          .subscribe(result => {
-            if (result.type === HttpEventType.Response) {
-              resolve(result.status === HttpStatus.OK);
-            }
-          });
+          .subscribe(
+            result => {
+              if (result.type === HttpEventType.Response) {
+                resolve(result.status === HttpStatus.OK);
+              }
+            },
+            error => {
+              reject(false);
+            });
       } else {
         reject(false);
       }

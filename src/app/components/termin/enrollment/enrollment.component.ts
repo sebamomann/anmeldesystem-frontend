@@ -162,10 +162,8 @@ export class EnrollmentComponent implements OnInit {
     if (this.userIsLoggedIn &&
       !this.getSelfEnrollment().value) {
       if (this.keyEventValid()) {
-        console.log('Key event valid');
         this.output.editKey = this.addKeyIfNotExisting();
       } else {
-        console.log('Key event invalid');
         this.keyEvent.markAllAsTouched();
         this.getKey().setErrors({invalid: true});
         return;
@@ -230,7 +228,6 @@ export class EnrollmentComponent implements OnInit {
     this.enrollmentService[functionName](this.output, this.appointment)
       .subscribe(
         result => {
-          console.log(result);
           this.clearLoginAndTokenFormIntercepting();
           if (result.type === HttpEventType.Response) {
             if (result.status === HttpStatus.CREATED || result.status === HttpStatus.OK) {
@@ -429,7 +426,6 @@ export class EnrollmentComponent implements OnInit {
       || this.output.editKey !== undefined) {
       this.sendEnrollment().then(() => '');
     } else {
-      console.log('no automatic submit');
       // TempStore item for possible login redirect
       localStorage.setItem(this.ENROLLMENT_OUTPUT_KEY, JSON.stringify(this.output));
       this.showLoginAndTokenForm = true;

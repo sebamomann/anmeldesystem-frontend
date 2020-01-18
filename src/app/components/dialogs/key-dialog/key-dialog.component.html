@@ -9,7 +9,7 @@
   </span>
     <button
       (click)="this.matDialogRef.close(false)"
-      [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url + '&delete=true&deleteId=' + enrollment.id}"
+      [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url + '&deleteId=' + enrollment.id}"
       [routerLink]="['/account/login']"
       color="primary"
       mat-raised-button>
