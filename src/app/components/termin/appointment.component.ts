@@ -306,8 +306,7 @@ export class AppointmentComponent implements OnInit {
 
     return new Promise<boolean>(async (resolve, reject) => {
       const result = await dialogRef.afterClosed().toPromise();
-
-      if (result !== undefined) {
+      if (result !== undefined && result !== false) {
         this.enrollmentService
           .validateKey(enrollment, result)
           .subscribe(
@@ -321,6 +320,7 @@ export class AppointmentComponent implements OnInit {
                 return resolve(sResult.status === HttpStatus.OK);
               }
             }, error => {
+              console.log(error);
               reject(false);
             });
       } else {
