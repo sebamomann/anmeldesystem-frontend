@@ -240,6 +240,8 @@ export class AppointmentComponent implements OnInit {
   };
 
   public precheckOpenConfirmationDialog = async (enrollment: IEnrollmentModel, operation: string): Promise<void> => {
+    localStorage.removeItem('editKeyByKeyDialog');
+
     this.allowedToEditByUserId(enrollment)
       .then(value => {
         if (operation === 'delete') {
@@ -311,6 +313,11 @@ export class AppointmentComponent implements OnInit {
           .subscribe(
             sResult => {
               if (sResult.type === HttpEventType.Response) {
+                if (sResult.status === HttpStatus.OK) {
+                  localStorage.setItem('editKeyByKeyDialog', result);
+                  return resolve(true);
+                }
+
                 return resolve(sResult.status === HttpStatus.OK);
               }
             }, error => {

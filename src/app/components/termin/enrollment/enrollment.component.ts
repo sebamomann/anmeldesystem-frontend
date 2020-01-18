@@ -30,6 +30,21 @@ const HttpStatus = require('http-status-codes');
   ]
 })
 export class EnrollmentComponent implements OnInit {
+
+  constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
+              private location: Location,
+              private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
+              private authenticationService: AuthenticationService, private snackBar: MatSnackBar) {
+
+    this.currentUrlSnapshotWithParameter = router.routerState.snapshot;
+
+    this.route.queryParams.subscribe(params => {
+      this.appointmentLink = params.a;
+      this.enrollmentId = params.e;
+      this.autoSend = params.send === 'true';
+    });
+  }
+
   userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
 
   selfEnrollment = this.formBuilder.group({
@@ -72,29 +87,20 @@ export class EnrollmentComponent implements OnInit {
   private autoSend = false;
   private autoSubmitBySetting = false;
 
-  constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
-              private location: Location,
-              private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
-              private authenticationService: AuthenticationService, private snackBar: MatSnackBar) {
-
-    this.currentUrlSnapshotWithParameter = router.routerState.snapshot;
-
-    this.route.queryParams.subscribe(params => {
-      this.appointmentLink = params.a;
-      this.enrollmentId = params.e;
-      this.autoSend = params.send === 'true';
-    });
+  static handleEditKey() {
+    return localStorage.getItem('editKeyByKeyDialog');
   }
 
   async ngOnInit() {
-    // Needed due to error permanent trigger, if value is put in via form [value]
-    if (this.userIsLoggedIn) {
-      this.getName().markAsTouched();
-      this.getName().setValue(this.authenticationService.currentUserValue.username);
-    }
     await this.route
       .data
       .subscribe(v => this.edit = v.edit);
+
+    // Needed due to error permanent trigger, if value is put in via form [value]
+    if (this.userIsLoggedIn && !this.edit) {
+      this.getName().markAsTouched();
+      this.getName().setValue(this.authenticationService.currentUserValue.username);
+    }
 
     this.appointmentService
       .getAppointment(this.appointmentLink, true)
@@ -113,7 +119,6 @@ export class EnrollmentComponent implements OnInit {
               this.output = JSON.parse(this.outputRawFromStorage);
               this.parseOutputIntoForm();
 
-              // Auto send if logged in
               if (this.autoSend) {
                 this.sendEnrollment();
               }
@@ -199,18 +204,25 @@ export class EnrollmentComponent implements OnInit {
    */
   sendEnrollment: () => Promise<void> = async () => {
     if (!this.keyEventValid()
-      && !this.userIsLoggedIn) {
+      && !this.userIsLoggedIn && !this.edit) {
       this.keyEvent.markAllAsTouched();
       return;
     }
 
+    if (this.edit) {
+      const key = EnrollmentComponent.handleEditKey();
+      if (key !== null) {
+        this.output.editKey = key;
+      }
+    }
+
     // Set key, if logged ind but not selfenroll
     // Set key if not logged in and token specified by after enroll screen
-    if (!this.userIsLoggedIn || (this.userIsLoggedIn && !this.getSelfEnrollment().value)) {
+    if ((!this.userIsLoggedIn || (this.userIsLoggedIn && !this.getSelfEnrollment().value)) && !this.edit) {
       this.output.editKey = this.addKeyIfNotExisting();
     }
 
-    if (this.userIsLoggedIn || this.keyEventValid()) {
+    if (this.userIsLoggedIn || this.keyEventValid() || this.edit) {
       if (this.edit) {
         this.sendEnrollmentRequest('update');
       } else {
@@ -231,6 +243,7 @@ export class EnrollmentComponent implements OnInit {
           this.clearLoginAndTokenFormIntercepting();
           if (result.type === HttpEventType.Response) {
             if (result.status === HttpStatus.CREATED || result.status === HttpStatus.OK) {
+              localStorage.removeItem('editKeyByKeyDialog');
               this.router.navigate([`enroll`], {
                 queryParams: {
                   a: this.appointment.link
@@ -240,7 +253,7 @@ export class EnrollmentComponent implements OnInit {
                   this.snackBar.open(`Erfolgreich ` + (this.edit ? 'bearbeitet' : 'angemeldet'),
                     '',
                     {
-                      duration: 4000,
+                      duration: 2000,
                       panelClass: 'snackbar-default'
                     });
                 }
@@ -258,6 +271,21 @@ export class EnrollmentComponent implements OnInit {
                 }
               );
             }
+          } else if (err.status === HttpStatus.FORBIDDEN) {
+            this.router.navigate([`enroll`], {
+              queryParams: {
+                a: this.appointment.link
+              }
+            }).then((navigated: boolean) => {
+              if (navigated) {
+                this.snackBar.open(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu bearbeiten.`,
+                  '',
+                  {
+                    duration: 4000,
+                    panelClass: 'snackbar-error'
+                  });
+              }
+            });
           }
         }
       );
@@ -422,8 +450,8 @@ export class EnrollmentComponent implements OnInit {
   private checkForAutomaticSubmit() {
     // If user selected selfEnrollment
     // Or if key is set
-    if ((this.getSelfEnrollment().value && this.userIsLoggedIn)
-      || this.output.editKey !== undefined) {
+    if (((this.getSelfEnrollment().value && this.userIsLoggedIn)
+      || this.output.editKey !== undefined) || this.edit) {
       this.sendEnrollment().then(() => '');
     } else {
       // TempStore item for possible login redirect
