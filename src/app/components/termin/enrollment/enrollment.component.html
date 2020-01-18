@@ -9,7 +9,7 @@
     <mat-card-content>
       <form (ngSubmit)="parseDataFromEnrollmentForm()"
             class="register-form">
-        <div *ngIf="userIsLoggedIn"
+        <div *ngIf="userIsLoggedIn && !this.edit"
              [formGroup]="selfEnrollment"
              class="additions tooltip-container">
           <mat-checkbox formControlName="selfEnrollment">
