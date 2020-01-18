@@ -54,14 +54,16 @@ export class AppointmentComponent implements OnInit {
   public percentDone;
   private disableAnimation = true;
   private dialogKey = '';
-  private deleteId = '';
+  private editId = '';
+  private editOperation = '';
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
               private snackBar: MatSnackBar) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
-      this.deleteId = params.deleteId;
+      this.editId = params.editId;
+      this.editOperation = params.editOperation;
     });
 
     this.route.params.subscribe(params => {
@@ -83,14 +85,18 @@ export class AppointmentComponent implements OnInit {
           // this.allowModify = this.modificationAllowed();
           this.allowModify = true;
           // Auto send if logged in
-          if (this.deleteId != null) {
-            const enrollmentToDelete = this.enrollments.filter(fEnrollment => {
-              if (fEnrollment.id === this.deleteId) {
+          if (this.editId != null) {
+            const enrollmentToEdit = this.enrollments.filter(fEnrollment => {
+              if (fEnrollment.id === this.editId) {
                 return fEnrollment;
               }
             })[0];
-            if (enrollmentToDelete !== undefined) {
-              this.precheckOpenConfirmationDialog(enrollmentToDelete);
+            if (enrollmentToEdit !== undefined) {
+              if (this.editOperation === 'delete') {
+                this.precheckOpenConfirmationDialog(enrollmentToEdit, 'delete');
+              } else if (this.editOperation === 'edit') {
+
+              }
             }
           }
           setTimeout(() => this.disableAnimation = false);
@@ -233,10 +239,22 @@ export class AppointmentComponent implements OnInit {
     });
   };
 
-  public precheckOpenConfirmationDialog = async (enrollment: IEnrollmentModel): Promise<void> => {
+  public precheckOpenConfirmationDialog = async (enrollment: IEnrollmentModel, operation: string): Promise<void> => {
     this.allowedToEditByUserId(enrollment)
       .then(value => {
-        this._openConfirmationDialog(enrollment);
+        if (operation === 'delete') {
+          this._openConfirmationDialog(enrollment);
+        } else if (operation === 'edit') {
+          this.router.navigate(['/enrollment'], {
+            queryParams:
+              {
+                a: this.appointment.link,
+                e: enrollment.id,
+                editId: null,
+                editOperation: null
+              }
+          });
+        }
         return;
       })
       .catch(err => {
@@ -244,12 +262,26 @@ export class AppointmentComponent implements OnInit {
       })
       .then(value => {
         if (typeof value === 'boolean') {
-          this._openConfirmationDialog(enrollment);
+          if (operation === 'delete') {
+            this._openConfirmationDialog(enrollment);
+          } else if (operation === 'edit') {
+            this.router.navigate(['/enrollment'], {
+              queryParams:
+                {
+                  a: this.appointment.link,
+                  e: enrollment.id,
+                  editId: null,
+                  editOperation: null
+                },
+              queryParamsHandling: 'merge'
+            });
+          }
         }
       })
       .catch(err2 => {
         if (err2 !== null) {
-          this.snackBar.open('Du hast nicht die benötigte Berechtigung diese Anmeldung zu löschen', 'OK', {
+          this.snackBar.open(`Du hast nicht die benötigte Berechtigung diese Anmeldung zu ` +
+            `${operation === 'edit' ? 'bearbeiten' : 'löschen'}`, 'OK', {
             duration: 2000,
             panelClass: 'snackbar-error'
           });

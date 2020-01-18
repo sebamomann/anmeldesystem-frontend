@@ -9,7 +9,7 @@
   </span>
     <button
       (click)="this.matDialogRef.close(false)"
-      [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url + '&deleteId=' + enrollment.id}"
+      [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url + '&editId=' + enrollment.id}"
       [routerLink]="['/account/login']"
       color="primary"
       mat-raised-button>
@@ -19,7 +19,7 @@
 
   <div *ngIf="userIsLoggedIn" mat-dialog-content>
   <span>
-    Sorry, als {{ this.authenticationService.currentUserValue.username }} hast du keine Berechtigung für diese Anmeldung.
+    Sorry {{ this.authenticationService.currentUserValue.username }}. Du keine Berechtigung für diese Anmeldung.
   </span>
   </div>
 
