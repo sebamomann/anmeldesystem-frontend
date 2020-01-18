@@ -22,11 +22,13 @@ export class KeyDialogComponent implements OnInit {
   ENROLLMENT_KEY_KEY = 'enrollmentKeys';
   localStorageKeys: string[];
   currentUrlSnapshotWithParameter: RouterStateSnapshot;
+  operation: string;
 
   constructor(private authenticationService: AuthenticationService, private formBuilder: FormBuilder,
               public matDialogRef: MatDialogRef<KeyDialogComponent>, private router: Router,
               @Inject(MAT_DIALOG_DATA) public data) {
-    this.enrollment = data;
+    this.enrollment = data.enrollment;
+    this.operation = data.operation;
     this.currentUrlSnapshotWithParameter = router.routerState.snapshot;
   }
 

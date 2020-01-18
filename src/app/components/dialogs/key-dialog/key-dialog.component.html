@@ -9,7 +9,9 @@
   </span>
     <button
       (click)="this.matDialogRef.close(false)"
-      [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url + '&editId=' + enrollment.id}"
+      [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url +
+      '&editId=' + enrollment.id +
+      '&editOperation=' + (this.operation === 'delete' ? 'delete' : 'edit')}"
       [routerLink]="['/account/login']"
       color="primary"
       mat-raised-button>

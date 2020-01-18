@@ -258,7 +258,7 @@ export class AppointmentComponent implements OnInit {
         return;
       })
       .catch(err => {
-        return this.allowedToEditByToken(enrollment);
+        return this.allowedToEditByToken(enrollment, operation);
       })
       .then(value => {
         if (typeof value === 'boolean') {
@@ -290,13 +290,16 @@ export class AppointmentComponent implements OnInit {
 
   };
 
-  public _openAskForKeyDialog = (enrollment: IEnrollmentModel): Promise<boolean> => {
+  public _openAskForKeyDialog = (enrollment: IEnrollmentModel, operation: string): Promise<boolean> => {
     const dialogRef = this.dialog.open(KeyDialogComponent, {
       width: '90%',
       maxWidth: 'initial',
       height: 'auto',
       maxHeight: '80vh',
-      data: enrollment
+      data: {
+        enrollment,
+        operation
+      }
     });
 
     return new Promise<boolean>(async (resolve, reject) => {
@@ -450,7 +453,7 @@ export class AppointmentComponent implements OnInit {
     });
   }
 
-  private allowedToEditByToken(enrollment: IEnrollmentModel) {
-    return this._openAskForKeyDialog(enrollment);
+  private allowedToEditByToken(enrollment: IEnrollmentModel, operation: string) {
+    return this._openAskForKeyDialog(enrollment, operation);
   }
 }
