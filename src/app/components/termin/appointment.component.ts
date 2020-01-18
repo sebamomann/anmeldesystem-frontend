@@ -54,7 +54,6 @@ export class AppointmentComponent implements OnInit {
   public percentDone;
   private disableAnimation = true;
   private dialogKey = '';
-  private autoDelete = false;
   private deleteId = '';
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
@@ -62,7 +61,6 @@ export class AppointmentComponent implements OnInit {
               private snackBar: MatSnackBar) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
-      this.autoDelete = params.delete;
       this.deleteId = params.deleteId;
     });
 
@@ -85,12 +83,17 @@ export class AppointmentComponent implements OnInit {
           // this.allowModify = this.modificationAllowed();
           this.allowModify = true;
           // Auto send if logged in
-          if (this.autoDelete) {
-            this.precheckOpenConfirmationDialog(this.enrollments.filter(fEnrollment => {
+          if (this.deleteId != null) {
+            const enrollmentToDelete = this.enrollments.filter(fEnrollment => {
               if (fEnrollment.id === this.deleteId) {
                 return fEnrollment;
               }
-            })[0]);
+            })[0];
+            if (enrollmentToDelete !== undefined) {
+              this.precheckOpenConfirmationDialog(enrollmentToDelete);
+            } else {
+              console.log('No enrollment found to delete');
+            }
           }
           setTimeout(() => this.disableAnimation = false);
         }
