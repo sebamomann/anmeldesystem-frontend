@@ -9,7 +9,8 @@ import {
   MatInputModule,
   MatOptionModule,
   MatProgressBarModule,
-  MatSelectModule
+  MatSelectModule,
+  MatTooltipModule
 } from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Location} from '@angular/common';
@@ -31,7 +32,8 @@ describe('EnrollmentComponent', () => {
         MatOptionModule, MatSelectModule,
         BrowserAnimationsModule, MatInputModule,
         MatProgressBarModule, HttpClientTestingModule,
-        RouterTestingModule, BrowserAnimationsModule],
+        RouterTestingModule, BrowserAnimationsModule,
+        MatTooltipModule],
       declarations: [EnrollmentComponent, GoBackHeaderComponent],
       providers: [{provide: Location, useClass: SpyLocation}],
     })
