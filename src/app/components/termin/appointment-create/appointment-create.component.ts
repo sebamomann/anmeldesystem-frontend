@@ -49,7 +49,7 @@ export class AppointmentCreateComponent implements OnInit {
   private fileList: IFileModelUpload[] = [];
   private fileBlob: Blob;
 
-  private percentDone = 0;
+  public percentDone = 0;
 
   constructor(private formBuilder: FormBuilder, public urlService: UrlService, private http: HttpClient, private sanitizer: DomSanitizer,
               public dialog: MatDialog, private appointmentService: AppointmentService, private router: Router,

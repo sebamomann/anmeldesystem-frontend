@@ -34,9 +34,9 @@ export class DashboardComponent implements OnInit {
 
   hide: any;
   numbers = new Array(3);
-  private percentDone;
-  private appointments = undefined;
-  private appointmentsArchive = undefined;
+  public percentDone;
+  public appointments = undefined;
+  public appointmentsArchive = undefined;
 
   constructor(public appointmentService: AppointmentService, private router: Router) {
 

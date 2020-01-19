@@ -70,19 +70,19 @@ export class EnrollmentComponent implements OnInit {
   });
 
   public appointment: IAppointmentModel;
-  private edit: any;
+  public edit: any;
   private appointmentLink: string;
   private enrollmentId: string;
-  private percentDone: number;
+  public percentDone: number;
   // Preparation for login redirect fields
   private ENROLLMENT_KEY_KEY = 'enrollmentKeys';
   private outputRawFromStorage: string;
   private output: IEnrollmentModel = new EnrollmentModel();
-  private showLoginAndTokenForm: boolean;
-  private currentUrlSnapshotWithParameter: RouterStateSnapshot;
+  public showLoginAndTokenForm: boolean;
+  public currentUrlSnapshotWithParameter: RouterStateSnapshot;
   // Key fields
   private ENROLLMENT_OUTPUT_KEY = 'enrollmentOutput';
-  private localStorageKeys: string[];
+  public localStorageKeys: string[];
   // Sending options
   private autoSend = false;
   private autoSubmitBySetting = false;
@@ -231,7 +231,7 @@ export class EnrollmentComponent implements OnInit {
     }
   };
 
-  private keyEventValid() {
+  public keyEventValid() {
     return this.keyEvent.get('key').value !== ''
       || this.keyEvent.get('existingKey').value !== null;
   }
@@ -313,7 +313,7 @@ export class EnrollmentComponent implements OnInit {
   };
 
   // Error handling
-  private getNameErrorMessage(): string {
+  public getNameErrorMessage(): string {
     if (this.getName().hasError('required')) {
       return 'Bitte gebe einen Namen an';
     }
@@ -323,31 +323,31 @@ export class EnrollmentComponent implements OnInit {
     }
   }
 
-  private getSelectErrorMessage(): string {
+  public getSelectErrorMessage(): string {
     if (this.getRequirement().hasError('required')) {
       return 'Bitte auswählen';
     }
   }
 
-  private getKeyErrorMessage(): string {
+  public getKeyErrorMessage(): string {
     if (this.getKey().hasError('required')) {
       return 'Bitte angeben';
     }
   }
 
-  private getExistingKeyErrorMessage(): string {
+  public getExistingKeyErrorMessage(): string {
     if (this.getKey().hasError('required')) {
       return 'Bitte auswählen';
     }
   }
 
-  private getKeyEventErrorMessage(): string {
+  public getKeyEventErrorMessage(): string {
     if (this.keyEvent.hasError('required')) {
       return 'Bitte spezifiziere einen Token';
     }
   }
 
-  private getSeatsErrorMessage() {
+  public getSeatsErrorMessage() {
     if (this.getSeats().hasError('required')) {
       return 'Bite gebe die Anzahl FREIER Plätze an';
     }
@@ -373,7 +373,7 @@ export class EnrollmentComponent implements OnInit {
     return this.driverPassengerEvent.get('service');
   }
 
-  private getDriver() {
+  public getDriver() {
     return this.driverPassengerEvent.get('driver');
   }
 
@@ -385,11 +385,11 @@ export class EnrollmentComponent implements OnInit {
     return this.event.get('comment');
   }
 
-  private getAdditionsControls() {
+  public getAdditionsControls() {
     return (this.event.get('additions') as FormArray).controls;
   }
 
-  private getSelfEnrollment() {
+  public getSelfEnrollment() {
     return this.selfEnrollment.get('selfEnrollment');
   }
 
@@ -437,7 +437,7 @@ export class EnrollmentComponent implements OnInit {
     return value;
   }
 
-  private clearLoginAndTokenFormIntercepting() {
+  public clearLoginAndTokenFormIntercepting() {
     localStorage.removeItem(this.ENROLLMENT_OUTPUT_KEY);
     this.showLoginAndTokenForm = false;
   }

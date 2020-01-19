@@ -14,6 +14,7 @@ import {ConfirmationDialogComponent} from '../dialogs/confirmation-dialog/confir
 import {EnrollmentService} from '../../services/enrollment.service';
 import {KeyDialogComponent} from '../dialogs/key-dialog/key-dialog.component';
 import {Location} from '@angular/common';
+import {EnrollmentUtil} from '../../_util/enrollmentUtil.util';
 
 const HttpStatus = require('http-status-codes');
 
@@ -53,7 +54,7 @@ export class AppointmentComponent implements OnInit {
   public filter: any;
   public allowModify = false;
   public percentDone;
-  private disableAnimation = true;
+  public disableAnimation = true;
   private dialogKey = '';
   private editId = '';
   private editOperation = '';
@@ -419,7 +420,7 @@ export class AppointmentComponent implements OnInit {
    * @param enrollment IEnrollmentModel Enrollment to search in
    * @param id string ID of addition to check for
    */
-  private enrollmentCheckedAddition: (enrollment: IEnrollmentModel, id: string) => boolean
+  public enrollmentCheckedAddition: (enrollment: IEnrollmentModel, id: string) => boolean
     = (enrollment: IEnrollmentModel, id: string): boolean => {
     return enrollment.additions.findIndex(add => add.id === id) !== -1;
   };

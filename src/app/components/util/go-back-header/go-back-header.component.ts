@@ -9,7 +9,7 @@ import {Location} from '@angular/common';
 export class GoBackHeaderComponent implements OnInit {
 
   @Input()
-  private appointment;
+  public appointment;
 
   constructor(private location: Location) {
   }

@@ -6,6 +6,7 @@ import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common'
 import {RouterTestingModule} from '@angular/router/testing';
 import {RouterModule} from '@angular/router';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {GoBackHeaderComponent} from '../../util/go-back-header/go-back-header.component';
 
 describe('DriverComponent', () => {
   let component: DriverComponent;
@@ -16,7 +17,7 @@ describe('DriverComponent', () => {
       imports: [MatIconModule, MatCardModule,
         MatProgressBarModule, HttpClientTestingModule,
         RouterTestingModule],
-      declarations: [DriverComponent],
+      declarations: [DriverComponent, GoBackHeaderComponent],
       providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}, RouterTestingModule, RouterModule]
     })
       .compileComponents();

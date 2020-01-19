@@ -1,4 +1,4 @@
-function EnrollmentUtil() {
+export function EnrollmentUtil() {
 }
 
 EnrollmentUtil.getKey = () => localStorage.getItem('enrollmentKey');

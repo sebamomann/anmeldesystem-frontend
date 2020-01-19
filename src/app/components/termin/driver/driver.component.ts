@@ -29,7 +29,7 @@ export class DriverComponent implements OnInit {
   public data: MyType = {};
   public drivers: IEnrollmentModel[];
   public link;
-  private percentDone: number;
+  public percentDone: number;
 
   constructor(private appointmentService: AppointmentService, private location: Location, private route: ActivatedRoute) {
     this.route.queryParams.subscribe(params => {

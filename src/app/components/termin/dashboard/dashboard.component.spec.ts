@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {DashboardComponent} from './dashboard.component';
-import {MatCardModule, MatFormFieldModule, MatIconModule, MatSnackBarModule} from '@angular/material';
+import {MatCardModule, MatFormFieldModule, MatIconModule, MatProgressBarModule, MatSnackBarModule} from '@angular/material';
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {AppointmentDataComponent} from '../appointment-data/appointment-data.component';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -17,7 +17,8 @@ describe('DashboardComponent', () => {
       imports: [
         MatIconModule, MatCardModule,
         MatFormFieldModule, RouterTestingModule,
-        MatSnackBarModule, HttpClientTestingModule
+        MatSnackBarModule, HttpClientTestingModule,
+        MatProgressBarModule
       ],
       providers: [WINDOW_PROVIDERS, {provide: LocationStrategy, useClass: PathLocationStrategy}],
       declarations: [DashboardComponent, AppointmentDataComponent]

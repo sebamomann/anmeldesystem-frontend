@@ -17,6 +17,7 @@ import {SpyLocation} from '@angular/common/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
+import {GoBackHeaderComponent} from '../../util/go-back-header/go-back-header.component';
 
 describe('EnrollmentComponent', () => {
   let component: EnrollmentComponent;
@@ -31,7 +32,7 @@ describe('EnrollmentComponent', () => {
         BrowserAnimationsModule, MatInputModule,
         MatProgressBarModule, HttpClientTestingModule,
         RouterTestingModule, BrowserAnimationsModule],
-      declarations: [EnrollmentComponent],
+      declarations: [EnrollmentComponent, GoBackHeaderComponent],
       providers: [{provide: Location, useClass: SpyLocation}],
     })
       .compileComponents();

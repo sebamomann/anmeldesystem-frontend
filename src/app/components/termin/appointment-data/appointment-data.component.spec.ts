@@ -38,7 +38,8 @@ describe('AppointmentDataComponent', () => {
       additions: [],
       driverAddition: false,
       enrollments: [],
-      files: []
+      files: [],
+      administrators: []
     };
     fixture.detectChanges();
   });

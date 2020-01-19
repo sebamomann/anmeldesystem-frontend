@@ -24,7 +24,7 @@ export class KeyDialogComponent implements OnInit {
   currentUrlSnapshotWithParameter: RouterStateSnapshot;
   operation: string;
 
-  constructor(private authenticationService: AuthenticationService, private formBuilder: FormBuilder,
+  constructor(public authenticationService: AuthenticationService, private formBuilder: FormBuilder,
               public matDialogRef: MatDialogRef<KeyDialogComponent>, private router: Router,
               @Inject(MAT_DIALOG_DATA) public data) {
     this.enrollment = data.enrollment;
@@ -71,24 +71,24 @@ export class KeyDialogComponent implements OnInit {
     return value;
   }
 
-  private keyEventValid() {
+  public keyEventValid() {
     return this.keyEvent.get('key').value !== ''
       || this.keyEvent.get('existingKey').value !== null;
   }
 
-  private getKeyErrorMessage(): string {
+  public getKeyErrorMessage(): string {
     if (this.getKey().hasError('required')) {
       return 'Bitte angeben';
     }
   }
 
-  private getExistingKeyErrorMessage(): string {
+  public getExistingKeyErrorMessage(): string {
     if (this.getKey().hasError('required')) {
       return 'Bitte auswählen';
     }
   }
 
-  private getKeyEventErrorMessage(): string {
+  public getKeyEventErrorMessage(): string {
     if (this.keyEvent.hasError('required')) {
       return 'Bitte spezifiziere einen Token';
     }

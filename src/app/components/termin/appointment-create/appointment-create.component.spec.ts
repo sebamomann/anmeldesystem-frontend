@@ -13,6 +13,7 @@ import {
   MatNativeDateModule,
   MatOptionModule,
   MatProgressBarModule,
+  MatSnackBarModule,
   MatStepperModule,
   MatTooltipModule
 } from '@angular/material';
@@ -37,7 +38,8 @@ describe('AppointmentCreateComponent', () => {
         MatAutocompleteModule, MatNativeDateModule,
         MatInputModule, BrowserAnimationsModule,
         MatProgressBarModule, HttpClientTestingModule,
-        MatTooltipModule, RouterTestingModule],
+        MatTooltipModule, RouterTestingModule,
+        MatSnackBarModule],
       declarations: [AppointmentCreateComponent, UrlEncodePipe],
       providers: [WINDOW_PROVIDERS]
     })
