@@ -16,7 +16,7 @@
       <mat-icon>access_time</mat-icon>
       <span> {{appointment.date | date: 'dd.MM.y, HH:mm' }}Uhr</span>
     </span>
-    <span *ngIf="appointment.date != appointment.deadline">
+    <span *ngIf="appointment.date != appointment.deadline && appointment.deadline != null">
       <mat-icon>alarm_on</mat-icon>
       <span>{{appointment.deadline | date: 'dd.MM.y, HH:mm' }}Uhr</span>
     </span>
