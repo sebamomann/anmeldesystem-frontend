@@ -18,7 +18,7 @@
     </span>
     <span *ngIf="appointment.date != appointment.deadline">
       <mat-icon>alarm_on</mat-icon>
-      <span>{{appointment.date | date: 'dd.MM.y, HH:mm' }}Uhr</span>
+      <span>{{appointment.deadline | date: 'dd.MM.y, HH:mm' }}Uhr</span>
     </span>
     <p>{{appointment.description}}</p>
 
