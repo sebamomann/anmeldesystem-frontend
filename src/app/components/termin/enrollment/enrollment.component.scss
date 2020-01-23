@@ -54,18 +54,13 @@
 .token-select {
   position: relative;
   display: inline-block;
+  width: 100%;
 
   .mat-form-field {
     width: 45%;
     vertical-align: center;
-
-    &:first-of-type {
-      float: left;
-    }
-
-    &:last-child {
-      float: right;
-    }
+    margin: 0 auto;
+    padding: 0px 5px;
 
     mat-card-actions {
       display: block;

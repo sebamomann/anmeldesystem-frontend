@@ -147,19 +147,29 @@
 
 <ng-container *ngIf="showLoginAndTokenForm">
   <mat-card class="float card-small">
-      <mat-card-content>
+    <mat-card-content>
         <span>
-          Logge dich ein um deine Anmeldung deinem Account zuzuordnen.
+          Logge dich ein um deine Anmeldung deinem Account zuzuordnen und sie später bearbeten/löschen zu können.
         </span>
-        <button [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url + '&send=true'}"
-                [routerLink]="['/account/login']"
-                color="primary"
-                mat-raised-button>
-          Login
-        </button>
-      </mat-card-content>
+      <button [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url + '&send=true'}"
+              [routerLink]="['/account/login']"
+              color="primary"
+              mat-raised-button>
+        Login
+      </button>
+    </mat-card-content>
 
-    <span class="separator middle center"></span>
+    <span class="separator middle center">
+      <div class="tooltip-wrapper center">
+        <mat-icon #tooltip="matTooltip"
+                  (click)="tooltip.toggle()"
+                  class="highlight-animation tooltip"
+                  matTooltip="{{'Wenn du keinen Account hast, dann gebe hier eine Art Passwort ein, um später deine Anmeldung ändern oder löschen zu können. '
+                + 'Nur mit diesem Passwort (Token) erhältst du später in der Übersicht die Berechtigung dafür. Also merke ihn dir gut!'}}">
+            help_outline
+          </mat-icon></div>
+
+    </span>
 
     <mat-expansion-panel class="integrated">
       <mat-expansion-panel-header>
@@ -167,7 +177,7 @@
           Token
         </mat-panel-title>
         <mat-panel-description>
-          Benutze einen Token als Zuordnung
+          Oder benutze einen Token als Zuordnung
         </mat-panel-description>
       </mat-expansion-panel-header>
       <mat-card-content (ngSubmit)="sendEnrollment()"
