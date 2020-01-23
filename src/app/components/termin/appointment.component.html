@@ -7,7 +7,7 @@
     <div class="header">
       <h2 class="headline medium">
         Teilnehmer [{{ appointment.enrollments.length }}{{ appointment.maxEnrollments !== null
-          ? '/' + appointment.maxEnrollments : '' }}]
+        ? '/' + appointment.maxEnrollments : '' }}]
         <span *ngIf="getNumberOfActiveFilter() > 0">
         [<mat-icon>filter_list</mat-icon>: {{ enrollments.length }}]
       </span>
@@ -83,7 +83,8 @@
             class="floating-button right">
     person_add
   </mat-icon>
-  <mat-icon [queryParams]="{a: link}"
+  <mat-icon *ngIf="appointment.driverAddition"
+            [queryParams]="{a: link}"
             [routerLink]="['/appointment/driver']"
             class="floating-button left decent">
     directions_car
