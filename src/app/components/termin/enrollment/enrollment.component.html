@@ -218,7 +218,7 @@
 </ng-container>
 
 <ng-template #loading>
-  <ng-container *ngIf="appointment === null; else loadingBar">
+  <ng-container *ngIf="appointment === undefined; else loadingBar">
     <div class="error empty">
       <span>Sorry - 404</span>
       <img src="/assets/img/404.svg">

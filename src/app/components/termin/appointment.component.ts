@@ -83,32 +83,44 @@ export class AppointmentComponent implements OnInit {
           this.percentDone = Math.round(100 * sAppointment.loaded / sAppointment.total);
         } else if (sAppointment.type === HttpEventType.Response) {
           this.appointment = sAppointment.body;
-          this.enrollments = sAppointment.body.enrollments;
-          this.filter = this.initializeFilterObject(sAppointment.body);
-          // this.allowModify = this.modificationAllowed();
-          this.allowModify = true;
-          // Auto send if logged in
-          if (this.editId != null) {
-            const enrollmentToEdit = this.enrollments.filter(fEnrollment => {
-              if (fEnrollment.id === this.editId) {
-                return fEnrollment;
-              }
-            })[0];
-            if (enrollmentToEdit !== undefined) {
-              this.location.replaceState('/enroll?a=' + this.link);
-              if (this.editOperation === 'delete') {
-                this.precheckOpenConfirmationDialog(enrollmentToEdit, 'delete');
-              } else if (this.editOperation === 'edit') {
-                this.precheckOpenConfirmationDialog(enrollmentToEdit, 'edit');
-              }
-            }
-          }
-          setTimeout(() => this.disableAnimation = false);
+          this.appointmentService.addCachedAppointment(this.appointment);
+
+          this.successfulRequest();
         }
       },
-      () => {
-        this.appointment = undefined;
+      (err) => {
+        if (err.status === 304) {
+          this.appointment = this.appointmentService.getFromCache(this.link);
+          this.successfulRequest();
+        } else {
+          console.log(err);
+          this.appointment = undefined;
+        }
       });
+  }
+
+  successfulRequest() {
+    this.enrollments = this.appointment.enrollments;
+    this.filter = this.initializeFilterObject(this.appointment);
+    // this.allowModify = this.modificationAllowed();
+    this.allowModify = true;
+    // Auto send if logged in
+    if (this.editId != null) {
+      const enrollmentToEdit = this.enrollments.filter(fEnrollment => {
+        if (fEnrollment.id === this.editId) {
+          return fEnrollment;
+        }
+      })[0];
+      if (enrollmentToEdit !== undefined) {
+        this.location.replaceState('/enroll?a=' + this.link);
+        if (this.editOperation === 'delete') {
+          this.precheckOpenConfirmationDialog(enrollmentToEdit, 'delete');
+        } else if (this.editOperation === 'edit') {
+          this.precheckOpenConfirmationDialog(enrollmentToEdit, 'edit');
+        }
+      }
+    }
+    setTimeout(() => this.disableAnimation = false);
   }
 
   /**
