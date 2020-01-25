@@ -5,26 +5,48 @@ import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
 import {environment} from '../../environments/environment';
+import {Globals} from '../globals';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppointmentService {
+  private globals: Globals;
 
-  constructor(private readonly httpClient: HttpClient) {
+  constructor(private readonly httpClient: HttpClient, private glob: Globals) {
+    this.globals = glob;
+  }
+
+  addCachedAppointment(appointment: IAppointmentModel) {
+    this.globals.appointments[appointment.link] = appointment;
+  }
+
+  getFromCache(link: string) {
+    return this.globals.appointments[link];
   }
 
   getAppointment(link: string, slim: boolean = false): Observable<HttpEvent<IAppointmentModel>> {
-    let url = `${environment.api.url}appointment/${link}`;
+    let url;
+    let req;
+    if (this.getFromCache(link) !== undefined && this.getFromCache(link) !== null) {
+      url = `${environment.api.url}appointment/newcontent/${link}`;
 
-    if (slim) {
-      url += '?slim=true';
+      req = new HttpRequest('POST', url, {lastUpdated: new Date()}, {
+        reportProgress: true,
+      });
+
+    } else {
+      url = `${environment.api.url}appointment/${link}`;
+      if (slim) {
+        url += '?slim=true';
+      }
+
+      req = new HttpRequest('GET', url, {
+        observe: 'response',
+        reportProgress: true,
+      });
     }
 
-    const req = new HttpRequest('GET', url, {
-      observe: 'response',
-      reportProgress: true,
-    });
     return this.httpClient.request(req);
   }
 

@@ -69,7 +69,7 @@ export class EnrollmentComponent implements OnInit {
     existingKey: new FormControl(),
   });
 
-  public appointment: IAppointmentModel;
+  public appointment: IAppointmentModel = null;
   public edit: any;
   private appointmentLink: string;
   private enrollmentId: string;
@@ -110,39 +110,48 @@ export class EnrollmentComponent implements OnInit {
             this.percentDone = Math.round(100 * sAppointment.loaded / sAppointment.total);
           } else if (sAppointment.type === HttpEventType.Response) {
             this.appointment = sAppointment.body;
+            this.appointmentService.addCachedAppointment(sAppointment.body);
 
-            this.storageDataToFields();
-
-            // When e.g. coming from login
-            if (this.showLoginAndTokenForm === true) {
-              // Re-fetch output from local storage
-              this.output = JSON.parse(this.outputRawFromStorage);
-              this.parseOutputIntoForm();
-
-              if (this.autoSend) {
-                this.sendEnrollment();
-              }
-            } else if (this.edit) {
-              const enrollment: IEnrollmentModel = this.appointment.enrollments.filter(fEnrollment => {
-                return fEnrollment.id === this.enrollmentId;
-              })[0];
-
-              if (enrollment !== null) {
-                this.output = enrollment;
-                this.parseOutputIntoForm();
-              }
-            } else {
-              // DO NOTHING, BECAUSE FORM IS EMPTY FOR ADDING NEW ENROLLMENT
-            }
-
-            this.buildFormCheckboxes();
+            this.successfulRequest();
           }
-        }, () => {
-          this.appointment = null;
+        }, (err) => {
+          if (err.status === 304) {
+            this.appointment = this.appointmentService.getFromCache(this.appointmentLink);
+            this.successfulRequest();
+          } else {
+            console.log(err);
+            this.appointment = undefined;
+          }
         }
       );
   }
 
+  successfulRequest() {
+    this.storageDataToFields();
+    // When e.g. coming from login
+    if (this.showLoginAndTokenForm === true) {
+      // Re-fetch output from local storage
+      this.output = JSON.parse(this.outputRawFromStorage);
+      this.parseOutputIntoForm();
+
+      if (this.autoSend) {
+        this.sendEnrollment();
+      }
+    } else if (this.edit) {
+      const enrollment: IEnrollmentModel = this.appointment.enrollments.filter(fEnrollment => {
+        return fEnrollment.id === this.enrollmentId;
+      })[0];
+
+      if (enrollment !== null) {
+        this.output = enrollment;
+        this.parseOutputIntoForm();
+      }
+    } else {
+      // DO NOTHING, BECAUSE FORM IS EMPTY FOR ADDING NEW ENROLLMENT
+    }
+
+    this.buildFormCheckboxes();
+  }
 
   /**
    * Main function on initializing sending of data to API

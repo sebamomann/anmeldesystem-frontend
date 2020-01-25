@@ -53,6 +53,7 @@ import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
 import {PwaService} from './services/pwa-service.service';
 import {PwaDialogComponent} from './components/dialogs/pwa-dialog/pwa-dialog.component';
+import {Globals} from './globals';
 
 @NgModule({
   declarations: [
@@ -106,7 +107,7 @@ import {PwaDialogComponent} from './components/dialogs/pwa-dialog/pwa-dialog.com
     MatListModule,
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
   ],
-  providers: [WINDOW_PROVIDERS, MatDatepickerModule, PwaService,
+  providers: [WINDOW_PROVIDERS, MatDatepickerModule, PwaService, Globals,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
