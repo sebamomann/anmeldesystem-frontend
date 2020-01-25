@@ -15,6 +15,7 @@ import {EnrollmentService} from '../../services/enrollment.service';
 import {KeyDialogComponent} from '../dialogs/key-dialog/key-dialog.component';
 import {Location} from '@angular/common';
 import {EnrollmentUtil} from '../../_util/enrollmentUtil.util';
+import {DomSanitizer} from '@angular/platform-browser';
 
 const HttpStatus = require('http-status-codes');
 
@@ -61,7 +62,7 @@ export class AppointmentComponent implements OnInit {
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
-              private snackBar: MatSnackBar, private location: Location) {
+              private snackBar: MatSnackBar, private location: Location, private sanitizer: DomSanitizer) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
       this.editId = params.editId;
