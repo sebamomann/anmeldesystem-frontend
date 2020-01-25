@@ -49,6 +49,10 @@ import {JwtInterceptor} from './_helper/interceptor/jwt.interceptor';
 import {ConfirmationDialogComponent} from './components/dialogs/confirmation-dialog/confirmation-dialog.component';
 import {GoBackHeaderComponent} from './components/util/go-back-header/go-back-header.component';
 import {KeyDialogComponent} from './components/dialogs/key-dialog/key-dialog.component';
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {environment} from '../environments/environment';
+import {PwaService} from './services/pwa-service.service';
+import {PwaDialogComponent} from './components/dialogs/pwa-dialog/pwa-dialog.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +73,7 @@ import {KeyDialogComponent} from './components/dialogs/key-dialog/key-dialog.com
     ConfirmationDialogComponent,
     GoBackHeaderComponent,
     KeyDialogComponent,
+    PwaDialogComponent,
   ],
   imports: [
     MatDatepickerModule,
@@ -99,19 +104,21 @@ import {KeyDialogComponent} from './components/dialogs/key-dialog/key-dialog.com
     MatProgressBarModule,
     HttpClientModule,
     MatListModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
   ],
-  providers: [WINDOW_PROVIDERS, MatDatepickerModule,
+  providers: [WINDOW_PROVIDERS, MatDatepickerModule, PwaService,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent],
-  exports: [FilterDialogComponent, CommentDialogComponent, UrlEncodePipe],
+  exports: [FilterDialogComponent, CommentDialogComponent, UrlEncodePipe, PwaDialogComponent],
   entryComponents: [
     FilterDialogComponent,
     CommentDialogComponent,
     TemplateDialogComponent,
     ConfirmationDialogComponent,
-    KeyDialogComponent
+    KeyDialogComponent,
+    PwaDialogComponent
   ],
 })
 export class AppModule {
