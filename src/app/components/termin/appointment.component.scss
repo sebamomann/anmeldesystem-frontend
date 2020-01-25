@@ -24,6 +24,19 @@
   .enrollment {
     margin: 2px auto;
 
+    &.small {
+      width: 49%;
+      display: inline-block;
+
+      &:nth-child(odd) {
+        float: left;
+      }
+
+      &:nth-child(even) {
+        float: right;
+      }
+    }
+
     &.mat-expansion-panel-spacing {
       margin: 16px 0;
     }
@@ -108,4 +121,17 @@
   box-shadow: 0 0 5px #b6b6b6;
   border-radius: 50%;
   padding: 5px;
+}
+
+.list-style {
+  margin-bottom: 16px;
+
+  mat-icon {
+    padding: 1.5px;
+    border-radius: 2.5px;
+    background-color: #cecece;
+    margin: 5px;
+    box-shadow: 0px 0px 2.5px #e7e7e7;
+    color: #00126E;
+  }
 }

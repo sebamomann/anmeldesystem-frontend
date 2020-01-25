@@ -22,6 +22,11 @@
       </h2>
     </div>
 
+    <!--    <div class="list-style">-->
+    <!--      <mat-icon (click)="list = true">list</mat-icon>-->
+    <!--      <mat-icon (click)="list = false">view_module</mat-icon>-->
+    <!--    </div>-->
+
     <mat-icon (click)="_openFilterDialog()"
               class="filter-open"
               matBadge="{{getNumberOfActiveFilter() > 0 ? getNumberOfActiveFilter() : ''}}"
@@ -32,7 +37,9 @@
 
     <mat-accordion *ngIf="enrollments.length > 0" [@listAnimation]>
       <ng-container *ngFor="let enrollment of enrollments">
-        <mat-expansion-panel [@.disabled]="disableAnimation" class="enrollment">
+        <mat-expansion-panel [@.disabled]="disableAnimation"
+                             [ngClass]="list ? '' : 'small'"
+                             class="enrollment">
           <mat-expansion-panel-header [collapsedHeight]="'auto'"
                                       [expandedHeight]="'auto'"
                                       class="enrollment-info">
