@@ -47,7 +47,7 @@ const HttpStatus = require('http-status-codes');
 @NgModule({})
 export class AppointmentComponent implements OnInit {
   userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
-
+  list = true;
   public appointment: IAppointmentModel = null;
   // List to show (enrollments left after filter is applied)
   public enrollments: IEnrollmentModel[];
