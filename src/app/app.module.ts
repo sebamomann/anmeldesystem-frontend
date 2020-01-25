@@ -49,6 +49,8 @@ import {JwtInterceptor} from './_helper/interceptor/jwt.interceptor';
 import {ConfirmationDialogComponent} from './components/dialogs/confirmation-dialog/confirmation-dialog.component';
 import {GoBackHeaderComponent} from './components/util/go-back-header/go-back-header.component';
 import {KeyDialogComponent} from './components/dialogs/key-dialog/key-dialog.component';
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {environment} from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -99,6 +101,7 @@ import {KeyDialogComponent} from './components/dialogs/key-dialog/key-dialog.com
     MatProgressBarModule,
     HttpClientModule,
     MatListModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
   ],
   providers: [WINDOW_PROVIDERS, MatDatepickerModule,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
