@@ -28,24 +28,24 @@ export class AppointmentService {
   getAppointment(link: string, slim: boolean = false): Observable<HttpEvent<IAppointmentModel>> {
     let url;
     let req;
-    if (this.getFromCache(link) !== undefined && this.getFromCache(link) !== null) {
-      url = `${environment.api.url}appointment/newcontent/${link}`;
-
-      req = new HttpRequest('POST', url, {lastUpdated: new Date()}, {
-        reportProgress: true,
-      });
-
-    } else {
-      url = `${environment.api.url}appointment/${link}`;
-      if (slim) {
-        url += '?slim=true';
-      }
-
-      req = new HttpRequest('GET', url, {
-        observe: 'response',
-        reportProgress: true,
-      });
+    // if (this.getFromCache(link) !== undefined && this.getFromCache(link) !== null) {
+    //   url = `${environment.api.url}appointment/newcontent/${link}`;
+    //
+    //   req = new HttpRequest('POST', url, {lastUpdated: new Date()}, {
+    //     reportProgress: true,
+    //   });
+    //
+    // } else {
+    url = `${environment.api.url}appointment/${link}`;
+    if (slim) {
+      url += '?slim=true';
     }
+
+    req = new HttpRequest('GET', url, {
+      observe: 'response',
+      reportProgress: true,
+    });
+    // }
 
     return this.httpClient.request(req);
   }
