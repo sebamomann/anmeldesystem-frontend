@@ -74,11 +74,11 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  private getUsername() {
+  public getUsername() {
     return this.event.get('username');
   }
 
-  private getPassword() {
+  public getPassword() {
     return this.event.get('password');
   }
 

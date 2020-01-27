@@ -21,7 +21,7 @@ export function passwordVerifyCheck(): ValidatorFn {
 })
 export class RegisterComponent implements OnInit {
 
-  private hide = true;
+  public hide = true;
 
   event = new FormGroup({
     username: new FormControl('', [Validators.required]),

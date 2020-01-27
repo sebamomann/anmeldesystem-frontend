@@ -25,20 +25,20 @@ export function passwordVerifyCheck(): ValidatorFn {
 export class PasswordresetComponent implements OnInit {
   public done = false;
   public loading: any;
-  private hide = true;
-  private mail: string;
-  private token: string;
-  private error = null;
-  private mailEvent = new FormGroup({
+  public hide = true;
+  public mail: string;
+  public token: string;
+  public error = null;
+  public mailEvent = new FormGroup({
     mail: new FormControl('', [Validators.required, Validators.email]),
   });
-  private passwordResetEvent = new FormGroup({
+  public passwordResetEvent = new FormGroup({
     passwords: new FormGroup({
       password: new FormControl('', [Validators.required]),
       passwordVerify: new FormControl('', [Validators.required]),
     }, passwordVerifyCheck()),
   });
-  private doneMsg: string;
+  public doneMsg: string;
   private date: any;
 
   constructor(private route: ActivatedRoute, private accountService: AccountService) {
@@ -150,19 +150,19 @@ export class PasswordresetComponent implements OnInit {
     }
   }
 
-  private getMail() {
+  public getMail() {
     return this.mailEvent.get('mail');
   }
 
-  private getPassword() {
+  public getPassword() {
     return this.getPasswordGroup().get('password');
   }
 
-  private getPasswordVerify() {
+  public getPasswordVerify() {
     return this.getPasswordGroup().get('passwordVerify');
   }
 
-  private getPasswordGroup() {
+  public getPasswordGroup() {
     return this.passwordResetEvent.get('passwords');
   }
 }
