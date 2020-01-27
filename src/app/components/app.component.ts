@@ -24,9 +24,9 @@ export class AppComponent {
         (window as any).ga('set', 'page', event.urlAfterRedirects);
         (window as any).ga('send', 'pageview');
       }
-
-      this.pwa.checkForUpdates();
     });
+
+    this.pwa.checkForUpdates();
 
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
