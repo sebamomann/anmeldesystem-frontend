@@ -32,6 +32,14 @@
         </a>
       </span>
 
+      <span>
+        <a [queryParams]="{mail: getUsername().value}"
+           [routerLink]="['/account/passwordreset']"
+           queryParamsHandling="merge">
+          Passwort vergessen?
+        </a>
+      </span>
+
       <mat-card-actions>
         <button color="primary" mat-raised-button>
           Login

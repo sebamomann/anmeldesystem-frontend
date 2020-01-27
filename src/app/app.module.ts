@@ -21,6 +21,7 @@ import {
   MatListModule,
   MatNativeDateModule,
   MatProgressBarModule,
+  MatProgressSpinnerModule,
   MatRadioModule,
   MatSelectModule,
   MatSnackBarModule,
@@ -39,7 +40,7 @@ import {CommentDialogComponent} from './components/dialogs/comment/commentDialog
 import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
 import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
 import {UrlEncodePipe} from './pipes/url-encode.pipe';
-import {LocationStrategy, PathLocationStrategy} from '@angular/common';
+import {DatePipe, LocationStrategy, PathLocationStrategy, registerLocaleData} from '@angular/common';
 import {DashboardComponent} from './components/termin/dashboard/dashboard.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {DriverComponent} from './components/termin/driver/driver.component';
@@ -54,6 +55,10 @@ import {environment} from '../environments/environment';
 import {PwaService} from './services/pwa-service.service';
 import {PwaDialogComponent} from './components/dialogs/pwa-dialog/pwa-dialog.component';
 import {Globals} from './globals';
+import {PasswordresetComponent} from './components/account/passwordreset/passwordreset.component';
+import localeDe from '@angular/common/locales/de';
+
+registerLocaleData(localeDe);
 
 @NgModule({
   declarations: [
@@ -75,6 +80,7 @@ import {Globals} from './globals';
     GoBackHeaderComponent,
     KeyDialogComponent,
     PwaDialogComponent,
+    PasswordresetComponent,
   ],
   imports: [
     MatDatepickerModule,
@@ -106,13 +112,14 @@ import {Globals} from './globals';
     HttpClientModule,
     MatListModule,
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+    MatProgressSpinnerModule,
   ],
   providers: [WINDOW_PROVIDERS, MatDatepickerModule, PwaService, Globals,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent],
-  exports: [FilterDialogComponent, CommentDialogComponent, UrlEncodePipe, PwaDialogComponent],
+  exports: [FilterDialogComponent, CommentDialogComponent, UrlEncodePipe, DatePipe, PwaDialogComponent],
   entryComponents: [
     FilterDialogComponent,
     CommentDialogComponent,

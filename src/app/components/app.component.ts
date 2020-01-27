@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {Router} from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
 import {WINDOW} from '../provider/window.provider';
 import {IUserModel} from '../models/IUserModel.model';
 import {AuthenticationService} from '../services/authentication.service';
@@ -19,6 +19,15 @@ export class AppComponent {
 
   constructor(private router: Router, @Inject(WINDOW) private window: Window,
               private authenticationService: AuthenticationService, public pwa: PwaService, public dialog: MatDialog) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        (window as any).ga('set', 'page', event.urlAfterRedirects);
+        (window as any).ga('send', 'pageview');
+      }
+    });
+
+    this.pwa.checkForUpdates();
+
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
