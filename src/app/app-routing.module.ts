@@ -9,6 +9,7 @@ import {AppointmentCreateComponent} from './components/termin/appointment-create
 import {DashboardComponent} from './components/termin/dashboard/dashboard.component';
 import {DriverComponent} from './components/termin/driver/driver.component';
 import {AuthGuard} from './_helper/auth.guard';
+import {PasswordresetComponent} from './components/account/passwordreset/passwordreset.component';
 
 
 const routes: Routes = [
@@ -16,7 +17,9 @@ const routes: Routes = [
   {
     path: 'account', children: [
       {path: 'login', component: LoginComponent},
-      {path: 'register', component: RegisterComponent}
+      {path: 'register', component: RegisterComponent},
+      {path: 'passwordreset/:mail/:token', component: PasswordresetComponent},
+      {path: 'passwordreset', component: PasswordresetComponent}
     ]
   },
   {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},

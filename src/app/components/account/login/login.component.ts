@@ -24,6 +24,9 @@ export class LoginComponent implements OnInit {
 
   constructor(private router: Router, private accountService: AccountService, private route: ActivatedRoute,
               private authenticationService: AuthenticationService, private alertService: AlertService) {
+    this.route.queryParams.subscribe(params => {
+      this.getUsername().setValue(params.mail);
+    });
   }
 
   ngOnInit() {
