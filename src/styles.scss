@@ -72,8 +72,12 @@ $anmeldesystem-theme: mat-light-theme($anmeldesystem-primary, $anmeldesystem-acc
 }
 
 $primary: #366EA7;
+$primary_dark: #141B41;
 $secondary: #2B2C30;
-$accent: #9BC963;
+$accent: #56E39F;
+$accent_dark: #204127;
+$error: #9B1D20;
+$error_dark: #3e0c0d;
 $success: green;
 
 html, body {
@@ -405,6 +409,7 @@ mat-hint {
   background-size: cover;
   position: fixed;
   width: 100%;
+  background-color: #fafafa;
   height: 100%;
   z-index: -1;
   top: 0;
@@ -612,3 +617,63 @@ footer {
   }
 }
 
+.bookmark {
+  background: #b00;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #b00), color-stop(100%, #900));
+  background-image: -webkit-linear-gradient(top, #b00 0%, #900 100%);
+  background-image: -moz-linear-gradient(top, #b00 0%, #900 100%);
+  background-image: -o-linear-gradient(top, #b00 0%, #900 100%);
+  background-image: -ms-linear-gradient(top, #b00 0%, #b00 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b00', endColorstr='#900', GradientType=0);
+  background-image: linear-gradient(top, #b00 0%, #900 100%);
+
+  height: 30px;
+  position: absolute;
+  top: 0;
+  right: 20px;
+  width: 20px;
+
+  &:hover {
+    transition: 0.5s all;
+    top: -5px;
+  }
+
+  &.enrolled {
+    background: $primary;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, $primary), color-stop(100%, $primary_dark));
+    background-image: -webkit-linear-gradient(top, $primary 0%, $primary_dark 100%);
+    background-image: -moz-linear-gradient(top, $primary 0%, $primary_dark 100%);
+    background-image: -o-linear-gradient(top, $primary 0%, $primary_dark 100%);
+    background-image: -ms-linear-gradient(top, $primary 0%, $primary_dark 100%);
+    background-image: linear-gradient(top, $primary 0%, $primary_dark 100%);
+  }
+
+  &.creator {
+    background: $primary;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, $error), color-stop(100%, $error_dark));
+    background-image: -webkit-linear-gradient(top, $error 0%, $error_dark 100%);
+    background-image: -moz-linear-gradient(top, $error 0%, $error_dark 100%);
+    background-image: -o-linear-gradient(top, $error 0%, $error_dark 100%);
+    background-image: -ms-linear-gradient(top, $error 0%, $error_dark 100%);
+    background-image: linear-gradient(top, $error 0%, $error_dark 100%);
+  }
+
+  &.admin {
+    background: $primary;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, $accent), color-stop(100%, $accent_dark));
+    background-image: -webkit-linear-gradient(top, $accent 0%, $accent_dark 100%);
+    background-image: -moz-linear-gradient(top, $accent 0%, $accent_dark 100%);
+    background-image: -o-linear-gradient(top, $accent 0%, $accent_dark 100%);
+    background-image: -ms-linear-gradient(top, $accent 0%, $accent_dark 100%);
+    background-image: linear-gradient(top, $accent 0%, $accent_dark 100%);
+  }
+}
+
+.bookmark:after {
+  content: '';
+  display: block;
+  border: 10px solid transparent;
+  border-bottom-color: white;
+  position: absolute;
+  bottom: 0;
+}
