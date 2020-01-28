@@ -619,13 +619,11 @@ footer {
 
 .bookmark {
   background: #b00;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #b00), color-stop(100%, #900));
-  background-image: -webkit-linear-gradient(top, #b00 0%, #900 100%);
-  background-image: -moz-linear-gradient(top, #b00 0%, #900 100%);
-  background-image: -o-linear-gradient(top, #b00 0%, #900 100%);
-  background-image: -ms-linear-gradient(top, #b00 0%, #b00 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b00', endColorstr='#900', GradientType=0);
-  background-image: linear-gradient(top, #b00 0%, #900 100%);
+  background-image: -webkit-linear-gradient(to bottom, #b00 0%, #900 100%);
+  background-image: -moz-linear-gradient(to bottom, #b00 0%, #900 100%);
+  background-image: -o-linear-gradient(to bottom, #b00 0%, #900 100%);
+  background-image: -ms-linear-gradient(to bottom, #b00 0%, #b00 100%);
+  background-image: linear-gradient(to bottom, #b00 0%, #900 100%);
 
   height: 30px;
   position: absolute;
@@ -640,32 +638,29 @@ footer {
 
   &.enrolled {
     background: $primary;
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, $primary), color-stop(100%, $primary_dark));
-    background-image: -webkit-linear-gradient(top, $primary 0%, $primary_dark 100%);
-    background-image: -moz-linear-gradient(top, $primary 0%, $primary_dark 100%);
-    background-image: -o-linear-gradient(top, $primary 0%, $primary_dark 100%);
-    background-image: -ms-linear-gradient(top, $primary 0%, $primary_dark 100%);
-    background-image: linear-gradient(top, $primary 0%, $primary_dark 100%);
+    background-image: -webkit-linear-gradient(to bottom, $primary 0%, $primary_dark 100%);
+    background-image: -moz-linear-gradient(to bottom, $primary 0%, $primary_dark 100%);
+    background-image: -o-linear-gradient(to bottom, $primary 0%, $primary_dark 100%);
+    background-image: -ms-linear-gradient(to bottom, $primary 0%, $primary_dark 100%);
+    background-image: linear-gradient(to bottom, $primary 0%, $primary_dark 100%);
   }
 
   &.creator {
-    background: $primary;
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, $error), color-stop(100%, $error_dark));
-    background-image: -webkit-linear-gradient(top, $error 0%, $error_dark 100%);
-    background-image: -moz-linear-gradient(top, $error 0%, $error_dark 100%);
-    background-image: -o-linear-gradient(top, $error 0%, $error_dark 100%);
-    background-image: -ms-linear-gradient(top, $error 0%, $error_dark 100%);
-    background-image: linear-gradient(top, $error 0%, $error_dark 100%);
+    background: $error;
+    background-image: -webkit-linear-gradient(to bottom, $error 0%, $error_dark 100%);
+    background-image: -moz-linear-gradient(to bottom, $error 0%, $error_dark 100%);
+    background-image: -o-linear-gradient(to bottom, $error 0%, $error_dark 100%);
+    background-image: -ms-linear-gradient(to bottom, $error 0%, $error_dark 100%);
+    background-image: linear-gradient(to bottom, $error 0%, $error_dark 100%);
   }
 
   &.admin {
-    background: $primary;
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, $accent), color-stop(100%, $accent_dark));
-    background-image: -webkit-linear-gradient(top, $accent 0%, $accent_dark 100%);
-    background-image: -moz-linear-gradient(top, $accent 0%, $accent_dark 100%);
-    background-image: -o-linear-gradient(top, $accent 0%, $accent_dark 100%);
-    background-image: -ms-linear-gradient(top, $accent 0%, $accent_dark 100%);
-    background-image: linear-gradient(top, $accent 0%, $accent_dark 100%);
+    background: $accent;
+    background-image: -webkit-linear-gradient(to bottom, $accent 0%, $accent_dark 100%);
+    background-image: -moz-linear-gradient(to bottom, $accent 0%, $accent_dark 100%);
+    background-image: -o-linear-gradient(to bottom, $accent 0%, $accent_dark 100%);
+    background-image: -ms-linear-gradient(to bottom, $accent 0%, $accent_dark 100%);
+    background-image: linear-gradient(to bottom, $accent 0%, $accent_dark 100%);
   }
 }
 
