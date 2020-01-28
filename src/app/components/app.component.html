@@ -1,3 +1,26 @@
+<div class="menu-wrapper">
+  <div (click)="toggleMenu()"
+       [ngClass]="{'active': menu}"
+       id="menuIcon">
+    <span class="line"></span>
+    <span class="line"></span>
+    <span class="line"></span>
+  </div>
+  <div [ngClass]="{'visible': menu}"
+       id="menu">
+  </div>
+  <div [@listAnimation]="menu" [ngClass]="{'visible': menu}" class="content">
+    <h2>Menü</h2>
+    <ul>
+      <li (click)="navigate(item.redirect) "
+          *ngFor="let item of items"
+          [@.disabled]="false">
+        {{item.name}}
+      </li>
+    </ul>
+  </div>
+</div>
+
 <div class="main-wrapper">
   <router-outlet></router-outlet>
 </div>

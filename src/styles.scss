@@ -93,10 +93,130 @@ mat-icon {
   vertical-align: middle;
 }
 
+.menu-wrapper {
+  #menu {
+    z-index: 9999;
+    position: fixed;
+    width: 0;
+    height: 0;
+    -webkit-transform: rotate(360deg);
+    border-style: solid;
+    border-width: 40px 60px 0 0;
+    border-color: $secondary transparent transparent transparent;
+    transition: 0.5s all;
+
+    &.visible {
+      border-style: solid;
+      border-width: 90vh 220vh 0 0;
+      border-color: $secondary transparent transparent transparent;
+      transition: 0.5s all;
+    }
+  }
+
+  & > #menuIcon {
+    position: fixed;
+    z-index: 999999;
+    transition: 0.5s all;
+
+    & > .line {
+      transition: 0.5s all;
+      width: 20px;
+      background-color: white;
+      height: 3px;
+      border-radius: 10px;
+      display: block;
+      margin: 5px 8px 5px;
+
+      &:nth-child(1) {
+        margin-top: 8px;
+        width: 29px;
+      }
+
+      &:nth-child(2) {
+        width: 17px;
+      }
+
+      &:nth-child(3) {
+        width: 5px;
+      }
+    }
+
+    &.active {
+      margin-top: 14px;
+      transition: 0.5s all;
+
+      & > .line {
+        transition: 0.5s all;
+        margin: 3px 8px 3px;
+
+        &:nth-child(1) {
+          width: 20px;
+          transform: rotateZ(45deg);
+        }
+
+        &:nth-child(2) {
+          opacity: 0;
+        }
+
+        &:nth-child(3) {
+          width: 20px;
+          transform: rotateZ(-45deg);
+        }
+      }
+    }
+  }
+
+  .content {
+    color: white;
+    display: none;
+    position: fixed;
+    z-index: 99999;
+    width: 100%;
+    text-align: center;
+
+    &.visible {
+      display: block;
+    }
+
+    & > h2 {
+      margin: 10px auto;
+      animation: swoosh 0.5s;
+      font-size: 1.75em;
+    }
+
+    ul {
+      margin-top: 150px;
+      padding: 0;
+      list-style: none;
+      font-size: 1.25em;
+
+      & > li {
+        margin: 7.5px auto;
+        font-weight: bolder;
+        text-transform: uppercase;
+        outline: none;
+      }
+    }
+  }
+}
+
+@keyframes swoosh {
+  0% {
+    opacity: 0;
+    margin-left: -100px;
+  }
+  100% {
+    opacity: 1;
+    margin-left: 0px;
+  }
+
+}
+
 .main-wrapper {
   min-height: calc(100vh - 100px);
   z-index: 5;
   padding-bottom: 100px;
+  overflow: auto;
 }
 
 h1 {
