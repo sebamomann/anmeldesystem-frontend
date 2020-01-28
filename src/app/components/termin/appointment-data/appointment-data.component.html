@@ -1,4 +1,7 @@
-<mat-card (click)="preview ? redirectToAppointment(appointment) : ''" class="appointment-data">
+<mat-card (click)="preview ? redirectToAppointment(appointment) : ''" [ngClass]="type" class="appointment-data">
+  <div *ngIf="preview" [ngClass]="type"
+       class="bookmark">
+  </div>
   <mat-card-title class="headline">
     {{appointment.title}}
   </mat-card-title>

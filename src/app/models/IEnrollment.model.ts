@@ -13,4 +13,5 @@ export interface IEnrollmentModel {
   additions: IAdditionModel[];
   iat?: string;
   editKey: string;
+  createdByUser?: boolean;
 }

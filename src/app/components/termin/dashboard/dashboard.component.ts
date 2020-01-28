@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
 import {HttpEventType} from '@angular/common/http';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
+import {AuthenticationService} from '../../../services/authentication.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,10 +36,11 @@ export class DashboardComponent implements OnInit {
   hide: any;
   numbers = new Array(3);
   public percentDone;
-  public appointments = undefined;
+  public appointments: IAppointmentModel[] = undefined;
   public appointmentsArchive = undefined;
 
-  constructor(public appointmentService: AppointmentService, private router: Router) {
+  constructor(public appointmentService: AppointmentService, private router: Router,
+              public authenticationService: AuthenticationService) {
 
   }
 
@@ -62,4 +64,25 @@ export class DashboardComponent implements OnInit {
   redirectToAppointment(appointment: IAppointmentModel) {
     this.router.navigate(['/enroll'], {queryParams: {a: appointment.link}});
   }
+
+  public parseClass(appointment: IAppointmentModel) {
+    return (this.isCreator(appointment)
+        ? 'creator'
+        : (this.isAdmin(appointment)
+            ? 'admin'
+            : 'enrolled'
+        )
+    );
+  }
+
+  private isAdmin(appointment: IAppointmentModel) {
+    return appointment.administrators.some(val => {
+      return val.mail === this.authenticationService.currentUserValue.mail;
+    });
+  }
+
+  private isCreator(appointment: IAppointmentModel) {
+    return appointment.creator.username === this.authenticationService.currentUserValue.username;
+  }
+
 }

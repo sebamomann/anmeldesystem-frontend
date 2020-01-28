@@ -19,8 +19,14 @@ export class AppointmentDataComponent implements OnInit {
   @Input()
   public preview = false;
 
+  @Input()
+  public type: string;
+
   constructor(public urlService: UrlService, private snackBar: MatSnackBar, private router: Router,
               public sanitizer: DomSanitizer, @Inject(WINDOW) public window: Window) {
+    if (!this.preview) {
+      this.type = '';
+    }
   }
 
   ngOnInit() {

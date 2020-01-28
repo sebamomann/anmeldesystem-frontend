@@ -56,7 +56,6 @@ export class AppointmentComponent implements OnInit {
   public allowModify = false;
   public percentDone;
   public disableAnimation = true;
-  private dialogKey = '';
   private editId = '';
   private editOperation = '';
 
@@ -276,7 +275,11 @@ export class AppointmentComponent implements OnInit {
         return;
       })
       .catch(err => {
-        return this.allowedToEditByToken(enrollment, operation);
+        if (!enrollment.createdByUser) {
+          return this.allowedToEditByToken(enrollment, operation);
+        }
+
+        throw err;
       })
       .then(value => {
         if (typeof value === 'boolean') {

@@ -8,10 +8,13 @@
 <ng-container *ngIf="appointments !== undefined; else appointmentdata">
   <div [@listAnimation]="appointments.length">
     <ng-container *ngFor="let appointment of appointments">
-      <app-appointment-data [appointment]="appointment" [preview]="true"></app-appointment-data>
+      <app-appointment-data [appointment]="appointment"
+                            [preview]="true"
+                            [type]="parseClass(appointment)">
+
+      </app-appointment-data>
     </ng-container>
   </div>
-
 
   <ng-container *ngIf="appointmentsArchive.length > 0">
     <h2 class="title">Archiv</h2>
