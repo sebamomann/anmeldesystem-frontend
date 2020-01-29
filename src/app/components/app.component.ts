@@ -17,9 +17,9 @@ import {animate, query, stagger, style, transition, trigger} from '@angular/anim
       transition('* => *', [
         query('ul li', [
           style({opacity: 0, transform: 'scale(0.9)'}),
-          stagger(75, [
-            animate('0.15s', style({opacity: 1, transform: 'scale(1.05)'})),
-            animate('0.075s', style({opacity: 1, transform: 'scale(1)'})),
+          stagger(50, [
+            animate('0.2s 150ms', style({opacity: 1, transform: 'scale(1.05)'})),
+            animate('0.05s', style({opacity: 1, transform: 'scale(1)'})),
           ])
         ])
       ])

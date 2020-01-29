@@ -1,0 +1,15 @@
+@mixin md-icon-size($size: 24px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+  line-height: $size;
+}
+
+$primary: #366EA7;
+$primary_dark: #141B41;
+$secondary: #2B2C30;
+$accent: #56E39F;
+$accent_dark: #204127;
+$error: #9B1D20;
+$error_dark: #3e0c0d;
+$success: green;
