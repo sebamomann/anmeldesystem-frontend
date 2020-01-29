@@ -20,7 +20,7 @@
     <h2 class="title">Archiv</h2>
     <div [@listAnimation]="appointments.length">
       <ng-container *ngFor="let appointment of appointmentsArchive">
-        <mat-card (click)="redirectToAppointment(appointment)" class="appointment-data">
+        <mat-card (click)="redirectToAppointment(appointment)" class="appointment-data archive">
           <mat-card-content>
             <span> {{ appointment.title }}</span>
             <span>{{ appointment.date | date: 'dd.MM.y, HH:mm'}}</span>

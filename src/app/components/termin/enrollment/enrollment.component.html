@@ -1,7 +1,10 @@
 <div *ngIf="appointment && !showLoginAndTokenForm; else loading">
-  <app-go-back-header [appointment]="appointment"></app-go-back-header>
 
-  <mat-card class="form float">
+  <h1 class="headline">
+    {{appointment.title}}
+  </h1>
+
+  <mat-card class="form">
     <mat-card-title class="headline">
       {{ edit ? 'Bearbeiten' : 'Anmelden' }}
     </mat-card-title>
@@ -139,6 +142,9 @@
           <button id="submit" mat-raised-button color="primary">
             {{ edit ? 'Speichern' : 'Anmelden' }}
           </button>
+          <a (click)="goBack()" mat-raised-button>
+            Zurück
+          </a>
         </mat-card-actions>
       </form>
     </mat-card-content>
@@ -161,6 +167,7 @@
 
     <span class="separator middle center">
       <div class="tooltip-wrapper center">
+        <!--suppress TypeScriptUnresolvedFunction -->
         <mat-icon #tooltip="matTooltip"
                   (click)="tooltip.toggle()"
                   class="highlight-animation tooltip"

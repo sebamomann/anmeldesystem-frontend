@@ -5,6 +5,11 @@
   line-height: $size;
 }
 
+:host ::ng-deep .appointment-data {
+  margin: 30px auto 30px;
+}
+
+
 /* GLOBAL */
 .enrollment-list {
   padding: 0;

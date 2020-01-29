@@ -468,4 +468,8 @@ export class EnrollmentComponent implements OnInit {
       this.showLoginAndTokenForm = true;
     }
   }
+
+  goBack() {
+    this.location.back();
+  }
 }

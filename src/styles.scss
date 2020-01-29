@@ -294,6 +294,11 @@ a {
     width: 100%;
   }
 
+  &.dark {
+    background-color: transparent;
+    color: white;
+  }
+
   .go_back {
     vertical-align: middle;
     position: absolute;
@@ -306,6 +311,7 @@ a {
   .headline {
     margin: 5px auto;
     font-size: 1.25em;
+    color: $secondary;
   }
 }
 
@@ -471,7 +477,6 @@ mat-card {
   }
 
   &.form {
-    margin-top: 15vh;
     width: 90%;
     text-align: center;
 
@@ -611,7 +616,8 @@ footer {
   padding: 12px;
   border-radius: 50%;
   z-index: 100;
-  background-color: $primary;
+  background-color: $primary_dark;
+  color: white;
   outline: none;
   box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
   0px 1px 1px 0px rgba(0, 0, 0, 0.14),

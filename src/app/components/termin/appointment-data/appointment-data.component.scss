@@ -29,7 +29,6 @@
   .appointment-data {
     width: 80%;
     text-align: center;
-    margin: 25px auto 50px;
     z-index: 10;
 
     mat-card-title {
@@ -42,7 +41,7 @@
     }
 
     mat-card-content {
-      margin-bottom: 0px;
+      margin-bottom: 0;
 
       .files-wrapper {
         .separator {
