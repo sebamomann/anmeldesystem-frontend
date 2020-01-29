@@ -49,10 +49,8 @@ export class LoginComponent implements OnInit {
             this.router.navigateByUrl(retUrl);
           },
           error => {
-            console.log(error.error.error);
             this.changeDate = new Date(error.error.error);
             const d = this.changeDate;
-            console.log(this.changeDate);
             if (d instanceof Date && !isNaN(d.getTime())) {
               this.getPassword().setErrors({isOldPassword: true});
             } else {
