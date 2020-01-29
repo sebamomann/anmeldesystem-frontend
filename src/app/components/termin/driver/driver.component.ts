@@ -99,6 +99,10 @@ export class DriverComponent implements OnInit {
       return -1;
     }
   }
+
+  goBack() {
+    this.location.back();
+  }
 }
 
 interface MyType {

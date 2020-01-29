@@ -1,12 +1,13 @@
-@mixin md-icon-size($size: 24px) {
-  font-size: $size;
-  height: $size;
-  width: $size;
-  line-height: $size;
-}
+@import "src/variables";
+
 
 mat-card {
   margin: 75px auto 25px;
+
+  mat-card-actions {
+    padding-bottom: 18px !important;
+    text-align: center;
+  }
 }
 
 .driver-wrapper {
@@ -62,6 +63,12 @@ mat-card {
 .analysis-block-wrapper {
   text-align: center;
 
+  .title {
+    color: $secondary;
+    font-size: 1.125em;
+    font-weight: normal;
+  }
+
   .analysis-block {
     padding: 10px;
     display: inline-block;
@@ -70,7 +77,9 @@ mat-card {
     vertical-align: top;
 
     .title {
+      color: $secondary;
       font-weight: bolder;
+      font-size: 1.25em;
     }
 
     .case {

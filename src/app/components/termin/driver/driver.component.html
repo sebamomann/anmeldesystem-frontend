@@ -1,5 +1,7 @@
 <div *ngIf="appointment; else loading">
-  <app-go-back-header [appointment]="appointment"></app-go-back-header>
+  <h1 class="headline">
+    {{appointment.title}}
+  </h1>
 
   <mat-card class="">
     <mat-card-title class="headline">
@@ -28,6 +30,11 @@
       </div>
       <ng-container *ngIf="data.gotTo === data.gotFrom then gotSame; else gotDifferent"></ng-container>
     </mat-card-content>
+    <mat-card-actions>
+      <button (click)="goBack()" mat-raised-button>
+        Zurück
+      </button>
+    </mat-card-actions>
   </mat-card>
 </div>
 
