@@ -1,19 +1,4 @@
 <div class="appointment-data-wrapper">
-  <div *ngIf="!preview" class="svg-wrapper">
-    <svg preserveAspectRatio="xMidYMid meet" version="1.0"
-         viewBox="0 0 100.000000 100.000000"
-         xmlns="http://www.w3.org/2000/svg">
-      <metadata>
-        Created by potrace 1.15, written by Peter Selinger 2001-2017
-      </metadata>
-      <g fill="#2B2C30"
-         stroke="none" transform="translate(0.000000,100.000000) scale(0.100000,-0.100000)">
-        <path d="M2 911 c4 -78 9 -99 41 -164 60 -121 169 -206 302 -236 28 -6 104
--15 170 -20 66 -5 143 -17 170 -26 171 -59 283 -218 309 -440 1 -17 4 196 5
-473 l1 502 -501 0 -501 0 4 -89z"/>
-      </g>
-    </svg>
-  </div>
   <mat-card (click)="preview ? redirectToAppointment(appointment) : ''" [ngClass]="type" class="appointment-data">
     <div *ngIf="preview" [ngClass]="type"
          class="bookmark">

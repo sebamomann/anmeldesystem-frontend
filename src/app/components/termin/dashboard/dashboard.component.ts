@@ -48,6 +48,7 @@ export class DashboardComponent implements OnInit {
     this.appointmentService.getAppointments(true).subscribe(result => {
       if (result.type === HttpEventType.DownloadProgress) {
         this.percentDone = Math.round(100 * result.loaded / result.total);
+        // this.percentDone = 0;
       } else if (result.type === HttpEventType.Response) {
         this.appointments = [];
         this.appointmentsArchive = [];

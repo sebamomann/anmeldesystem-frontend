@@ -97,7 +97,7 @@ body {
   overflow: hidden;
 
   & > svg {
-    transform: scale(1.1, 1.2) translateY(5%) translateX(-2.5%);
+    transform: scale(1.1, 1.25) translateY(10%) translateX(-2.5%);
   }
 }
 
@@ -665,6 +665,26 @@ footer {
   position: fixed !important;
   top: 0;
   z-index: 9999;
+  animation: 0.75s progress-bar;
+}
+
+@keyframes progress-bar {
+  0% {
+    height: 0;
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    height: 4px;
+  }
+}
+
+.mat-progress-bar-buffer {
+  background-color: $secondary;
+}
+
+.mat-progress-bar-fill::after {
+  background-color: white;
 }
 
 .upload-progress {
