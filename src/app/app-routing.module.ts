@@ -15,7 +15,7 @@ import {PasswordresetComponent} from './components/account/passwordreset/passwor
 const routes: Routes = [
   {path: '', pathMatch: 'full', component: LandingPageComponent},
   {
-    path: 'account', children: [
+    path: 'account', canActivate: [AuthGuard], children: [
       {path: 'login', component: LoginComponent},
       {path: 'register', component: RegisterComponent},
       {path: 'passwordreset/:mail/:token', component: PasswordresetComponent},

@@ -86,6 +86,8 @@ export class AppComponent {
 
     if (this.userIsLoggedIn) {
       this.items.push({name: 'account', redirect: '/account'});
+    } else {
+      this.items.push({name: 'account', redirect: '/account/login'});
     }
 
     this.items.push({name: 'kontakt'});
