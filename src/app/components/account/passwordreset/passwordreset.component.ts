@@ -3,6 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {AccountService} from '../../../services/account.service';
 import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {DatePipe} from '@angular/common';
+import {HttpEventType} from '@angular/common/http';
 
 const HttpStatus = require('http-status-codes');
 
@@ -111,11 +112,9 @@ export class PasswordresetComponent implements OnInit {
         .resetPassword(this.getPassword().value, this.mail, this.token)
         .subscribe(
           result => {
-            if (result.status === 204) {
-              setTimeout(() => {
-                this.done = true;
-                this.doneMsg = 'Top. Ich habe dein passwort geändert!';
-              }, 1000);
+            if (result.type === HttpEventType.Response) {
+              this.done = true;
+              this.doneMsg = 'Top. Ich habe dein passwort geändert!';
             }
           },
           err => {
