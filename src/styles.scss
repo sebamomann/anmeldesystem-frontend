@@ -268,8 +268,8 @@ a {
 
   &.title {
     font-size: 1.4em;
-    color: white;
-    margin: 0 auto;
+    color: white !important;
+    margin: 0 auto !important;
     display: block;
     width: fit-content;
     text-decoration: none;
