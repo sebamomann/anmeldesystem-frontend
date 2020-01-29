@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {AuthenticationService} from '../../services/authentication.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -6,8 +7,9 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./landing-page.component.scss']
 })
 export class LandingPageComponent implements OnInit {
+  public userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
 
-  constructor() {
+  constructor(private authenticationService: AuthenticationService) {
   }
 
   ngOnInit() {
