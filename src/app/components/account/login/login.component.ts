@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
   hide = true;
 
   event = new FormGroup({
-    username: new FormControl('', [Validators.required]),
+    username: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required]),
   });
 
@@ -51,16 +51,25 @@ export class LoginComponent implements OnInit {
           error => {
             console.log(error.error.error);
             this.changeDate = new Date(error.error.error);
-            this.getPassword().setErrors({isOldPassword: true});
+            const d = this.changeDate;
+            console.log(this.changeDate);
+            if (d instanceof Date && !isNaN(d.getTime())) {
+              this.getPassword().setErrors({isOldPassword: true});
+            } else {
+              this.getPassword().setErrors({invalid: true});
+            }
           });
-
     }
   }
 
   getUsernameErrorMessage(): string {
-    return this.getUsername().hasError('required')
-      ? 'Bitte gebe Email/Benutzername ein'
-      : 'Etwas ist schief gelaufen';
+    if (this.getUsername().hasError('required')) {
+      return 'Bitte gebe deine E-Mail ein';
+    }
+
+    if (this.getUsername().hasError('email')) {
+      return 'Bitte gebe eine gültige E-Mail ein';
+    }
   }
 
   getPasswordErrorMessage(): string {
@@ -71,6 +80,10 @@ export class LoginComponent implements OnInit {
     if (this.getPassword().hasError('isOldPassword')) {
       const pipe = new DatePipe('de-DE');
       return 'Du hast dieses Passwort am ' + pipe.transform(this.changeDate, 'dd.MM.y, HH:mm') + 'Uhr geändert';
+    }
+
+    if (this.getPassword().hasError('invalid')) {
+      return 'Benutzername oder Passwort falsch';
     }
   }
 
