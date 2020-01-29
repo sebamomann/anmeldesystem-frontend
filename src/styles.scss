@@ -73,7 +73,7 @@ $anmeldesystem-theme: mat-light-theme($anmeldesystem-primary, $anmeldesystem-acc
 
 $primary: #366EA7;
 $primary_dark: #141B41;
-$secondary: #2B2C30;
+$secondary: #1B1C20;
 $accent: #56E39F;
 $accent_dark: #204127;
 $error: #9B1D20;
@@ -114,7 +114,8 @@ mat-icon {
     -webkit-transform: rotate(360deg);
     border-style: solid;
     border-width: 40px 60px 0 0;
-    border-color: transparent transparent transparent transparent;
+    border-color: $secondary transparent transparent transparent;
+    opacity: 0.5;
     transition: 0.5s all, 2s border-top-color;
 
     &.visible {
@@ -122,6 +123,7 @@ mat-icon {
       border-width: 90vh 220vh 0 0;
       border-color: $secondary transparent transparent transparent;
       transition: 0.5s all, 0s border-top-color;
+      opacity: 0.95;
     }
   }
 
@@ -154,12 +156,12 @@ mat-icon {
     }
 
     &.active {
-      margin-top: 14px;
+      margin-top: 16px;
       transition: 0.5s all;
 
       & > .line {
         transition: 0.5s all;
-        margin: 3px 8px 3px;
+        margin: 3.5px 8px 3px;
 
         &:nth-child(1) {
           width: 20px;
@@ -262,6 +264,8 @@ h1 {
 }
 
 a {
+  color: $primary_dark;
+
   &.title {
     font-size: 1.4em;
     color: white;
@@ -463,12 +467,11 @@ mat-card {
   }
 
   &.float {
-    top: calc(50vh - 25px);
-    transform: translateY(-50%);
+    margin-top: 15vh;
   }
 
   &.form {
-    margin: 0 auto;
+    margin-top: 15vh;
     width: 90%;
     text-align: center;
 
@@ -483,13 +486,25 @@ mat-card {
     mat-card-content {
       form > span {
         display: block;
-        margin: 15px auto;
+        margin: 5px auto 0;
       }
 
       & > button:last-of-type {
         display: block;
         margin: 0 auto;
       }
+    }
+
+    mat-card-actions {
+      margin-bottom: 8px;
+    }
+  }
+
+  mat-card-title {
+    color: $secondary;
+
+    &.headline {
+      color: $secondary;
     }
   }
 
