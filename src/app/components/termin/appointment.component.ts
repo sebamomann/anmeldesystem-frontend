@@ -51,11 +51,11 @@ export class AppointmentComponent implements OnInit {
   public appointment: IAppointmentModel = null;
   // List to show (enrollments left after filter is applied)
   public enrollments: IEnrollmentModel[];
-  private enrollmentsCorrect: IEnrollmentModel[] = [];
-  private enrollmentsCorrectOrig: IEnrollmentModel[] = [];
-  private enrollmentsTooLate: IEnrollmentModel[] = [];
-  private enrollmentsWaitingList: IEnrollmentModel[] = [];
-  private waitingListBeforeDate: boolean;
+  public enrollmentsCorrect: IEnrollmentModel[] = [];
+  public enrollmentsCorrectOrig: IEnrollmentModel[] = [];
+  public enrollmentsTooLate: IEnrollmentModel[] = [];
+  public enrollmentsWaitingList: IEnrollmentModel[] = [];
+  public waitingListBeforeDate: boolean;
 
   public link: string;
   public filter: any;
@@ -107,7 +107,7 @@ export class AppointmentComponent implements OnInit {
   successfulRequest() {
     this.enrollments = this.appointment.enrollments;
     this.enrollmentsTooLate = this.enrollments.filter(fEnrollment => {
-      if (fEnrollment.iat < this.appointment.deadline) {
+      if (fEnrollment.iat > this.appointment.deadline) {
         return fEnrollment;
       } else {
         this.enrollmentsCorrect.push(fEnrollment);
