@@ -51,6 +51,12 @@ export class AppointmentComponent implements OnInit {
   public appointment: IAppointmentModel = null;
   // List to show (enrollments left after filter is applied)
   public enrollments: IEnrollmentModel[];
+  private enrollmentsCorrect: IEnrollmentModel[] = [];
+  private enrollmentsCorrectOrig: IEnrollmentModel[] = [];
+  private enrollmentsTooLate: IEnrollmentModel[] = [];
+  private enrollmentsWaitingList: IEnrollmentModel[] = [];
+  private waitingListBeforeDate: boolean;
+
   public link: string;
   public filter: any;
   public allowModify = false;
@@ -100,6 +106,38 @@ export class AppointmentComponent implements OnInit {
 
   successfulRequest() {
     this.enrollments = this.appointment.enrollments;
+    this.enrollmentsTooLate = this.enrollments.filter(fEnrollment => {
+      if (fEnrollment.iat < this.appointment.deadline) {
+        return fEnrollment;
+      } else {
+        this.enrollmentsCorrect.push(fEnrollment);
+      }
+    });
+
+    if (this.appointment.maxEnrollments != null && this.appointment.maxEnrollments !== 0) {
+      if (this.enrollmentsCorrect.length > this.appointment.maxEnrollments) {
+        const enrollmentsCorrectTmp = this.enrollmentsCorrect
+          .slice(0, this.appointment.maxEnrollments);
+        const enrollmentsWaitingListTmp = this.enrollmentsCorrect
+          .slice(this.appointment.maxEnrollments, this.appointment.maxEnrollments + this.enrollmentsCorrect.length);
+
+        this.enrollmentsCorrect = enrollmentsCorrectTmp;
+        this.enrollmentsWaitingList = enrollmentsWaitingListTmp;
+        this.waitingListBeforeDate = true;
+      } else {
+        const enrollmentsTooLateTmp = this.enrollmentsTooLate
+          .slice(0, this.appointment.maxEnrollments);
+        const enrollmentsWaitingListTmp = this.enrollmentsTooLate
+          .slice(this.appointment.maxEnrollments, this.appointment.maxEnrollments + this.enrollmentsTooLate.length);
+
+        this.enrollmentsTooLate = enrollmentsTooLateTmp;
+        this.enrollmentsWaitingList = enrollmentsWaitingListTmp;
+        this.waitingListBeforeDate = false;
+      }
+    }
+
+    this.enrollmentsCorrectOrig = this.enrollmentsCorrect;
+
     this.filter = this.initializeFilterObject(this.appointment);
     // this.allowModify = this.modificationAllowed();
     this.allowModify = true;
@@ -139,14 +177,14 @@ export class AppointmentComponent implements OnInit {
    */
   filterEnrollments: () => IEnrollmentModel[] = () => {
     // Reset enrollment list to original list
-    this.enrollments = this.appointment.enrollments;
+    this.enrollmentsCorrect = this.enrollmentsCorrectOrig;
 
     const numberOfAdditionFilters = this.filter.additions.filter(val => val.active).length;
     if (numberOfAdditionFilters > 0
       || this.filter.driverPassenger !== '') {
       const output: IEnrollmentModel[] = [];
 
-      this.enrollments.forEach(eEnrollment => {
+      this.enrollmentsCorrect.forEach(eEnrollment => {
         try {
           if (numberOfAdditionFilters > 0) {
             let contains = 0;

@@ -26,6 +26,10 @@
     }
   }
 
+  &:not(:first-of-type) {
+    margin-top: 50px;
+  }
+
   .enrollment {
     margin: 2px auto;
 
