@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.model';
-import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
+import {HttpClient, HttpEvent, HttpHeaders, HttpRequest} from '@angular/common/http';
 import {Observable, Subject, timer} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
 import {environment} from '../../environments/environment';
@@ -25,6 +25,7 @@ export class AppointmentService {
   private hasUpdate$: Observable<boolean>;
   private updateAvailableFnc;
   private etag = {current: '', last: ''};
+  private first: boolean;
 
 
   constructor(private readonly httpClient: HttpClient, private glob: Globals) {
@@ -33,13 +34,14 @@ export class AppointmentService {
 
   getAppointment(link: string, slim: boolean = false) {
     if (!this.cache$ || this.lastFetched !== link) {
+      console.log('empty cache');
       this.clear$.next();
-      this.clear$ = new Subject<void>();
       this.lastFetched = link;
       this.hasUpdate$ = new Observable(obs => {
         obs.next(this.etag.last !== this.etag.current);
+        // obs.next(true);
 
-        this.updateAvailableFnc = (_newValue, _link) => {
+        this.updateAvailableFnc = (_newValue) => {
           obs.next(_newValue);
         };
       });
@@ -52,12 +54,12 @@ export class AppointmentService {
       // subscribers share one underlying source and don't re-create
       // the source over and over again. We use takeUntil to complete
       // this stream when the user forces an update.
+      this.first = true;
       this.cache$ = timer$.pipe(
         switchMap(() => this.requestAppointment(link, slim)),
         takeUntil(this.clear$),
         shareReplay(CACHE_SIZE)
       );
-
     }
 
     return this.cache$;
@@ -92,9 +94,18 @@ export class AppointmentService {
       url += '?slim=true';
     }
 
+    const headers = new HttpHeaders();
+    if (this.first) {
+      headers.append('test', 'Example');
+      console.log('first');
+    }
+
+    this.first = false;
+
     req = new HttpRequest('GET', url, {
       observe: 'response',
       reportProgress: true,
+      headers
     });
     // }
 

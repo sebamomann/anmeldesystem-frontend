@@ -109,6 +109,12 @@ export class AppointmentComponent implements OnInit {
     this.updateAvailable$ = this.appointmentService.updateAvailable();
     this.showNotification$ = merge(show$, hide$);
 
+    this.updateAvailable$.subscribe(val => {
+      if (val) {
+        this.fetchUpdate();
+      }
+    });
+
     this.successfulRequest();
   }
 
@@ -545,5 +551,10 @@ export class AppointmentComponent implements OnInit {
 
   private allowedToEditByToken(enrollment: IEnrollmentModel, operation: string) {
     return this._openAskForKeyDialog(enrollment, operation);
+  }
+
+  fetchUpdate() {
+    this.update$.next();
+    this.resetUpdateAvailable();
   }
 }

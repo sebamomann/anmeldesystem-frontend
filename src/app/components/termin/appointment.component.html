@@ -1,23 +1,10 @@
-<div [class.visible]="updateAvailable$ | async" class="notification">
-  <span>There's new data available. Click to reload the data.</span>
-  <button (click)="update$.next(); this.resetUpdateAvailable()" color="accent" mat-raised-button>
-    <div class="flex-row">
-      <mat-icon>cached</mat-icon>
-      UPDATE
-    </div>
-  </button>
+<div *ngIf="updateAvailable$ | async" class="notification-wrapper">
+  <div (click)="fetchUpdate()" [class.visible]="updateAvailable$ | async" class="notification">
+    <span>Neue Daten vorhanden <mat-icon>cached</mat-icon></span>
+  </div>
 </div>
 
-<ng-container *ngIf="appointment$ | async as appointment">
-
-  <button (click)="forceReload()" class="reload-button"
-          color="accent" mat-raised-button>
-    <div class="flex-row">
-      <mat-icon>cached</mat-icon>
-      FETCH NEW JOKES
-    </div>
-  </button>
-
+<ng-container *ngIf="appointment$ | async as appointment; else loading">
   <app-appointment-data [appointment]="appointment"></app-appointment-data>
 
   <!--  <div *ngIf="userIsLoggedIn" id="telegramAuth">-->
