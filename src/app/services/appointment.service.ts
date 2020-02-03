@@ -21,6 +21,7 @@ export class AppointmentService {
   private lastFetched: string;
   private cache$: Observable<IAppointmentModel>;
   private reload$ = new Subject<void>();
+  private clear$ = new Subject<void>();
   private hasUpdate$: Observable<boolean>;
   private updateAvailableFnc;
   private etag = {current: '', last: ''};
@@ -32,6 +33,8 @@ export class AppointmentService {
 
   getAppointment(link: string, slim: boolean = false) {
     if (!this.cache$ || this.lastFetched !== link) {
+      this.clear$.next();
+      this.clear$ = new Subject<void>();
       this.lastFetched = link;
       this.hasUpdate$ = new Observable(obs => {
         obs.next(this.etag.last !== this.etag.current);
@@ -51,9 +54,10 @@ export class AppointmentService {
       // this stream when the user forces an update.
       this.cache$ = timer$.pipe(
         switchMap(() => this.requestAppointment(link, slim)),
-        takeUntil(this.reload$),
+        takeUntil(this.clear$),
         shareReplay(CACHE_SIZE)
       );
+
     }
 
     return this.cache$;
