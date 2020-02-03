@@ -38,8 +38,8 @@ export class AppointmentService {
       this.clear$.next();
       this.lastFetched = link;
       this.hasUpdate$ = new Observable(obs => {
-        obs.next(this.etag.last !== this.etag.current);
-        // obs.next(true);
+        // obs.next(this.etag.last !== this.etag.current);
+        obs.next(true);
 
         this.updateAvailableFnc = (_newValue) => {
           obs.next(_newValue);
@@ -94,10 +94,11 @@ export class AppointmentService {
       url += '?slim=true';
     }
 
-    const headers = new HttpHeaders();
+    let headers = new HttpHeaders();
     if (this.first) {
-      headers.append('test', 'Example');
-      console.log('first');
+      headers = new HttpHeaders({
+        'If-None-Match': ''
+      });
     }
 
     this.first = false;
@@ -114,6 +115,9 @@ export class AppointmentService {
       this.etag.last = this.etag.current;
       // @ts-ignore
       this.etag.current = response.headers.get('etag');
+      if (this.etag.last !== this.etag.current) {
+        this.updateAvailableFnc(true);
+      }
     });
 
     return res.pipe(

@@ -111,6 +111,7 @@ export class AppointmentComponent implements OnInit {
 
     this.updateAvailable$.subscribe(val => {
       if (val) {
+        console.log(val);
         this.fetchUpdate();
       }
     });
