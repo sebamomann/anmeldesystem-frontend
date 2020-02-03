@@ -107,14 +107,8 @@ export class AppointmentComponent implements OnInit {
     const show$ = merge(initialNotifications$, reload$).pipe(mapTo(true));
     const hide$ = this.update$.pipe(mapTo(false));
     this.updateAvailable$ = this.appointmentService.updateAvailable();
-    this.showNotification$ = merge(show$, hide$);
 
-    this.updateAvailable$.subscribe(val => {
-      if (val) {
-        console.log(val);
-        this.fetchUpdate();
-      }
-    });
+    this.showNotification$ = merge(show$, hide$);
 
     this.successfulRequest();
   }

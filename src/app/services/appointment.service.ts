@@ -96,12 +96,13 @@ export class AppointmentService {
 
     let headers = new HttpHeaders();
     if (this.first) {
+      console.log('first');
       headers = new HttpHeaders({
         'If-None-Match': ''
       });
+    } else {
+      console.log('!first');
     }
-
-    this.first = false;
 
     req = new HttpRequest('GET', url, {
       observe: 'response',
@@ -115,7 +116,9 @@ export class AppointmentService {
       this.etag.last = this.etag.current;
       // @ts-ignore
       this.etag.current = response.headers.get('etag');
-      if (this.etag.last !== this.etag.current) {
+      if (this.etag.last !== this.etag.current || this.first) {
+        this.first = false;
+        console.log('update');
         this.updateAvailableFnc(true);
       }
     });

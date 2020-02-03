@@ -28,11 +28,26 @@
 
     &.visible {
       display: block;
+      animation: comeUp 0.25s;
     }
 
     button {
       font-size: 1em;
     }
+  }
+}
+
+@keyframes comeUp {
+  0% {
+    transform: scale(0.25);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
   }
 }
 
