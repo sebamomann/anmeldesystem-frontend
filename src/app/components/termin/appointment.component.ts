@@ -72,6 +72,7 @@ export class AppointmentComponent implements OnInit {
   showNotification$: Observable<boolean>;
   update$ = new Subject<void>();
   forceReload$ = new Subject<void>();
+  updateAvailable$: Observable<boolean>;
 
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
@@ -105,9 +106,14 @@ export class AppointmentComponent implements OnInit {
     const initialNotifications$ = this.getNotifications();
     const show$ = merge(initialNotifications$, reload$).pipe(mapTo(true));
     const hide$ = this.update$.pipe(mapTo(false));
+    this.updateAvailable$ = this.appointmentService.updateAvailable();
     this.showNotification$ = merge(show$, hide$);
 
     this.successfulRequest();
+  }
+
+  resetUpdateAvailable() {
+    this.appointmentService.resetAvailableUpdate();
   }
 
   getDataOnce() {

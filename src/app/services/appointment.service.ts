@@ -21,6 +21,9 @@ export class AppointmentService {
   private lastFetched: string;
   private cache$: Observable<IAppointmentModel>;
   private reload$ = new Subject<void>();
+  private hasUpdate$: Observable<boolean>;
+  private updateAvailableFnc;
+  private etag = {current: '', last: ''};
 
 
   constructor(private readonly httpClient: HttpClient, private glob: Globals) {
@@ -30,6 +33,14 @@ export class AppointmentService {
   getAppointment(link: string, slim: boolean = false) {
     if (!this.cache$ || this.lastFetched !== link) {
       this.lastFetched = link;
+      this.hasUpdate$ = new Observable(obs => {
+        obs.next(this.etag.last !== this.etag.current);
+
+        this.updateAvailableFnc = (_newValue, _link) => {
+          obs.next(_newValue);
+        };
+      });
+
       // Set up timer that ticks every X milliseconds
       const timer$ = timer(0, REFRESH_INTERVAL);
 
@@ -46,6 +57,14 @@ export class AppointmentService {
     }
 
     return this.cache$;
+  }
+
+  updateAvailable(): Observable<boolean> {
+    return this.hasUpdate$;
+  }
+
+  resetAvailableUpdate() {
+    this.updateAvailableFnc(false);
   }
 
   forceReload() {
@@ -75,7 +94,14 @@ export class AppointmentService {
     });
     // }
 
-    return this.httpClient.request(req).pipe(
+    const res = this.httpClient.request(req);
+    res.toPromise().then(response => {
+      this.etag.last = this.etag.current;
+      // @ts-ignore
+      this.etag.current = response.headers.get('etag');
+    });
+
+    return res.pipe(
       // @ts-ignore
       map(response => response.body)
     );
