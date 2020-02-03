@@ -4,8 +4,9 @@ import {AppointmentService} from '../../../services/appointment.service';
 import {Location} from '@angular/common';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {ActivatedRoute} from '@angular/router';
-import {HttpEventType} from '@angular/common/http';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {merge, Observable, Subject} from 'rxjs';
+import {mapTo, mergeMap, skip, switchMap, take} from 'rxjs/operators';
 
 const HttpStatus = require('http-status-codes');
 
@@ -31,6 +32,12 @@ export class DriverComponent implements OnInit {
   public link;
   public percentDone: number;
 
+  // CACHE
+  appointment$: Observable<IAppointmentModel>;
+  showNotification$: Observable<boolean>;
+  update$ = new Subject<void>();
+  forceReload$ = new Subject<void>();
+
   constructor(private appointmentService: AppointmentService, private location: Location, private route: ActivatedRoute) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
@@ -38,53 +45,73 @@ export class DriverComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.appointmentService.getAppointment(this.link, true).subscribe(sAppointment => {
-      if (sAppointment.type === HttpEventType.DownloadProgress) {
-        this.percentDone = Math.round(100 * sAppointment.loaded / sAppointment.total);
-      } else if (sAppointment.type === HttpEventType.Response) {
-        if (sAppointment.status !== HttpStatus.OK) {
-          this.appointment = null;
-          return;
+    const initialAppointment$ = this.getDataOnce();
+
+    const updates$ = merge(this.update$, this.forceReload$).pipe(
+      mergeMap(() => this.getDataOnce())
+    );
+
+    this.appointment$ = merge(initialAppointment$, updates$);
+
+    const reload$ = this.forceReload$.pipe(switchMap(() => this.getNotifications()));
+    const initialNotifications$ = this.getNotifications();
+    const show$ = merge(initialNotifications$, reload$).pipe(mapTo(true));
+    const hide$ = this.update$.pipe(mapTo(false));
+    this.showNotification$ = merge(show$, hide$);
+
+    this.sucessfulRequest();
+  }
+
+  getDataOnce() {
+    return this.appointmentService.getAppointment(this.link).pipe(take(1));
+  }
+
+  getNotifications() {
+    return this.appointmentService.getAppointment(this.link).pipe(skip(1));
+  }
+
+  forceReload() {
+    this.appointmentService.forceReload();
+    this.forceReload$.next();
+  }
+
+  sucessfulRequest() {
+    this.appointment$.subscribe(sAppointment => {
+      this.appointment = sAppointment;
+
+      this.drivers = this.appointment.enrollments.filter(fAppointment => fAppointment.driver !== null);
+
+      this.data.neededTo = this.appointment.enrollments.filter(fAppointment => {
+        if (fAppointment.passenger != null
+          && (fAppointment.passenger.requirement === 1 || fAppointment.passenger.requirement === 2)) {
+          return fAppointment;
         }
-
-        this.appointment = sAppointment.body;
-
-        this.drivers = this.appointment.enrollments.filter(fAppointment => fAppointment.driver !== null);
-
-        this.data.neededTo = this.appointment.enrollments.filter(fAppointment => {
-          if (fAppointment.passenger != null
-            && (fAppointment.passenger.requirement === 1 || fAppointment.passenger.requirement === 2)) {
-            return fAppointment;
-          }
-        }).length;
-        this.data.gotTo = 0;
-        // tslint:disable-next-line:no-unused-expression
-        this.appointment.enrollments.filter(fAppointment => {
-          if (fAppointment.driver != null
-            && (fAppointment.driver.service === 1 || fAppointment.driver.service === 2)) {
-            this.data.gotTo += fAppointment.driver.seats;
-          }
-        }).length;
-        this.data.neededFrom = this.appointment.enrollments.filter(fAppointment => {
-          if (fAppointment.passenger != null
-            && (fAppointment.passenger.requirement === 1 || fAppointment.passenger.requirement === 3)) {
-            return fAppointment;
-          }
-        }).length;
-        this.data.gotFrom = 0;
-        // tslint:disable-next-line:no-unused-expression
-        this.appointment.enrollments.filter(fAppointment => {
-          if (fAppointment.driver != null
-            && (fAppointment.driver.service === 1 || fAppointment.driver.service === 3)) {
-            this.data.gotFrom += fAppointment.driver.seats;
-          }
-        }).length;
-
-      }
-    }, error => {
-
+      }).length;
+      this.data.gotTo = 0;
+      // tslint:disable-next-line:no-unused-expression
+      this.appointment.enrollments.filter(fAppointment => {
+        if (fAppointment.driver != null
+          && (fAppointment.driver.service === 1 || fAppointment.driver.service === 2)) {
+          this.data.gotTo += fAppointment.driver.seats;
+        }
+      }).length;
+      this.data.neededFrom = this.appointment.enrollments.filter(fAppointment => {
+        if (fAppointment.passenger != null
+          && (fAppointment.passenger.requirement === 1 || fAppointment.passenger.requirement === 3)) {
+          return fAppointment;
+        }
+      }).length;
+      this.data.gotFrom = 0;
+      // tslint:disable-next-line:no-unused-expression
+      this.appointment.enrollments.filter(fAppointment => {
+        if (fAppointment.driver != null
+          && (fAppointment.driver.service === 1 || fAppointment.driver.service === 3)) {
+          this.data.gotFrom += fAppointment.driver.seats;
+        }
+      }).length;
     });
   }
+
 
   compare(nr1: number, nr2: number) {
     if (nr1 > nr2) {

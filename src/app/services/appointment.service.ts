@@ -2,10 +2,14 @@ import {Injectable} from '@angular/core';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.model';
 import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, Subject, timer} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
 import {environment} from '../../environments/environment';
 import {Globals} from '../globals';
+import {map, shareReplay, switchMap, takeUntil} from 'rxjs/operators';
+
+const REFRESH_INTERVAL = 10000;
+const CACHE_SIZE = 1;
 
 @Injectable({
   providedIn: 'root'
@@ -13,19 +17,43 @@ import {Globals} from '../globals';
 export class AppointmentService {
   private globals: Globals;
 
+  // CACHING
+  private lastFetched: string;
+  private cache$: Observable<IAppointmentModel>;
+  private reload$ = new Subject<void>();
+
+
   constructor(private readonly httpClient: HttpClient, private glob: Globals) {
     this.globals = glob;
   }
 
-  addCachedAppointment(appointment: IAppointmentModel) {
-    this.globals.appointments[appointment.link] = appointment;
+  getAppointment(link: string, slim: boolean = false) {
+    if (!this.cache$ || this.lastFetched !== link) {
+      this.lastFetched = link;
+      // Set up timer that ticks every X milliseconds
+      const timer$ = timer(0, REFRESH_INTERVAL);
+
+      // For each timer tick make an http request to fetch new data
+      // We use shareReplay(X) to multicast the cache so that all
+      // subscribers share one underlying source and don't re-create
+      // the source over and over again. We use takeUntil to complete
+      // this stream when the user forces an update.
+      this.cache$ = timer$.pipe(
+        switchMap(() => this.requestAppointment(link, slim)),
+        takeUntil(this.reload$),
+        shareReplay(CACHE_SIZE)
+      );
+    }
+
+    return this.cache$;
   }
 
-  getFromCache(link: string) {
-    return this.globals.appointments[link];
+  forceReload() {
+    this.reload$.next();
+    this.cache$ = null;
   }
 
-  getAppointment(link: string, slim: boolean = false): Observable<HttpEvent<IAppointmentModel>> {
+  requestAppointment(link: string, slim: boolean) {
     let url;
     let req;
     // if (this.getFromCache(link) !== undefined && this.getFromCache(link) !== null) {
@@ -47,7 +75,10 @@ export class AppointmentService {
     });
     // }
 
-    return this.httpClient.request(req);
+    return this.httpClient.request(req).pipe(
+      // @ts-ignore
+      map(response => response.body)
+    );
   }
 
   getAppointments(slim: boolean = false): Observable<HttpEvent<IAppointmentModel[]>> {
@@ -59,6 +90,7 @@ export class AppointmentService {
       observe: 'response',
       reportProgress: true,
     });
+
     return this.httpClient.request(req);
   }
 

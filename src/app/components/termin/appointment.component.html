@@ -1,4 +1,22 @@
-<ng-container *ngIf="appointment; else loading">
+<div [class.visible]="showNotification$ | async" class="notification">
+  <span>There's new data available. Click to reload the data.</span>
+  <button (click)="update$.next()" color="accent" mat-raised-button>
+    <div class="flex-row">
+      <mat-icon>cached</mat-icon>
+      UPDATE
+    </div>
+  </button>
+</div>
+
+<ng-container *ngIf="appointment$ | async as appointment">
+
+  <button (click)="forceReload()" class="reload-button"
+          color="accent" mat-raised-button>
+    <div class="flex-row">
+      <mat-icon>cached</mat-icon>
+      FETCH NEW JOKES
+    </div>
+  </button>
 
   <app-appointment-data [appointment]="appointment"></app-appointment-data>
 
