@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.model';
 import {HttpClient, HttpEvent, HttpHeaders, HttpRequest} from '@angular/common/http';
-import {Observable, Subject, timer} from 'rxjs';
+import {BehaviorSubject, Observable, Subject, timer} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
 import {environment} from '../../environments/environment';
 import {Globals} from '../globals';
@@ -22,8 +22,7 @@ export class AppointmentService {
   private cache$: Observable<IAppointmentModel>;
   private reload$ = new Subject<void>();
   private clear$ = new Subject<void>();
-  private hasUpdate$: Observable<boolean>;
-  private updateAvailableFnc;
+  private hasUpdate$: BehaviorSubject<boolean>;
   private etag = {current: '', last: ''};
   private first: boolean;
 
@@ -37,14 +36,7 @@ export class AppointmentService {
       console.log('empty cache');
       this.clear$.next();
       this.lastFetched = link;
-      this.hasUpdate$ = new Observable(obs => {
-        // obs.next(this.etag.last !== this.etag.current);
-        obs.next(true);
-
-        this.updateAvailableFnc = (_newValue) => {
-          obs.next(_newValue);
-        };
-      });
+      this.hasUpdate$ = new BehaviorSubject<boolean>(false);
 
       // Set up timer that ticks every X milliseconds
       const timer$ = timer(0, REFRESH_INTERVAL);
@@ -66,11 +58,11 @@ export class AppointmentService {
   }
 
   updateAvailable(): Observable<boolean> {
-    return this.hasUpdate$;
+    return this.hasUpdate$.asObservable();
   }
 
   resetAvailableUpdate() {
-    this.updateAvailableFnc(false);
+    this.hasUpdate$.next(false);
   }
 
   forceReload() {
@@ -119,7 +111,7 @@ export class AppointmentService {
       if (this.etag.last !== this.etag.current || this.first) {
         this.first = false;
         console.log('update');
-        this.updateAvailableFnc(true);
+        this.hasUpdate$.next(true);
       }
     });
 

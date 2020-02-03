@@ -72,7 +72,8 @@ export class AppointmentComponent implements OnInit {
   showNotification$: Observable<boolean>;
   update$ = new Subject<void>();
   forceReload$ = new Subject<void>();
-  updateAvailable$: Observable<boolean>;
+  updateAvailable$: Observable<boolean> = new Observable<boolean>();
+  private first = true;
 
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
@@ -106,7 +107,17 @@ export class AppointmentComponent implements OnInit {
     const initialNotifications$ = this.getNotifications();
     const show$ = merge(initialNotifications$, reload$).pipe(mapTo(true));
     const hide$ = this.update$.pipe(mapTo(false));
+    this.updateAvailable$ = null;
     this.updateAvailable$ = this.appointmentService.updateAvailable();
+
+    // this.appointment$.subscribe(val => {
+    //   console.log(val);
+    //   if (val !== undefined && this.first) {
+    //     this.first = false;
+    //     console.log('lol');
+    //     this.fetchUpdate();
+    //   }
+    // });
 
     this.showNotification$ = merge(show$, hide$);
 
