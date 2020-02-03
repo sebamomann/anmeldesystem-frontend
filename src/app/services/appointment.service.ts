@@ -70,7 +70,7 @@ export class AppointmentService {
     this.cache$ = null;
   }
 
-  requestAppointment(link: string, slim: boolean) {
+  requestAppointment(link: string, slim: boolean): Observable<IAppointmentModel> {
     let url;
     let req;
     // if (this.getFromCache(link) !== undefined && this.getFromCache(link) !== null) {
@@ -101,22 +101,26 @@ export class AppointmentService {
       reportProgress: true,
       headers
     });
-    // }
+    const resp = this.httpClient.request(req);
 
-    const res = this.httpClient.request(req);
+
+    const res = this.httpClient.get(url, {headers, observe: 'response'});
     res.toPromise().then(response => {
+      console.log(response);
       this.etag.last = this.etag.current;
-      // @ts-ignore
       this.etag.current = response.headers.get('etag');
-      if (this.etag.last !== this.etag.current || this.first) {
-        this.first = false;
+      console.log(JSON.stringify(this.etag));
+      if (this.etag.last !== this.etag.current && !this.first) {
         console.log('update');
         this.hasUpdate$.next(true);
       }
+
+      this.first = false;
     });
 
+
+    // @ts-ignore
     return res.pipe(
-      // @ts-ignore
       map(response => response.body)
     );
   }
