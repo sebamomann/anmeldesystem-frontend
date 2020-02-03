@@ -106,10 +106,8 @@ export class AppointmentService {
 
     const res = this.httpClient.get(url, {headers, observe: 'response'});
     res.toPromise().then(response => {
-      console.log(response);
       this.etag.last = this.etag.current;
       this.etag.current = response.headers.get('etag');
-      console.log(JSON.stringify(this.etag));
       if (this.etag.last !== this.etag.current && !this.first) {
         console.log('update');
         this.hasUpdate$.next(true);
@@ -119,9 +117,8 @@ export class AppointmentService {
     });
 
 
-    // @ts-ignore
     return res.pipe(
-      map(response => response.body)
+      map(response => response.body as IAppointmentModel)
     );
   }
 
