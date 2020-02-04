@@ -32,7 +32,6 @@ const HttpStatus = require('http-status-codes');
   ]
 })
 export class EnrollmentComponent implements OnInit {
-
   constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
               private location: Location,
               private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
@@ -117,6 +116,9 @@ export class EnrollmentComponent implements OnInit {
     );
 
     this.appointment$ = merge(initialAppointment$, updates$);
+    this.appointment$.subscribe(sAppointment => {
+      this.appointment = sAppointment;
+    });
 
     const reload$ = this.forceReload$.pipe(switchMap(() => this.getNotifications()));
     const initialNotifications$ = this.getNotifications();
@@ -140,34 +142,31 @@ export class EnrollmentComponent implements OnInit {
     this.forceReload$.next();
   }
 
-  successfulRequest() {
-    this.appointment$.subscribe(sAppointment => {
+  private successfulRequest(): void {
+    this.storageDataToFields();
+    // When e.g. coming from login
+    if (this.showLoginAndTokenForm === true) {
+      // Re-fetch output from local storage
+      this.output = JSON.parse(this.outputRawFromStorage);
+      this.parseOutputIntoForm();
 
-      this.storageDataToFields();
-      // When e.g. coming from login
-      if (this.showLoginAndTokenForm === true) {
-        // Re-fetch output from local storage
-        this.output = JSON.parse(this.outputRawFromStorage);
-        this.parseOutputIntoForm();
-
-        if (this.autoSend) {
-          this.sendEnrollment();
-        }
-      } else if (this.edit) {
-        const enrollment: IEnrollmentModel = sAppointment.enrollments.filter(fEnrollment => {
-          return fEnrollment.id === this.enrollmentId;
-        })[0];
-
-        if (enrollment !== null) {
-          this.output = enrollment;
-          this.parseOutputIntoForm();
-        }
-      } else {
-        // DO NOTHING, BECAUSE FORM IS EMPTY FOR ADDING NEW ENROLLMENT
+      if (this.autoSend) {
+        this.sendEnrollment();
       }
+    } else if (this.edit) {
+      const enrollment: IEnrollmentModel = this.appointment.enrollments.filter(fEnrollment => {
+        return fEnrollment.id === this.enrollmentId;
+      })[0];
 
-      this.buildFormCheckboxes();
-    });
+      if (enrollment !== null) {
+        this.output = enrollment;
+        this.parseOutputIntoForm();
+      }
+    } else {
+      // DO NOTHING, BECAUSE FORM IS EMPTY FOR ADDING NEW ENROLLMENT
+    }
+
+    this.buildFormCheckboxes();
   }
 
   /**
