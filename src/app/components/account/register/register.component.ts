@@ -2,8 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AccountService} from '../../../services/account.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
-export function passwordVerifyCheck(): ValidatorFn {
+const HttpStatus = require('http-status-codes');
+
+function passwordVerifyCheck(): ValidatorFn {
   return (control: FormGroup): ValidationErrors => {
     const pass = control.controls.password.value;
     const passVerify = control.controls.passwordVerify.value;
@@ -42,28 +45,29 @@ export class RegisterComponent implements OnInit {
     if (this.event.valid) {
 
       const userData = {
-        email: this.getEmail().value,
+        mail: this.getMail().value,
         password: this.getPassword().value,
         username: this.getUsername().value,
       };
 
-      const response = this.accountService.register(userData);
+      this.accountService.register(userData).subscribe(res => {
 
-
-      response.subscribe(res => {
-          const user = res.user;
-          const error = res.error;
-
-          if (error.length === 0) {
-            this.router.navigateByUrl('');
-          }
-        }, error => {
-          error.error.error.forEach(val => {
-            const fnName: string = 'get' + val.charAt(0).toUpperCase() + val.substring(1);
-            this[fnName]().setErrors({inUse: true});
-          });
         },
+        (err: HttpErrorResponse) => {
+          if (err.status === HttpStatus.BAD_REQUEST) {
+            if (err.error.code === 'DUPLICATE_ENTRY') {
+              err.error.error.forEach(fColumn => {
+                  const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
+                  const fnName: string = 'get' + uppercaseName;
+                  this[fnName]().setErrors({inUse: true});
+                }
+              );
+            }
+          }
+        }
       );
+    } else {
+      this.getPasswordVerify().setErrors({});
     }
   }
 
@@ -78,15 +82,15 @@ export class RegisterComponent implements OnInit {
   }
 
   getEmailErrorMessage(): string {
-    if (this.getEmail().hasError('required')) {
+    if (this.getMail().hasError('required')) {
       return 'Bitte gebe eine Email-Adresse an';
     }
 
-    if (this.getEmail().hasError('email')) {
+    if (this.getMail().hasError('email')) {
       return 'Diese Email-Adresse hat kein gültiges Format';
     }
 
-    if (this.getEmail().hasError('inUse')) {
+    if (this.getMail().hasError('inUse')) {
       return 'Diese Email wird bereits verwendet';
     }
   }
@@ -111,7 +115,7 @@ export class RegisterComponent implements OnInit {
     return this.event.get('username');
   }
 
-  private getEmail() {
+  private getMail() {
     return this.event.get('email');
   }
 

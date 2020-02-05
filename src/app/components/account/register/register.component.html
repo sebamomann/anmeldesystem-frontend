@@ -11,7 +11,7 @@
                placeholder="Benutzername"
                formControlName="username"
                required>
-        <mat-error *ngIf="event.get('username').invalid">{{ getUsernameErrorMessage() }}</mat-error>
+        <mat-error>{{ getUsernameErrorMessage() }}</mat-error>
       </mat-form-field>
       <mat-form-field class="email">
         <input matInput
@@ -19,7 +19,7 @@
                placeholder="E-Mail"
                formControlName="email"
                required>
-        <mat-error *ngIf="event.get('email').invalid">{{ getEmailErrorMessage() }}</mat-error>
+        <mat-error>{{ getEmailErrorMessage() }}</mat-error>
       </mat-form-field>
       <mat-form-field class="pass" formGroupName="passwords">
         <input matInput
@@ -31,8 +31,7 @@
         <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
-        <mat-error
-          *ngIf="event.get('passwords').get('password').invalid">{{ getPasswordErrorMessage() }}</mat-error>
+        <mat-error>{{ getPasswordErrorMessage() }}</mat-error>
       </mat-form-field>
       <mat-form-field class="pass" formGroupName="passwords">
         <input matInput
@@ -44,8 +43,7 @@
         <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
-        <mat-error
-          *ngIf="event.get('passwords').get('passwordVerify').invalid">{{ getPasswordVerifyErrorMessage() }}</mat-error>
+        <mat-error>{{ getPasswordVerifyErrorMessage() }} </mat-error>
       </mat-form-field>
       <span>
         Du hast bereits einen Account?

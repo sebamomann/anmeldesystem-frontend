@@ -59,6 +59,8 @@ import {PasswordresetComponent} from './components/account/passwordreset/passwor
 import localeDe from '@angular/common/locales/de';
 import {EnrollmentListComponent} from './components/termin/enrollment/enrollment-list/enrollment-list.component';
 
+const HttpStatus = require('http-status-codes');
+
 registerLocaleData(localeDe);
 
 @NgModule({
