@@ -1,9 +1,9 @@
 <mat-card class="form float">
   <mat-card-title class="headline">
-    Register
+    Registrieren
   </mat-card-title>
 
-  <mat-card-content>
+  <mat-card-content *ngIf="done == false; else doneTemplate">
     <form (ngSubmit)="create()" class="register-form" [formGroup]="event">
       <mat-form-field class="username">
         <input matInput
@@ -61,4 +61,13 @@
     </form>
   </mat-card-content>
 </mat-card>
+
+<ng-template #doneTemplate>
+  <span>
+    Dein Account wurde erfolgreich angelegt. Bitte Folge den Anweisungen in der dir eben zugesandten E-Mail, um
+    die Registrierung abzuschließen.
+  </span>
+</ng-template>
+
+
 

@@ -25,6 +25,7 @@ function passwordVerifyCheck(): ValidatorFn {
 export class RegisterComponent implements OnInit {
 
   public hide = true;
+  public done = false;
 
   event = new FormGroup({
     username: new FormControl('', [Validators.required]),
@@ -51,7 +52,7 @@ export class RegisterComponent implements OnInit {
       };
 
       this.accountService.register(userData).subscribe(res => {
-
+          this.done = true;
         },
         (err: HttpErrorResponse) => {
           if (err.status === HttpStatus.BAD_REQUEST) {
