@@ -15,13 +15,13 @@
             <span>{{driver.name}}</span>
             <span>{{driver.driver.seats}} freie Plätze</span>
             <ng-container [ngSwitch]="driver.driver.service">
-              <span *ngSwitchCase="1" class='service'>
+              <span *ngSwitchCase="3" class='service'>
                 <mat-icon>compare_arrows</mat-icon>
               </span>
               <span *ngSwitchCase="2" class='service negative'>
                 <mat-icon>arrow_forward</mat-icon>
               </span>
-              <span *ngSwitchCase="3" class='service negative'>
+              <span *ngSwitchCase="1" class='service negative'>
                 <mat-icon>arrow_back</mat-icon>
               </span>
             </ng-container>

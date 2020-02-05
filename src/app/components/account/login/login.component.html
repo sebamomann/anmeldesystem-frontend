@@ -11,7 +11,7 @@
                id="username"
                placeholder="Email/Benutzername"
                required>
-        <mat-error *ngIf="event.get('username').invalid">{{ getUsernameErrorMessage() }}</mat-error>
+        <mat-error>{{ getUsernameErrorMessage() }}</mat-error>
       </mat-form-field>
       <mat-form-field class="pass">
         <input matInput
@@ -22,7 +22,7 @@
         <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
-        <mat-error *ngIf="event.get('password').invalid">{{ getPasswordErrorMessage() }}</mat-error>
+        <mat-error>{{ getPasswordErrorMessage() }}</mat-error>
       </mat-form-field>
 
       <span>

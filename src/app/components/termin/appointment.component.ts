@@ -114,8 +114,6 @@ export class AppointmentComponent implements OnInit {
       }
     });
 
-    this.enrollmentsTooLate.reverse();
-
     if (this.appointment.maxEnrollments != null && this.appointment.maxEnrollments !== 0) {
       if (this.enrollmentsCorrect.length > this.appointment.maxEnrollments) {
         const enrollmentsCorrectTmp = this.enrollmentsCorrect
