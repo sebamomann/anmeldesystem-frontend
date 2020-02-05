@@ -856,3 +856,10 @@ footer {
   position: absolute;
   bottom: 0;
 }
+
+.pass button {
+  mat-icon {
+    @include md-icon-size(25px !important);
+  }
+}
+
