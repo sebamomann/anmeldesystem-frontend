@@ -18,6 +18,7 @@ const routes: Routes = [
     path: 'account', children: [
       {path: 'login', component: LoginComponent},
       {path: 'register', component: RegisterComponent},
+      {path: 'verify/:mail/:token', component: RegisterComponent},
       {path: 'passwordreset/:mail/:token', component: PasswordresetComponent},
       {path: 'passwordreset', component: PasswordresetComponent}
     ]

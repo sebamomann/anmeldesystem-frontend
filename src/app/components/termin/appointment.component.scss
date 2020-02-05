@@ -25,83 +25,83 @@
       }
     }
   }
+}
 
-  .enrollment {
-    margin: 2px auto;
+.enrollment {
+  margin: 2px auto;
 
-    &.small {
-      width: 49%;
+  &.small {
+    width: 49%;
+    display: inline-block;
+
+    &:nth-child(odd) {
+      float: left;
+    }
+
+    &:nth-child(even) {
+      float: right;
+    }
+  }
+
+  &.mat-expansion-panel-spacing {
+    margin: 16px 0;
+  }
+
+  .enrollment-info {
+    padding: 10px 15px;
+    font-size: 0.95em;
+
+    span {
+      display: block;
+      width: 95%;
+
+      &.comment-block {
+        font-size: 0.9em;
+        font-style: italic;
+      }
+
+      &:first-of-type {
+        font-weight: 500;
+      }
+    }
+  }
+
+  .enrollment-additions {
+    margin: 5px auto;
+    display: flex;
+    flex: 3;
+
+    mat-icon {
+      @include md-icon-size(18px);
+      margin: 0 10% 0 0;
+      text-align: center;
+    }
+  }
+
+
+  .addition-list {
+    font-size: 0.75em;
+
+    & > div {
       display: inline-block;
-
-      &:nth-child(odd) {
-        float: left;
-      }
-
-      &:nth-child(even) {
-        float: right;
-      }
-    }
-
-    &.mat-expansion-panel-spacing {
-      margin: 16px 0;
-    }
-
-    .enrollment-info {
-      padding: 10px 15px;
-      font-size: 0.95em;
+      min-width: 50%;
+      width: 50%;
 
       span {
-        display: block;
-        width: 95%;
-
-        &.comment-block {
-          font-size: 0.9em;
-          font-style: italic;
-        }
-
-        &:first-of-type {
-          font-weight: 500;
-        }
+        width: 81% !important;
+        text-align: left;
       }
-    }
 
-    .enrollment-additions {
-      margin: 5px auto;
-      display: flex;
-      flex: 3;
+      span, mat-icon {
+        display: inline-block;
+        width: auto;
+        vertical-align: middle;
+      }
 
       mat-icon {
-        @include md-icon-size(18px);
-        margin: 0 10% 0 0;
-        text-align: center;
-      }
-    }
-
-
-    .addition-list {
-      font-size: 0.75em;
-
-      & > div {
-        display: inline-block;
-        min-width: 50%;
-        width: 50%;
-
-        span {
-          width: 81% !important;
-          text-align: left;
-        }
-
-        span, mat-icon {
-          display: inline-block;
-          width: auto;
-          vertical-align: middle;
-        }
-
-        mat-icon {
-          @include md-icon-size(19px);
-          margin-right: 5px;
-          color: #00126e;
-        }
+        @include md-icon-size(19px);
+        margin-right: 5px;
+        color: #00126e;
       }
     }
   }
