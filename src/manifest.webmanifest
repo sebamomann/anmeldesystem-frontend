@@ -1,7 +1,7 @@
 {
   "name": "EC-Anmeldesystem",
   "short_name": "ECA",
-  "theme_color": "#2B2C30",
+  "theme_color": "#2C2C2F",
   "background_color": "#ffffff",
   "display": "standalone",
   "scope": "/",

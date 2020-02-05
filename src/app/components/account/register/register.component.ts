@@ -31,7 +31,7 @@ export class RegisterComponent implements OnInit {
   public mail: string;
   public token: string;
   public error = null;
-  private verified = false;
+  public verified = false;
 
   event = new FormGroup({
     username: new FormControl('', [Validators.required]),
