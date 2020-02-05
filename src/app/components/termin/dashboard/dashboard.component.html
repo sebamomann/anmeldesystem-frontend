@@ -6,15 +6,17 @@
 
 <!--<ng-container *ngIf="false; else appointmentdata">-->
 <ng-container *ngIf="appointments !== undefined; else appointmentdata">
-  <div [@listAnimation]="appointments.length">
-    <ng-container *ngFor="let appointment of appointments">
-      <app-appointment-data [appointment]="appointment"
+  <ng-container *ngIf="appointments.length > 0; else empty">
+    <div [@listAnimation]="appointments.length">
+      <app-appointment-data *ngFor="let appointment of appointments"
+                            [appointment]="appointment"
                             [preview]="true"
                             [type]="parseClass(appointment)">
 
       </app-appointment-data>
-    </ng-container>
-  </div>
+    </div>
+  </ng-container>
+
 
   <ng-container *ngIf="appointmentsArchive.length > 0">
     <h2 class="title">Archiv</h2>
@@ -30,6 +32,15 @@
     </div>
   </ng-container>
 </ng-container>
+
+<ng-template #empty>
+  <div class="empty-list standalone">
+    <img src="/assets/img/404.svg">
+    <span>
+      Du hast gerade mit keinen aktiven Terminen zu tun. Erstelle dir einen eigenen!
+    </span>
+  </div>
+</ng-template>
 
 <ng-template #appointmentdata>
   <mat-progress-bar [@fadeInOut]
