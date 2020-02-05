@@ -41,4 +41,9 @@ export class AccountService {
     });
     return this.httpClient.request(req);
   }
+
+  activateUserByEmail(mail: string, token: string) {
+    const url = `${environment.api.url}user/verify/${mail}/${token}`;
+    return this.httpClient.get<null>(url, {observe: 'response', reportProgress: true});
+  }
 }

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {AccountService} from '../../../services/account.service';
 import {HttpErrorResponse} from '@angular/common/http';
 
@@ -27,6 +27,12 @@ export class RegisterComponent implements OnInit {
   public hide = true;
   public done = false;
 
+  // verify
+  public mail: string;
+  public token: string;
+  public error = null;
+  private verified = false;
+
   event = new FormGroup({
     username: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.email, Validators.required]),
@@ -36,10 +42,39 @@ export class RegisterComponent implements OnInit {
     }, passwordVerifyCheck()),
   });
 
-  constructor(private router: Router, private accountService: AccountService) {
+  constructor(private router: Router, private accountService: AccountService,
+              private route: ActivatedRoute) {
+    this.route.params.subscribe(params => {
+      this.mail = params.mail;
+      this.token = params.token;
+    });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    if (this.mail != null && this.token != null) {
+      await this.accountService
+        .activateUserByEmail(this.mail, this.token)
+        .subscribe(
+          result => {
+            this.verified = true;
+          },
+          error => {
+            let message = '';
+            if (error.status === HttpStatus.BAD_REQUEST) {
+              switch (error.error.code) {
+                case 'INVALID':
+                  message = 'Mit diesem Link kann Ich leider nichts anfangen. Hast du ihn versehentlich nicht komplett kopiert?';
+                  break;
+                case 'USED':
+                  message = `Dein Account ist bereits freigeschalten. Du kannst dich einloggen!`;
+                  break;
+              }
+
+              this.error = message;
+            }
+          }
+        );
+    }
   }
 
   create(): void {
