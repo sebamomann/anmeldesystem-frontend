@@ -51,7 +51,7 @@
              matInput
              placeholder="Passwort"
              required>
-      <button (click)="hide = !hide" mat-icon-button matSuffix type="button">
+      <button (click)="hide = !hide" aria-label="toggle password visibility" mat-icon-button matSuffix type="button">
         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
       <mat-error>{{ getPasswordErrorMessage() }}</mat-error>
@@ -63,7 +63,7 @@
              matInput
              placeholder="Passwort wiederholen"
              required>
-      <button (click)="hide = !hide" mat-icon-button matSuffix type="button">
+      <button (click)="hide = !hide" aria-label="toggle password visibility" mat-icon-button matSuffix type="button">
         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
       <mat-error>{{ getPasswordVerifyErrorMessage() }} </mat-error>

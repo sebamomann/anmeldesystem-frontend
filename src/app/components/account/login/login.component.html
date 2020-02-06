@@ -19,7 +19,7 @@
                formControlName="password"
                id="password"
                placeholder="Passwort" required>
-        <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
+        <button (click)="hide = !hide" aria-label="toggle password visibility" mat-icon-button matSuffix type="button">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
         <mat-error>{{ getPasswordErrorMessage() }}</mat-error>
