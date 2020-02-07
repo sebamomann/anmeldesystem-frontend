@@ -90,6 +90,8 @@ export class AppComponent {
       this.items.push({name: 'account', redirect: '/account/login'});
     }
 
+    this.items.push({name: 'releasenotes', redirect: '/release'});
+
     this.items.push({name: 'kontakt'});
     this.items.push({name: 'impressum'});
   }

@@ -478,6 +478,10 @@ mat-card {
 
   &.float {
     margin-top: 15vh;
+
+    &.high {
+      margin-top: 7.5vh;
+    }
   }
 
   &.form {
