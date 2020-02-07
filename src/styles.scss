@@ -207,10 +207,14 @@ mat-icon {
     }
 
     ul {
-      margin-top: 150px;
+      margin-top: 25px;
       padding: 0;
       list-style: none;
       font-size: 1.25em;
+
+      &:first-of-type {
+        margin-top: 100px;
+      }
 
       & > li {
         margin: 7.5px auto;
