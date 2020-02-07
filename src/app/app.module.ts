@@ -58,6 +58,7 @@ import {Globals} from './globals';
 import {PasswordresetComponent} from './components/account/passwordreset/passwordreset.component';
 import localeDe from '@angular/common/locales/de';
 import {EnrollmentListComponent} from './components/termin/enrollment/enrollment-list/enrollment-list.component';
+import {ReleasenotesComponent} from './components/releasenotes/releasenotes.component';
 
 const HttpStatus = require('http-status-codes');
 
@@ -85,6 +86,7 @@ registerLocaleData(localeDe);
     PwaDialogComponent,
     PasswordresetComponent,
     EnrollmentListComponent,
+    ReleasenotesComponent,
   ],
   imports: [
     MatDatepickerModule,

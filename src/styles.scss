@@ -87,6 +87,14 @@ html, body {
 body {
   margin: 0;
   font-family: "Nunito", "Helvetica Neue", sans-serif;
+
+  h1, h2, h3, h4 {
+    font-family: "Montserrat", "Helvetica Neue", sans-serif;
+  }
+
+  p {
+    font-family: "Nunito", "Helvetica Neue", sans-serif;
+  }
 }
 
 .svg-wrapper {
@@ -231,10 +239,6 @@ mat-icon {
   min-height: calc(100vh - 100px);
   padding-bottom: 100px;
   overflow: auto;
-}
-
-h1 {
-  font-family: "Montserrat", "Helvetica Neue", sans-serif;
 }
 
 .headline {
