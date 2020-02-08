@@ -32,8 +32,10 @@
                                     [expandedHeight]="'auto'"
                                     class="enrollment-info">
           <span> {{ enrollment.name }} </span>
-          <span class="separator small colored high"></span>
-          <span *ngIf="enrollment.comment !== null" class="comment-block"> {{ enrollment.comment }} </span>
+          <ng-container *ngIf="enrollment.comment !== null">
+            <span class="separator small colored high"></span>
+            <span class="comment-block"> {{ enrollment.comment }} </span>
+          </ng-container>
           <div *ngIf="appointment.additions.length > 0"
                class="addition-list">
               <span *ngIf="appointment.additions.length > 0 && enrollment.comment !== null"
