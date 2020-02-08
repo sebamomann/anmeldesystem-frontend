@@ -32,6 +32,7 @@
           <mat-icon>
             attach_file
           </mat-icon>
+          <!--suppress TypeScriptUnresolvedVariable -->
           <a
             [href]="this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(b64toBlob(arrayBufferToBase64(file.data))))"
             download="{{file.name}}"
@@ -44,7 +45,9 @@
 
     <mat-card-actions *ngIf="!preview" class="link-management">
       <mat-form-field>
-        <input #inputElement matInput placeholder="" readonly value="{{urlService.getHostname() + appointment.link}}">
+        <label>
+          <input #inputElement matInput placeholder="" readonly value="{{urlService.getHostname() + appointment.link}}">
+        </label>
       </mat-form-field>
       <button (click)="copyInputMessage(inputElement)" mat-raised-button>Kopieren</button>
     </mat-card-actions>
