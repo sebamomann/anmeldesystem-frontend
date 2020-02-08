@@ -630,6 +630,11 @@ footer {
     margin: 5px auto;
     display: block;
   }
+
+  span:last-child {
+    font-size: 0.75em;
+    font-style: italic;
+  }
 }
 
 .mat-tooltip {
