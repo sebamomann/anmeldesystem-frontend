@@ -145,30 +145,33 @@ export class EnrollmentComponent implements OnInit {
   }
 
   private successfulRequest(): void {
-    this.storageDataToFields();
-    // When e.g. coming from login
-    if (this.showLoginAndTokenForm === true) {
-      // Re-fetch output from local storage
-      this.output = JSON.parse(this.outputRawFromStorage);
-      this.parseOutputIntoForm();
-
-      if (this.autoSend) {
-        this.sendEnrollment();
-      }
-    } else if (this.edit) {
-      const enrollment: IEnrollmentModel = this.appointment.enrollments.filter(fEnrollment => {
-        return fEnrollment.id === this.enrollmentId;
-      })[0];
-
-      if (enrollment !== null) {
-        this.output = enrollment;
+    this.appointment$.subscribe(sAppointment => {
+      this.appointment = sAppointment;
+      this.storageDataToFields();
+      // When e.g. coming from login
+      if (this.showLoginAndTokenForm === true) {
+        // Re-fetch output from local storage
+        this.output = JSON.parse(this.outputRawFromStorage);
         this.parseOutputIntoForm();
-      }
-    } else {
-      // DO NOTHING, BECAUSE FORM IS EMPTY FOR ADDING NEW ENROLLMENT
-    }
 
-    this.buildFormCheckboxes();
+        if (this.autoSend) {
+          this.sendEnrollment();
+        }
+      } else if (this.edit) {
+        const enrollment: IEnrollmentModel = this.appointment.enrollments.filter(fEnrollment => {
+          return fEnrollment.id === this.enrollmentId;
+        })[0];
+
+        if (enrollment !== null) {
+          this.output = enrollment;
+          this.parseOutputIntoForm();
+        }
+      } else {
+        // DO NOTHING, BECAUSE FORM IS EMPTY FOR ADDING NEW ENROLLMENT
+      }
+
+      this.buildFormCheckboxes();
+    });
   }
 
   /**
