@@ -1,4 +1,4 @@
-import {Component, NgModule, OnInit} from '@angular/core';
+import {Component, NgModule, OnDestroy, OnInit} from '@angular/core';
 import {AppointmentService} from '../../services/appointment.service';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {FilterDialogComponent} from '../dialogs/filter/filterDialog.component';
@@ -47,7 +47,7 @@ const HttpStatus = require('http-status-codes');
   ],
 })
 @NgModule({})
-export class AppointmentComponent implements OnInit {
+export class AppointmentComponent implements OnInit, OnDestroy {
   userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
   list = true;
   public appointment: IAppointmentModel = null;
@@ -124,16 +124,20 @@ export class AppointmentComponent implements OnInit {
     this.successfulRequest();
   }
 
+  ngOnDestroy() {
+    this.appointmentService.clear();
+  }
+
   resetUpdateAvailable() {
     this.appointmentService.resetAvailableUpdate();
   }
 
   getDataOnce() {
-    return this.appointmentService.getAppointment(this.link).pipe(take(1));
+    return this.appointmentService.getAppointment(this.link, true).pipe(take(1));
   }
 
   getNotifications() {
-    return this.appointmentService.getAppointment(this.link).pipe(skip(1));
+    return this.appointmentService.getAppointment(this.link, true).pipe(skip(1));
   }
 
   forceReload() {

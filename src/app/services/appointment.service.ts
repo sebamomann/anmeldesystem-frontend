@@ -8,7 +8,7 @@ import {environment} from '../../environments/environment';
 import {Globals} from '../globals';
 import {map, shareReplay, switchMap, takeUntil} from 'rxjs/operators';
 
-const REFRESH_INTERVAL = 10000;
+const REFRESH_INTERVAL = 1000;
 const CACHE_SIZE = 1;
 
 @Injectable({
@@ -25,16 +25,18 @@ export class AppointmentService {
   private hasUpdate$: BehaviorSubject<boolean>;
   private etag = {current: '', last: ''};
   private first: boolean;
+  private timerActive: boolean;
 
 
   constructor(private readonly httpClient: HttpClient, private glob: Globals) {
     this.globals = glob;
   }
 
-  getAppointment(link: string, slim: boolean = false) {
-    if (!this.cache$ || this.lastFetched !== link) {
+  getAppointment(link: string, restart: boolean, slim: boolean = false) {
+    if (!this.cache$ || this.lastFetched !== link || (!this.timerActive && restart)) {
       console.log('empty cache');
       this.clear$.next();
+      this.timerActive = true;
       this.lastFetched = link;
       this.hasUpdate$ = new BehaviorSubject<boolean>(false);
 
@@ -55,6 +57,11 @@ export class AppointmentService {
     }
 
     return this.cache$;
+  }
+
+  clear() {
+    this.clear$.next();
+    this.timerActive = false;
   }
 
   updateAvailable(): Observable<boolean> {
