@@ -3,10 +3,10 @@
   <mat-card-title class="headline">
     Termin erstellen
   </mat-card-title>
-  <span (click)="_openAppointmentTemplateDialog()">
-    Vorlagen
-    <mat-icon>file_copy</mat-icon>
-  </span>
+  <!--  <span (click)="_openAppointmentTemplateDialog()">-->
+  <!--    Vorlagen-->
+  <!--    <mat-icon>file_copy</mat-icon>-->
+  <!--  </span>-->
   <mat-vertical-stepper #stepper [linear]="true">
     <!-- OVERALL DATA-->
     <mat-step [stepControl]="overallDataFormGroup">
@@ -216,18 +216,18 @@
     <mat-step [stepControl]="doneGroup">
       <form [formGroup]="doneGroup">
         <ng-template matStepLabel> Fertig</ng-template>
-        <div class="tooltip-container">
-          <mat-checkbox formControlName="saveAsTemplate">
-            Als Vorlage Speichern
-          </mat-checkbox>
-          <!--suppress TypeScriptUnresolvedFunction -->
-          <mat-icon #templateTooltip="matTooltip"
-                    (click)="templateTooltip.toggle()"
-                    class="tooltip"
-                    matTooltip="{{'Die Kerndaten des Termins werden als Vorlage für schnelleres Erstellen eines Termins bereitgestellt.'}}">
-            info
-          </mat-icon>
-        </div>
+        <!--        <div class="tooltip-container">-->
+        <!--          <mat-checkbox formControlName="saveAsTemplate">-->
+        <!--            Als Vorlage Speichern-->
+        <!--          </mat-checkbox>-->
+        <!--          &lt;!&ndash;suppress TypeScriptUnresolvedFunction &ndash;&gt;-->
+        <!--          <mat-icon #templateTooltip="matTooltip"-->
+        <!--                    (click)="templateTooltip.toggle()"-->
+        <!--                    class="tooltip"-->
+        <!--                    matTooltip="{{'Die Kerndaten des Termins werden als Vorlage für schnelleres Erstellen eines Termins bereitgestellt.'}}">-->
+        <!--            info-->
+        <!--          </mat-icon>-->
+        <!--        </div>-->
         <div class="stepper-navigation">
           <button (click)="create()" mat-button mat-stroked-button>Erstellen</button>
           <button mat-button matStepperPrevious>Zurück</button>
