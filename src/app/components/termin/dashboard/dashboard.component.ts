@@ -38,6 +38,7 @@ export class DashboardComponent implements OnInit {
   public percentDone;
   public appointments: IAppointmentModel[] = undefined;
   public appointmentsArchive = undefined;
+  public allowToShowEmpty: any;
 
   constructor(public appointmentService: AppointmentService, private router: Router,
               public authenticationService: AuthenticationService) {
@@ -56,6 +57,7 @@ export class DashboardComponent implements OnInit {
           this.appointments = result.body;
           this.appointmentsArchive = this.appointments.filter(fAppointment => Date.parse(fAppointment.date) < Date.now());
           this.appointments = this.appointments.filter(fAppointment => Date.parse(fAppointment.date) > Date.now());
+          this.allowToShowEmpty = true;
         }, 500);
       }
     });

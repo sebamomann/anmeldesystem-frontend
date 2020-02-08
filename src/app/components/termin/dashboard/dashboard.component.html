@@ -33,7 +33,7 @@
   </ng-container>
 </ng-container>
 
-<ng-template #empty>
+<ng-template #empty *ngIf="allowToShowEmpty">
   <div class="empty-list standalone">
     <img src="/assets/img/404.svg">
     <span>
