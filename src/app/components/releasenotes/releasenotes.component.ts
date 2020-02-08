@@ -32,7 +32,6 @@ export class ReleasenotesComponent implements OnInit {
               return fReleasenote;
             }
           });
-          console.log(this.releasenotes);
         }
       });
   }
