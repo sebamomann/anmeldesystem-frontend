@@ -31,19 +31,7 @@ const HttpStatus = require('http-status-codes');
 })
 export class EnrollmentComponent implements OnInit {
 
-  constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
-              private location: Location,
-              private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
-              private authenticationService: AuthenticationService, private snackBar: MatSnackBar) {
-
-    this.currentUrlSnapshotWithParameter = router.routerState.snapshot;
-
-    this.route.queryParams.subscribe(params => {
-      this.appointmentLink = params.a;
-      this.enrollmentId = params.e;
-      this.autoSend = params.send === 'true';
-    });
-  }
+  private link: string;
 
   userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
 
@@ -71,7 +59,21 @@ export class EnrollmentComponent implements OnInit {
 
   public appointment: IAppointmentModel = null;
   public edit: any;
-  private appointmentLink: string;
+
+  constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
+              private location: Location,
+              private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
+              private authenticationService: AuthenticationService, private snackBar: MatSnackBar) {
+
+    this.currentUrlSnapshotWithParameter = router.routerState.snapshot;
+
+    this.route.queryParams.subscribe(params => {
+      this.link = params.a;
+      this.enrollmentId = params.e;
+      this.autoSend = params.send === 'true';
+    });
+  }
+
   private enrollmentId: string;
   public percentDone: number;
   // Preparation for login redirect fields
@@ -103,7 +105,7 @@ export class EnrollmentComponent implements OnInit {
     }
 
     this.appointmentService
-      .getAppointment(this.appointmentLink, true)
+      .getAppointment(this.link, true)
       .subscribe(
         sAppointment => {
           if (sAppointment.type === HttpEventType.DownloadProgress) {
@@ -116,7 +118,7 @@ export class EnrollmentComponent implements OnInit {
           }
         }, (err) => {
           if (err.status === 304) {
-            this.appointment = this.appointmentService.getFromCache(this.appointmentLink);
+            this.appointment = this.appointmentService.getFromCache(this.link);
             this.successfulRequest();
           } else {
             console.log(err);
@@ -470,6 +472,6 @@ export class EnrollmentComponent implements OnInit {
   }
 
   goBack() {
-    this.location.back();
+    this.router.navigate(['/enroll'], {queryParams: {a: this.link}});
   }
 }

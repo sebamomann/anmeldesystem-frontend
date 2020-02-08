@@ -442,7 +442,6 @@ a {
   }
 }
 
-
 mat-card {
   max-width: calc(90% - 40px);
   margin: 0 auto;
@@ -639,10 +638,10 @@ footer {
 
 .floating-button {
   position: fixed;
-  padding: 12px;
+  padding: 15px;
   border-radius: 50%;
   z-index: 100;
-  background-color: $primary_dark;
+  background-color: #366EA7;
   color: white;
   outline: none;
   box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
@@ -660,7 +659,7 @@ footer {
   }
 
   &.decent {
-    background-color: lightgray;
+    background-color: gray;
   }
 
   mat-icon {

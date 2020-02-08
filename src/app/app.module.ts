@@ -59,6 +59,7 @@ import {PasswordresetComponent} from './components/account/passwordreset/passwor
 import localeDe from '@angular/common/locales/de';
 import {EnrollmentListComponent} from './components/termin/enrollment/enrollment-list/enrollment-list.component';
 import {ReleasenotesComponent} from './components/releasenotes/releasenotes.component';
+import {NgxMatDatetimePickerModule} from 'ngx-mat-datetime-picker';
 
 const HttpStatus = require('http-status-codes');
 
@@ -119,6 +120,7 @@ registerLocaleData(localeDe);
     MatListModule,
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
     MatProgressSpinnerModule,
+    NgxMatDatetimePickerModule,
   ],
   providers: [WINDOW_PROVIDERS, MatDatepickerModule, PwaService, Globals,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
