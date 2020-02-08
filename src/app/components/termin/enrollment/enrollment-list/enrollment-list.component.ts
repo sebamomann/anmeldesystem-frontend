@@ -58,7 +58,7 @@ export class EnrollmentListComponent implements OnInit {
 
   public disableAnimation = true;
   @Input()
-  public distance = false;
+  public main = false;
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
