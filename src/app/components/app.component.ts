@@ -8,6 +8,8 @@ import {PwaDialogComponent} from './dialogs/pwa-dialog/pwa-dialog.component';
 import {MatDialog} from '@angular/material';
 import {animate, query, stagger, style, transition, trigger} from '@angular/animations';
 
+const version = require('../../../package.json').version;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -31,8 +33,9 @@ export class AppComponent {
   public menu = false;
   public items: any[];
   public now: string;
-  currentUser: IUserModel;
+  public currentUser: IUserModel;
   private userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
+  public version: string = version;
 
   constructor(private router: Router, @Inject(WINDOW) private window: Window,
               private authenticationService: AuthenticationService, public pwa: PwaService, public dialog: MatDialog) {
