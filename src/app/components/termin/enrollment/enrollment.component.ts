@@ -270,6 +270,9 @@ export class EnrollmentComponent implements OnInit {
           this.clearLoginAndTokenFormIntercepting();
           if (result.type === HttpEventType.Response) {
             if (result.status === HttpStatus.CREATED || result.status === HttpStatus.OK) {
+              if (functionName === 'create') {
+                this.appointment.enrollments.push(result.body);
+              }
               localStorage.removeItem('editKeyByKeyDialog');
               this.router.navigate([`enroll`], {
                 queryParams: {

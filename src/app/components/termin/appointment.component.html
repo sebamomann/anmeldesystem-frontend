@@ -19,9 +19,13 @@
     <app-enrollment-list [appointment]="appointment" [distance]="false"
                          [enrollments]="enrollmentsCorrect" [title]="'Teilnehemer'"></app-enrollment-list>
     <app-enrollment-list [appointment]="appointment" [distance]="true"
-                         [enrollments]="enrollmentsWaitingList" [title]="'Warteliste'"></app-enrollment-list>
+                         *ngIf="waitingListBeforeDate" [enrollments]="enrollmentsWaitingList"
+                         [title]="'Warteliste'"></app-enrollment-list>
     <app-enrollment-list [appointment]="appointment" [distance]="true"
                          [enrollments]="enrollmentsTooLate" [title]="'Zu spät angemeldet'"></app-enrollment-list>
+    <app-enrollment-list *ngIf="!waitingListBeforeDate" [appointment]="appointment"
+                         [distance]="true" [enrollments]="enrollmentsWaitingList"
+                         [title]="'Warteliste'"></app-enrollment-list>
   </ng-container>
 
   <ng-template #emptyList>
