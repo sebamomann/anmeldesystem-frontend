@@ -11,8 +11,8 @@ import {HttpEventType} from '@angular/common/http';
 })
 export class ReleasenotesComponent implements OnInit {
   private releasenotes: IReleasenote[];
-  private releasenotesFrontend: IReleasenote[];
-  private releasenotesBackend: IReleasenote[];
+  public releasenotesFrontend: IReleasenote[];
+  public releasenotesBackend: IReleasenote[];
 
   constructor(private releasenotesService: ReleasenotesService) {
   }

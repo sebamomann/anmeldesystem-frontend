@@ -3,10 +3,10 @@
   <mat-card-title class="headline">
     Termin erstellen
   </mat-card-title>
-  <span (click)="_openAppointmentTemplateDialog()">
-    Vorlagen
-    <mat-icon>file_copy</mat-icon>
-  </span>
+  <!--  <span (click)="_openAppointmentTemplateDialog()">-->
+  <!--    Vorlagen-->
+  <!--    <mat-icon>file_copy</mat-icon>-->
+  <!--  </span>-->
   <mat-vertical-stepper #stepper [linear]="true">
     <!-- OVERALL DATA-->
     <mat-step [stepControl]="overallDataFormGroup">
@@ -21,22 +21,36 @@
                  required>
         </mat-form-field>
         <mat-form-field class="example-full-width">
-          <input matInput [matDatepicker]="date"
+          <!--          <input matInput [matDatepicker]="date"-->
+          <!--                 placeholder="Datum"-->
+          <!--                 formControlName="date"-->
+          <!--                 id="date"-->
+          <!--                 required>-->
+          <!--          <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>-->
+          <!--          <mat-datepicker touchUi #date></mat-datepicker>-->
+          <input [ngxMatDatetimePicker]="datePicker" matInput
                  placeholder="Datum"
                  formControlName="date"
                  id="date"
                  required>
-          <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
-          <mat-datepicker touchUi #date></mat-datepicker>
+          <mat-datepicker-toggle [for]="datePicker" matSuffix></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #datePicker></ngx-mat-datetime-picker>
         </mat-form-field>
         <mat-form-field class="example-full-width">
-          <input [matDatepicker]="deadline"
-                 matInput
+          <!--          <input [matDatepicker]="deadline"-->
+          <!--                 matInput-->
+          <!--                 placeholder="Anmeldefrist"-->
+          <!--                 formControlName="deadline"-->
+          <!--                 id="deadline">-->
+          <!--          <mat-datepicker-toggle [for]="deadline" matSuffix></mat-datepicker-toggle>-->
+          <!--          <mat-datepicker touchUi #deadline></mat-datepicker>-->
+
+          <input [ngxMatDatetimePicker]="deadlinePicker" matInput
                  placeholder="Anmeldefrist"
                  formControlName="deadline"
                  id="deadline">
-          <mat-datepicker-toggle [for]="deadline" matSuffix></mat-datepicker-toggle>
-          <mat-datepicker touchUi #deadline></mat-datepicker>
+          <mat-datepicker-toggle [for]="deadlinePicker" matSuffix></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #deadlinePicker></ngx-mat-datetime-picker>
         </mat-form-field>
         <mat-form-field class="">
           <input matInput
@@ -216,18 +230,18 @@
     <mat-step [stepControl]="doneGroup">
       <form [formGroup]="doneGroup">
         <ng-template matStepLabel> Fertig</ng-template>
-        <div class="tooltip-container">
-          <mat-checkbox formControlName="saveAsTemplate">
-            Als Vorlage Speichern
-          </mat-checkbox>
-          <!--suppress TypeScriptUnresolvedFunction -->
-          <mat-icon #templateTooltip="matTooltip"
-                    (click)="templateTooltip.toggle()"
-                    class="tooltip"
-                    matTooltip="{{'Die Kerndaten des Termins werden als Vorlage für schnelleres Erstellen eines Termins bereitgestellt.'}}">
-            info
-          </mat-icon>
-        </div>
+        <!--        <div class="tooltip-container">-->
+        <!--          <mat-checkbox formControlName="saveAsTemplate">-->
+        <!--            Als Vorlage Speichern-->
+        <!--          </mat-checkbox>-->
+        <!--          &lt;!&ndash;suppress TypeScriptUnresolvedFunction &ndash;&gt;-->
+        <!--          <mat-icon #templateTooltip="matTooltip"-->
+        <!--                    (click)="templateTooltip.toggle()"-->
+        <!--                    class="tooltip"-->
+        <!--                    matTooltip="{{'Die Kerndaten des Termins werden als Vorlage für schnelleres Erstellen eines Termins bereitgestellt.'}}">-->
+        <!--            info-->
+        <!--          </mat-icon>-->
+        <!--        </div>-->
         <div class="stepper-navigation">
           <button (click)="create()" mat-button mat-stroked-button>Erstellen</button>
           <button mat-button matStepperPrevious>Zurück</button>

@@ -1,6 +1,6 @@
 {
   "name": "anmeldesystem",
-  "version": "0.0.0",
+  "version": "1.0.1",
   "scripts": {
     "ng": "ng",
     "clean": "rimraf ./dist",
@@ -30,6 +30,8 @@
     "file-saver": "^2.0.2",
     "hammerjs": "^2.0.8",
     "http-status-codes": "^1.4.0",
+    "moment": "^2.24.0",
+    "ngx-mat-datetime-picker": "^1.0.2",
     "particles.js": "^2.0.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",

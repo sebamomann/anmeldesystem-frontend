@@ -34,7 +34,7 @@
 </ng-container>
 
 <ng-template #empty>
-  <div class="empty-list standalone">
+  <div *ngIf="allowToShowEmpty" class="empty-list standalone">
     <img src="/assets/img/404.svg">
     <span>
       Du hast gerade mit keinen aktiven Terminen zu tun. Erstelle dir einen eigenen!

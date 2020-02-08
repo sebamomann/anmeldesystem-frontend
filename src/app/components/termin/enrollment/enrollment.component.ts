@@ -32,19 +32,7 @@ const HttpStatus = require('http-status-codes');
   ]
 })
 export class EnrollmentComponent implements OnInit {
-  constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
-              private location: Location,
-              private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
-              private authenticationService: AuthenticationService, private snackBar: MatSnackBar) {
-
-    this.currentUrlSnapshotWithParameter = router.routerState.snapshot;
-
-    this.route.queryParams.subscribe(params => {
-      this.appointmentLink = params.a;
-      this.enrollmentId = params.e;
-      this.autoSend = params.send === 'true';
-    });
-  }
+  private link: string;
 
   userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
 
@@ -72,7 +60,21 @@ export class EnrollmentComponent implements OnInit {
 
   public appointment: IAppointmentModel = null;
   public edit: any;
-  private appointmentLink: string;
+
+  constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
+              private location: Location,
+              private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
+              private authenticationService: AuthenticationService, private snackBar: MatSnackBar) {
+
+    this.currentUrlSnapshotWithParameter = router.routerState.snapshot;
+
+    this.route.queryParams.subscribe(params => {
+      this.link = params.a;
+      this.enrollmentId = params.e;
+      this.autoSend = params.send === 'true';
+    });
+  }
+
   private enrollmentId: string;
   public percentDone: number;
   // Preparation for login redirect fields
@@ -130,11 +132,11 @@ export class EnrollmentComponent implements OnInit {
   }
 
   getDataOnce() {
-    return this.appointmentService.getAppointment(this.appointmentLink).pipe(take(1));
+    return this.appointmentService.getAppointment(this.link).pipe(take(1));
   }
 
   getNotifications() {
-    return this.appointmentService.getAppointment(this.appointmentLink).pipe(skip(1));
+    return this.appointmentService.getAppointment(this.link).pipe(skip(1));
   }
 
   forceReload() {
