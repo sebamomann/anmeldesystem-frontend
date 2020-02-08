@@ -87,6 +87,14 @@ html, body {
 body {
   margin: 0;
   font-family: "Nunito", "Helvetica Neue", sans-serif;
+
+  h1, h2, h3, h4 {
+    font-family: "Montserrat", "Helvetica Neue", sans-serif;
+  }
+
+  p {
+    font-family: "Nunito", "Helvetica Neue", sans-serif;
+  }
 }
 
 .svg-wrapper {
@@ -199,10 +207,14 @@ mat-icon {
     }
 
     ul {
-      margin-top: 150px;
+      margin-top: 25px;
       padding: 0;
       list-style: none;
       font-size: 1.25em;
+
+      &:first-of-type {
+        margin-top: 100px;
+      }
 
       & > li {
         margin: 7.5px auto;
@@ -233,10 +245,6 @@ mat-icon {
   overflow: auto;
 }
 
-h1 {
-  font-family: "Montserrat", "Helvetica Neue", sans-serif;
-}
-
 .headline {
   margin: 25px 0 50px 0;
   text-align: center;
@@ -253,7 +261,7 @@ h1 {
 }
 
 .title {
-  font-size: 1.4em;
+  font-size: 1.5em;
   margin: 0 auto;
   color: white;
   display: block;
@@ -474,6 +482,10 @@ mat-card {
 
   &.float {
     margin-top: 15vh;
+
+    &.high {
+      margin-top: 7.5vh;
+    }
   }
 
   &.form {
@@ -570,15 +582,29 @@ mat-hint {
   border-radius: 5px;
   position: relative;
   width: 80%;
-  color: gray;
+  color: #525252;
   margin: 0 auto;
   display: flex;
   flex: 2;
   padding: 15px;
-  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+
+  &.standalone {
+    margin-top: 25px;
+  }
 
   span {
+    display: inline-block;
     width: 100%;
+    vertical-align: middle;
+    margin-top: inherit;
+    position: relative;
+  }
+
+  img {
+    margin: 0 auto 25px;
+    display: inline-block;
+    height: 100px;
   }
 
   mat-icon {
@@ -842,3 +868,10 @@ footer {
   position: absolute;
   bottom: 0;
 }
+
+.pass button {
+  mat-icon {
+    @include md-icon-size(25px !important);
+  }
+}
+

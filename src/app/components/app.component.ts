@@ -82,16 +82,25 @@ export class AppComponent {
   }
 
   buildNav() {
-    this.items = [{name: 'dashboard', redirect: '/dashboard'}];
+    this.items = [];
+
+    const group1 = [];
+    group1.push({name: 'dashboard', redirect: '/dashboard'});
 
     if (this.userIsLoggedIn) {
-      this.items.push({name: 'account', redirect: '/account'});
+      group1.push({name: 'account', redirect: '/account'});
     } else {
-      this.items.push({name: 'account', redirect: '/account/login'});
+      group1.push({name: 'account', redirect: '/account/login'});
     }
 
-    this.items.push({name: 'kontakt'});
-    this.items.push({name: 'impressum'});
+    const group2 = [];
+    group2.push({name: 'releasenotes', redirect: '/release'});
+
+    const group3 = [];
+    group3.push({name: 'kontakt'});
+    group3.push({name: 'impressum'});
+
+    this.items.push(group1, group2, group3);
   }
 
   navigate(redirect: any) {

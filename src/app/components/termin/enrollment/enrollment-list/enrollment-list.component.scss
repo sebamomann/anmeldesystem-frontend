@@ -58,15 +58,29 @@
       }
     }
 
-    .enrollment-additions {
-      margin: 5px auto;
-      display: flex;
-      flex: 3;
+    ::ng-deep .mat-expansion-panel-body {
+      padding: 0 15px 10px;
 
-      mat-icon {
-        @include md-icon-size(18px);
-        margin: 0 10% 0 0;
-        text-align: center;
+      .enrollment-additions {
+        margin: 5px auto;
+        display: flex;
+        flex: 3;
+
+        mat-icon {
+          @include md-icon-size(18px);
+          margin: 0 10% 0 0;
+          text-align: center;
+        }
+      }
+
+      .creationDate {
+        position: relative;
+        display: block;
+        right: 0;
+        text-align: right;
+        font-style: italic;
+        font-size: 0.8em;
+        margin-top: -20px;
       }
     }
 

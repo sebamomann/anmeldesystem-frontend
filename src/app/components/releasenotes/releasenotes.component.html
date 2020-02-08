@@ -1,0 +1,45 @@
+<mat-card class="release-block float high">
+  <mat-card-title class="headline">
+    Releasenotes
+  </mat-card-title>
+  <mat-tab-group mat-stretch-tabs>
+    <mat-tab label="Frontend">
+      <ng-template matTabContent>
+        <mat-accordion>
+          <ng-container *ngFor="let releasenote of releasenotesFrontend; first as isFirst">
+            <mat-expansion-panel [expanded]="isFirst">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{releasenote.version}}
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{releasenote.iat | date: 'dd.MM.y HH:mm'}} Uhr
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div [innerHTML]="releasenote.data"></div>
+            </mat-expansion-panel>
+          </ng-container>
+        </mat-accordion>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Backend">
+      <ng-template matTabContent>
+        <mat-accordion>
+          <ng-container *ngFor="let releasenote of releasenotesBackend; first as isFirst">
+            <mat-expansion-panel [expanded]="isFirst">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{releasenote.version}}
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{releasenote.iat | date: 'dd.MM.y HH:mm'}}
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div [innerHTML]="releasenote.data"></div>
+            </mat-expansion-panel>
+          </ng-container>
+        </mat-accordion>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card>

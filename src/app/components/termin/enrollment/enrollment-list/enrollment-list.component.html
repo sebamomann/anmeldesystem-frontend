@@ -68,6 +68,9 @@
             <mat-icon (click)="precheckOpenConfirmationDialog(enrollment, 'delete')">delete</mat-icon>
           </ng-container>
         </div>
+        <span class="creationDate">
+          {{enrollment.iat | date : 'dd.MM.y, HH:mm'}} Uhr
+        </span>
       </mat-expansion-panel>
     </ng-container>
   </mat-accordion>

@@ -33,7 +33,7 @@ export class AppointmentCreateComponent implements OnInit {
   fileUpload: any;
   doneGroup: any;
 
-  // Addition Form
+  // Addition Formc
   driverAddition = false;
 
   // Administration Form
@@ -65,7 +65,7 @@ export class AppointmentCreateComponent implements OnInit {
 
     this.additionFormGroup = this.formBuilder.group({
       additions: new FormArray([new FormControl()]),
-      driverAddition: new FormControl()
+      driverAddition: [false]
     });
 
     this.linkFormGroup = this.formBuilder.group({
@@ -111,7 +111,7 @@ export class AppointmentCreateComponent implements OnInit {
       deadline: this.getDeadline().value,
       maxEnrollments: this.getMaxEnrollments().value,
       additions: this.parseAdditionsFromForm(),
-      driverAddition: this.driverAddition,
+      driverAddition: this.getDriverAddition().value,
       administrators: this.administrators,
       files: this.fileList,
     };
@@ -223,7 +223,7 @@ export class AppointmentCreateComponent implements OnInit {
           this.addAdditionFormControlToFormArray(addition.name);
         });
 
-        this.driverAddition = result.driverAddition;
+        this.getDriverAddition().setValue(result.driverAddition);
       }
     });
   };
@@ -317,6 +317,10 @@ export class AppointmentCreateComponent implements OnInit {
 
   private getDescription() {
     return this.linkFormGroup.get('description');
+  }
+
+  private getDriverAddition() {
+    return this.additionFormGroup.get('driverAddition');
   }
 
   // Stepper Indices

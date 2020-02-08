@@ -12,12 +12,13 @@ export class AccountService {
   constructor(private httpClient: HttpClient, @Inject(WINDOW) private window: Window) {
   }
 
-  login(userCredentials: { password: any; username: any }) {
-    return undefined;
-  }
 
-  register(userData: { password: any; email: any; username: any }) {
-    return undefined;
+  register(userData: { password: any; mail: any; username: any }) {
+    const url = `${environment.api.url}user/`;
+    return this.httpClient.post<any>(url, {
+      user: userData,
+      domain: this.window.location.hostname + '/account/verify'
+    }, {observe: 'response', reportProgress: true});
   }
 
   validatePasswordresetToken(mail: string, token: string) {
@@ -39,5 +40,10 @@ export class AccountService {
       reportProgress: true,
     });
     return this.httpClient.request(req);
+  }
+
+  activateUserByEmail(mail: string, token: string) {
+    const url = `${environment.api.url}user/verify/${mail}/${token}`;
+    return this.httpClient.get<null>(url, {observe: 'response', reportProgress: true});
   }
 }
