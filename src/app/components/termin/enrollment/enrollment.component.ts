@@ -272,7 +272,14 @@ export class EnrollmentComponent implements OnInit {
             if (result.status === HttpStatus.CREATED || result.status === HttpStatus.OK) {
               if (functionName === 'create') {
                 this.appointment.enrollments.push(result.body);
+              } else if (functionName === 'update') {
+                this.appointment.enrollments.map(obj => {
+                  if (obj.id === result.body.id) {
+                    return result.body;
+                  }
+                });
               }
+
               localStorage.removeItem('editKeyByKeyDialog');
               this.router.navigate([`enroll`], {
                 queryParams: {
