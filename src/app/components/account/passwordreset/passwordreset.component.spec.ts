@@ -4,6 +4,7 @@ import {PasswordresetComponent} from './passwordreset.component';
 import {MatCardModule, MatFormFieldModule, MatIconModule, MatProgressSpinnerModule} from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('PasswordresetComponent', () => {
   let component: PasswordresetComponent;
@@ -13,7 +14,8 @@ describe('PasswordresetComponent', () => {
     TestBed.configureTestingModule({
       imports: [MatCardModule, ReactiveFormsModule,
         MatIconModule, MatFormFieldModule,
-        MatProgressSpinnerModule, RouterTestingModule],
+        MatProgressSpinnerModule, RouterTestingModule,
+        HttpClientTestingModule],
       declarations: [PasswordresetComponent]
     })
       .compileComponents();

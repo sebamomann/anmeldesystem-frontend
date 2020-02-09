@@ -3,6 +3,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {AppComponent} from './app.component';
 import {WINDOW_PROVIDERS} from '../provider/window.provider';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {PwaService} from '../services/pwa-service.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -13,7 +14,7 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent,
       ],
-      providers: [WINDOW_PROVIDERS]
+      providers: [WINDOW_PROVIDERS, PwaService]
     }).compileComponents();
   }));
 

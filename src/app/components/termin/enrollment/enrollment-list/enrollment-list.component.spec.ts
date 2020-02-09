@@ -22,7 +22,7 @@ import {Globals} from '../../../../globals';
 
 function createEnrollment(id1: boolean, id2: boolean, id3: boolean, id4: boolean, driver: boolean, passenger: boolean): IEnrollmentModel {
   const obj: IEnrollmentModel = {
-    name: (driver ? 'Driver' : 'Passenger') + Math.random(),
+    name: (driver ? 'Driver' : 'Passenger') + '_' + Math.random(),
     comment: 'This is my cool comment',
     comments: [],
     driver: (driver ? {seats: 3, service: 1} : null),
@@ -110,7 +110,7 @@ describe('EnrollmentListComponent', () => {
       date: '01-01-2020 00:00:00',
       deadline: '01-01-2019 00:00:00',
       link: 'ABCDE',
-      maxEnrollments: 10,
+      maxEnrollments: null,
       files: [],
       administrators: [],
       additions: [

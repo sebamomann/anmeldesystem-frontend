@@ -4,6 +4,7 @@ import {KeyDialogComponent} from './key-dialog.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule} from '@angular/material';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('KeyDialogComponent', () => {
   let component: KeyDialogComponent;
@@ -15,7 +16,7 @@ describe('KeyDialogComponent', () => {
         RouterTestingModule, FormsModule,
         ReactiveFormsModule, MatInputModule,
         MatOptionModule, MatFormFieldModule,
-        MatSelectModule
+        MatSelectModule, HttpClientTestingModule
       ],
       declarations: [KeyDialogComponent]
     })
