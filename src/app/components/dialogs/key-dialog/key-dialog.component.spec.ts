@@ -3,7 +3,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {KeyDialogComponent} from './key-dialog.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatFormFieldModule, MatInputModule, MatOptionModule} from '@angular/material';
+import {MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule} from '@angular/material';
 
 describe('KeyDialogComponent', () => {
   let component: KeyDialogComponent;
@@ -14,7 +14,8 @@ describe('KeyDialogComponent', () => {
       imports: [
         RouterTestingModule, FormsModule,
         ReactiveFormsModule, MatInputModule,
-        MatOptionModule, MatFormFieldModule
+        MatOptionModule, MatFormFieldModule,
+        MatSelectModule
       ],
       declarations: [KeyDialogComponent]
     })

@@ -18,7 +18,7 @@ describe('FilterDialogComponent', () => {
       declarations: [FilterDialogComponent],
       providers: [{provider: MatDialogRef, useValue: {}},
         {
-          provide: MAT_DIALOG_DATA, useValue: {
+          provider: MAT_DIALOG_DATA, useValue: {
             filter: {
               additions: [], driverPassenger: true
             },

@@ -24,6 +24,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {NgxMatDatetimePickerModule} from 'ngx-mat-datetime-picker';
+import {Globals} from '../../../globals';
 
 describe('AppointmentCreateComponent', () => {
   let component: AppointmentCreateComponent;
@@ -42,7 +43,7 @@ describe('AppointmentCreateComponent', () => {
         MatTooltipModule, RouterTestingModule,
         MatSnackBarModule, NgxMatDatetimePickerModule],
       declarations: [AppointmentCreateComponent, UrlEncodePipe],
-      providers: [WINDOW_PROVIDERS]
+      providers: [WINDOW_PROVIDERS, Globals]
     })
       .compileComponents();
   }));
