@@ -20,6 +20,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {IEnrollmentModel} from '../../models/IEnrollment.model';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {EnrollmentListComponent} from './enrollment/enrollment-list/enrollment-list.component';
+import {Globals} from '../../globals';
 
 function createEnrollment(id1: boolean, id2: boolean, id3: boolean, id4: boolean, driver: boolean, passenger: boolean): IEnrollmentModel {
   const obj: IEnrollmentModel = {
@@ -74,7 +75,7 @@ describe('AppointmentComponent', () => {
         MatInputModule, MatProgressBarModule,
         HttpClientTestingModule],
       declarations: [AppointmentComponent, AppointmentDataComponent, EnrollmentListComponent],
-      providers: [WINDOW_PROVIDERS]
+      providers: [WINDOW_PROVIDERS, Globals]
     })
       .compileComponents();
   }));

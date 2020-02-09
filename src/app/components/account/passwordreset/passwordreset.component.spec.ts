@@ -2,6 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {PasswordresetComponent} from './passwordreset.component';
 import {MatCardModule} from '@angular/material';
+import {ReactiveFormsModule} from '@angular/forms';
 
 describe('PasswordresetComponent', () => {
   let component: PasswordresetComponent;
@@ -9,7 +10,7 @@ describe('PasswordresetComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MatCardModule],
+      imports: [MatCardModule, ReactiveFormsModule],
       declarations: [PasswordresetComponent]
     })
       .compileComponents();

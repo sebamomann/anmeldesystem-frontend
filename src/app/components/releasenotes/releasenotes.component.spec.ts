@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ReleasenotesComponent} from './releasenotes.component';
-import {MatCardModule, MatExpansionModule, MatTableModule} from '@angular/material';
+import {MatCardModule, MatExpansionModule, MatTabsModule} from '@angular/material';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('ReleasenotesComponent', () => {
@@ -11,7 +11,7 @@ describe('ReleasenotesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MatCardModule, MatExpansionModule,
-        MatTableModule, HttpClientTestingModule],
+        HttpClientTestingModule, MatTabsModule],
       declarations: [ReleasenotesComponent]
     })
       .compileComponents();

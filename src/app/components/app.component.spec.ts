@@ -10,11 +10,10 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        HttpClientTestingModule
+        HttpClientTestingModule, PwaService
       ],
       declarations: [
         AppComponent,
-        PwaService
       ],
       providers: [WINDOW_PROVIDERS]
     }).compileComponents();

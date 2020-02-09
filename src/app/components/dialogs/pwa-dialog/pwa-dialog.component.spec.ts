@@ -2,6 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {PwaDialogComponent} from './pwa-dialog.component';
 import {MatDialogModule} from '@angular/material';
+import {MatDialogRef} from '@angular/material/dialog';
 
 describe('PwaDialogComponent', () => {
   let component: PwaDialogComponent;
@@ -10,7 +11,8 @@ describe('PwaDialogComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MatDialogModule],
-      declarations: [PwaDialogComponent]
+      declarations: [PwaDialogComponent],
+      providers: [{provider: MatDialogRef, useValue: {}}]
     })
       .compileComponents();
   }));

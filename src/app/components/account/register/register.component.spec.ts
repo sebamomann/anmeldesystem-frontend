@@ -6,6 +6,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {WINDOW_PROVIDERS} from '../../../provider/window.provider';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -18,7 +19,8 @@ describe('RegisterComponent', () => {
         ReactiveFormsModule, FormsModule,
         MatIconModule, MatInputModule,
         BrowserAnimationsModule, HttpClientTestingModule],
-      declarations: [RegisterComponent]
+      declarations: [RegisterComponent],
+      providers: [WINDOW_PROVIDERS]
     })
       .compileComponents();
   }));

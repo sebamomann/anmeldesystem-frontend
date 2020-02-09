@@ -40,8 +40,8 @@ describe('AppointmentCreateComponent', () => {
         MatInputModule, BrowserAnimationsModule,
         MatProgressBarModule, HttpClientTestingModule,
         MatTooltipModule, RouterTestingModule,
-        MatSnackBarModule],
-      declarations: [AppointmentCreateComponent, UrlEncodePipe, NgxMatDatetimePickerModule],
+        MatSnackBarModule, NgxMatDatetimePickerModule],
+      declarations: [AppointmentCreateComponent, UrlEncodePipe],
       providers: [WINDOW_PROVIDERS]
     })
       .compileComponents();

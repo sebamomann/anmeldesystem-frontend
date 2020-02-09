@@ -11,6 +11,7 @@ import {
   MatOptionModule,
   MatProgressBarModule,
   MatSelectModule,
+  MatSnackBarModule,
   MatTooltipModule
 } from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -20,6 +21,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {GoBackHeaderComponent} from '../../util/go-back-header/go-back-header.component';
+import {Globals} from '../../../globals';
 
 describe('EnrollmentComponent', () => {
   let component: EnrollmentComponent;
@@ -34,9 +36,10 @@ describe('EnrollmentComponent', () => {
         BrowserAnimationsModule, MatInputModule,
         MatProgressBarModule, HttpClientTestingModule,
         RouterTestingModule, BrowserAnimationsModule,
-        MatTooltipModule, MatExpansionModule],
+        MatTooltipModule, MatExpansionModule,
+        MatSnackBarModule],
       declarations: [EnrollmentComponent, GoBackHeaderComponent],
-      providers: [{provide: Location, useClass: SpyLocation}],
+      providers: [{provide: Location, useClass: SpyLocation}, Globals],
     })
       .compileComponents();
   }));
