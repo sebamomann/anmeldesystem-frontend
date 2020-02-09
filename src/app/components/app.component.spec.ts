@@ -14,12 +14,14 @@ describe('AppComponent', () => {
       imports: [
         RouterTestingModule, HttpClientTestingModule,
         ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
-        MatDialogModule
+        MatDialogModule,
       ],
       declarations: [
         AppComponent,
       ],
-      providers: [WINDOW_PROVIDERS, PwaService, SwUpdate, particlesJS]
+      providers: [WINDOW_PROVIDERS,
+        PwaService,
+        SwUpdate]
     }).compileComponents();
   }));
 

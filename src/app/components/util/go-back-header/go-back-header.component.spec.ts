@@ -12,8 +12,12 @@ describe('GoBackHeaderComponent', () => {
     TestBed.configureTestingModule({
       imports: [MatIconModule],
       declarations: [GoBackHeaderComponent],
-      providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy},
-        {provide: APP_BASE_HREF, useValue: '/'}]
+      providers: [Location, {
+        provide: LocationStrategy, useClass: PathLocationStrategy
+      },
+        {
+          provide: APP_BASE_HREF, useValue: '/'
+        }]
     })
       .compileComponents();
   }));
@@ -21,6 +25,21 @@ describe('GoBackHeaderComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(GoBackHeaderComponent);
     component = fixture.componentInstance;
+    component.appointment = {
+      title: '',
+      description: '',
+      location: '',
+      creator: {},
+      date: '',
+      deadline: '',
+      link: '',
+      maxEnrollments: 0,
+      additions: [],
+      driverAddition: false,
+      enrollments: [],
+      files: [],
+      administrators: []
+    };
     fixture.detectChanges();
   });
 
