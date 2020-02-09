@@ -16,13 +16,13 @@
   <!--      <mat-icon (click)="list = false">view_module</mat-icon>-->
   <!--    </div>-->
 
-  <!--  <mat-icon (click)="_openFilterDialog()"-->
-  <!--            class="filter-open"-->
-  <!--            matBadge="{{getNumberOfActiveFilter() > 0 ? getNumberOfActiveFilter() : ''}}"-->
-  <!--            matBadgeColor="info"-->
-  <!--            matBadgeSize="small">-->
-  <!--    filter_list-->
-  <!--  </mat-icon>-->
+  <mat-icon (click)="_openFilterDialog()"
+            class="filter-open"
+            matBadge="{{getNumberOfActiveFilter() > 0 ? getNumberOfActiveFilter() : ''}}"
+            matBadgeColor="info"
+            matBadgeSize="small">
+    filter_list
+  </mat-icon>
 
   <mat-accordion *ngIf="enrollmentsFiltered.length > 0" [@listAnimation]>
     <ng-container *ngFor="let enrollment of enrollmentsFiltered">

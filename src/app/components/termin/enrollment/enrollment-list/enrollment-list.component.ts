@@ -110,22 +110,26 @@ export class EnrollmentListComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (isObject(result) && result !== this.filter) {
-        const oldFilter = this.filter;
-        const oldEnrollments = this.enrollments;
+    dialogRef.afterClosed().subscribe(newFilter => {
+      if (isObject(newFilter) && newFilter !== this.filter) {
+        // Preserve current data
+        const curr_filter = this.filter;
+        const curr_enrollments = this.enrollmentsFiltered;
 
-        this.filter = result;
-        const tmpEnrollments = this.filterEnrollments();
+        this.filter = newFilter;
 
-        if (tmpEnrollments.length === 0 && this.getNumberOfActiveFilter() > 0) {
-          this.enrollments = oldEnrollments;
+        console.log(this.filter);
+
+        const _enrollmentsFiltered = this.filterEnrollments();
+
+        if (_enrollmentsFiltered.length === 0 && this.getNumberOfActiveFilter() > 0) {
+          this.enrollments = curr_enrollments;
           // Reopen filter if filter shows no results
           this._openFilterDialog(true);
           // Reset filter
-          this.filter = oldFilter;
+          this.filter = curr_filter;
         } else {
-          this.enrollments = tmpEnrollments;
+          this.enrollmentsFiltered = _enrollmentsFiltered;
         }
       }
     });
@@ -192,21 +196,19 @@ export class EnrollmentListComponent implements OnInit {
    */
   filterEnrollments: () => IEnrollmentModel[] = () => {
     // Reset enrollment list to original list
-    this.enrollmentsFiltered = this.enrollments;
 
     const numberOfAdditionFilters = this.filter.additions.filter(val => val.active).length;
     if (numberOfAdditionFilters > 0
       || this.filter.driverPassenger !== '') {
       const output: IEnrollmentModel[] = [];
 
-      this.enrollmentsFiltered.forEach(eEnrollment => {
+      this.enrollments.forEach(eEnrollment => {
+        console.log(eEnrollment);
         try {
           if (numberOfAdditionFilters > 0) {
             let contains = 0;
             this.filter.additions.forEach(eFilterAddition => {
-              let valid = true;
-
-              if (eFilterAddition.active === true
+              if (eFilterAddition.active
                 && eEnrollment.additions.some(iAddition => iAddition.id === eFilterAddition.id)) {
                 contains++;
               }
@@ -215,18 +217,14 @@ export class EnrollmentListComponent implements OnInit {
                 if (eAddition.id === eFilterAddition.id
                   && !eFilterAddition.active
                   && this.filter.explicitly === 'explicit') {
-                  valid = false;
+                  throw new Error();
                 }
               });
 
               if ((this.filter.explicitly === 'explicit' || this.filter.explicitly === 'semiExplicit')
                 && eFilterAddition.active === true
                 && !eEnrollment.additions.some(sAddition => sAddition.id === eFilterAddition.id)) {
-                valid = false;
-              }
-
-              if (!valid) {
-                return;
+                throw new Error();
               }
             });
 
@@ -248,6 +246,7 @@ export class EnrollmentListComponent implements OnInit {
           //
         }
       });
+
       return output;
     }
   };

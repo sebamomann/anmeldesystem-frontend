@@ -8,7 +8,8 @@
         "check-format",
         "allow-leading-underscore",
         "allow-pascal-case",
-        "require-const-for-all-caps"
+        "require-const-for-all-caps",
+        "allow-snake-case"
       ]
     },
     "array-type": false,
