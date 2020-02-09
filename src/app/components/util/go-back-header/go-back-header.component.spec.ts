@@ -2,7 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {GoBackHeaderComponent} from './go-back-header.component';
 import {MatIconModule} from '@angular/material';
-import {Location} from '@angular/common';
+import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 
 describe('GoBackHeaderComponent', () => {
   let component: GoBackHeaderComponent;
@@ -12,7 +12,7 @@ describe('GoBackHeaderComponent', () => {
     TestBed.configureTestingModule({
       imports: [MatIconModule],
       declarations: [GoBackHeaderComponent],
-      providers: [Location]
+      providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}]
     })
       .compileComponents();
   }));

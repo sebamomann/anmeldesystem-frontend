@@ -7,6 +7,7 @@ import {AppointmentDataComponent} from '../appointment-data/appointment-data.com
 import {RouterTestingModule} from '@angular/router/testing';
 import {WINDOW_PROVIDERS} from '../../../provider/window.provider';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {Globals} from '../../../globals';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -20,7 +21,7 @@ describe('DashboardComponent', () => {
         MatSnackBarModule, HttpClientTestingModule,
         MatProgressBarModule
       ],
-      providers: [WINDOW_PROVIDERS, {provide: LocationStrategy, useClass: PathLocationStrategy}],
+      providers: [WINDOW_PROVIDERS, {provide: LocationStrategy, useClass: PathLocationStrategy}, Globals],
       declarations: [DashboardComponent, AppointmentDataComponent]
     }).compileComponents();
   }));

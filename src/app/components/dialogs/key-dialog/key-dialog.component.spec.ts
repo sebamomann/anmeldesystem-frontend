@@ -2,7 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {KeyDialogComponent} from './key-dialog.component';
 import {RouterTestingModule} from '@angular/router/testing';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 describe('KeyDialogComponent', () => {
   let component: KeyDialogComponent;
@@ -11,7 +11,8 @@ describe('KeyDialogComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule, FormsModule
+        RouterTestingModule, FormsModule,
+        ReactiveFormsModule
       ],
       declarations: [KeyDialogComponent]
     })

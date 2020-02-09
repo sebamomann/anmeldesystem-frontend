@@ -4,6 +4,7 @@ import {EnrollmentComponent} from './enrollment.component';
 import {
   MatCardModule,
   MatCheckboxModule,
+  MatExpansionModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
@@ -33,7 +34,7 @@ describe('EnrollmentComponent', () => {
         BrowserAnimationsModule, MatInputModule,
         MatProgressBarModule, HttpClientTestingModule,
         RouterTestingModule, BrowserAnimationsModule,
-        MatTooltipModule],
+        MatTooltipModule, MatExpansionModule],
       declarations: [EnrollmentComponent, GoBackHeaderComponent],
       providers: [{provide: Location, useClass: SpyLocation}],
     })

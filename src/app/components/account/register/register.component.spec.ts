@@ -5,6 +5,7 @@ import {MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule} from '
 import {RouterTestingModule} from '@angular/router/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -16,7 +17,7 @@ describe('RegisterComponent', () => {
         MatIconModule, RouterTestingModule,
         ReactiveFormsModule, FormsModule,
         MatIconModule, MatInputModule,
-        BrowserAnimationsModule],
+        BrowserAnimationsModule, HttpClientTestingModule],
       declarations: [RegisterComponent]
     })
       .compileComponents();
