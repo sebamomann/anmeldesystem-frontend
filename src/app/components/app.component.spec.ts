@@ -4,18 +4,22 @@ import {AppComponent} from './app.component';
 import {WINDOW_PROVIDERS} from '../provider/window.provider';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {PwaService} from '../services/pwa-service.service';
-import {SwUpdate} from '@angular/service-worker';
+import {ServiceWorkerModule, SwUpdate} from '@angular/service-worker';
+import {environment} from '../../environments/environment';
+import {MatDialogModule} from '@angular/material';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule, HttpClientTestingModule
+        RouterTestingModule, HttpClientTestingModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+        MatDialogModule
       ],
       declarations: [
         AppComponent,
       ],
-      providers: [WINDOW_PROVIDERS, PwaService, SwUpdate]
+      providers: [WINDOW_PROVIDERS, PwaService, SwUpdate, particlesJS]
     }).compileComponents();
   }));
 

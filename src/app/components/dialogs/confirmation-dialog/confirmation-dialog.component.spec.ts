@@ -12,7 +12,13 @@ describe('ConfirmationDialogComponent', () => {
     TestBed.configureTestingModule({
       imports: [MatDialogModule],
       declarations: [ConfirmationDialogComponent],
-      providers: [MAT_DIALOG_DATA, {provider: MatDialogRef, useValue: {}}]
+      providers: [{
+        provide: MAT_DIALOG_DATA,
+        useValue: {message: ''}
+      }, {
+        provide: MatDialogRef,
+        useValue: {}
+      }]
     })
       .compileComponents();
   }));

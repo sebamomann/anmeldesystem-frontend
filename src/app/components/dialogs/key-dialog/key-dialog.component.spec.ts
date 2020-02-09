@@ -3,7 +3,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {KeyDialogComponent} from './key-dialog.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule} from '@angular/material';
+import {MAT_DIALOG_DATA, MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule} from '@angular/material';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {MatDialogRef} from '@angular/material/dialog';
 
@@ -20,7 +20,7 @@ describe('KeyDialogComponent', () => {
         MatSelectModule, HttpClientTestingModule
       ],
       declarations: [KeyDialogComponent],
-      providers: [{provide: MatDialogRef, useValue: {}}]
+      providers: [{provide: MatDialogRef, useValue: {}}, {provide: MAT_DIALOG_DATA, useValue: {}}]
     })
       .compileComponents();
   }));

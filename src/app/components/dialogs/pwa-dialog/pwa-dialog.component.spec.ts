@@ -3,6 +3,9 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {PwaDialogComponent} from './pwa-dialog.component';
 import {MatDialogModule} from '@angular/material';
 import {MatDialogRef} from '@angular/material/dialog';
+import {PwaService} from '../../../services/pwa-service.service';
+import {ServiceWorkerModule, SwUpdate} from '@angular/service-worker';
+import {environment} from '../../../../environments/environment';
 
 describe('PwaDialogComponent', () => {
   let component: PwaDialogComponent;
@@ -10,9 +13,11 @@ describe('PwaDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MatDialogModule],
+      imports: [MatDialogModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production})],
       declarations: [PwaDialogComponent],
-      providers: [{provide: MatDialogRef, useValue: {}}]
+      providers: [{provide: MatDialogRef, useValue: {}}, PwaService,
+        SwUpdate]
     })
       .compileComponents();
   }));
