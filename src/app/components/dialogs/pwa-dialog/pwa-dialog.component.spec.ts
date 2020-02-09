@@ -12,7 +12,7 @@ describe('PwaDialogComponent', () => {
     TestBed.configureTestingModule({
       imports: [MatDialogModule],
       declarations: [PwaDialogComponent],
-      providers: [{provider: MatDialogRef, useValue: {}}]
+      providers: [{provide: MatDialogRef, useValue: {}}]
     })
       .compileComponents();
   }));

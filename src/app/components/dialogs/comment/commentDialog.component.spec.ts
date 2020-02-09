@@ -31,7 +31,7 @@ describe('CommentDialogComponent', () => {
         MatSnackBarModule
       ],
       declarations: [CommentDialogComponent],
-      providers: [{provider: MatDialogRef, useValue: {}},
+      providers: [{provide: MatDialogRef, useValue: {}},
         {provide: MAT_DIALOG_DATA, useValue: {enrollment: {comments: []}}}]
     })
       .compileComponents();

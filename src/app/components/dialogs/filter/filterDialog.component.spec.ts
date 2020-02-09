@@ -16,7 +16,7 @@ describe('FilterDialogComponent', () => {
         MatRadioModule, MatIconModule,
         MatTooltipModule, MatDialogModule],
       declarations: [FilterDialogComponent],
-      providers: [{provider: MatDialogRef, useValue: {}},
+      providers: [{provide: MatDialogRef, useValue: {}},
         {
           provider: MAT_DIALOG_DATA, useValue: {
             filter: {

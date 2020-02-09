@@ -4,6 +4,7 @@ import {AppComponent} from './app.component';
 import {WINDOW_PROVIDERS} from '../provider/window.provider';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {PwaService} from '../services/pwa-service.service';
+import {SwUpdate} from '@angular/service-worker';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -14,7 +15,7 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent,
       ],
-      providers: [WINDOW_PROVIDERS, PwaService]
+      providers: [WINDOW_PROVIDERS, PwaService, SwUpdate]
     }).compileComponents();
   }));
 
