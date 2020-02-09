@@ -249,6 +249,8 @@ export class EnrollmentListComponent implements OnInit {
 
       return output;
     }
+
+    return [];
   };
 
   /**

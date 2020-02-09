@@ -16,9 +16,9 @@ import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
-import {AppointmentComponent} from '../../appointment.component';
-import {AppointmentDataComponent} from '../../appointment-data/appointment-data.component';
 import {WINDOW_PROVIDERS} from '../../../../provider/window.provider';
+import {EnrollmentListComponent} from './enrollment-list.component';
+import {Globals} from '../../../../globals';
 
 function createEnrollment(id1: boolean, id2: boolean, id3: boolean, id4: boolean, driver: boolean, passenger: boolean): IEnrollmentModel {
   const obj: IEnrollmentModel = {
@@ -59,9 +59,9 @@ function createFilter(b1: boolean, b2: boolean, b3: boolean, b4: boolean, explic
   };
 }
 
-describe('AppointmentComponent', () => {
-  let component: AppointmentComponent;
-  let fixture: ComponentFixture<AppointmentComponent>;
+describe('EnrollmentListComponent', () => {
+  let component: EnrollmentListComponent;
+  let fixture: ComponentFixture<EnrollmentListComponent>;
 
   const DriverMc = createEnrollment(true, false, false, false, true, false);
   const DriverMcBk = createEnrollment(true, true, false, false, true, false);
@@ -93,14 +93,14 @@ describe('AppointmentComponent', () => {
         MatSnackBarModule, BrowserAnimationsModule,
         MatInputModule, MatProgressBarModule,
         HttpClientTestingModule],
-      declarations: [AppointmentComponent, AppointmentDataComponent],
-      providers: [WINDOW_PROVIDERS]
+      declarations: [EnrollmentListComponent],
+      providers: [WINDOW_PROVIDERS, Globals]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AppointmentComponent);
+    fixture = TestBed.createComponent(EnrollmentListComponent);
     component = fixture.componentInstance;
     component.appointment = {
       title: 'Test Termin',
@@ -146,6 +146,20 @@ describe('AppointmentComponent', () => {
         PassengerBkSubwayDiner,
         PassengerAll1, PassengerAll2]
     };
+
+    component.enrollments = [DriverMc,
+      DriverMcBk,
+      DriverSubwayDiner, DriverSubwayDiner2, DriverSubwayDiner3,
+      DriverMcBkSubway,
+      DriverBkSubwayDiner,
+      DriverAll1, DriverAll2,
+      PassengerMc,
+      PassengerDiner,
+      PassengerMcBk, PassengerMcBk2,
+      PassengerMcSubway,
+      PassengerBkDiner,
+      PassengerBkSubwayDiner,
+      PassengerAll1, PassengerAll2];
 
     fixture.detectChanges();
   });
