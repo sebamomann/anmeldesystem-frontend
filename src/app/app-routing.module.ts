@@ -7,7 +7,6 @@ import {LoginComponent} from './components/account/login/login.component';
 import {RegisterComponent} from './components/account/register/register.component';
 import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
 import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
-import {DriverComponent} from './components/termin/driver/driver.component';
 import {PasswordresetComponent} from './components/account/passwordreset/passwordreset.component';
 import {ReleasenotesComponent} from './components/releasenotes/releasenotes.component';
 
@@ -29,7 +28,7 @@ const routes: Routes = [
   {path: 'create', component: AppointmentCreateComponent, canActivate: [AuthGuard]},
   {
     path: 'appointment', children: [
-      {path: 'driver', pathMatch: 'full', component: DriverComponent},
+      {path: 'driver', loadChildren: './components/termin/driver/driver.module#DriverModule'},
     ]
   },
   {

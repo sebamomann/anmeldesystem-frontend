@@ -41,7 +41,6 @@ import {AppointmentCreateComponent} from './components/termin/appointment-create
 import {UrlEncodePipe} from './pipes/url-encode.pipe';
 import {DatePipe, LocationStrategy, PathLocationStrategy, registerLocaleData} from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {DriverComponent} from './components/termin/driver/driver.component';
 import {TemplateDialogComponent} from './components/dialogs/template-dialog/template-dialog.component';
 import {AuthInterceptor} from './_helper/interceptor/auth.interceptor';
 import {JwtInterceptor} from './_helper/interceptor/jwt.interceptor';
@@ -76,7 +75,6 @@ registerLocaleData(localeDe);
     EnrollmentComponent,
     AppointmentCreateComponent,
     UrlEncodePipe,
-    DriverComponent,
     TemplateDialogComponent,
     ConfirmationDialogComponent,
     GoBackHeaderComponent,
