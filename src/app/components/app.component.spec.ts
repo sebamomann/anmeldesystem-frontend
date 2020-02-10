@@ -7,6 +7,9 @@ import {PwaService} from '../services/pwa-service.service';
 import {ServiceWorkerModule, SwUpdate} from '@angular/service-worker';
 import {environment} from '../../environments/environment';
 import {MatDialogModule} from '@angular/material';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+declare let particlesJS: any;
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -15,13 +18,15 @@ describe('AppComponent', () => {
         RouterTestingModule, HttpClientTestingModule,
         ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
         MatDialogModule,
+        NoopAnimationsModule
       ],
       declarations: [
         AppComponent,
       ],
       providers: [WINDOW_PROVIDERS,
         PwaService,
-        SwUpdate]
+        SwUpdate,
+      ]
     }).compileComponents();
   }));
 

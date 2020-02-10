@@ -25,6 +25,10 @@ module.exports = function (config) {
       reports: ['html', 'lcovonly', 'text-summary'],
       fixWebpackSourcePaths: true
     },
+    files: [
+      "https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js",
+      'typings.d.ts'
+    ],
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
