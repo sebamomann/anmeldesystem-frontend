@@ -16,15 +16,19 @@ describe('FilterDialogComponent', () => {
         MatRadioModule, MatIconModule,
         MatTooltipModule, MatDialogModule],
       declarations: [FilterDialogComponent],
-      providers: [{provide: MatDialogRef, useValue: {}},
+      providers: [
         {
-          provide: MAT_DIALOG_DATA, useValue: {
+          provide: MatDialogRef, useValue: {}
+        }, {
+          provide: MAT_DIALOG_DATA,
+          useValue: {
             filter: {
-              additions: [], driverPassenger: true
+              additions: [], driverPassenger: '', explicitly: ''
             },
             appointment: {
               driverAddition: true
-            }
+            },
+            error: true
           }
         }]
     })
