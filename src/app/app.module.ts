@@ -29,14 +29,12 @@ import {
   MatTabsModule,
   MatTooltipModule
 } from '@angular/material';
-import {AppointmentComponent} from './components/termin/appointment.component';
 import {WINDOW_PROVIDERS} from './provider/window.provider';
 import {LoginComponent} from './components/account/login/login.component';
 import {RegisterComponent} from './components/account/register/register.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FilterDialogComponent} from './components/dialogs/filter/filterDialog.component';
 import {CommentDialogComponent} from './components/dialogs/comment/commentDialog.component';
-import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
 import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
 import {UrlEncodePipe} from './pipes/url-encode.pipe';
 import {DatePipe, LocationStrategy, PathLocationStrategy, registerLocaleData} from '@angular/common';
@@ -54,7 +52,6 @@ import {PwaDialogComponent} from './components/dialogs/pwa-dialog/pwa-dialog.com
 import {Globals} from './globals';
 import {PasswordresetComponent} from './components/account/passwordreset/passwordreset.component';
 import localeDe from '@angular/common/locales/de';
-import {EnrollmentListComponent} from './components/termin/enrollment/enrollment-list/enrollment-list.component';
 import {ReleasenotesComponent} from './components/releasenotes/releasenotes.component';
 import {NgxMatDatetimePickerModule} from 'ngx-mat-datetime-picker';
 import {DashboardModule} from './components/termin/dashboard/dashboard.module';
@@ -67,12 +64,10 @@ registerLocaleData(localeDe);
   declarations: [
     AppComponent,
     LandingPageComponent,
-    AppointmentComponent,
     LoginComponent,
     RegisterComponent,
     FilterDialogComponent,
     CommentDialogComponent,
-    EnrollmentComponent,
     AppointmentCreateComponent,
     UrlEncodePipe,
     TemplateDialogComponent,
@@ -81,7 +76,6 @@ registerLocaleData(localeDe);
     KeyDialogComponent,
     PwaDialogComponent,
     PasswordresetComponent,
-    EnrollmentListComponent,
     ReleasenotesComponent,
   ],
   imports: [
