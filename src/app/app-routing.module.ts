@@ -2,24 +2,13 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
 import {LandingPageComponent} from './components/landing-page/landing-page.component';
-import {LoginComponent} from './components/account/login/login.component';
-import {RegisterComponent} from './components/account/register/register.component';
 import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
-import {PasswordresetComponent} from './components/account/passwordreset/passwordreset.component';
 
 import {AuthGuard} from './_helper/auth.guard';
 
 const routes: Routes = [
   {path: '', pathMatch: 'full', component: LandingPageComponent},
-  {
-    path: 'account', children: [
-      {path: 'login', component: LoginComponent},
-      {path: 'register', component: RegisterComponent},
-      {path: 'verify/:mail/:token', component: RegisterComponent},
-      {path: 'passwordreset/:mail/:token', component: PasswordresetComponent},
-      {path: 'passwordreset', component: PasswordresetComponent}
-    ]
-  },
+  {path: 'account', loadChildren: './components/account/account.module#AccountModule'},
   {path: 'dashboard', loadChildren: './components/termin/dashboard/dashboard.module#DashboardModule'},
   {path: 'release', loadChildren: './components/releasenotes/releasenotes.module#ReleasenotesModule'},
   {path: 'create', component: AppointmentCreateComponent, canActivate: [AuthGuard]},

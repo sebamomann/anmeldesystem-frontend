@@ -30,8 +30,6 @@ import {
   MatTooltipModule
 } from '@angular/material';
 import {WINDOW_PROVIDERS} from './provider/window.provider';
-import {LoginComponent} from './components/account/login/login.component';
-import {RegisterComponent} from './components/account/register/register.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FilterDialogComponent} from './components/dialogs/filter/filterDialog.component';
 import {CommentDialogComponent} from './components/dialogs/comment/commentDialog.component';
@@ -50,7 +48,6 @@ import {environment} from '../environments/environment';
 import {PwaService} from './services/pwa-service.service';
 import {PwaDialogComponent} from './components/dialogs/pwa-dialog/pwa-dialog.component';
 import {Globals} from './globals';
-import {PasswordresetComponent} from './components/account/passwordreset/passwordreset.component';
 import localeDe from '@angular/common/locales/de';
 import {NgxMatDatetimePickerModule} from 'ngx-mat-datetime-picker';
 import {DashboardModule} from './components/termin/dashboard/dashboard.module';
@@ -63,8 +60,6 @@ registerLocaleData(localeDe);
   declarations: [
     AppComponent,
     LandingPageComponent,
-    LoginComponent,
-    RegisterComponent,
     FilterDialogComponent,
     CommentDialogComponent,
     AppointmentCreateComponent,
@@ -74,7 +69,6 @@ registerLocaleData(localeDe);
     GoBackHeaderComponent,
     KeyDialogComponent,
     PwaDialogComponent,
-    PasswordresetComponent,
   ],
   imports: [
     MatDatepickerModule,
