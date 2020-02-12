@@ -33,8 +33,6 @@ import {WINDOW_PROVIDERS} from './provider/window.provider';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FilterDialogComponent} from './components/dialogs/filter/filterDialog.component';
 import {CommentDialogComponent} from './components/dialogs/comment/commentDialog.component';
-import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
-import {UrlEncodePipe} from './pipes/url-encode.pipe';
 import {DatePipe, LocationStrategy, PathLocationStrategy, registerLocaleData} from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {TemplateDialogComponent} from './components/dialogs/template-dialog/template-dialog.component';
@@ -62,8 +60,6 @@ registerLocaleData(localeDe);
     LandingPageComponent,
     FilterDialogComponent,
     CommentDialogComponent,
-    AppointmentCreateComponent,
-    UrlEncodePipe,
     TemplateDialogComponent,
     ConfirmationDialogComponent,
     GoBackHeaderComponent,
@@ -104,16 +100,16 @@ registerLocaleData(localeDe);
     NgxMatDatetimePickerModule,
     DashboardModule,
   ],
-  providers: [WINDOW_PROVIDERS, MatDatepickerModule, PwaService, Globals,
+  providers: [WINDOW_PROVIDERS, PwaService, Globals,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent],
   exports: [FilterDialogComponent,
     CommentDialogComponent,
-    UrlEncodePipe,
     DatePipe,
-    PwaDialogComponent],
+    PwaDialogComponent
+  ],
   entryComponents: [
     FilterDialogComponent,
     CommentDialogComponent,
