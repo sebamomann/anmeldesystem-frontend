@@ -52,7 +52,6 @@ import {PwaDialogComponent} from './components/dialogs/pwa-dialog/pwa-dialog.com
 import {Globals} from './globals';
 import {PasswordresetComponent} from './components/account/passwordreset/passwordreset.component';
 import localeDe from '@angular/common/locales/de';
-import {ReleasenotesComponent} from './components/releasenotes/releasenotes.component';
 import {NgxMatDatetimePickerModule} from 'ngx-mat-datetime-picker';
 import {DashboardModule} from './components/termin/dashboard/dashboard.module';
 
@@ -76,7 +75,6 @@ registerLocaleData(localeDe);
     KeyDialogComponent,
     PwaDialogComponent,
     PasswordresetComponent,
-    ReleasenotesComponent,
   ],
   imports: [
     MatDatepickerModule,

@@ -6,7 +6,6 @@ import {LoginComponent} from './components/account/login/login.component';
 import {RegisterComponent} from './components/account/register/register.component';
 import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
 import {PasswordresetComponent} from './components/account/passwordreset/passwordreset.component';
-import {ReleasenotesComponent} from './components/releasenotes/releasenotes.component';
 
 import {AuthGuard} from './_helper/auth.guard';
 
@@ -22,7 +21,7 @@ const routes: Routes = [
     ]
   },
   {path: 'dashboard', loadChildren: './components/termin/dashboard/dashboard.module#DashboardModule'},
-  {path: 'release', component: ReleasenotesComponent},
+  {path: 'release', loadChildren: './components/releasenotes/releasenotes.module#ReleasenotesModule'},
   {path: 'create', component: AppointmentCreateComponent, canActivate: [AuthGuard]},
   {
     path: 'appointment', children: [
