@@ -8,6 +8,7 @@ import {RouterModule, Routes} from '@angular/router';
 
 const routes: Routes = [
   {path: '', component: AppointmentComponent},
+  {path: 'driver', loadChildren: './driver/driver.module#DriverModule'}
 ];
 
 @NgModule({
@@ -22,7 +23,6 @@ const routes: Routes = [
     MatIconModule,
     RouterModule,
     MatProgressBarModule,
-
   ]
 })
 export class AppointmentModule {
