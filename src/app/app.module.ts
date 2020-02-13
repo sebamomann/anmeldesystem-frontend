@@ -3,7 +3,6 @@ import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './components/app.component';
-import {LandingPageComponent} from './components/landing-page/landing-page.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MatAutocompleteModule,
@@ -57,7 +56,6 @@ registerLocaleData(localeDe);
 @NgModule({
   declarations: [
     AppComponent,
-    LandingPageComponent,
     FilterDialogComponent,
     CommentDialogComponent,
     TemplateDialogComponent,

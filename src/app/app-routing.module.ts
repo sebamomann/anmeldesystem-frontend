@@ -1,10 +1,8 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
-import {LandingPageComponent} from './components/landing-page/landing-page.component';
-
 const routes: Routes = [
-  {path: '', pathMatch: 'full', component: LandingPageComponent},
+  {path: '', pathMatch: 'full', loadChildren: './components/landing-page/landing-page.module#LandingPageModule'},
   {path: 'account', loadChildren: './components/account/account.module#AccountModule'},
   {path: 'dashboard', loadChildren: './components/termin/dashboard/dashboard.module#DashboardModule'},
   {path: 'release', loadChildren: './components/releasenotes/releasenotes.module#ReleasenotesModule'},
@@ -14,11 +12,13 @@ const routes: Routes = [
       {path: 'driver', loadChildren: './components/termin/driver/driver.module#DriverModule'},
     ]
   },
+  {path: 'enroll', loadChildren: './components/termin/enroll.module#EnrollModule'},
   {
-    path: 'enroll', loadChildren: './components/termin/enroll.module#EnrollModule'
+    path: 'enrollment',
+    pathMatch: 'full',
+    loadChildren: './components/termin/enrollment/enrollment.module#EnrollmentModule',
+    data: {edit: true}
   },
-
-  // {path: 'enrollment', pathMatch: 'full', component: EnrollmentComponent, data: {edit: true}},
   // {path: ':link', component: AppointmentComponent},
 ];
 
