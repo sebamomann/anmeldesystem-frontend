@@ -19,7 +19,7 @@ const routes: Routes = [
     loadChildren: './components/termin/enrollment/enrollment.module#EnrollmentModule',
     data: {edit: true}
   },
-  // {path: ':link', component: AppointmentComponent},
+  {path: ':link', loadChildren: './components/termin/appointment.module#AppointmentModule'},
 ];
 
 @NgModule({

@@ -4,8 +4,11 @@ import {AppointmentComponent} from './appointment.component';
 import {EnrollmentListModule} from './enrollment/enrollment-list/enrollment-list.module';
 import {AppointmentDataModule} from './appointment-data/appointment-data.module';
 import {MatIconModule, MatProgressBarModule} from '@angular/material';
-import {RouterModule} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 
+const routes: Routes = [
+  {path: '', component: AppointmentComponent},
+];
 
 @NgModule({
   declarations: [
@@ -13,11 +16,13 @@ import {RouterModule} from '@angular/router';
   ],
   imports: [
     CommonModule,
-    EnrollmentListModule,
+    RouterModule.forChild(routes),
     AppointmentDataModule,
+    EnrollmentListModule,
     MatIconModule,
     RouterModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+
   ]
 })
 export class AppointmentModule {
