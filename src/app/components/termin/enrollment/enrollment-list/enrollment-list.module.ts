@@ -6,7 +6,7 @@ import {MatBadgeModule, MatExpansionModule, MatIconModule} from '@angular/materi
 
 @NgModule({
   declarations: [
-    EnrollmentListComponent
+    EnrollmentListComponent,
   ],
   exports: [
     EnrollmentListComponent
@@ -16,7 +16,7 @@ import {MatBadgeModule, MatExpansionModule, MatIconModule} from '@angular/materi
     MatIconModule,
     MatBadgeModule,
     MatExpansionModule
-  ]
+  ],
 })
 export class EnrollmentListModule {
 }
