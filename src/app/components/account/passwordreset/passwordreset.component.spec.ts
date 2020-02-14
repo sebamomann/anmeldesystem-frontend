@@ -7,6 +7,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {WINDOW_PROVIDERS} from '../../../provider/window.provider';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ValidatorService} from '../../../_helper/validatorService';
 
 describe('PasswordresetComponent', () => {
   let component: PasswordresetComponent;
@@ -20,7 +21,7 @@ describe('PasswordresetComponent', () => {
         HttpClientTestingModule, MatInputModule,
         BrowserAnimationsModule],
       declarations: [PasswordresetComponent],
-      providers: [WINDOW_PROVIDERS]
+      providers: [WINDOW_PROVIDERS, ValidatorService]
     })
       .compileComponents();
   }));
