@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.model';
 import {HttpClient, HttpEvent, HttpHeaders, HttpRequest} from '@angular/common/http';
-import {BehaviorSubject, Observable, Subject, timer} from 'rxjs';
+import {BehaviorSubject, merge, Observable, Subject, timer} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
 import {environment} from '../../environments/environment';
 import {Globals} from '../globals';
@@ -36,7 +36,6 @@ export class AppointmentService {
     if (!this.cache$ || this.lastFetched !== link || (!this.timerActive && restart)) {
       console.log('empty cache');
       this.clear$.next();
-      this.timerActive = true;
       this.lastFetched = link;
       this.hasUpdate$ = new BehaviorSubject<boolean>(false);
 
@@ -49,12 +48,21 @@ export class AppointmentService {
       // the source over and over again. We use takeUntil to complete
       // this stream when the user forces an update.
       this.first = true;
-      this.cache$ = timer$.pipe(
+
+      const cacheNew$ = timer$.pipe(
         switchMap(() => this.requestAppointment(link, slim)),
         takeUntil(this.clear$),
         shareReplay(CACHE_SIZE)
       );
+
+      if (restart && this.timerActive) {
+        this.cache$ = merge(this.cache$, cacheNew$);
+      } else {
+        this.cache$ = cacheNew$;
+      }
     }
+
+    this.timerActive = true;
 
     return this.cache$;
   }
