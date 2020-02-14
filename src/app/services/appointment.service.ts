@@ -1,11 +1,15 @@
 import {Injectable} from '@angular/core';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.model';
-import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {HttpClient, HttpEvent, HttpHeaders, HttpRequest} from '@angular/common/http';
+import {BehaviorSubject, merge, Observable, Subject, timer} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
 import {environment} from '../../environments/environment';
 import {Globals} from '../globals';
+import {map, shareReplay, switchMap, takeUntil} from 'rxjs/operators';
+
+const REFRESH_INTERVAL = 1000;
+const CACHE_SIZE = 1;
 
 @Injectable({
   providedIn: 'root'
@@ -13,19 +17,74 @@ import {Globals} from '../globals';
 export class AppointmentService {
   private globals: Globals;
 
+  // CACHING
+  private lastFetched: string;
+  private cache$: Observable<IAppointmentModel>;
+  private reload$ = new Subject<void>();
+  private clear$ = new Subject<void>();
+  private hasUpdate$: BehaviorSubject<boolean>;
+  private etag = {current: '', last: ''};
+  private first: boolean;
+  private timerActive: boolean;
+
+
   constructor(private readonly httpClient: HttpClient, private glob: Globals) {
     this.globals = glob;
   }
 
-  addCachedAppointment(appointment: IAppointmentModel) {
-    this.globals.appointments[appointment.link] = appointment;
+  getAppointment(link: string, restart: boolean, slim: boolean = false) {
+    if (!this.cache$ || this.lastFetched !== link || (!this.timerActive && restart)) {
+      this.clear$.next();
+      this.lastFetched = link;
+      this.hasUpdate$ = new BehaviorSubject<boolean>(false);
+
+      // Set up timer that ticks every X milliseconds
+      const timer$ = timer(0, REFRESH_INTERVAL);
+
+      // For each timer tick make an http request to fetch new data
+      // We use shareReplay(X) to multicast the cache so that all
+      // subscribers share one underlying source and don't re-create
+      // the source over and over again. We use takeUntil to complete
+      // this stream when the user forces an update.
+      this.first = true;
+
+      const cacheNew$ = timer$.pipe(
+        switchMap(() => this.requestAppointment(link, slim)),
+        takeUntil(this.clear$),
+        shareReplay(CACHE_SIZE)
+      );
+
+      if (restart && this.timerActive) {
+        this.cache$ = merge(this.cache$, cacheNew$);
+      } else {
+        this.cache$ = cacheNew$;
+      }
+    }
+
+    this.timerActive = true;
+
+    return this.cache$;
   }
 
-  getFromCache(link: string) {
-    return this.globals.appointments[link];
+  clear() {
+    this.clear$.next();
+    this.timerActive = false;
   }
 
-  getAppointment(link: string, slim: boolean = false): Observable<HttpEvent<IAppointmentModel>> {
+  updateAvailable(): Observable<boolean> {
+    return this.hasUpdate$.asObservable();
+  }
+
+  resetAvailableUpdate() {
+    this.hasUpdate$.next(false);
+  }
+
+  forceReload() {
+    this.reload$.next();
+    this.cache$ = null;
+  }
+
+  requestAppointment(link: string, slim: boolean): Observable<IAppointmentModel> {
     let url;
     let req;
     // if (this.getFromCache(link) !== undefined && this.getFromCache(link) !== null) {
@@ -41,13 +100,37 @@ export class AppointmentService {
       url += '?slim=true';
     }
 
+    let headers = new HttpHeaders();
+    if (this.first) {
+      headers = new HttpHeaders({
+        'If-None-Match': ''
+      });
+    }
+
     req = new HttpRequest('GET', url, {
       observe: 'response',
       reportProgress: true,
+      headers
     });
-    // }
+    const resp = this.httpClient.request(req);
 
-    return this.httpClient.request(req);
+
+    const res = this.httpClient.get(url, {headers, observe: 'response'});
+    res.toPromise().then(response => {
+      this.etag.last = this.etag.current;
+      this.etag.current = response.headers.get('etag');
+      if (this.etag.last !== this.etag.current && !this.first) {
+        console.log('update');
+        this.hasUpdate$.next(true);
+      }
+
+      this.first = false;
+    });
+
+
+    return res.pipe(
+      map(response => response.body as IAppointmentModel)
+    );
   }
 
   getAppointments(slim: boolean = false): Observable<HttpEvent<IAppointmentModel[]>> {
@@ -59,6 +142,7 @@ export class AppointmentService {
       observe: 'response',
       reportProgress: true,
     });
+
     return this.httpClient.request(req);
   }
 

@@ -1,5 +1,10 @@
-<ng-container *ngIf="appointment; else loading">
+<div *ngIf="updateAvailable$ | async" class="notification-wrapper">
+  <div (click)="fetchUpdate()" [class.visible]="updateAvailable$ | async" class="notification">
+    <span>Neue Daten vorhanden <mat-icon>cached</mat-icon></span>
+  </div>
+</div>
 
+<ng-container *ngIf="appointment$ | async as appointment; else loading">
   <app-appointment-data [appointment]="appointment"></app-appointment-data>
 
   <!--  <div *ngIf="userIsLoggedIn" id="telegramAuth">-->
@@ -11,12 +16,16 @@
   <!--  </div>-->
 
   <ng-container *ngIf="enrollments.length > 0; else emptyList">
-    <app-enrollment-list [appointment]="appointment" [distance]="false"
+    <app-enrollment-list [appointment]="appointment" [main]="true"
                          [enrollments]="enrollmentsCorrect" [title]="'Teilnehemer'"></app-enrollment-list>
-    <app-enrollment-list [appointment]="appointment" [distance]="true"
-                         [enrollments]="enrollmentsWaitingList" [title]="'Warteliste'"></app-enrollment-list>
-    <app-enrollment-list [appointment]="appointment" [distance]="true"
+    <app-enrollment-list [appointment]="appointment" [main]="false"
+                         *ngIf="waitingListBeforeDate" [enrollments]="enrollmentsWaitingList"
+                         [title]="'Warteliste'"></app-enrollment-list>
+    <app-enrollment-list [appointment]="appointment" [main]="false"
                          [enrollments]="enrollmentsTooLate" [title]="'Zu spät angemeldet'"></app-enrollment-list>
+    <app-enrollment-list *ngIf="!waitingListBeforeDate"
+                         [appointment]="appointment" [enrollments]="enrollmentsWaitingList" [main]="false"
+                         [title]="'Warteliste'"></app-enrollment-list>
   </ng-container>
 
   <ng-template #emptyList>

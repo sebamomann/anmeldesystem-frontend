@@ -12,7 +12,7 @@
   <div [@listAnimation]="menu" [ngClass]="{'visible': menu}" class="content">
     <h2>Menü</h2>
     <ul *ngFor="let group of items">
-      <li (click)="navigate(item.redirect) "
+      <li (click)="navigate(item.redirect)"
           *ngFor="let item of group"
           [@.disabled]="false">
         {{item.name}}

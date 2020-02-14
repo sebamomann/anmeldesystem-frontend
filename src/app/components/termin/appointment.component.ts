@@ -1,4 +1,4 @@
-import {Component, NgModule, OnInit} from '@angular/core';
+import {Component, NgModule, OnDestroy, OnInit} from '@angular/core';
 import {AppointmentService} from '../../services/appointment.service';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {FilterDialogComponent} from '../dialogs/filter/filterDialog.component';
@@ -16,6 +16,8 @@ import {KeyDialogComponent} from '../dialogs/key-dialog/key-dialog.component';
 import {Location} from '@angular/common';
 import {EnrollmentUtil} from '../../_util/enrollmentUtil.util';
 import {DomSanitizer} from '@angular/platform-browser';
+import {merge, Observable, Subject} from 'rxjs';
+import {mapTo, mergeMap, skip, startWith, switchMap, take} from 'rxjs/operators';
 
 const HttpStatus = require('http-status-codes');
 
@@ -45,7 +47,7 @@ const HttpStatus = require('http-status-codes');
   ],
 })
 @NgModule({})
-export class AppointmentComponent implements OnInit {
+export class AppointmentComponent implements OnInit, OnDestroy {
   userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
   list = true;
   public appointment: IAppointmentModel = null;
@@ -65,6 +67,15 @@ export class AppointmentComponent implements OnInit {
   private editId = '';
   private editOperation = '';
 
+  // CACHE
+  appointment$: Observable<IAppointmentModel>;
+  showNotification$: Observable<boolean>;
+  update$ = new Subject<void>();
+  forceReload$ = new Subject<void>();
+  updateAvailable$: Observable<boolean> = new Observable<boolean>();
+  private first = true;
+
+
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
               private snackBar: MatSnackBar, private location: Location, private sanitizer: DomSanitizer) {
@@ -83,82 +94,117 @@ export class AppointmentComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.appointmentService.getAppointment(this.link).subscribe(sAppointment => {
-        if (sAppointment.type === HttpEventType.DownloadProgress) {
-          this.percentDone = Math.round(100 * sAppointment.loaded / sAppointment.total);
-        } else if (sAppointment.type === HttpEventType.Response) {
-          this.appointment = sAppointment.body;
-          this.appointmentService.addCachedAppointment(this.appointment);
+    const initialAppointment$ = this.getDataOnce();
 
-          this.successfulRequest();
-        }
-      },
-      (err) => {
-        if (err.status === 304) {
-          this.appointment = this.appointmentService.getFromCache(this.link);
-          this.successfulRequest();
-        } else {
-          console.log(err);
-          this.appointment = undefined;
-        }
-      });
+    const updates$ = merge(this.update$, this.forceReload$).pipe(
+      startWith(false),
+      mergeMap(() => this.getDataOnce())
+    );
+
+    this.appointment$ = merge(initialAppointment$, updates$);
+
+    const reload$ = this.forceReload$.pipe(switchMap(() => this.getNotifications()));
+    const initialNotifications$ = this.getNotifications();
+    const show$ = merge(initialNotifications$, reload$).pipe(mapTo(true));
+    const hide$ = this.update$.pipe(mapTo(false));
+    this.updateAvailable$ = null;
+    this.updateAvailable$ = this.appointmentService.updateAvailable();
+
+    // this.appointment$.subscribe(val => {
+    //   console.log(val);
+    //   if (val !== undefined && this.first) {
+    //     this.first = false;
+    //     console.log('lol');
+    //     this.fetchUpdate();
+    //   }
+    // });
+
+    this.showNotification$ = merge(show$, hide$);
+
+    this.successfulRequest();
+  }
+
+  ngOnDestroy() {
+    this.appointmentService.clear();
+  }
+
+  resetUpdateAvailable() {
+    this.appointmentService.resetAvailableUpdate();
+  }
+
+  getDataOnce() {
+    return this.appointmentService.getAppointment(this.link, true).pipe(take(1));
+  }
+
+  getNotifications() {
+    return this.appointmentService.getAppointment(this.link, true).pipe(skip(1));
+  }
+
+  forceReload() {
+    this.appointmentService.forceReload();
+    this.forceReload$.next();
   }
 
   successfulRequest() {
-    this.enrollments = this.appointment.enrollments;
-    this.enrollmentsTooLate = this.enrollments.filter(fEnrollment => {
-      if (fEnrollment.iat > this.appointment.deadline) {
-        return fEnrollment;
-      } else {
-        this.enrollmentsCorrect.push(fEnrollment);
+    this.appointment$.subscribe(sAppointment => {
+      if (sAppointment !== undefined) {
+        this.enrollmentsCorrect = [];
+        this.enrollments = sAppointment.enrollments;
+        this.enrollmentsTooLate = this.enrollments.filter(fEnrollment => {
+          if (fEnrollment.iat > sAppointment.deadline) {
+            return fEnrollment;
+          } else {
+            this.enrollmentsCorrect.push(fEnrollment);
+          }
+        });
+
+        if (sAppointment.maxEnrollments != null && sAppointment.maxEnrollments !== 0) {
+          if (this.enrollmentsCorrect.length > sAppointment.maxEnrollments) {
+            const enrollmentsCorrectTmp = this.enrollmentsCorrect
+              .slice(0, sAppointment.maxEnrollments);
+            const enrollmentsWaitingListTmp = this.enrollmentsCorrect
+              .slice(sAppointment.maxEnrollments, sAppointment.maxEnrollments + this.enrollmentsCorrect.length);
+
+            this.enrollmentsCorrect = enrollmentsCorrectTmp;
+            this.enrollmentsWaitingList = enrollmentsWaitingListTmp;
+            this.waitingListBeforeDate = true;
+          } else {
+            const enrollmentsTooLateTmp = this.enrollmentsTooLate
+              .slice(0, sAppointment.maxEnrollments);
+            const enrollmentsWaitingListTmp = this.enrollmentsTooLate
+              .slice(sAppointment.maxEnrollments, sAppointment.maxEnrollments + this.enrollmentsTooLate.length);
+
+            this.enrollmentsTooLate = enrollmentsTooLateTmp;
+            this.enrollmentsWaitingList = enrollmentsWaitingListTmp;
+            this.waitingListBeforeDate = false;
+          }
+        }
+
+        this.enrollmentsCorrectOrig = this.enrollmentsCorrect;
+
+        this.filter = this.initializeFilterObject(sAppointment);
+        // this.allowModify = this.modificationAllowed();
+        this.allowModify = true;
+        // Auto send if logged in
+        if (this.editId != null) {
+          const enrollmentToEdit = this.enrollments.filter(fEnrollment => {
+            if (fEnrollment.id === this.editId) {
+              return fEnrollment;
+            }
+          })[0];
+          if (enrollmentToEdit !== undefined) {
+            this.location.replaceState('/enroll?a=' + this.link);
+            if (this.editOperation === 'delete') {
+              this.precheckOpenConfirmationDialog(enrollmentToEdit, 'delete');
+            } else if (this.editOperation === 'edit') {
+              this.precheckOpenConfirmationDialog(enrollmentToEdit, 'edit');
+            }
+          }
+        }
+        setTimeout(() => this.disableAnimation = false);
       }
     });
-
-    if (this.appointment.maxEnrollments != null && this.appointment.maxEnrollments !== 0) {
-      if (this.enrollmentsCorrect.length > this.appointment.maxEnrollments) {
-        const enrollmentsCorrectTmp = this.enrollmentsCorrect
-          .slice(0, this.appointment.maxEnrollments);
-        const enrollmentsWaitingListTmp = this.enrollmentsCorrect
-          .slice(this.appointment.maxEnrollments, this.appointment.maxEnrollments + this.enrollmentsCorrect.length);
-
-        this.enrollmentsCorrect = enrollmentsCorrectTmp;
-        this.enrollmentsWaitingList = enrollmentsWaitingListTmp;
-        this.waitingListBeforeDate = true;
-      } else {
-        const enrollmentsTooLateTmp = this.enrollmentsTooLate
-          .slice(0, this.appointment.maxEnrollments);
-        const enrollmentsWaitingListTmp = this.enrollmentsTooLate
-          .slice(this.appointment.maxEnrollments, this.appointment.maxEnrollments + this.enrollmentsTooLate.length);
-
-        this.enrollmentsTooLate = enrollmentsTooLateTmp;
-        this.enrollmentsWaitingList = enrollmentsWaitingListTmp;
-        this.waitingListBeforeDate = false;
-      }
-    }
-
-    this.enrollmentsCorrectOrig = this.enrollmentsCorrect;
-
-    this.filter = this.initializeFilterObject(this.appointment);
-    // this.allowModify = this.modificationAllowed();
-    this.allowModify = true;
-    // Auto send if logged in
-    if (this.editId != null) {
-      const enrollmentToEdit = this.enrollments.filter(fEnrollment => {
-        if (fEnrollment.id === this.editId) {
-          return fEnrollment;
-        }
-      })[0];
-      if (enrollmentToEdit !== undefined) {
-        this.location.replaceState('/enroll?a=' + this.link);
-        if (this.editOperation === 'delete') {
-          this.precheckOpenConfirmationDialog(enrollmentToEdit, 'delete');
-        } else if (this.editOperation === 'edit') {
-          this.precheckOpenConfirmationDialog(enrollmentToEdit, 'edit');
-        }
-      }
-    }
-    setTimeout(() => this.disableAnimation = false);
-  }
+  };
 
   /**
    * Remove enrollment from appointment list. Used for eliminating the need of re-fetching the entire appointment after enrollment deletion
@@ -515,5 +561,10 @@ export class AppointmentComponent implements OnInit {
 
   private allowedToEditByToken(enrollment: IEnrollmentModel, operation: string) {
     return this._openAskForKeyDialog(enrollment, operation);
+  }
+
+  fetchUpdate() {
+    this.update$.next();
+    this.resetUpdateAvailable();
   }
 }

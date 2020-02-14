@@ -1,9 +1,9 @@
 <div *ngIf="enrollmentsFiltered.length > 0 || getNumberOfActiveFilter() > 0;"
-     [ngClass]="distance ? 'distance' : ''"
+     [ngClass]="main ? '' : 'distance'"
      class="enrollment-list block decent">
   <div class="header">
     <h2 class="headline medium">
-      {{title}} [{{ enrollmentsFiltered.length }}{{ appointment.maxEnrollments !== null
+      {{title}} [{{ enrollmentsFiltered.length }}{{ appointment.maxEnrollments !== null && main
       ? '/' + appointment.maxEnrollments : '' }}]
       <span *ngIf="getNumberOfActiveFilter() > 0">
         [<mat-icon>filter_list</mat-icon>: {{ enrollmentsFiltered.length }}]

@@ -9,6 +9,48 @@
   margin: 30px auto 30px;
 }
 
+.notification-wrapper {
+  position: fixed;
+  top: 10px;
+  width: 100%;
+  z-index: 11;
+
+  .notification {
+    display: none;
+    text-align: center;
+    margin: 0 auto;
+    background-color: white;
+    padding: 5px 15px;
+    border-radius: 10px;
+    font-size: 0.85em;
+    width: fit-content;
+    box-shadow: 0 5px 6px #2C2C2F;
+
+    &.visible {
+      display: block;
+      animation: comeUp 0.25s;
+    }
+
+    button {
+      font-size: 1em;
+    }
+  }
+}
+
+@keyframes comeUp {
+  0% {
+    transform: scale(0.25);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 
 /* GLOBAL */
 .enrollment-list {

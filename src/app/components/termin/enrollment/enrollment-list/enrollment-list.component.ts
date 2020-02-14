@@ -58,7 +58,7 @@ export class EnrollmentListComponent implements OnInit {
 
   public disableAnimation = true;
   @Input()
-  public distance = false;
+  public main = false;
   public filterGotActivated = false;
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
@@ -79,8 +79,8 @@ export class EnrollmentListComponent implements OnInit {
    */
   removeAppointment: (enrollment: IEnrollmentModel) => void
     = (enrollment: IEnrollmentModel) => {
-    const index = this.appointment.enrollments.indexOf(enrollment);
-    this.appointment.enrollments.splice(index, 1);
+    const index = this.enrollments.indexOf(enrollment);
+    this.enrollments.splice(index, 1);
   };
 
   /**

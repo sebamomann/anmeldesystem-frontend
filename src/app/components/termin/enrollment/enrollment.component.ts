@@ -12,6 +12,8 @@ import {MatSnackBar} from '@angular/material';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {EnrollmentService} from '../../../services/enrollment.service';
 import {EnrollmentModel} from '../../../models/EnrollmentModel.model';
+import {merge, Observable, Subject} from 'rxjs';
+import {mapTo, mergeMap, skip, switchMap, take} from 'rxjs/operators';
 
 const HttpStatus = require('http-status-codes');
 
@@ -30,7 +32,6 @@ const HttpStatus = require('http-status-codes');
   ]
 })
 export class EnrollmentComponent implements OnInit {
-
   private link: string;
 
   userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
@@ -89,6 +90,12 @@ export class EnrollmentComponent implements OnInit {
   private autoSend = false;
   private autoSubmitBySetting = false;
 
+  // CACHE
+  appointment$: Observable<IAppointmentModel>;
+  showNotification$: Observable<boolean>;
+  update$ = new Subject<void>();
+  forceReload$ = new Subject<void>();
+
   static handleEditKey() {
     return localStorage.getItem('editKeyByKeyDialog');
   }
@@ -104,55 +111,67 @@ export class EnrollmentComponent implements OnInit {
       this.getName().setValue(this.authenticationService.currentUserValue.username);
     }
 
-    this.appointmentService
-      .getAppointment(this.link, true)
-      .subscribe(
-        sAppointment => {
-          if (sAppointment.type === HttpEventType.DownloadProgress) {
-            this.percentDone = Math.round(100 * sAppointment.loaded / sAppointment.total);
-          } else if (sAppointment.type === HttpEventType.Response) {
-            this.appointment = sAppointment.body;
-            this.appointmentService.addCachedAppointment(sAppointment.body);
+    const initialAppointment$ = this.getDataOnce();
 
-            this.successfulRequest();
-          }
-        }, (err) => {
-          if (err.status === 304) {
-            this.appointment = this.appointmentService.getFromCache(this.link);
-            this.successfulRequest();
-          } else {
-            console.log(err);
-            this.appointment = undefined;
-          }
-        }
-      );
+    const updates$ = merge(this.update$, this.forceReload$).pipe(
+      mergeMap(() => this.getDataOnce())
+    );
+
+    this.appointment$ = merge(initialAppointment$, updates$);
+    this.appointment$.subscribe(sAppointment => {
+      this.appointment = sAppointment;
+    });
+
+    const reload$ = this.forceReload$.pipe(switchMap(() => this.getNotifications()));
+    const initialNotifications$ = this.getNotifications();
+    const show$ = merge(initialNotifications$, reload$).pipe(mapTo(true));
+    const hide$ = this.update$.pipe(mapTo(false));
+    this.showNotification$ = merge(show$, hide$);
+
+    this.successfulRequest();
   }
 
-  successfulRequest() {
-    this.storageDataToFields();
-    // When e.g. coming from login
-    if (this.showLoginAndTokenForm === true) {
-      // Re-fetch output from local storage
-      this.output = JSON.parse(this.outputRawFromStorage);
-      this.parseOutputIntoForm();
+  getDataOnce() {
+    return this.appointmentService.getAppointment(this.link, false).pipe(take(1));
+  }
 
-      if (this.autoSend) {
-        this.sendEnrollment();
-      }
-    } else if (this.edit) {
-      const enrollment: IEnrollmentModel = this.appointment.enrollments.filter(fEnrollment => {
-        return fEnrollment.id === this.enrollmentId;
-      })[0];
+  getNotifications() {
+    return this.appointmentService.getAppointment(this.link, false).pipe(skip(1));
+  }
 
-      if (enrollment !== null) {
-        this.output = enrollment;
+  forceReload() {
+    this.appointmentService.forceReload();
+    this.forceReload$.next();
+  }
+
+  private successfulRequest(): void {
+    this.appointment$.subscribe(sAppointment => {
+      this.appointment = sAppointment;
+      this.storageDataToFields();
+      // When e.g. coming from login
+      if (this.showLoginAndTokenForm === true) {
+        // Re-fetch output from local storage
+        this.output = JSON.parse(this.outputRawFromStorage);
         this.parseOutputIntoForm();
-      }
-    } else {
-      // DO NOTHING, BECAUSE FORM IS EMPTY FOR ADDING NEW ENROLLMENT
-    }
 
-    this.buildFormCheckboxes();
+        if (this.autoSend) {
+          this.sendEnrollment();
+        }
+      } else if (this.edit) {
+        const enrollment: IEnrollmentModel = this.appointment.enrollments.filter(fEnrollment => {
+          return fEnrollment.id === this.enrollmentId;
+        })[0];
+
+        if (enrollment !== null) {
+          this.output = enrollment;
+          this.parseOutputIntoForm();
+        }
+      } else {
+        // DO NOTHING, BECAUSE FORM IS EMPTY FOR ADDING NEW ENROLLMENT
+      }
+
+      this.buildFormCheckboxes();
+    });
   }
 
   /**
@@ -254,6 +273,16 @@ export class EnrollmentComponent implements OnInit {
           this.clearLoginAndTokenFormIntercepting();
           if (result.type === HttpEventType.Response) {
             if (result.status === HttpStatus.CREATED || result.status === HttpStatus.OK) {
+              if (functionName === 'create') {
+                this.appointment.enrollments.push(result.body);
+              } else if (functionName === 'update') {
+                this.appointment.enrollments.map(obj => {
+                  if (obj.id === result.body.id) {
+                    return result.body;
+                  }
+                });
+              }
+
               localStorage.removeItem('editKeyByKeyDialog');
               this.router.navigate([`enroll`], {
                 queryParams: {
@@ -472,6 +501,6 @@ export class EnrollmentComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/enroll'], {queryParams: {a: this.link}});
+    this.location.back();
   }
 }

@@ -7,6 +7,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {WINDOW_PROVIDERS} from '../../../provider/window.provider';
+import {ValidatorService} from '../../../_helper/validatorService';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -20,7 +21,7 @@ describe('LoginComponent', () => {
         MatInputModule, BrowserAnimationsModule,
         HttpClientTestingModule],
       declarations: [LoginComponent],
-      providers: [WINDOW_PROVIDERS]
+      providers: [WINDOW_PROVIDERS, ValidatorService]
     })
       .compileComponents();
   }));
