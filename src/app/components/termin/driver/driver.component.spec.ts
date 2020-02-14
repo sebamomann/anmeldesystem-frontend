@@ -2,11 +2,13 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {DriverComponent} from './driver.component';
 import {MatCardModule, MatIconModule, MatProgressBarModule} from '@angular/material';
-import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import {APP_BASE_HREF, Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {RouterTestingModule} from '@angular/router/testing';
 import {RouterModule} from '@angular/router';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {GoBackHeaderComponent} from '../../util/go-back-header/go-back-header.component';
+import {Globals} from '../../../globals';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('DriverComponent', () => {
   let component: DriverComponent;
@@ -16,9 +18,10 @@ describe('DriverComponent', () => {
     TestBed.configureTestingModule({
       imports: [MatIconModule, MatCardModule,
         MatProgressBarModule, HttpClientTestingModule,
-        RouterTestingModule],
+        RouterTestingModule, BrowserAnimationsModule],
       declarations: [DriverComponent, GoBackHeaderComponent],
-      providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}, RouterTestingModule, RouterModule]
+      providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}, RouterTestingModule, RouterModule,
+        {provide: APP_BASE_HREF, useValue: '/'}, Globals]
     })
       .compileComponents();
   }));

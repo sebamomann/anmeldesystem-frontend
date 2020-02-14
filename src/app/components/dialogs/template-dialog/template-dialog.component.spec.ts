@@ -4,6 +4,7 @@ import {TemplateDialogComponent} from './template-dialog.component';
 import {MatDialogModule, MatIconModule, MatListModule} from '@angular/material';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
+import {Globals} from '../../../globals';
 
 describe('TemplateDialogComponent', () => {
   let component: TemplateDialogComponent;
@@ -14,7 +15,8 @@ describe('TemplateDialogComponent', () => {
       imports: [MatListModule, MatIconModule,
         MatDialogModule, HttpClientTestingModule,
         RouterTestingModule],
-      declarations: [TemplateDialogComponent]
+      declarations: [TemplateDialogComponent],
+      providers: [Globals]
     })
       .compileComponents();
   }));

@@ -2,4 +2,4 @@
 data-telegram-login="eca_cgh_bot"
 data-size="large"
 data-onauth="onTelegramAuth(user)"
-data-request-access="write"></script>
+data-request-access="write"></script>;

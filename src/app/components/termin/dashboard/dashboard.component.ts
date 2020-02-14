@@ -37,6 +37,7 @@ export class DashboardComponent implements OnInit {
   numbers = new Array(3);
   public percentDone;
   public appointments: IAppointmentModel[] = undefined;
+  public appointment = null;
   public appointmentsArchive = undefined;
   public allowToShowEmpty: any;
 

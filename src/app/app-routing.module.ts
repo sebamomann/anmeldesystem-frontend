@@ -1,46 +1,21 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
-import {LandingPageComponent} from './components/landing-page/landing-page.component';
-import {AppointmentComponent} from './components/termin/appointment.component';
-import {LoginComponent} from './components/account/login/login.component';
-import {RegisterComponent} from './components/account/register/register.component';
-import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
-import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
-import {DashboardComponent} from './components/termin/dashboard/dashboard.component';
-import {DriverComponent} from './components/termin/driver/driver.component';
-import {PasswordresetComponent} from './components/account/passwordreset/passwordreset.component';
-import {ReleasenotesComponent} from './components/releasenotes/releasenotes.component';
-
-import {AuthGuard} from './_helper/auth.guard';
-
 const routes: Routes = [
-  {path: '', pathMatch: 'full', component: LandingPageComponent},
+  {path: '', pathMatch: 'full', loadChildren: './components/landing-page/landing-page.module#LandingPageModule'},
+  {path: 'account', loadChildren: './components/account/account.module#AccountModule'},
+  {path: 'dashboard', loadChildren: './components/termin/dashboard/dashboard.module#DashboardModule'},
+  {path: 'release', loadChildren: './components/releasenotes/releasenotes.module#ReleasenotesModule'},
+  {path: 'create', loadChildren: './components/termin/appointment-create/appointment-create.module#AppointmentCreateModule'},
+  {path: 'appointment', loadChildren: './components/termin/appointment.module#AppointmentModule'},
+  {path: 'enroll', loadChildren: './components/termin/enroll.module#EnrollModule'},
   {
-    path: 'account', children: [
-      {path: 'login', component: LoginComponent},
-      {path: 'register', component: RegisterComponent},
-      {path: 'verify/:mail/:token', component: RegisterComponent},
-      {path: 'passwordreset/:mail/:token', component: PasswordresetComponent},
-      {path: 'passwordreset', component: PasswordresetComponent}
-    ]
+    path: 'enrollment',
+    pathMatch: 'full',
+    loadChildren: './components/termin/enrollment/enrollment.module#EnrollmentModule',
+    data: {edit: true}
   },
-  {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
-  {path: 'release', component: ReleasenotesComponent},
-  {path: 'create', component: AppointmentCreateComponent, canActivate: [AuthGuard]},
-  {
-    path: 'appointment', children: [
-      {path: 'driver', pathMatch: 'full', component: DriverComponent},
-    ]
-  },
-  {
-    path: 'enroll', children: [
-      {path: '', pathMatch: 'full', component: AppointmentComponent},
-      {path: 'add', pathMatch: 'full', component: EnrollmentComponent},
-    ]
-  },
-  {path: 'enrollment', pathMatch: 'full', component: EnrollmentComponent, data: {edit: true}},
-  {path: ':link', component: AppointmentComponent},
+  {path: ':link', loadChildren: './components/termin/appointment.module#AppointmentModule'},
 ];
 
 @NgModule({

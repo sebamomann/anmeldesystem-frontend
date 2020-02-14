@@ -2,10 +2,12 @@ import {TestBed} from '@angular/core/testing';
 
 import {AppointmentService} from './appointment.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {Globals} from '../globals';
 
-describe('TerminService', () => {
+describe('AppointmentService', () => {
   beforeEach(() => TestBed.configureTestingModule({
     imports: [HttpClientTestingModule],
+    providers: [Globals]
   }));
 
   it('should be created', () => {
