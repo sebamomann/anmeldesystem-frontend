@@ -34,7 +34,6 @@ export class AppointmentService {
 
   getAppointment(link: string, restart: boolean, slim: boolean = false) {
     if (!this.cache$ || this.lastFetched !== link || (!this.timerActive && restart)) {
-      console.log('empty cache');
       this.clear$.next();
       this.lastFetched = link;
       this.hasUpdate$ = new BehaviorSubject<boolean>(false);
@@ -103,12 +102,9 @@ export class AppointmentService {
 
     let headers = new HttpHeaders();
     if (this.first) {
-      console.log('first');
       headers = new HttpHeaders({
         'If-None-Match': ''
       });
-    } else {
-      console.log('!first');
     }
 
     req = new HttpRequest('GET', url, {
