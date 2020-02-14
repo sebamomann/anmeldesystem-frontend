@@ -1,4 +1,12 @@
 .filter {
+  position: relative;
+
+  .reset {
+    padding: 0 10px !important;
+    min-width: 0;
+    margin-left: 0;
+  }
+
   .mat-dialog-title {
     margin: 0;
   }
