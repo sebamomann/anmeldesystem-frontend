@@ -226,16 +226,12 @@ export class EnrollmentListComponent implements OnInit {
                 }
               });
 
-              console.log(this.filter.additions.some(cAddition => cAddition.active));
-
               if ((this.filter.explicitly === 'explicit' || this.filter.explicitly === 'semiExplicit')
                 && eFilterAddition.active === true
                 && !eEnrollment.additions.some(sAddition => sAddition.id === eFilterAddition.id)) {
                 throw new Error();
               }
             });
-
-            console.log(this.filter.additions.some(cAddition => cAddition.active));
 
             if (contains === 0 && this.filter.additions.some(cAddition => cAddition.active)) {
               return;
