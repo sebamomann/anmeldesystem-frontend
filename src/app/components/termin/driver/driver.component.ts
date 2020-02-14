@@ -66,11 +66,11 @@ export class DriverComponent implements OnInit {
   }
 
   getDataOnce() {
-    return this.appointmentService.getAppointment(this.link).pipe(take(1));
+    return this.appointmentService.getAppointment(this.link, false).pipe(take(1));
   }
 
   getNotifications() {
-    return this.appointmentService.getAppointment(this.link).pipe(skip(1));
+    return this.appointmentService.getAppointment(this.link, false).pipe(skip(1));
   }
 
   forceReload() {
