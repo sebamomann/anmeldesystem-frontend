@@ -30,7 +30,7 @@
     </ng-container>
 
 
-    <div class="filter-block" *ngIf="isFilterActive">
+    <div class="filter-block">
       <div class="separator tall brighter center semi"></div>
       <!--suppress TypeScriptUnresolvedFunction -->
       <mat-icon class="tooltip"
@@ -60,7 +60,7 @@
     </span>
   </div>
   <div mat-dialog-actions>
-    <button [mat-dialog-close]="dialogFilter" cdkFocusInitial mat-button>Anwenden</button>
+    <button [mat-dialog-close]="dialogFilter" cdkFocusInitial mat-raised-button>Anwenden</button>
     <button mat-button (click)="onNoClick()">Abbrechen</button>
     <button [mat-dialog-close]="null" class="reset" mat-button>
       <mat-icon>delete_sweep</mat-icon>

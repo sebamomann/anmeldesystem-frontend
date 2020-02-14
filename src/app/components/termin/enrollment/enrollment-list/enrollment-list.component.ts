@@ -59,6 +59,7 @@ export class EnrollmentListComponent implements OnInit {
   public disableAnimation = true;
   @Input()
   public distance = false;
+  public filterGotActivated = false;
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
@@ -114,17 +115,17 @@ export class EnrollmentListComponent implements OnInit {
       if (isObject(newFilter)
         && newFilter !== this.filter
         && newFilter != null) {
+        this.filterGotActivated = true;
         // Preserve current data
         const curr_filter = this.filter;
         const curr_enrollments = this.enrollmentsFiltered;
 
         this.filter = newFilter;
 
-        console.log(this.filter);
-
         const _enrollmentsFiltered = this.filterEnrollments();
 
-        if (_enrollmentsFiltered.length === 0 && this.getNumberOfActiveFilter() > 0) {
+        if (_enrollmentsFiltered.length === 0
+          && this.getNumberOfActiveFilter() > 0) {
           this.enrollments = curr_enrollments;
           // Reopen filter if filter shows no results
           this._openFilterDialog(true);
@@ -134,8 +135,9 @@ export class EnrollmentListComponent implements OnInit {
           this.enrollmentsFiltered = _enrollmentsFiltered;
         }
       } else if (newFilter === null) {
+        this.filterGotActivated = false;
         this.filter = this.initializeFilterObject(this.appointment);
-        this.enrollmentsFiltered = this.enrollments;
+        this.enrollmentsFiltered = this.appointment.enrollments;
       }
     });
   };
@@ -202,14 +204,13 @@ export class EnrollmentListComponent implements OnInit {
   filterEnrollments: () => IEnrollmentModel[] = () => {
     // Reset enrollment list to original list
 
-    const numberOfAdditionFilters = this.filter.additions.filter(val => val.active).length;
-    if (numberOfAdditionFilters > 0
+    if (this.filterGotActivated
       || this.filter.driverPassenger !== '') {
       const output: IEnrollmentModel[] = [];
 
       this.enrollments.forEach(eEnrollment => {
         try {
-          if (numberOfAdditionFilters > 0) {
+          if (this.filter.additions.filter(val => val.active).length > 0) {
             let contains = 0;
             this.filter.additions.forEach(eFilterAddition => {
               if (eFilterAddition.active
@@ -225,6 +226,8 @@ export class EnrollmentListComponent implements OnInit {
                 }
               });
 
+              console.log(this.filter.additions.some(cAddition => cAddition.active));
+
               if ((this.filter.explicitly === 'explicit' || this.filter.explicitly === 'semiExplicit')
                 && eFilterAddition.active === true
                 && !eEnrollment.additions.some(sAddition => sAddition.id === eFilterAddition.id)) {
@@ -232,8 +235,16 @@ export class EnrollmentListComponent implements OnInit {
               }
             });
 
-            if (contains === 0) {
+            console.log(this.filter.additions.some(cAddition => cAddition.active));
+
+            if (contains === 0 && this.filter.additions.some(cAddition => cAddition.active)) {
               return;
+            }
+          } else {
+            if (this.filter.explicitly === 'explicit') {
+              if (eEnrollment.additions.some(sAddition => sAddition)) {
+                return;
+              }
             }
           }
 
@@ -262,15 +273,28 @@ export class EnrollmentListComponent implements OnInit {
    * #selectedAdditions + (driverPassengerFilter ? 1 : 0) + (explicit ? 1 : 0)
    */
   getNumberOfActiveFilter: () => number = () => {
+    if (!this.filterGotActivated) {
+      return 0;
+    }
+
     let i = 0;
     this.filter.additions.forEach(filter => {
       if (filter.active) {
         i++;
       }
     });
-    if (this.filter.driverPassenger === 'driver' || this.filter.driverPassenger === 'passenger') {
+
+    if (this.filter.driverPassenger === 'driver'
+      || this.filter.driverPassenger === 'passenger') {
       i++;
     }
+
+    if (this.filter.explicitly === 'explicit'
+      || this.filter.explicitly === 'dynamic'
+      || this.filter.explicitly === 'semiExplicit') {
+      i++;
+    }
+
     return i;
   };
 

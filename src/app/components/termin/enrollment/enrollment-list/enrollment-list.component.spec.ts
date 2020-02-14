@@ -63,6 +63,7 @@ describe('EnrollmentListComponent', () => {
   let component: EnrollmentListComponent;
   let fixture: ComponentFixture<EnrollmentListComponent>;
 
+  const DriverNone = createEnrollment(false, false, false, false, true, false);
   const DriverMc = createEnrollment(true, false, false, false, true, false);
   const DriverMcBk = createEnrollment(true, true, false, false, true, false);
   const DriverSubwayDiner = createEnrollment(false, false, true, true, true, false);
@@ -73,6 +74,7 @@ describe('EnrollmentListComponent', () => {
   const DriverAll1 = createEnrollment(true, true, true, true, true, false);
   const DriverAll2 = createEnrollment(true, true, true, true, true, false);
 
+  const PassengerNone = createEnrollment(false, false, false, false, false, true);
   const PassengerMc = createEnrollment(true, false, false, false, false, true);
   const PassengerDiner = createEnrollment(false, false, false, true, false, true);
   const PassengerMcBk = createEnrollment(true, true, false, false, false, true);
@@ -102,6 +104,7 @@ describe('EnrollmentListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EnrollmentListComponent);
     component = fixture.componentInstance;
+    component.filterGotActivated = true;
     component.appointment = {
       title: 'Test Termin',
       description: 'This is a very very cool date because I created it lol',
@@ -132,12 +135,15 @@ describe('EnrollmentListComponent', () => {
         }
       ],
       driverAddition: true,
-      enrollments: [DriverMc,
+      enrollments: [
+        DriverNone,
+        DriverMc,
         DriverMcBk,
         DriverSubwayDiner, DriverSubwayDiner2, DriverSubwayDiner3,
         DriverMcBkSubway,
         DriverBkSubwayDiner,
         DriverAll1, DriverAll2,
+        PassengerNone,
         PassengerMc,
         PassengerDiner,
         PassengerMcBk, PassengerMcBk2,
@@ -147,12 +153,15 @@ describe('EnrollmentListComponent', () => {
         PassengerAll1, PassengerAll2]
     };
 
-    component.enrollments = [DriverMc,
+    component.enrollments = [
+      DriverNone,
+      DriverMc,
       DriverMcBk,
       DriverSubwayDiner, DriverSubwayDiner2, DriverSubwayDiner3,
       DriverMcBkSubway,
       DriverBkSubwayDiner,
       DriverAll1, DriverAll2,
+      PassengerNone,
       PassengerMc,
       PassengerDiner,
       PassengerMcBk, PassengerMcBk2,
@@ -324,5 +333,70 @@ describe('EnrollmentListComponent', () => {
     const filtered = component.filterEnrollments();
     expect(filtered).toEqual([DriverMc, DriverMcBk, DriverSubwayDiner, DriverSubwayDiner2, DriverSubwayDiner3, DriverMcBkSubway,
       DriverBkSubwayDiner, DriverAll1, DriverAll2]);
+  });
+
+  it('correct filter: none, dynamic, both', () => {
+    component.filter = createFilter(false, false, false, false, 'dynamic', 'both');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([DriverNone,
+      DriverMc,
+      DriverMcBk,
+      DriverSubwayDiner, DriverSubwayDiner2, DriverSubwayDiner3,
+      DriverMcBkSubway,
+      DriverBkSubwayDiner,
+      DriverAll1, DriverAll2,
+      PassengerNone,
+      PassengerMc,
+      PassengerDiner,
+      PassengerMcBk, PassengerMcBk2,
+      PassengerMcSubway,
+      PassengerBkDiner,
+      PassengerBkSubwayDiner,
+      PassengerAll1, PassengerAll2]);
+  });
+
+  it('correct filter: none, semiExplicit, both', () => {
+    component.filter = createFilter(false, false, false, false, 'semiExplicit', 'both');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([DriverNone,
+      DriverMc,
+      DriverMcBk,
+      DriverSubwayDiner, DriverSubwayDiner2, DriverSubwayDiner3,
+      DriverMcBkSubway,
+      DriverBkSubwayDiner,
+      DriverAll1, DriverAll2,
+      PassengerNone,
+      PassengerMc,
+      PassengerDiner,
+      PassengerMcBk, PassengerMcBk2,
+      PassengerMcSubway,
+      PassengerBkDiner,
+      PassengerBkSubwayDiner,
+      PassengerAll1, PassengerAll2]);
+  });
+
+  it('correct filter: none, explicit, both', () => {
+    component.filter = createFilter(false, false, false, false, 'explicit', 'both');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([
+      DriverNone,
+      PassengerNone,
+    ]);
+  });
+
+  it('correct filter: none, explicit, driver', () => {
+    component.filter = createFilter(false, false, false, false, 'explicit', 'driver');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([
+      DriverNone,
+    ]);
+  });
+
+  it('correct filter: none, explicit, passenger', () => {
+    component.filter = createFilter(false, false, false, false, 'explicit', 'passenger');
+    const filtered = component.filterEnrollments();
+    expect(filtered).toEqual([
+      PassengerNone,
+    ]);
   });
 });
