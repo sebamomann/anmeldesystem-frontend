@@ -3,7 +3,6 @@ import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './components/app.component';
-import {LandingPageComponent} from './components/landing-page/landing-page.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MatAutocompleteModule,
@@ -29,21 +28,12 @@ import {
   MatTabsModule,
   MatTooltipModule
 } from '@angular/material';
-import {AppointmentComponent} from './components/termin/appointment.component';
-import {AppointmentDataComponent} from './components/termin/appointment-data/appointment-data.component';
 import {WINDOW_PROVIDERS} from './provider/window.provider';
-import {LoginComponent} from './components/account/login/login.component';
-import {RegisterComponent} from './components/account/register/register.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FilterDialogComponent} from './components/dialogs/filter/filterDialog.component';
 import {CommentDialogComponent} from './components/dialogs/comment/commentDialog.component';
-import {EnrollmentComponent} from './components/termin/enrollment/enrollment.component';
-import {AppointmentCreateComponent} from './components/termin/appointment-create/appointment-create.component';
-import {UrlEncodePipe} from './pipes/url-encode.pipe';
 import {DatePipe, LocationStrategy, PathLocationStrategy, registerLocaleData} from '@angular/common';
-import {DashboardComponent} from './components/termin/dashboard/dashboard.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {DriverComponent} from './components/termin/driver/driver.component';
 import {TemplateDialogComponent} from './components/dialogs/template-dialog/template-dialog.component';
 import {AuthInterceptor} from './_helper/interceptor/auth.interceptor';
 import {JwtInterceptor} from './_helper/interceptor/jwt.interceptor';
@@ -55,11 +45,9 @@ import {environment} from '../environments/environment';
 import {PwaService} from './services/pwa-service.service';
 import {PwaDialogComponent} from './components/dialogs/pwa-dialog/pwa-dialog.component';
 import {Globals} from './globals';
-import {PasswordresetComponent} from './components/account/passwordreset/passwordreset.component';
 import localeDe from '@angular/common/locales/de';
-import {EnrollmentListComponent} from './components/termin/enrollment/enrollment-list/enrollment-list.component';
-import {ReleasenotesComponent} from './components/releasenotes/releasenotes.component';
 import {NgxMatDatetimePickerModule} from 'ngx-mat-datetime-picker';
+import {DashboardModule} from './components/termin/dashboard/dashboard.module';
 
 const HttpStatus = require('http-status-codes');
 
@@ -68,26 +56,13 @@ registerLocaleData(localeDe);
 @NgModule({
   declarations: [
     AppComponent,
-    LandingPageComponent,
-    AppointmentComponent,
-    AppointmentDataComponent,
-    LoginComponent,
-    RegisterComponent,
     FilterDialogComponent,
     CommentDialogComponent,
-    EnrollmentComponent,
-    AppointmentCreateComponent,
-    UrlEncodePipe,
-    DashboardComponent,
-    DriverComponent,
     TemplateDialogComponent,
     ConfirmationDialogComponent,
     GoBackHeaderComponent,
     KeyDialogComponent,
     PwaDialogComponent,
-    PasswordresetComponent,
-    EnrollmentListComponent,
-    ReleasenotesComponent,
   ],
   imports: [
     MatDatepickerModule,
@@ -121,13 +96,18 @@ registerLocaleData(localeDe);
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
     MatProgressSpinnerModule,
     NgxMatDatetimePickerModule,
+    DashboardModule,
   ],
-  providers: [WINDOW_PROVIDERS, MatDatepickerModule, PwaService, Globals,
+  providers: [WINDOW_PROVIDERS, PwaService, Globals,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent],
-  exports: [FilterDialogComponent, CommentDialogComponent, UrlEncodePipe, DatePipe, PwaDialogComponent],
+  exports: [FilterDialogComponent,
+    CommentDialogComponent,
+    DatePipe,
+    PwaDialogComponent
+  ],
   entryComponents: [
     FilterDialogComponent,
     CommentDialogComponent,

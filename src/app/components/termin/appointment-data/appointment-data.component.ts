@@ -48,10 +48,9 @@ export class AppointmentDataComponent implements OnInit {
 
   arrayBufferToBase64(buffer) {
     const TYPED_ARRAY = new Uint8Array(buffer.data);
-    const STRING_CHAR = TYPED_ARRAY.reduce((data, byte) => {
+    return TYPED_ARRAY.reduce((data, byte) => {
       return data + String.fromCharCode(byte);
     }, '');
-    return STRING_CHAR;
   }
 
 

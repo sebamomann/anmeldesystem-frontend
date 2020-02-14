@@ -19,7 +19,8 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "emitDecoratorMetadata": false
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
