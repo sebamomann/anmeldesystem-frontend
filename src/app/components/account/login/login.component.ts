@@ -6,6 +6,7 @@ import {AuthenticationService} from '../../../services/authentication.service';
 import {first} from 'rxjs/operators';
 import {AlertService} from '../../../services/alert.service';
 import {DatePipe} from '@angular/common';
+import {ValidatorService} from '../../../_helper/validatorService';
 
 @Component({
   selector: 'app-login',
@@ -25,9 +26,10 @@ export class LoginComponent implements OnInit {
   private changeDate: Date;
 
   constructor(private router: Router, private accountService: AccountService, private route: ActivatedRoute,
-              private authenticationService: AuthenticationService, private alertService: AlertService) {
+              private authenticationService: AuthenticationService, private alertService: AlertService,
+              private validatorService: ValidatorService) {
     this.route.queryParams.subscribe(params => {
-      this.getUsername().setValue(params.mail);
+      this.getUsername().setValue(validatorService.emailIsValid(params.mail) ? params.mail : '');
     });
   }
 
