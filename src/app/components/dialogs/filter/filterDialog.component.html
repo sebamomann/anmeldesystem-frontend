@@ -60,7 +60,10 @@
     </span>
   </div>
   <div mat-dialog-actions>
+    <button [mat-dialog-close]="dialogFilter" cdkFocusInitial mat-button>Anwenden</button>
     <button mat-button (click)="onNoClick()">Abbrechen</button>
-    <button mat-button [mat-dialog-close]="dialogFilter" cdkFocusInitial>Anwenden</button>
+    <button [mat-dialog-close]="null" class="reset" mat-button>
+      <mat-icon>delete_sweep</mat-icon>
+    </button>
   </div>
 </div>

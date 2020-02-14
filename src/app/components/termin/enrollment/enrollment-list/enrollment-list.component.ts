@@ -111,7 +111,9 @@ export class EnrollmentListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(newFilter => {
-      if (isObject(newFilter) && newFilter !== this.filter) {
+      if (isObject(newFilter)
+        && newFilter !== this.filter
+        && newFilter != null) {
         // Preserve current data
         const curr_filter = this.filter;
         const curr_enrollments = this.enrollmentsFiltered;
@@ -131,6 +133,9 @@ export class EnrollmentListComponent implements OnInit {
         } else {
           this.enrollmentsFiltered = _enrollmentsFiltered;
         }
+      } else if (newFilter === null) {
+        this.filter = this.initializeFilterObject(this.appointment);
+        this.enrollmentsFiltered = this.enrollments;
       }
     });
   };
@@ -203,7 +208,6 @@ export class EnrollmentListComponent implements OnInit {
       const output: IEnrollmentModel[] = [];
 
       this.enrollments.forEach(eEnrollment => {
-        console.log(eEnrollment);
         try {
           if (numberOfAdditionFilters > 0) {
             let contains = 0;
