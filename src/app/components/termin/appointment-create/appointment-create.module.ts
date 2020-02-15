@@ -9,9 +9,11 @@ import {
   MatCheckboxModule,
   MatChipsModule,
   MatDatepickerModule,
+  MatDialogModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
+  MatListModule,
   MatProgressBarModule,
   MatStepperModule,
   MatTooltipModule
@@ -20,6 +22,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {NgxMatDatetimePickerModule} from 'ngx-mat-datetime-picker';
 import {AuthGuard} from '../../../_helper/auth.guard';
 import {ApplicationPipesModule} from '../../../pipes/application-pipes.module';
+import {TemplateDialogComponent} from '../../dialogs/template-dialog/template-dialog.component';
 
 const routes: Routes = [
   {path: '', component: AppointmentCreateComponent, canActivate: [AuthGuard]}
@@ -28,6 +31,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppointmentCreateComponent,
+    TemplateDialogComponent
   ],
   imports: [
     CommonModule,
@@ -47,8 +51,12 @@ const routes: Routes = [
     MatInputModule,
     MatButtonModule,
     ApplicationPipesModule,
+    MatDialogModule,
+    MatListModule,
   ],
-  exports: [],
+  exports: [
+    TemplateDialogComponent
+  ],
   providers: []
 })
 export class AppointmentCreateModule {

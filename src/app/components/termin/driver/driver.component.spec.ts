@@ -6,7 +6,6 @@ import {APP_BASE_HREF, Location, LocationStrategy, PathLocationStrategy} from '@
 import {RouterTestingModule} from '@angular/router/testing';
 import {RouterModule} from '@angular/router';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {GoBackHeaderComponent} from '../../util/go-back-header/go-back-header.component';
 import {Globals} from '../../../globals';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -19,7 +18,7 @@ describe('DriverComponent', () => {
       imports: [MatIconModule, MatCardModule,
         MatProgressBarModule, HttpClientTestingModule,
         RouterTestingModule, BrowserAnimationsModule],
-      declarations: [DriverComponent, GoBackHeaderComponent],
+      declarations: [DriverComponent],
       providers: [Location, {provide: LocationStrategy, useClass: PathLocationStrategy}, RouterTestingModule, RouterModule,
         {provide: APP_BASE_HREF, useValue: '/'}, Globals]
     })
