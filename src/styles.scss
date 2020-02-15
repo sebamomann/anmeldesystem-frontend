@@ -240,7 +240,7 @@ mat-icon {
 
 .main-wrapper {
   position: relative;
-  min-height: calc(100vh - 100px);
+  min-height: calc(100vh - 179px);
   padding-bottom: 100px;
   overflow: auto;
 }
@@ -879,3 +879,28 @@ footer {
   }
 }
 
+
+@media all and (min-width: 1024px) {
+  .svg-wrapper {
+    svg {
+      display: none;
+
+    }
+
+    background-image: linear-gradient(to bottom, $secondary, $secondary 30vh, transparent 20vh, transparent);
+  }
+
+  mat-card {
+    max-width: 1225px;
+
+    &.form {
+      max-width: 700px;
+    }
+  }
+
+  .main-wrapper {
+    margin: 0 auto;
+    max-width: 1225px;
+    min-height: calc(100vh - 179px);
+  }
+}

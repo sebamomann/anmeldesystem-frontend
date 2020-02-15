@@ -7,7 +7,7 @@
 <!--<ng-container *ngIf="false; else appointmentdata">-->
 <ng-container *ngIf="appointments !== undefined; else appointmentdata">
   <ng-container *ngIf="appointments.length > 0; else empty">
-    <div [@listAnimation]="appointments.length">
+    <div [@listAnimation]="appointments.length" class="appointment-list-wrapper">
       <app-appointment-data *ngFor="let appointment of appointments"
                             [appointment]="appointment"
                             [preview]="true"
@@ -20,7 +20,7 @@
 
   <ng-container *ngIf="appointmentsArchive.length > 0">
     <h2 class="title">Archiv</h2>
-    <div [@listAnimation]="appointments.length">
+    <div [@listAnimation]="appointments.length" class="appointment-list-wrapper">
       <ng-container *ngFor="let appointment of appointmentsArchive">
         <mat-card (click)="redirectToAppointment(appointment)" class="appointment-data archive">
           <mat-card-content>
@@ -48,7 +48,7 @@
                     class="progress-bar"
                     mode="determinate">
   </mat-progress-bar>
-  <div>
+  <div class="appointment-list-wrapper">
     <mat-card *ngFor="let number of numbers"
               [ngClass]="{'hide': hide}"
               class="template">

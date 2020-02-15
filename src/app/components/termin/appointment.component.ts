@@ -309,6 +309,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public _openFilterDialog = (error: boolean = false): void => {
     const dialogRef = this.dialog.open(FilterDialogComponent, {
       width: '80%',
+      maxWidth: '500px',
       height: 'auto',
       data: {
         appointment: this.appointment,
@@ -398,7 +399,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public _openAskForKeyDialog = (enrollment: IEnrollmentModel, operation: string): Promise<boolean> => {
     const dialogRef = this.dialog.open(KeyDialogComponent, {
       width: '90%',
-      maxWidth: 'initial',
+      maxWidth: '500px',
       height: 'auto',
       maxHeight: '80vh',
       data: {
@@ -441,7 +442,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public _openCommentDialog = (enrollment: IEnrollmentModel): void => {
     const dialogRef = this.dialog.open(CommentDialogComponent, {
       width: '90%',
-      maxWidth: 'initial',
+      maxWidth: '500px',
       height: 'auto',
       maxHeight: '80vh',
       data: {enrollment},

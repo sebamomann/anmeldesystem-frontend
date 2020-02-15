@@ -103,6 +103,7 @@ export class EnrollmentListComponent implements OnInit {
   public _openFilterDialog = (error: boolean = false): void => {
     const dialogRef = this.dialog.open(FilterDialogComponent, {
       width: '80%',
+      maxWidth: '500px',
       height: 'auto',
       data: {
         appointment: this.appointment,
