@@ -2,6 +2,7 @@
 
 .template {
   width: 80%;
+  display: inline-block;
   text-align: center;
   margin: 20px auto 10px;
   background-size: 500% 250%;
@@ -122,3 +123,28 @@
   }
 }
 
+@media all and (min-width: 1024px) {
+  .appointment-list-wrapper {
+    margin-top: 35px;
+    text-align: center;
+
+    .appointment-data {
+      &.archive {
+        width: 25%;
+        min-width: 300px;
+        display: inline-block;
+        margin: 10px;
+      }
+    }
+  }
+
+  ::ng-deep .appointment-data-wrapper {
+    width: 40%;
+    display: inline-block;
+  }
+
+  .template {
+    width: 40%;
+    margin: 15px 33px 5px;
+  }
+}

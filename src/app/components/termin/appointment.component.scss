@@ -68,3 +68,13 @@
     }
   }
 }
+
+@media all and (min-width: 1024px) {
+  ::ng-deep .appointment-data-wrapper {
+    vertical-align: top;
+    width: 50% !important;
+    display: inline-block;
+
+    margin: 0px auto !important;
+  }
+}

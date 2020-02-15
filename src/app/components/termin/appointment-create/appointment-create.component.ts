@@ -207,7 +207,7 @@ export class AppointmentCreateComponent implements OnInit {
   public _openAppointmentTemplateDialog: () => void = () => {
     const dialogRef = this.dialog.open(TemplateDialogComponent, {
       width: '90%',
-      maxWidth: 'initial',
+      maxWidth: '500px',
       height: 'auto',
       maxHeight: '80vh',
     });

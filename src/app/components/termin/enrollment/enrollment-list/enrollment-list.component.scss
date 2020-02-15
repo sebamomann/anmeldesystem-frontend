@@ -137,3 +137,15 @@
   padding: 5px;
 }
 
+@media all and (min-width: 1024px) {
+  .enrollment-list {
+    margin: 30px 15px;
+    width: calc(50% - 45px);
+    display: inline-block;
+    vertical-align: top;
+
+    &.distance {
+      margin-top: 30px;
+    }
+  }
+}
