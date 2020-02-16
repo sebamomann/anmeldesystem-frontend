@@ -138,7 +138,7 @@ export class EnrollmentListComponent implements OnInit {
       } else if (newFilter === null) {
         this.filterGotActivated = false;
         this.filter = this.initializeFilterObject(this.appointment);
-        this.enrollmentsFiltered = this.appointment.enrollments;
+        this.enrollmentsFiltered = this.enrollments;
       }
     });
   };
@@ -203,8 +203,6 @@ export class EnrollmentListComponent implements OnInit {
    * Filter enrollment list for applying filters set by filterDialog.
    */
   filterEnrollments: () => IEnrollmentModel[] = () => {
-    // Reset enrollment list to original list
-
     if (this.filterGotActivated
       || this.filter.driverPassenger !== '') {
       const output: IEnrollmentModel[] = [];
