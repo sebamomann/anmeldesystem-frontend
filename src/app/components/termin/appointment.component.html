@@ -17,7 +17,7 @@
 
   <ng-container *ngIf="enrollments.length > 0; else emptyList">
     <app-enrollment-list [appointment]="appointment" [main]="true"
-                         [enrollments]="enrollmentsCorrect" [title]="'Teilnehemer'"></app-enrollment-list>
+                         [enrollments]="enrollmentsCorrect" [title]="'Teilnehmer'"></app-enrollment-list>
     <app-enrollment-list [appointment]="appointment" [main]="false"
                          *ngIf="waitingListBeforeDate" [enrollments]="enrollmentsWaitingList"
                          [title]="'Warteliste'"></app-enrollment-list>
