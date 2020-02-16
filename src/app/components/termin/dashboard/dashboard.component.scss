@@ -1,65 +1,69 @@
 @import "src/variables";
 
-.template {
-  width: 80%;
-  display: inline-block;
+.appointment-list-wrapper {
   text-align: center;
-  margin: 20px auto 10px;
-  background-size: 500% 250%;
-  background: linear-gradient(324deg, #ffffff, #c8c8c8);
-  background-size: 400% 400%;
 
-  -webkit-animation: AnimationName 3s ease infinite;
-  -moz-animation: AnimationName 3s ease infinite;
-  animation: AnimationName 3s ease infinite;
+  .template {
+    width: 80%;
+    display: inline-block;
+    text-align: center;
+    margin: 20px auto 10px;
+    background-size: 500% 250%;
+    background: linear-gradient(324deg, #ffffff, #c8c8c8);
+    background-size: 400% 400%;
 
-  &.hide {
-    animation: hide 0.5s;
-  }
+    -webkit-animation: AnimationName 3s ease infinite;
+    -moz-animation: AnimationName 3s ease infinite;
+    animation: AnimationName 3s ease infinite;
 
-  mat-card-title {
-    height: 37px;
-    width: 75%;
-    background-color: white;
-    margin: 0 auto 25px;
-    border-radius: 100px;
-  }
+    &.hide {
+      animation: hide 0.5s;
+    }
 
-  mat-card-content {
-    & > span {
-      height: 31px;
+    mat-card-title {
+      height: 37px;
+      width: 75%;
       background-color: white;
-      margin: 4px 10px;
-      display: inline-block;
-      width: calc(50% - 20px);
+      margin: 0 auto 25px;
       border-radius: 100px;
     }
-  }
-}
 
-:host ::ng-deep .appointment-data {
-  width: 80%;
-  text-align: center;
-  margin: 15px auto 5px;
-
-  &.archive {
-    margin: 5px auto 0;
-    padding: 10px;
-
-    span {
-      width: 50%;
-      display: inline-block;
-
-      &:first-of-type {
-        text-align: left;
-        font-weight: bolder;
+    mat-card-content {
+      & > span {
+        height: 31px;
+        background-color: white;
+        margin: 4px 10px;
+        display: inline-block;
+        width: calc(50% - 20px);
+        border-radius: 100px;
       }
+    }
+  }
 
-      &:last-of-type {
-        text-align: right;
-        font-style: italic;
-        font-size: 0.75em;
-        vertical-align: bottom;
+  :host ::ng-deep .appointment-data {
+    width: 80%;
+    text-align: center;
+    margin: 15px auto 5px;
+
+    &.archive {
+      margin: 5px auto 0;
+      padding: 10px;
+
+      span {
+        width: 50%;
+        display: inline-block;
+
+        &:first-of-type {
+          text-align: left;
+          font-weight: bolder;
+        }
+
+        &:last-of-type {
+          text-align: right;
+          font-style: italic;
+          font-size: 0.75em;
+          vertical-align: bottom;
+        }
       }
     }
   }
@@ -126,7 +130,6 @@
 @media all and (min-width: 1024px) {
   .appointment-list-wrapper {
     margin-top: 35px;
-    text-align: center;
 
     .appointment-data {
       &.archive {
