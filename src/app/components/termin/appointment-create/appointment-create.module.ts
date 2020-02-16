@@ -57,7 +57,8 @@ const routes: Routes = [
   exports: [
     TemplateDialogComponent
   ],
-  providers: []
+  providers: [],
+  entryComponents: [TemplateDialogComponent]
 })
 export class AppointmentCreateModule {
 }

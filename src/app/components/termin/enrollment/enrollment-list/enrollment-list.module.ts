@@ -53,6 +53,12 @@ import {RouterModule} from '@angular/router';
     ReactiveFormsModule,
     RouterModule,
     MatSelectModule,
+  ],
+  entryComponents: [
+    FilterDialogComponent,
+    CommentDialogComponent,
+    ConfirmationDialogComponent,
+    KeyDialogComponent,
   ]
 })
 export class EnrollmentListModule {
