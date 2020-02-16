@@ -8,7 +8,7 @@ import {environment} from '../../environments/environment';
 import {Globals} from '../globals';
 import {map, shareReplay, switchMap, takeUntil} from 'rxjs/operators';
 
-const REFRESH_INTERVAL = 1000;
+const REFRESH_INTERVAL = 30000;
 const CACHE_SIZE = 1;
 
 @Injectable({

@@ -1,7 +1,7 @@
 @import "src/variables";
 
 .appointment-data-wrapper {
-  overflow: auto;
+  overflow: hidden;
 
   & > .svg-wrapper {
     position: fixed;

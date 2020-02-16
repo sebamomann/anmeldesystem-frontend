@@ -34,8 +34,7 @@
           </mat-icon>
           <!--suppress TypeScriptUnresolvedVariable -->
           <a
-            [href]="this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(b64toBlob(arrayBufferToBase64(file.data))))"
-            download="{{file.name}}"
+            [href]="apiUrl + 'file/' + file.id"
             mat-button>
             {{file.name}}
           </a>

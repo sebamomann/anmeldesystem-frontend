@@ -103,6 +103,7 @@ export class EnrollmentListComponent implements OnInit {
   public _openFilterDialog = (error: boolean = false): void => {
     const dialogRef = this.dialog.open(FilterDialogComponent, {
       width: '80%',
+      maxWidth: '500px',
       height: 'auto',
       data: {
         appointment: this.appointment,
@@ -137,7 +138,7 @@ export class EnrollmentListComponent implements OnInit {
       } else if (newFilter === null) {
         this.filterGotActivated = false;
         this.filter = this.initializeFilterObject(this.appointment);
-        this.enrollmentsFiltered = this.appointment.enrollments;
+        this.enrollmentsFiltered = this.enrollments;
       }
     });
   };
@@ -202,8 +203,6 @@ export class EnrollmentListComponent implements OnInit {
    * Filter enrollment list for applying filters set by filterDialog.
    */
   filterEnrollments: () => IEnrollmentModel[] = () => {
-    // Reset enrollment list to original list
-
     if (this.filterGotActivated
       || this.filter.driverPassenger !== '') {
       const output: IEnrollmentModel[] = [];

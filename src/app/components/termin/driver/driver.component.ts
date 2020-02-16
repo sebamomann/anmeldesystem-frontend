@@ -83,7 +83,7 @@ export class DriverComponent implements OnInit {
 
     this.data.neededTo = this.appointment.enrollments.filter(fAppointment => {
       if (fAppointment.passenger != null
-        && (fAppointment.passenger.requirement === 1 || fAppointment.passenger.requirement === 2)) {
+        && (fAppointment.passenger.requirement === 1 || fAppointment.passenger.requirement === 3)) {
         return fAppointment;
       }
     }).length;
@@ -91,13 +91,13 @@ export class DriverComponent implements OnInit {
     // tslint:disable-next-line:no-unused-expression
     this.appointment.enrollments.filter(fAppointment => {
       if (fAppointment.driver != null
-        && (fAppointment.driver.service === 1 || fAppointment.driver.service === 2)) {
+        && (fAppointment.driver.service === 1 || fAppointment.driver.service === 3)) {
         this.data.gotTo += fAppointment.driver.seats;
       }
     }).length;
     this.data.neededFrom = this.appointment.enrollments.filter(fAppointment => {
       if (fAppointment.passenger != null
-        && (fAppointment.passenger.requirement === 1 || fAppointment.passenger.requirement === 3)) {
+        && (fAppointment.passenger.requirement === 2 || fAppointment.passenger.requirement === 3)) {
         return fAppointment;
       }
     }).length;
@@ -105,7 +105,7 @@ export class DriverComponent implements OnInit {
     // tslint:disable-next-line:no-unused-expression
     this.appointment.enrollments.filter(fAppointment => {
       if (fAppointment.driver != null
-        && (fAppointment.driver.service === 1 || fAppointment.driver.service === 3)) {
+        && (fAppointment.driver.service === 2 || fAppointment.driver.service === 3)) {
         this.data.gotFrom += fAppointment.driver.seats;
       }
     }).length;
