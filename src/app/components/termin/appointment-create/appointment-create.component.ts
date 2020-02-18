@@ -51,9 +51,10 @@ export class AppointmentCreateComponent implements OnInit {
 
   public percentDone = 0;
 
-  constructor(private formBuilder: FormBuilder, public urlService: UrlService, private http: HttpClient, private sanitizer: DomSanitizer,
-              public dialog: MatDialog, private appointmentService: AppointmentService, private router: Router,
-              private snackBar: MatSnackBar) {
+  constructor(private formBuilder: FormBuilder, public urlService: UrlService,
+              private http: HttpClient, private sanitizer: DomSanitizer,
+              public dialog: MatDialog, private appointmentService: AppointmentService,
+              private router: Router, private snackBar: MatSnackBar) {
 
     this.overallDataFormGroup = this.formBuilder.group({
       title: ['', Validators.required],

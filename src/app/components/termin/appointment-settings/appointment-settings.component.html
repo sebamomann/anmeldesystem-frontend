@@ -11,7 +11,7 @@
         <ng-container *ngTemplateOutlet="additions"></ng-container>
       </mat-tab>
       <mat-tab label="Link">
-        Working on it
+        <ng-container *ngTemplateOutlet="link"></ng-container>
       </mat-tab>
       <mat-tab label="Adminsitration">
         Working on it
@@ -37,35 +37,44 @@
       </label>
     </mat-form-field>
     <mat-form-field class="example-full-width">
-      <input [ngxMatDatetimePicker]="datePicker"
-             formControlName="date"
-             id="date"
-             matInput
-             placeholder="Datum"
-             required>
+      <label for="date">
+        <input [ngxMatDatetimePicker]="datePicker"
+               formControlName="date"
+               id="date"
+               matInput
+               placeholder="Datum"
+               required>
+      </label>
       <mat-datepicker-toggle [for]="datePicker" matSuffix></mat-datepicker-toggle>
       <ngx-mat-datetime-picker #datePicker></ngx-mat-datetime-picker>
     </mat-form-field>
     <mat-form-field class="example-full-width">
-      <input [ngxMatDatetimePicker]="deadlinePicker" formControlName="deadline"
-             id="deadline"
-             matInput
-             placeholder="Anmeldefrist">
+      <label for="deadline">
+        <input [ngxMatDatetimePicker]="deadlinePicker"
+               formControlName="deadline"
+               id="deadline"
+               matInput
+               placeholder="Anmeldefrist">
+      </label>
       <mat-datepicker-toggle [for]="deadlinePicker" matSuffix></mat-datepicker-toggle>
       <ngx-mat-datetime-picker #deadlinePicker></ngx-mat-datetime-picker>
     </mat-form-field>
     <mat-form-field class="">
-      <input formControlName="location"
-             id="location"
-             matInput
-             placeholder="Ort"
-             required>
+      <label for="location">
+        <input formControlName="location"
+               id="location"
+               matInput
+               placeholder="Ort"
+               required>
+      </label>
     </mat-form-field>
     <mat-form-field class="">
-      <input formControlName="maxEnrollments"
-             id="maxEnrollments"
-             matInput
-             placeholder="Maximale Teilnehmer">
+      <label for="maxEnrollments">
+        <input formControlName="maxEnrollments"
+               id="maxEnrollments"
+               matInput
+               placeholder="Maximale Teilnehmer">
+      </label>
     </mat-form-field>
   </form>
 </ng-template>
@@ -85,20 +94,68 @@
         info
       </mat-icon>
     </div>
-    <!--suppress AngularInvalidExpressionResultType -->
     <div class="addition-wrapper">
+      <!--suppress AngularInvalidExpressionResultType, TypeScriptUnresolvedVariable -->
       <div *ngFor="let addition of additionFormGroup.controls.additions.controls; let i = index"
            formArrayName="additions">
         <mat-form-field>
-          <input [formControlName]="i.toString()"
-                 id="i"
-                 matInput
-                 placeholder="Zusatz {{i + 1}}">
+          <label for="addition_{{i}}">
+            <input [formControlName]="i.toString()"
+                   id="addition_{{i}}"
+                   matInput
+                   placeholder="Zusatz {{i + 1}}">
+          </label>
           <mat-icon (click)="removeAdditionFromFormArray(i)" matSuffix>clear</mat-icon>
         </mat-form-field>
       </div>
       <button (click)="addAdditionFormControlToFormArray()" class="solo" mat-button mat-stroked-button>Hinzufügen
       </button>
     </div>
+  </form>
+</ng-template>
+
+<ng-template #link>
+  <form [formGroup]="linkFormGroup">
+    <span class="info">Eigener URL Pfad zum Termin</span>
+    <mat-form-field class="">
+      <label for="link">
+        <input (change)="checkLink()"
+               formControlName="link"
+               id="link"
+               matInput
+               placeholder="Wunschlink">
+      </label>
+      <mat-hint *ngIf="linkFormGroup.get('link').value !== ''
+                  && linkFormGroup.get('link').value !== null"
+                class="small">
+        {{urlService.getHostname()}}{{linkFormGroup.get('link').value | urlEncode}}
+      </mat-hint>
+      <mat-error>{{ this.getLinkErrorMessage() }}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <div class="tooltip-container">
+        <label for="description">
+          <textarea #description
+                    formControlName="description"
+                    id="description"
+                    matInput
+                    minlength="5"
+                    placeholder="Zusatzinformationen"
+                    required>
+          </textarea>
+        </label>
+        <!--suppress TypeScriptUnresolvedFunction -->
+        <mat-icon #descriptionTooltip="matTooltip"
+                  (click)="descriptionTooltip.toggle()"
+                  class="tooltip"
+                  matTooltip="{{'Dieser Text wird unter Anderem beim Versenden des Anmeldelinks als Linkvorschau angezeigt.'}}">
+          info
+        </mat-icon>
+      </div>
+      <mat-hint *ngIf="description.value.length < 10"
+                align="start">
+        Noch mindestens {{10 - description.value.length}} Zeichen
+      </mat-hint>
+    </mat-form-field>
   </form>
 </ng-template>

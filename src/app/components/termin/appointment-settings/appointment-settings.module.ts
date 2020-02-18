@@ -16,6 +16,7 @@ import {
 } from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
 import {NgxMatDatetimePickerModule} from 'ngx-mat-datetime-picker';
+import {ApplicationPipesModule} from '../../../pipes/application-pipes.module';
 
 const routes: Routes = [
   {path: '', component: AppointmentSettingsComponent}
@@ -38,6 +39,7 @@ const routes: Routes = [
     MatIconModule,
     MatTooltipModule,
     MatButtonModule,
+    ApplicationPipesModule,
   ]
 })
 export class AppointmentSettingsModule {

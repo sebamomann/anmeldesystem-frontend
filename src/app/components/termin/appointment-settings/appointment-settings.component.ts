@@ -8,6 +8,7 @@ import {Location} from '@angular/common';
 import {DomSanitizer} from '@angular/platform-browser';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
+import {UrlService} from '../../../services/url.service';
 
 @Component({
   selector: 'app-appointment-settings',
@@ -15,16 +16,21 @@ import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
   styleUrls: ['./appointment-settings.component.scss']
 })
 export class AppointmentSettingsComponent implements OnInit {
+  private isEdit = true;
+
   private link: any;
   private appointment: IAppointmentModel;
   private overallDataFormGroup: any;
   private additionFormGroup: any;
+  private linkFormGroup: any;
+
+  private numberOfShares = 10;
 
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
               private snackBar: MatSnackBar, private location: Location, private sanitizer: DomSanitizer,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder, public urlService: UrlService) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
     });
@@ -47,6 +53,11 @@ export class AppointmentSettingsComponent implements OnInit {
     this.additionFormGroup = this.formBuilder.group({
       additions: new FormArray([new FormControl()]),
       driverAddition: [false]
+    });
+
+    this.linkFormGroup = this.formBuilder.group({
+      link: new FormControl(),
+      description: new FormControl()
     });
   }
 
@@ -72,9 +83,12 @@ export class AppointmentSettingsComponent implements OnInit {
     return this.overallDataFormGroup.get(str);
   }
 
-  private parseDataIntoForms() {
-    this.parseOverallData();
-    this.parseAdditionData();
+  getLinkErrorMessage(): string {
+    if (this.linkFormGroup.get('link').hasError('inUse')) {
+      return 'Dieser Link ist leider schon in Benutzung';
+    } else if (this.linkFormGroup.get('link').hasError('new')) {
+      return 'Beachte, dein alter Link wird sofort ungültig';
+    }
   }
 
   private parseOverallData() {
@@ -93,5 +107,27 @@ export class AppointmentSettingsComponent implements OnInit {
     });
 
     this.additionFormGroup.get('driverAddition').setValue(this.appointment.driverAddition);
+  }
+
+  checkLink() {
+    if (this.linkFormGroup.get('link').value !== this.appointment.link) {
+      this.linkFormGroup.get('link').setErrors({new: true});
+      this.linkFormGroup.get('link').markAsTouched();
+    }
+  }
+
+  private parseDataIntoForms() {
+    this.parseOverallData();
+    this.parseAdditionData();
+    this.parseLinkData();
+  }
+
+  private parseLinkData() {
+    this.linkFormGroup.setValue({
+      link: this.appointment.link,
+      description: this.appointment.description,
+    });
+
+    this.checkLink();
   }
 }
