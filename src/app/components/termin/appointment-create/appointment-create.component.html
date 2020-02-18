@@ -20,13 +20,6 @@
                  required>
         </mat-form-field>
         <mat-form-field class="example-full-width">
-          <!--          <input matInput [matDatepicker]="date"-->
-          <!--                 placeholder="Datum"-->
-          <!--                 formControlName="date"-->
-          <!--                 id="date"-->
-          <!--                 required>-->
-          <!--          <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>-->
-          <!--          <mat-datepicker touchUi #date></mat-datepicker>-->
           <input [ngxMatDatetimePicker]="datePicker" matInput
                  placeholder="Datum"
                  formControlName="date"
@@ -36,14 +29,6 @@
           <ngx-mat-datetime-picker #datePicker></ngx-mat-datetime-picker>
         </mat-form-field>
         <mat-form-field class="example-full-width">
-          <!--          <input [matDatepicker]="deadline"-->
-          <!--                 matInput-->
-          <!--                 placeholder="Anmeldefrist"-->
-          <!--                 formControlName="deadline"-->
-          <!--                 id="deadline">-->
-          <!--          <mat-datepicker-toggle [for]="deadline" matSuffix></mat-datepicker-toggle>-->
-          <!--          <mat-datepicker touchUi #deadline></mat-datepicker>-->
-
           <input [ngxMatDatetimePicker]="deadlinePicker" matInput
                  placeholder="Anmeldefrist"
                  formControlName="deadline"
@@ -89,16 +74,18 @@
               info
             </mat-icon>
           </div>
-          <!--suppress AngularInvalidExpressionResultType, JSUnusedGlobalSymbols -->
-          <div *ngFor="let addition of additionFormGroup.controls.additions.controls; let i = index"
-               formArrayName="additions">
-            <mat-form-field class="">
-              <input matInput
-                     [formControlName]="i.toString()"
-                     placeholder="Zusatz {{i + 1}}"
-                     id="i">
-              <mat-icon (click)="removeAdditionFromFormArray(i)" matSuffix>clear</mat-icon>
-            </mat-form-field>
+          <div class="addition-wrapper">
+            <!--suppress AngularInvalidExpressionResultType, JSUnusedGlobalSymbols -->
+            <div *ngFor="let addition of additionFormGroup.controls.additions.controls; let i = index"
+                 formArrayName="additions">
+              <mat-form-field>
+                <input [formControlName]="i.toString()"
+                       id="i"
+                       matInput
+                       placeholder="Zusatz {{i + 1}}">
+                <mat-icon (click)="removeAdditionFromFormArray(i)" matSuffix>clear</mat-icon>
+              </mat-form-field>
+            </div>
           </div>
         </ng-container>
         <button (click)="addAdditionFormControlToFormArray()" class="solo" mat-button mat-stroked-button>Hinzufügen

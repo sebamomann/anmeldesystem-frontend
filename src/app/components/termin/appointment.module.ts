@@ -7,7 +7,7 @@ import {MatIconModule, MatProgressBarModule} from '@angular/material';
 import {RouterModule, Routes} from '@angular/router';
 
 const routes: Routes = [
-  {path: '', component: AppointmentComponent},
+  {path: 'settings', loadChildren: './appointment-settings/appointment-settings.module#AppointmentSettingsModule'},
   {path: 'driver', loadChildren: './driver/driver.module#DriverModule'}
 ];
 

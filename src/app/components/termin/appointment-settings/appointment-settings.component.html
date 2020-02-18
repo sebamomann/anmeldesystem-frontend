@@ -1,0 +1,104 @@
+<mat-card class="float high">
+  <ng-container *ngIf="appointment != undefined; else loading">
+    <mat-card-title class="headline">
+      {{appointment.title}}
+    </mat-card-title>
+    <mat-tab-group dynamicHeight>
+      <mat-tab label="Allgemein">
+        <ng-container *ngTemplateOutlet="overall"></ng-container>
+      </mat-tab>
+      <mat-tab label="Zusätze">
+        <ng-container *ngTemplateOutlet="additions"></ng-container>
+      </mat-tab>
+      <mat-tab label="Link">
+        Working on it
+      </mat-tab>
+      <mat-tab label="Adminsitration">
+        Working on it
+      </mat-tab>
+    </mat-tab-group>
+  </ng-container>
+</mat-card>
+
+<ng-template #loading>
+  <mat-spinner>
+  </mat-spinner>
+</ng-template>
+
+<ng-template #overall>
+  <form [formGroup]="overallDataFormGroup">
+    <mat-form-field class="">
+      <label for="title">
+        <input formControlName="title"
+               id="title"
+               matInput
+               placeholder="Titel"
+               required>
+      </label>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <input [ngxMatDatetimePicker]="datePicker"
+             formControlName="date"
+             id="date"
+             matInput
+             placeholder="Datum"
+             required>
+      <mat-datepicker-toggle [for]="datePicker" matSuffix></mat-datepicker-toggle>
+      <ngx-mat-datetime-picker #datePicker></ngx-mat-datetime-picker>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <input [ngxMatDatetimePicker]="deadlinePicker" formControlName="deadline"
+             id="deadline"
+             matInput
+             placeholder="Anmeldefrist">
+      <mat-datepicker-toggle [for]="deadlinePicker" matSuffix></mat-datepicker-toggle>
+      <ngx-mat-datetime-picker #deadlinePicker></ngx-mat-datetime-picker>
+    </mat-form-field>
+    <mat-form-field class="">
+      <input formControlName="location"
+             id="location"
+             matInput
+             placeholder="Ort"
+             required>
+    </mat-form-field>
+    <mat-form-field class="">
+      <input formControlName="maxEnrollments"
+             id="maxEnrollments"
+             matInput
+             placeholder="Maximale Teilnehmer">
+    </mat-form-field>
+  </form>
+</ng-template>
+
+<ng-template #additions>
+  <form [formGroup]="additionFormGroup">
+    <div class="tooltip-container">
+      <mat-checkbox formControlName="driverAddition">
+        Fahrer
+      </mat-checkbox>
+      <!--suppress TypeScriptUnresolvedFunction -->
+      <mat-icon #driverAdditionTooltip="matTooltip"
+                (click)="driverAdditionTooltip.toggle()"
+                class="tooltip"
+                matTooltip="{{ 'Hierbei können sich Teilnehmer als Fahrer melden. Sie geben unter Anderem die ' +
+                       'Anzahl freier Plätze ein und in welche Richtung sie fahren.'}}">
+        info
+      </mat-icon>
+    </div>
+    <!--suppress AngularInvalidExpressionResultType -->
+    <div class="addition-wrapper">
+      <div *ngFor="let addition of additionFormGroup.controls.additions.controls; let i = index"
+           formArrayName="additions">
+        <mat-form-field>
+          <input [formControlName]="i.toString()"
+                 id="i"
+                 matInput
+                 placeholder="Zusatz {{i + 1}}">
+          <mat-icon (click)="removeAdditionFromFormArray(i)" matSuffix>clear</mat-icon>
+        </mat-form-field>
+      </div>
+      <button (click)="addAdditionFormControlToFormArray()" class="solo" mat-button mat-stroked-button>Hinzufügen
+      </button>
+    </div>
+  </form>
+</ng-template>
