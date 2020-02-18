@@ -11,7 +11,7 @@
     <mat-step [stepControl]="overallDataFormGroup">
       <form [formGroup]="overallDataFormGroup">
         <ng-template matStepLabel>Allgemein</ng-template>
-        <span class="info">Allgemeine Informationen des Termins</span>
+        <span class="info">Kerninformationen des Termins</span>
         <mat-form-field class="">
           <input matInput
                  placeholder="Titel"
@@ -59,7 +59,7 @@
     <mat-step [stepControl]="additionFormGroup">
       <form [formGroup]="additionFormGroup">
         <ng-template matStepLabel>Zusätze</ng-template>
-        <span class="info"> Zusätze, welche beim Anmelden mit Ja/Nein beantwortet werden.</span>
+        <span class="info"> Zusätze, welche beim Anmelden mit Ja/Nein beantwortet werden</span>
         <ng-container id="additionList">
           <div class="tooltip-container">
             <mat-checkbox formControlName="driverAddition">
