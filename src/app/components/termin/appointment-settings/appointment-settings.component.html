@@ -165,13 +165,16 @@
 <ng-template #administration>
   <form [formGroup]="administratorFormGroup">
     <span class="info">Erlaube jemandem die Administration dieses Termins</span>
-    <mat-form-field>
-      <input aria-label="Number"
-             formControlName="name"
-             matInput
-             placeholder="Benutzername"
-             type="text">
-    </mat-form-field>
+    <div class="input-with-button-wrapper">
+      <mat-form-field>
+        <input aria-label="Number"
+               formControlName="name"
+               matInput
+               placeholder="Benutzername"
+               type="text">
+      </mat-form-field>
+      <button mat-raised-button>Speichern</button>
+    </div>
 
     <ng-container *ngIf="administrators.length > 0">
       <span class="separator center colored middle extra-tall"></span>

@@ -880,6 +880,18 @@ footer {
   }
 }
 
+.input-with-button-wrapper {
+  mat-form-field {
+    width: 65% !important;
+  }
+
+  button {
+    margin-top: 12px;
+    float: right;
+    line-height: 32px;
+  }
+}
+
 @media all and (min-width: 1024px) {
   .svg-wrapper {
     svg {
