@@ -533,6 +533,14 @@ mat-card {
   }
 }
 
+mat-form-field {
+  width: 100%;
+
+  &.compressed {
+    margin-top: -0.5em;
+  }
+}
+
 mat-expansion-panel {
   &.integrated {
     box-shadow: none !important;

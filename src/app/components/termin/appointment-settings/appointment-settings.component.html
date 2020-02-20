@@ -104,7 +104,7 @@
       <!--suppress AngularInvalidExpressionResultType, TypeScriptUnresolvedVariable -->
       <div *ngFor="let addition of additionFormGroup.controls.additions.controls; let i = index"
            formArrayName="additions">
-        <mat-form-field>
+        <mat-form-field class="compressed">
           <label for="addition_{{i}}">
             <input [formControlName]="i.toString()"
                    id="addition_{{i}}"
