@@ -3,7 +3,7 @@
     <mat-card-title class="headline">
       {{appointment.title}}
     </mat-card-title>
-    <mat-tab-group dynamicHeight>
+    <mat-tab-group [selectedIndex]="3" dynamicHeight>
       <mat-tab label="Allgemein">
         <ng-container *ngTemplateOutlet="overall"></ng-container>
       </mat-tab>
@@ -14,7 +14,7 @@
         <ng-container *ngTemplateOutlet="link"></ng-container>
       </mat-tab>
       <mat-tab label="Adminsitration">
-        Working on it
+        <ng-container *ngTemplateOutlet="administration"></ng-container>
       </mat-tab>
     </mat-tab-group>
   </ng-container>
@@ -159,5 +159,26 @@
         Noch mindestens {{10 - description.value.length}} Zeichen
       </mat-hint>
     </mat-form-field>
+  </form>
+</ng-template>
+
+<ng-template #administration>
+  <form [formGroup]="administratorFormGroup">
+    <span class="info">Erlaube jemandem die Administration dieses Termins</span>
+    <mat-form-field>
+      <input aria-label="Number"
+             formControlName="name"
+             matInput
+             placeholder="Benutzername"
+             type="text">
+    </mat-form-field>
+
+    <div class="administrator-wrapper">
+      <app-administrator-delete *ngFor="let admin of administrators"
+                                [admin]="admin"
+                                [appointment]="appointment">
+
+      </app-administrator-delete>
+    </div>
   </form>
 </ng-template>

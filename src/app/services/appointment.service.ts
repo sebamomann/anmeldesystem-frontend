@@ -188,4 +188,10 @@ export class AppointmentService {
   //   return this.httpClient.request(req);
   //   // return this.httpClient.post<any>(url, enrollment, {observe: 'response'});
   // }
+  removeAdministration(adminUsername: string, appointment: IAppointmentModel): Observable<HttpEvent<void>> {
+    const req = new HttpRequest('DELETE', `${environment.api.url}appointment/${appointment.link}/administrator/${adminUsername}`, {
+      reportProgress: true,
+    });
+    return this.httpClient.request(req);
+  }
 }

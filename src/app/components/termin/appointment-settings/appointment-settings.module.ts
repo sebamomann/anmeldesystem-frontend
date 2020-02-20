@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {AppointmentSettingsComponent} from './appointment-settings.component';
 import {RouterModule, Routes} from '@angular/router';
 import {
+  MatAutocompleteModule,
   MatButtonModule,
   MatCardModule,
   MatCheckboxModule,
@@ -17,6 +18,7 @@ import {
 import {ReactiveFormsModule} from '@angular/forms';
 import {NgxMatDatetimePickerModule} from 'ngx-mat-datetime-picker';
 import {ApplicationPipesModule} from '../../../pipes/application-pipes.module';
+import {AdministratorDeleteModule} from '../administrator/administrator-delete/administrator-delete.module';
 
 const routes: Routes = [
   {path: '', component: AppointmentSettingsComponent}
@@ -40,6 +42,8 @@ const routes: Routes = [
     MatTooltipModule,
     MatButtonModule,
     ApplicationPipesModule,
+    MatAutocompleteModule,
+    AdministratorDeleteModule,
   ]
 })
 export class AppointmentSettingsModule {

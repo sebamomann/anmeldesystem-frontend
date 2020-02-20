@@ -23,9 +23,16 @@ export class AppointmentSettingsComponent implements OnInit {
   private overallDataFormGroup: any;
   private additionFormGroup: any;
   private linkFormGroup: any;
+  private administratorFormGroup: any;
 
   private numberOfShares = 10;
 
+  private administrators: string[] = [
+    'benutzer1@sebamomann.de',
+    'text@example.de',
+    'mama@mia.com',
+    'foo@bar.tld',
+    'hallo@helmut.rofl'];
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
@@ -58,6 +65,10 @@ export class AppointmentSettingsComponent implements OnInit {
     this.linkFormGroup = this.formBuilder.group({
       link: new FormControl(),
       description: new FormControl()
+    });
+
+    this.administratorFormGroup = this.formBuilder.group({
+      name: new FormControl()
     });
   }
 
@@ -109,13 +120,6 @@ export class AppointmentSettingsComponent implements OnInit {
     this.additionFormGroup.get('driverAddition').setValue(this.appointment.driverAddition);
   }
 
-  checkLink() {
-    if (this.linkFormGroup.get('link').value !== this.appointment.link) {
-      this.linkFormGroup.get('link').setErrors({new: true});
-      this.linkFormGroup.get('link').markAsTouched();
-    }
-  }
-
   private parseDataIntoForms() {
     this.parseOverallData();
     this.parseAdditionData();
@@ -129,5 +133,12 @@ export class AppointmentSettingsComponent implements OnInit {
     });
 
     this.checkLink();
+  }
+
+  private checkLink() {
+    if (this.linkFormGroup.get('link').value !== this.appointment.link) {
+      this.linkFormGroup.get('link').setErrors({new: true});
+      this.linkFormGroup.get('link').markAsTouched();
+    }
   }
 }
