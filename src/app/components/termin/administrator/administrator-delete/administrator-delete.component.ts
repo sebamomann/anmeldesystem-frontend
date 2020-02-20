@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {AppointmentService} from '../../../../services/appointment.service';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
 import Timer = NodeJS.Timer;
@@ -10,6 +10,9 @@ import Timer = NodeJS.Timer;
 })
 export class AdministratorDeleteComponent implements OnInit {
 
+  @ViewChild('adminRef', {static: false})
+  private elementReference: ElementRef;
+
   @Input()
   admin: string;
   @Input()
@@ -17,7 +20,7 @@ export class AdministratorDeleteComponent implements OnInit {
   public icon: string;
   private timer: Timer;
 
-  constructor(private appointmentService: AppointmentService) {
+  constructor(private appointmentService: AppointmentService, private viewContainerRef: ViewContainerRef) {
   }
 
   ngOnInit() {
@@ -41,6 +44,7 @@ export class AdministratorDeleteComponent implements OnInit {
         .subscribe(
           result => {
             console.log('DELETED');
+            this.elementReference.nativeElement.remove();
           },
           error => {
 
