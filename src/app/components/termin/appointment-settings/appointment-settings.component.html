@@ -173,12 +173,16 @@
              type="text">
     </mat-form-field>
 
-    <div class="administrator-wrapper">
-      <app-administrator-delete *ngFor="let admin of administrators"
-                                [admin]="admin"
-                                [appointment]="appointment">
+    <ng-container *ngIf="administrators.length > 0">
+      <span class="separator center colored middle extra-tall"></span>
+      <div class="administrator-wrapper">
+        <app-administrator-delete
+          *ngFor="let admin of administrators"
+          [admin]="admin"
+          [appointment]="appointment">
 
-      </app-administrator-delete>
-    </div>
+        </app-administrator-delete>
+      </div>
+    </ng-container>
   </form>
 </ng-template>

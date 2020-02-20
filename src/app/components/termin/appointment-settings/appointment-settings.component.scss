@@ -15,7 +15,7 @@ mat-tab-group {
 
 form {
   .addition-wrapper {
-    margin-top: 8px;
+    margin-top: 25px;
   }
 
   .mat-form-field {
@@ -25,4 +25,8 @@ form {
 
 ::ng-deep mat-tab-body {
   padding: 15px 0 0 0;
+}
+
+.administrator-wrapper {
+  margin-top: 25px;
 }
