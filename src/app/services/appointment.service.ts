@@ -194,4 +194,11 @@ export class AppointmentService {
     });
     return this.httpClient.request(req);
   }
+
+  removeFile(fileId: string, appointment: IAppointmentModel) {
+    const req = new HttpRequest('DELETE', `${environment.api.url}appointment/${appointment.link}/file/${fileId}`, {
+      reportProgress: true,
+    });
+    return this.httpClient.request(req);
+  }
 }

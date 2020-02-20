@@ -30,3 +30,16 @@ form {
 .administrator-wrapper {
   margin-top: 25px;
 }
+
+.info {
+  font-size: 1.15em;
+  margin: 5px auto 28px
+}
+
+@import "src/variables";
+
+.file-upload {
+  color: $primary_dark;
+  margin: 10px auto 20px;
+  display: block;
+}

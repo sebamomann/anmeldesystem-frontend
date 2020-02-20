@@ -152,20 +152,6 @@ export class AppointmentCreateComponent implements OnInit {
       );
   }
 
-  /* FILE UPLOAD */
-  selectFilesFromComputer() {
-    const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
-    fileUpload.onchange = () => {
-      // tslint:disable-next-line:prefer-for-of
-      for (let index = 0; index < fileUpload.files.length; index++) {
-        const file = fileUpload.files[index];
-        this.files.push({file, done: false});
-      }
-      this.convertFiles();
-    };
-    fileUpload.click();
-  }
-
   /* Addition Form */
   formHavingAdditions() {
     return this.additionFormGroup.controls.additions.controls.some(addition => addition.value !== null)
@@ -229,15 +215,6 @@ export class AppointmentCreateComponent implements OnInit {
     });
   };
 
-  async blobToBase64(file: Blob) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-  }
-
   // Form Util
   addAdditionFormControlToFormArray(value: string | null = null) {
     return (this.additionFormGroup.controls.additions as FormArray).push(new FormControl(value));
@@ -264,32 +241,6 @@ export class AppointmentCreateComponent implements OnInit {
     const filterValue = value.toLowerCase();
 
     return this.allUsers.filter(user => user.toLowerCase().indexOf(filterValue) === 0);
-  }
-
-  /**
-   * Convert uploaded Files to BLOB->Bade64 String and add to array as objects for API call
-   */
-  private convertFiles() {
-    const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
-    fileUpload.value = '';
-
-    this.files.forEach(file => {
-      this.convertFile(file).catch(() => {
-        this.snackBar.open('Datei konnte nicht hochgeladen werden', null, {
-          duration: 2000,
-          panelClass: 'snackbar-error'
-        });
-      });
-    });
-  }
-
-  private async convertFile(file) {
-    this.fileBlob = new Blob([file.file], {type: 'application/octet-stream'});
-    const result = await this.blobToBase64(this.fileBlob).catch(e => e);
-    if (result instanceof Error) {
-      return;
-    }
-    this.fileList.push({name: file.file.name, data: result.toString()});
   }
 
   private getMaxEnrollments() {

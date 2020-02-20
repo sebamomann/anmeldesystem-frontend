@@ -146,35 +146,6 @@
       </form>
     </mat-step>
 
-    <!-- FILE UPLOAD -->
-    <mat-step [stepControl]="fileUpload">
-      <ng-template matStepLabel>Zusatzdatei</ng-template>
-      <span class="info">
-        Diese Datei wird zum Download bereitgestellt. Hier finden z.B: Muttizettel o.ä. Platz.
-        <span>(Je kürzer und aussagekräftiger der Datei Name, desto besser)</span>
-      </span>
-      <button (click)="selectFilesFromComputer()"
-              color="warn"
-              mat-button>
-        <mat-icon>file_upload</mat-icon>
-        Hochladen
-      </button>
-      <br/>
-      <ul>
-        <li *ngFor="let file of files">
-          <span id="file-label">
-            {{file.file.name}}
-          </span>
-          <mat-progress-bar *ngIf="!file.done" mode="indeterminate"></mat-progress-bar>
-        </li>
-      </ul>
-      <input id="fileUpload"
-             multiple="multiple"
-             name="fileUpload"
-             style="display:none;"
-             type="file"/>
-    </mat-step>
-
     <!-- DONE -->
     <mat-step [stepControl]="doneGroup">
       <form [formGroup]="doneGroup">
