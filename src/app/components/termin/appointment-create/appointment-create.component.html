@@ -9,50 +9,7 @@
   <mat-vertical-stepper #stepper [linear]="true">
     <!-- OVERALL DATA-->
     <mat-step [stepControl]="overallDataFormGroup">
-      <form [formGroup]="overallDataFormGroup">
-        <ng-template matStepLabel>Allgemein</ng-template>
-        <span class="info">Kerninformationen des Termins</span>
-        <mat-form-field class="">
-          <input matInput
-                 placeholder="Titel"
-                 formControlName="title"
-                 id="title"
-                 required>
-        </mat-form-field>
-        <mat-form-field class="example-full-width">
-          <input [ngxMatDatetimePicker]="datePicker" matInput
-                 placeholder="Datum"
-                 formControlName="date"
-                 id="date"
-                 required>
-          <mat-datepicker-toggle [for]="datePicker" matSuffix></mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #datePicker></ngx-mat-datetime-picker>
-        </mat-form-field>
-        <mat-form-field class="example-full-width">
-          <input [ngxMatDatetimePicker]="deadlinePicker" matInput
-                 placeholder="Anmeldefrist"
-                 formControlName="deadline"
-                 id="deadline">
-          <mat-datepicker-toggle [for]="deadlinePicker" matSuffix></mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #deadlinePicker></ngx-mat-datetime-picker>
-        </mat-form-field>
-        <mat-form-field class="">
-          <input matInput
-                 placeholder="Ort"
-                 formControlName="location"
-                 id="location"
-                 required>
-        </mat-form-field>
-        <mat-form-field class="">
-          <input matInput
-                 placeholder="Maximale Teilnehmer"
-                 formControlName="maxEnrollments"
-                 id="maxEnrollments">
-        </mat-form-field>
-        <div class="stepper-navigation">
-          <button mat-button mat-stroked-button matStepperNext>Weiter</button>
-        </div>
-      </form>
+      <app-overall-data (save)="getOverallData($event)"></app-overall-data>
     </mat-step>
 
     <!-- ADDITIONS-->

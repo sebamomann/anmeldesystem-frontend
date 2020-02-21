@@ -12,6 +12,8 @@ export class OverallDataComponent implements OnInit {
   save = new EventEmitter<any>();
   @Input()
   private appointment: IAppointmentModel;
+  @Input()
+  private button = 'Speichern';
   private dataFormGroup: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {

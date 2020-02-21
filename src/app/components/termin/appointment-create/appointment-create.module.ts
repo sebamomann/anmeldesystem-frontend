@@ -20,6 +20,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {NgxMatDatetimePickerModule} from 'ngx-mat-datetime-picker';
 import {AuthGuard} from '../../../_helper/auth.guard';
 import {ApplicationPipesModule} from '../../../pipes/application-pipes.module';
+import {OverallDataModule} from '../form/overall-data/overall-data.module';
 
 const routes: Routes = [
   {path: '', component: AppointmentCreateComponent, canActivate: [AuthGuard]}
@@ -47,6 +48,7 @@ const routes: Routes = [
     MatInputModule,
     MatButtonModule,
     ApplicationPipesModule,
+    OverallDataModule,
   ],
   exports: [],
   providers: []

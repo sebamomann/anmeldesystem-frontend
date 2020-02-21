@@ -280,4 +280,8 @@ export class AppointmentCreateComponent implements OnInit {
   private getFormGroupIndexOfLink() {
     return 2;
   }
+
+  getOverallData($event: any) {
+
+  }
 }
