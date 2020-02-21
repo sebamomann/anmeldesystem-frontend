@@ -7,7 +7,7 @@ import {EnrollmentService} from '../../../services/enrollment.service';
 import {Location} from '@angular/common';
 import {DomSanitizer} from '@angular/platform-browser';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
-import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl} from '@angular/forms';
 import {UrlService} from '../../../services/url.service';
 import {IFileModelUpload} from '../../../models/IFileModelUpload.model';
 
@@ -56,13 +56,6 @@ export class AppointmentSettingsComponent implements OnInit {
       }
     });
 
-    this.overallDataFormGroup = this.formBuilder.group({
-      title: ['', Validators.required],
-      date: ['', Validators.required],
-      deadline: [''],
-      location: ['', Validators.required],
-      maxEnrollments: [''],
-    });
 
     this.additionFormGroup = this.formBuilder.group({
       additions: new FormArray([new FormControl()]),
@@ -109,16 +102,6 @@ export class AppointmentSettingsComponent implements OnInit {
     }
   }
 
-  private parseOverallData() {
-    this.overallDataFormGroup.setValue({
-      title: this.appointment.title,
-      date: this.appointment.date,
-      deadline: this.appointment.deadline,
-      location: this.appointment.location,
-      maxEnrollments: this.appointment.maxEnrollments
-    });
-  }
-
   private parseAdditionData() {
     this.appointment.additions.forEach(fAddition => {
       this.addAdditionFormControlToFormArray(fAddition.name);
@@ -128,7 +111,6 @@ export class AppointmentSettingsComponent implements OnInit {
   }
 
   private parseDataIntoForms() {
-    this.parseOverallData();
     this.parseAdditionData();
     this.parseLinkData();
   }
@@ -193,5 +175,8 @@ export class AppointmentSettingsComponent implements OnInit {
       return;
     }
     this.fileList.push({name: file.file.name, data: result.toString()});
+  }
+
+  saveOverall(data: any) {
   }
 }

@@ -3,9 +3,12 @@
     <mat-card-title class="headline">
       {{appointment.title}}
     </mat-card-title>
-    <mat-tab-group [selectedIndex]="4" dynamicHeight>
+    <mat-tab-group [selectedIndex]="0" dynamicHeight>
       <mat-tab label="Allgemein">
-        <ng-container *ngTemplateOutlet="overall"></ng-container>
+        <app-overall-data
+          (save)="saveOverall($event)"
+          [appointment]="appointment">
+        </app-overall-data>
       </mat-tab>
       <mat-tab label="Zusätze">
         <ng-container *ngTemplateOutlet="additions"></ng-container>
@@ -27,62 +30,6 @@
 <ng-template #loading>
   <mat-spinner>
   </mat-spinner>
-</ng-template>
-
-<ng-template #overall>
-  <form [formGroup]="overallDataFormGroup">
-    <span class="info">Kerninformationen</span>
-    <mat-form-field class="">
-      <label for="title">
-        <input formControlName="title"
-               id="title"
-               matInput
-               placeholder="Titel"
-               required>
-      </label>
-    </mat-form-field>
-    <mat-form-field class="example-full-width">
-      <label for="date">
-        <input [ngxMatDatetimePicker]="datePicker"
-               formControlName="date"
-               id="date"
-               matInput
-               placeholder="Datum"
-               required>
-      </label>
-      <mat-datepicker-toggle [for]="datePicker" matSuffix></mat-datepicker-toggle>
-      <ngx-mat-datetime-picker #datePicker></ngx-mat-datetime-picker>
-    </mat-form-field>
-    <mat-form-field class="example-full-width">
-      <label for="deadline">
-        <input [ngxMatDatetimePicker]="deadlinePicker"
-               formControlName="deadline"
-               id="deadline"
-               matInput
-               placeholder="Anmeldefrist">
-      </label>
-      <mat-datepicker-toggle [for]="deadlinePicker" matSuffix></mat-datepicker-toggle>
-      <ngx-mat-datetime-picker #deadlinePicker></ngx-mat-datetime-picker>
-    </mat-form-field>
-    <mat-form-field class="">
-      <label for="location">
-        <input formControlName="location"
-               id="location"
-               matInput
-               placeholder="Ort"
-               required>
-      </label>
-    </mat-form-field>
-    <mat-form-field class="">
-      <label for="maxEnrollments">
-        <input formControlName="maxEnrollments"
-               id="maxEnrollments"
-               matInput
-               placeholder="Maximale Teilnehmer">
-      </label>
-    </mat-form-field>
-    <button mat-raised-button>Speichern</button>
-  </form>
 </ng-template>
 
 <ng-template #additions>
