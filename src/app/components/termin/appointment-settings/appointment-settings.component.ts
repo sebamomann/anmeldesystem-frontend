@@ -7,7 +7,7 @@ import {EnrollmentService} from '../../../services/enrollment.service';
 import {Location} from '@angular/common';
 import {DomSanitizer} from '@angular/platform-browser';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
-import {FormArray, FormBuilder, FormControl} from '@angular/forms';
+import {FormBuilder, FormControl} from '@angular/forms';
 import {UrlService} from '../../../services/url.service';
 import {IFileModelUpload} from '../../../models/IFileModelUpload.model';
 
@@ -56,17 +56,6 @@ export class AppointmentSettingsComponent implements OnInit {
       }
     });
 
-
-    this.additionFormGroup = this.formBuilder.group({
-      additions: new FormArray([new FormControl()]),
-      driverAddition: [false]
-    });
-
-    this.linkFormGroup = this.formBuilder.group({
-      link: new FormControl(),
-      description: new FormControl()
-    });
-
     this.administratorFormGroup = this.formBuilder.group({
       name: new FormControl()
     });
@@ -82,36 +71,13 @@ export class AppointmentSettingsComponent implements OnInit {
       });
   }
 
-  addAdditionFormControlToFormArray(value: string | null = null) {
-    return (this.additionFormGroup.controls.additions as FormArray).push(new FormControl(value));
-  }
 
-  removeAdditionFromFormArray(index: number) {
-    this.additionFormGroup.controls.additions.removeAt(index);
-  }
 
   public privateGetOverall(str: string) {
     return this.overallDataFormGroup.get(str);
   }
 
-  getLinkErrorMessage(): string {
-    if (this.linkFormGroup.get('link').hasError('inUse')) {
-      return 'Dieser Link ist leider schon in Benutzung';
-    } else if (this.linkFormGroup.get('link').hasError('new')) {
-      return 'Beachte, dein alter Link wird sofort ungültig';
-    }
-  }
-
-  private parseAdditionData() {
-    this.appointment.additions.forEach(fAddition => {
-      this.addAdditionFormControlToFormArray(fAddition.name);
-    });
-
-    this.additionFormGroup.get('driverAddition').setValue(this.appointment.driverAddition);
-  }
-
   private parseDataIntoForms() {
-    this.parseAdditionData();
     this.parseLinkData();
   }
 
@@ -178,5 +144,12 @@ export class AppointmentSettingsComponent implements OnInit {
   }
 
   saveOverall(data: any) {
+  }
+
+  saveAdditions(data: any) {
+  }
+
+  saveLink($event: any) {
+
   }
 }

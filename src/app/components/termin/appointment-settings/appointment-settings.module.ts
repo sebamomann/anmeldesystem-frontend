@@ -21,6 +21,8 @@ import {ApplicationPipesModule} from '../../../pipes/application-pipes.module';
 import {AdministratorDeleteModule} from '../administrator/administrator-delete/administrator-delete.module';
 import {FileDeleteModule} from '../file/file-delete/file-delete.module';
 import {OverallDataModule} from '../form/overall-data/overall-data.module';
+import {AdditionsModule} from '../form/additions/additions.module';
+import {LinkDataModule} from '../form/link-data/link-data.module';
 
 const routes: Routes = [
   {path: '', component: AppointmentSettingsComponent}
@@ -48,6 +50,8 @@ const routes: Routes = [
     AdministratorDeleteModule,
     FileDeleteModule,
     OverallDataModule,
+    AdditionsModule,
+    LinkDataModule,
   ]
 })
 export class AppointmentSettingsModule {

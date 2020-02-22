@@ -8,12 +8,14 @@ import {IAppointmentModel} from '../../../../models/IAppointment.model';
   styleUrls: ['./overall-data.component.scss']
 })
 export class OverallDataComponent implements OnInit {
+
   @Output()
   save = new EventEmitter<any>();
   @Input()
   private appointment: IAppointmentModel;
   @Input()
   private button = 'Speichern';
+
   private dataFormGroup: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {

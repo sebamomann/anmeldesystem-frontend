@@ -6,101 +6,32 @@
   <!--    Vorlagen-->
   <!--    <mat-icon>file_copy</mat-icon>-->
   <!--  </span>-->
-  <mat-vertical-stepper #stepper [linear]="true">
+  <mat-vertical-stepper #stepper>
     <!-- OVERALL DATA-->
     <mat-step [stepControl]="overallDataFormGroup">
-      <app-overall-data (save)="getOverallData($event)"></app-overall-data>
+      <ng-template matStepLabel>Allgemein</ng-template>
+      <app-overall-data (save)="getOverallData($event)"
+                        [button]="'Weiter'">
+      </app-overall-data>
     </mat-step>
 
     <!-- ADDITIONS-->
     <mat-step [stepControl]="additionFormGroup">
-      <form [formGroup]="additionFormGroup">
-        <ng-template matStepLabel>Zusätze</ng-template>
-        <span class="info"> Zusätze, welche beim Anmelden mit Ja/Nein beantwortet werden</span>
-        <ng-container id="additionList">
-          <div class="tooltip-container">
-            <mat-checkbox formControlName="driverAddition">
-              Fahrer
-            </mat-checkbox>
-            <!--suppress TypeScriptUnresolvedFunction -->
-            <mat-icon #driverAdditionTooltip="matTooltip"
-                      (click)="driverAdditionTooltip.toggle()"
-                      class="tooltip"
-                      matTooltip="{{ 'Hierbei können sich Teilnehmer als Fahrer melden. Sie geben unter Anderem die ' +
-                       'Anzahl freier Plätze ein und in welche Richtung sie fahren.'}}">
-              info
-            </mat-icon>
-          </div>
-          <div class="addition-wrapper">
-            <!--suppress AngularInvalidExpressionResultType, JSUnusedGlobalSymbols -->
-            <div *ngFor="let addition of additionFormGroup.controls.additions.controls; let i = index"
-                 formArrayName="additions">
-              <mat-form-field>
-                <input [formControlName]="i.toString()"
-                       id="i"
-                       matInput
-                       placeholder="Zusatz {{i + 1}}">
-                <mat-icon (click)="removeAdditionFromFormArray(i)" matSuffix>clear</mat-icon>
-              </mat-form-field>
-            </div>
-          </div>
-        </ng-container>
-        <button (click)="addAdditionFormControlToFormArray()" class="solo" mat-button mat-stroked-button>Hinzufügen
-        </button>
-        <div class="stepper-navigation">
-          <button mat-button mat-stroked-button matStepperNext>
-            {{ formHavingAdditions() ? 'Weiter' : 'Nein danke' }}
-          </button>
-          <button mat-button matStepperPrevious>Zurück</button>
-        </div>
-      </form>
+      <ng-template matStepLabel>Zusätze</ng-template>
+      <app-additions (save)="getAdditions($event)"
+                     [button]="'Weiter'">
+      </app-additions>
+      <button mat-button matStepperPrevious>Zurück</button>
     </mat-step>
 
     <!-- LINK DATA -->
     <mat-step [stepControl]=" linkFormGroup">
-      <form [formGroup]="linkFormGroup">
-        <ng-template matStepLabel>Link</ng-template>
-        <span class="info">Eigener URL Pfad zum Termin</span>
-        <mat-form-field class="">
-          <input matInput
-                 placeholder="Wunschlink"
-                 formControlName="link"
-                 id="link">
-          <mat-hint class="small"
-                    *ngIf="linkFormGroup.get('link').value !== ''
-                  && linkFormGroup.get('link').value !== null">
-            {{urlService.getHostname()}}{{linkFormGroup.get('link').value | urlEncode}}
-          </mat-hint>
-          <mat-error>{{ this.getLinkErrorMessage() }}</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <div class="tooltip-container">
-            <textarea #description
-                      formControlName="description"
-                      id="description"
-                      matInput
-                      minlength="5"
-                      placeholder="Zusatzinformationen"
-                      required>
-            </textarea>
-            <!--suppress TypeScriptUnresolvedFunction -->
-            <mat-icon #descriptionTooltip="matTooltip"
-                      (click)="descriptionTooltip.toggle()"
-                      class="tooltip"
-                      matTooltip="{{'Dieser Text wird unter Anderem beim Versenden des Anmeldelinks als Linkvorschau angezeigt.'}}">
-              info
-            </mat-icon>
-          </div>
-          <mat-hint align="start"
-                    *ngIf="description.value.length < 10">
-            Noch mindestens {{10 - description.value.length}} Zeichen
-          </mat-hint>
-        </mat-form-field>
-        <div class="stepper-navigation">
-          <button mat-button mat-stroked-button matStepperNext>Weiter</button>
-          <button mat-button matStepperPrevious>Zurück</button>
-        </div>
-      </form>
+      <ng-template matStepLabel>Link</ng-template>
+      <app-additions
+        (save)="getLinkData($event)"
+        [button]="'Weiter'">>
+      </app-additions>
+      <button mat-button matStepperPrevious>Zurück</button>
     </mat-step>
 
     <!-- DONE -->

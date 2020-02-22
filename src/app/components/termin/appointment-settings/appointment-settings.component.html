@@ -7,20 +7,24 @@
       <mat-tab label="Allgemein">
         <app-overall-data
           (save)="saveOverall($event)"
-          [appointment]="appointment"
-          [button]="'Weiter'">
+          [appointment]="appointment">
         </app-overall-data>
       </mat-tab>
       <mat-tab label="Zusätze">
-        <ng-container *ngTemplateOutlet="additions"></ng-container>
+        <app-additions
+          (save)="saveAdditions($event)"
+          [appointment]="appointment">
+        </app-additions>
       </mat-tab>
       <mat-tab label="Link">
+        <app-link-data
+          (save)="saveLink($event)"
+          [appointment]="appointment"></app-link-data>
         <ng-container *ngTemplateOutlet="link"></ng-container>
       </mat-tab>
       <mat-tab label="Adminsitration">
         <ng-container *ngTemplateOutlet="administration"></ng-container>
       </mat-tab>
-
       <mat-tab label="Anhänge">
         <ng-container *ngTemplateOutlet="fileUpload"></ng-container>
       </mat-tab>
@@ -31,90 +35,6 @@
 <ng-template #loading>
   <mat-spinner>
   </mat-spinner>
-</ng-template>
-
-<ng-template #additions>
-  <form [formGroup]="additionFormGroup">
-    <span class="info"> Zusätze, welche beim Anmelden mit Ja/Nein beantwortet werden.</span>
-    <div class="tooltip-container">
-      <mat-checkbox formControlName="driverAddition">
-        Fahrer
-      </mat-checkbox>
-      <!--suppress TypeScriptUnresolvedFunction -->
-      <mat-icon #driverAdditionTooltip="matTooltip"
-                (click)="driverAdditionTooltip.toggle()"
-                class="tooltip"
-                matTooltip="{{ 'Hierbei können sich Teilnehmer als Fahrer melden. Sie geben unter Anderem die ' +
-                       'Anzahl freier Plätze ein und in welche Richtung sie fahren.'}}">
-        info
-      </mat-icon>
-    </div>
-    <div class="addition-wrapper">
-      <!--suppress AngularInvalidExpressionResultType, TypeScriptUnresolvedVariable -->
-      <div *ngFor="let addition of additionFormGroup.controls.additions.controls; let i = index"
-           formArrayName="additions">
-        <mat-form-field class="compressed">
-          <label for="addition_{{i}}">
-            <input [formControlName]="i.toString()"
-                   id="addition_{{i}}"
-                   matInput
-                   placeholder="Zusatz {{i + 1}}">
-          </label>
-          <mat-icon (click)="removeAdditionFromFormArray(i)" matSuffix>clear</mat-icon>
-        </mat-form-field>
-      </div>
-      <button (click)="addAdditionFormControlToFormArray()" class="solo" mat-button mat-stroked-button>Hinzufügen
-      </button>
-    </div>
-    <button mat-raised-button>Speichern</button>
-  </form>
-</ng-template>
-
-<ng-template #link>
-  <form [formGroup]="linkFormGroup">
-    <span class="info">Eigener URL Pfad zum Termin</span>
-    <mat-form-field class="">
-      <label for="link">
-        <input (change)="checkLink()"
-               formControlName="link"
-               id="link"
-               matInput
-               placeholder="Wunschlink">
-      </label>
-      <mat-hint *ngIf="linkFormGroup.get('link').value !== ''
-                  && linkFormGroup.get('link').value !== null"
-                class="small">
-        {{urlService.getHostname()}}{{linkFormGroup.get('link').value | urlEncode}}
-      </mat-hint>
-      <mat-error>{{ this.getLinkErrorMessage() }}</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <div class="tooltip-container">
-        <label for="description">
-          <textarea #description
-                    formControlName="description"
-                    id="description"
-                    matInput
-                    minlength="5"
-                    placeholder="Zusatzinformationen"
-                    required>
-          </textarea>
-        </label>
-        <!--suppress TypeScriptUnresolvedFunction -->
-        <mat-icon #descriptionTooltip="matTooltip"
-                  (click)="descriptionTooltip.toggle()"
-                  class="tooltip"
-                  matTooltip="{{'Dieser Text wird unter Anderem beim Versenden des Anmeldelinks als Linkvorschau angezeigt.'}}">
-          info
-        </mat-icon>
-      </div>
-      <mat-hint *ngIf="description.value.length < 10"
-                align="start">
-        Noch mindestens {{10 - description.value.length}} Zeichen
-      </mat-hint>
-    </mat-form-field>
-    <button mat-raised-button>Speichern</button>
-  </form>
 </ng-template>
 
 <ng-template #administration>

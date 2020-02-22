@@ -1,0 +1,46 @@
+<form [formGroup]="event">
+  <span class="info">Eigener URL Pfad zum Termin</span>
+  <mat-form-field class="">
+    <label for="link">
+      <input (change)="checkLink()"
+             formControlName="link"
+             id="link"
+             matInput
+             placeholder="Wunschlink">
+    </label>
+    <mat-hint *ngIf="event.get('link').value !== ''
+                  && event.get('link').value !== null"
+              class="small">
+      {{urlService.getHostname()}}{{event.get('link').value | urlEncode}}
+    </mat-hint>
+    <mat-error>{{ this.getLinkErrorMessage() }}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <div class="tooltip-container">
+      <label for="description">
+          <textarea #description
+                    formControlName="description"
+                    id="description"
+                    matInput
+                    minlength="5"
+                    placeholder="Zusatzinformationen"
+                    required>
+          </textarea>
+      </label>
+      <!--suppress TypeScriptUnresolvedFunction -->
+      <mat-icon #descriptionTooltip="matTooltip"
+                (click)="descriptionTooltip.toggle()"
+                class="tooltip"
+                matTooltip="{{'Dieser Text wird unter Anderem beim Versenden des Anmeldelinks als Linkvorschau angezeigt.'}}">
+        info
+      </mat-icon>
+    </div>
+    <mat-hint *ngIf="description.value.length < 10"
+              align="start">
+      Noch mindestens {{10 - description.value.length}} Zeichen
+    </mat-hint>
+  </mat-form-field>
+  <button mat-raised-button>
+    {{button}}
+  </button>
+</form>

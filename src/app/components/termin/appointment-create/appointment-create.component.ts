@@ -152,12 +152,6 @@ export class AppointmentCreateComponent implements OnInit {
       );
   }
 
-  /* Addition Form */
-  formHavingAdditions() {
-    return this.additionFormGroup.controls.additions.controls.some(addition => addition.value !== null)
-      || this.additionFormGroup.get('driverAddition').value;
-  }
-
   /* Administration Form */
   addAdministratorToList(event: MatChipInputEvent) {
     if (!this.matAutocomplete.isOpen) {
@@ -282,6 +276,14 @@ export class AppointmentCreateComponent implements OnInit {
   }
 
   getOverallData($event: any) {
+    this.stepper.next();
+  }
+
+  getAdditions($event: any) {
+    this.stepper.next();
+  }
+
+  getLinkData($event: any) {
 
   }
 }

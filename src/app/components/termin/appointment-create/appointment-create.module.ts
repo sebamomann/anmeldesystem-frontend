@@ -21,6 +21,7 @@ import {NgxMatDatetimePickerModule} from 'ngx-mat-datetime-picker';
 import {AuthGuard} from '../../../_helper/auth.guard';
 import {ApplicationPipesModule} from '../../../pipes/application-pipes.module';
 import {OverallDataModule} from '../form/overall-data/overall-data.module';
+import {AdditionsModule} from '../form/additions/additions.module';
 
 const routes: Routes = [
   {path: '', component: AppointmentCreateComponent, canActivate: [AuthGuard]}
@@ -49,6 +50,7 @@ const routes: Routes = [
     MatButtonModule,
     ApplicationPipesModule,
     OverallDataModule,
+    AdditionsModule,
   ],
   exports: [],
   providers: []
