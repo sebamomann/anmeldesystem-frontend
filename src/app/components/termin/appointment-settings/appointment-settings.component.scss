@@ -17,19 +17,15 @@ mat-tab-group {
   padding: 15px 0 0 0;
 }
 
-.administrator-wrapper {
-  margin-top: 25px;
-}
-
 .info {
   font-size: 1.15em;
   margin: 5px auto 28px
 }
 
-@import "src/variables";
+.spinner-wrapper {
+  padding: 25px;
 
-.file-upload {
-  color: $primary_dark;
-  margin: 10px auto 20px;
-  display: block;
+  mat-spinner {
+    margin: 0 auto;
+  }
 }
