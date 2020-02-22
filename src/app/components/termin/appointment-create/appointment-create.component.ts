@@ -1,15 +1,13 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {MatAutocomplete, MatDialog, MatStepper} from '@angular/material';
-import {COMMA, SPACE, TAB} from '@angular/cdk/keycodes';
-import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {DomSanitizer} from '@angular/platform-browser';
 import {TemplateDialogComponent} from '../../dialogs/template-dialog/template-dialog.component';
 import {isObject} from 'util';
 import {AppointmentService} from '../../../services/appointment.service';
-import {IFileModelUpload} from '../../../models/IFileModelUpload.model';
 import {Router} from '@angular/router';
+import {CreateAppointmentModel} from '../../../models/createAppointment.model';
 
 const HttpStatus = require('http-status-codes');
 
@@ -20,25 +18,14 @@ const HttpStatus = require('http-status-codes');
 })
 export class AppointmentCreateComponent implements OnInit {
 
-  // Stepper Indices
-  public overallDataFormGroup: any;
-
   @ViewChild('stepper', null) stepper: MatStepper;
+  @ViewChild('userInput', {static: false}) userInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
 
   // FormGroups
   doneGroup: any;
 
-  // Administration Form
-  administrators: string[] = [];
-  allUsers: string[] = ['benutzer1@sebamomann.de', 'text@example.de', 'mama@mia.com', 'foo@bar.tld', 'hallo@helmut.rofl'];
-  filteredUsers: Observable<string[]>;
-  readonly separatorKeysCodes: number[] = [COMMA, SPACE, TAB];
-  @ViewChild('userInput', {static: false}) userInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
-
-  // FileUpload
-  private fileList: IFileModelUpload[] = [];
-
+  public output: CreateAppointmentModel;
   public percentDone = 0;
 
   constructor(private formBuilder: FormBuilder,
@@ -143,25 +130,21 @@ export class AppointmentCreateComponent implements OnInit {
     });
   };
 
-  private _filterAdministratorAutocomplete(value: string): string[] {
-    const filterValue = value.toLowerCase();
+  getOverallData(data: any) {
+    this.output.title = data.title;
+    this.output.date = data.date;
+    this.output.deadline = data.deadline;
+    this.output.location = data.location;
+    this.output.maxEnrollments = data.maxEnrollments;
 
-    return this.allUsers.filter(user => user.toLowerCase().indexOf(filterValue) === 0);
-  }
-
-  private getFormGroupIndexOfLink() {
-    return 2;
-  }
-
-  getOverallData($event: any) {
     this.stepper.next();
   }
 
-  getAdditions($event: any) {
+  getAdditions(data: any) {
     this.stepper.next();
   }
 
-  getLinkData($event: any) {
+  getLinkData(data: any) {
     this.stepper.next();
   }
 }

@@ -11,18 +11,20 @@ export class OverallDataComponent implements OnInit {
 
   @Output()
   save = new EventEmitter<any>();
+  @Output()
+  valid = false;
   @Input()
   private appointment: IAppointmentModel;
   @Input()
   private button = 'Speichern';
 
-  private dataFormGroup: FormGroup;
+  private event: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {
   }
 
   ngOnInit() {
-    this.dataFormGroup = this.formBuilder.group({
+    this.event = this.formBuilder.group({
       title: ['', Validators.required],
       date: ['', Validators.required],
       deadline: [''],
@@ -36,7 +38,7 @@ export class OverallDataComponent implements OnInit {
   }
 
   private parseOverallData() {
-    this.dataFormGroup.setValue({
+    this.event.setValue({
       title: this.appointment.title,
       date: this.appointment.date,
       deadline: this.appointment.deadline,
@@ -46,7 +48,20 @@ export class OverallDataComponent implements OnInit {
   }
 
   private saveFnc() {
-    const data = {};
-    this.save.emit(data);
+    if (this.event.valid) {
+      const data = {
+        title: this.get('title').value,
+        date: this.get('date').value,
+        deadline: this.get('deadline').value,
+        location: this.get('location').value,
+        maxEnrollments: this.get('maxEnrollments').value
+      };
+
+      this.save.emit(data);
+    }
+  }
+
+  private get(str: string) {
+    return this.event.get(str);
   }
 }
