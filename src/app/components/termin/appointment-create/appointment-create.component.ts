@@ -7,7 +7,6 @@ import {TemplateDialogComponent} from '../../dialogs/template-dialog/template-di
 import {isObject} from 'util';
 import {AppointmentService} from '../../../services/appointment.service';
 import {Router} from '@angular/router';
-import {CreateAppointmentModel} from '../../../models/createAppointment.model';
 
 const HttpStatus = require('http-status-codes');
 
@@ -25,7 +24,7 @@ export class AppointmentCreateComponent implements OnInit {
   // FormGroups
   doneGroup: any;
 
-  public output: CreateAppointmentModel;
+  public output: any = {};
   public percentDone = 0;
 
   constructor(private formBuilder: FormBuilder,
@@ -141,6 +140,11 @@ export class AppointmentCreateComponent implements OnInit {
   }
 
   getAdditions(data: any) {
+    console.log(data);
+
+    this.output.driverAddition = data.driverAddition;
+    this.output.additions = data.additions;
+
     this.stepper.next();
   }
 

@@ -29,6 +29,8 @@ export class AdditionsComponent implements OnInit {
 
     if (this.appointment !== undefined) {
       this.parseIntoForm();
+    } else {
+      this.addAddition();
     }
   }
 
@@ -45,9 +47,21 @@ export class AdditionsComponent implements OnInit {
   }
 
   saveFnc() {
-    const data = {};
-    this.save.emit(data);
+    if (this.event.valid) {
+      const data = {
+        driverAddition: this.event.get('driverAddition').value,
+        additions: this.parseAdditionsFromForm(),
+      };
+
+      this.save.emit(data);
+    }
   }
+
+  private parseAdditionsFromForm() {
+    const additions = [];
+    this.event.controls.additions.controls.forEach(field => field.value != null ? additions.push({name: field.value}) : '');
+    return additions;
+  };
 
   private addAddition(value: string | null = null) {
     return (this.event.controls.additions as FormArray).push(new FormControl(value));
