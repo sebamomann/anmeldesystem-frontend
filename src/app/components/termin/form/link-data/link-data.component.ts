@@ -56,4 +56,9 @@ export class LinkDataComponent implements OnInit {
       this.event.get('link').markAsTouched();
     }
   }
+
+  public saveFnc() {
+    const data = {};
+    this.save.emit(data);
+  }
 }

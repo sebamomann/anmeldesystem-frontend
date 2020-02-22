@@ -40,7 +40,9 @@
       Noch mindestens {{10 - description.value.length}} Zeichen
     </mat-hint>
   </mat-form-field>
-  <button mat-raised-button>
+  <button
+    (click)="saveFnc()"
+    mat-raised-button>
     {{button}}
   </button>
 </form>
