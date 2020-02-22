@@ -44,6 +44,11 @@ export class AdditionsComponent implements OnInit {
     this.event.get('driverAddition').setValue(this.appointment.driverAddition);
   }
 
+  saveFnc() {
+    const data = {};
+    this.save.emit(data);
+  }
+
   private addAddition(value: string | null = null) {
     return (this.event.controls.additions as FormArray).push(new FormControl(value));
   }

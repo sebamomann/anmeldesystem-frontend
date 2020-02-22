@@ -8,7 +8,7 @@
   <!--  </span>-->
   <mat-vertical-stepper #stepper>
     <!-- OVERALL DATA-->
-    <mat-step [stepControl]="overallDataFormGroup">
+    <mat-step>
       <ng-template matStepLabel>Allgemein</ng-template>
       <app-overall-data (save)="getOverallData($event)"
                         [button]="'Weiter'">
@@ -16,7 +16,7 @@
     </mat-step>
 
     <!-- ADDITIONS-->
-    <mat-step [stepControl]="additionFormGroup">
+    <mat-step>
       <ng-template matStepLabel>Zusätze</ng-template>
       <app-additions (save)="getAdditions($event)"
                      [button]="'Weiter'">
@@ -25,7 +25,7 @@
     </mat-step>
 
     <!-- LINK DATA -->
-    <mat-step [stepControl]=" linkFormGroup">
+    <mat-step>
       <ng-template matStepLabel>Link</ng-template>
       <app-additions
         (save)="getLinkData($event)"

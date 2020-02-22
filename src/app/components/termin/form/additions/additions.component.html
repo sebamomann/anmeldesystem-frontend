@@ -40,7 +40,8 @@
     Hinzufügen
   </button>
   <div class="stepper-navigation">
-    <button mat-stroked-button>
+    <button (click)="saveFnc()"
+            mat-stroked-button>
       {{ button === 'Speichern' ? button : (hasAdditions() ? button : 'Nein danke') }}
     </button>
   </div>

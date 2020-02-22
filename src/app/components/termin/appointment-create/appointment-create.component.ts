@@ -20,6 +20,9 @@ const HttpStatus = require('http-status-codes');
 })
 export class AppointmentCreateComponent implements OnInit {
 
+  // Stepper Indices
+  public overallDataFormGroup: any;
+
   @ViewChild('stepper', null) stepper: MatStepper;
 
   // FormGroups
@@ -146,8 +149,6 @@ export class AppointmentCreateComponent implements OnInit {
     return this.allUsers.filter(user => user.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  // Stepper Indices
-  // noinspection JSMethodCanBeStatic,JSUnusedLocalSymbols
   private getFormGroupIndexOfLink() {
     return 2;
   }
@@ -161,6 +162,6 @@ export class AppointmentCreateComponent implements OnInit {
   }
 
   getLinkData($event: any) {
-
+    this.stepper.next();
   }
 }
