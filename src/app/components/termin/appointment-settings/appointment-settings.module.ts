@@ -2,24 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AppointmentSettingsComponent} from './appointment-settings.component';
 import {RouterModule, Routes} from '@angular/router';
-import {
-  MatAutocompleteModule,
-  MatButtonModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatDatepickerModule,
-  MatFormFieldModule,
-  MatIconModule,
-  MatInputModule,
-  MatProgressSpinnerModule,
-  MatTabsModule,
-  MatTooltipModule
-} from '@angular/material';
-import {ReactiveFormsModule} from '@angular/forms';
-import {NgxMatDatetimePickerModule} from 'ngx-mat-datetime-picker';
-import {ApplicationPipesModule} from '../../../pipes/application-pipes.module';
-import {AdministratorDeleteModule} from '../administrator/administrator-delete/administrator-delete.module';
-import {FileDeleteModule} from '../file/file-delete/file-delete.module';
+import {MatCardModule, MatProgressSpinnerModule, MatTabsModule} from '@angular/material';
 import {OverallDataModule} from '../form/overall-data/overall-data.module';
 import {AdditionsModule} from '../form/additions/additions.module';
 import {LinkDataModule} from '../form/link-data/link-data.module';
@@ -35,27 +18,14 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    MatTabsModule,
     MatCardModule,
-    MatProgressSpinnerModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    NgxMatDatetimePickerModule,
-    MatDatepickerModule,
-    MatCheckboxModule,
-    MatIconModule,
-    MatTooltipModule,
-    MatButtonModule,
-    ApplicationPipesModule,
-    MatAutocompleteModule,
-    AdministratorDeleteModule,
-    FileDeleteModule,
+    MatTabsModule,
     OverallDataModule,
     AdditionsModule,
     LinkDataModule,
     AdministratorModule,
     FileModule,
+    MatProgressSpinnerModule,
   ]
 })
 export class AppointmentSettingsModule {
