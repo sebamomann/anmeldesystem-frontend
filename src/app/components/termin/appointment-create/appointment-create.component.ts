@@ -40,6 +40,7 @@ export class AppointmentCreateComponent implements OnInit {
   }
 
   async create() {
+    console.log(JSON.stringify(this.output));
     // if (!this.overallDataFormGroup.valid ||
     //   !this.additionFormGroup.valid ||
     //   !this.linkFormGroup.valid ||
