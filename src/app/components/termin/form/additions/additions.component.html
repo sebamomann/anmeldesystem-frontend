@@ -41,7 +41,7 @@
   </button>
   <div class="stepper-navigation">
     <button mat-stroked-button>
-      {{ button === 'Speichern' ? button : (formHavingAdditions() ? button : 'Nein danke') }}
+      {{ button === 'Speichern' ? button : (hasAdditions() ? button : 'Nein danke') }}
     </button>
   </div>
 </form>
