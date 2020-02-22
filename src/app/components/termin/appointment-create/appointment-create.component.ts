@@ -1,12 +1,9 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
-import {UrlService} from '../../../services/url.service';
-import {MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent, MatDialog, MatSnackBar, MatStepper} from '@angular/material';
+import {FormBuilder, FormControl} from '@angular/forms';
+import {MatAutocomplete, MatDialog, MatStepper} from '@angular/material';
 import {COMMA, SPACE, TAB} from '@angular/cdk/keycodes';
 import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-import {CreateAppointmentModel} from '../../../models/createAppointment.model';
-import {HttpClient, HttpErrorResponse, HttpEventType} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {DomSanitizer} from '@angular/platform-browser';
 import {TemplateDialogComponent} from '../../dialogs/template-dialog/template-dialog.component';
 import {isObject} from 'util';
@@ -26,15 +23,7 @@ export class AppointmentCreateComponent implements OnInit {
   @ViewChild('stepper', null) stepper: MatStepper;
 
   // FormGroups
-  overallDataFormGroup: any;
-  additionFormGroup: any;
-  linkFormGroup: any;
-  administrationFormGroup: any;
-  fileUpload: any;
   doneGroup: any;
-
-  // Addition Formc
-  driverAddition = false;
 
   // Administration Form
   administrators: string[] = [];
@@ -45,40 +34,14 @@ export class AppointmentCreateComponent implements OnInit {
   @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
 
   // FileUpload
-  public files: Array<{ file: File, done: boolean }> = [];
   private fileList: IFileModelUpload[] = [];
-  private fileBlob: Blob;
 
   public percentDone = 0;
 
-  constructor(private formBuilder: FormBuilder, public urlService: UrlService,
+  constructor(private formBuilder: FormBuilder,
               private http: HttpClient, private sanitizer: DomSanitizer,
               public dialog: MatDialog, private appointmentService: AppointmentService,
-              private router: Router, private snackBar: MatSnackBar) {
-
-    this.overallDataFormGroup = this.formBuilder.group({
-      title: ['', Validators.required],
-      date: ['', Validators.required],
-      deadline: [''],
-      location: ['', Validators.required],
-      maxEnrollments: [''],
-    });
-
-    this.additionFormGroup = this.formBuilder.group({
-      additions: new FormArray([new FormControl()]),
-      driverAddition: [false]
-    });
-
-    this.linkFormGroup = this.formBuilder.group({
-      link: new FormControl(),
-      description: new FormControl()
-    });
-
-    this.administrationFormGroup = this.formBuilder.group({
-      users: new FormControl()
-    });
-
-    this.fileUpload = this.formBuilder.group({});
+              private router: Router) {
 
     this.doneGroup = this.formBuilder.group({
       saveAsTemplate: new FormControl()
@@ -89,99 +52,67 @@ export class AppointmentCreateComponent implements OnInit {
   ngOnInit() {
     // Not yet working
     // noinspection TypeScriptValidateJSTypes
-    this.filteredUsers = this.administrationFormGroup.get('users').valueChanges.pipe(
-      startWith(null),
-      map((user: string | null) => user ? this._filterAdministratorAutocomplete(user) : this.allUsers.slice()));
+    // this.filteredUsers = this.administrationFormGroup.get('users').valueChanges.pipe(
+    //   startWith(null),
+    //   map((user: string | null) => user ? this._filterAdministratorAutocomplete(user) : this.allUsers.slice()));
   }
 
   async create() {
-    if (!this.overallDataFormGroup.valid ||
-      !this.additionFormGroup.valid ||
-      !this.linkFormGroup.valid ||
-      !this.doneGroup.valid ||
-      !this.administrationFormGroup.valid) {
-      return;
-    }
-
-    const output: CreateAppointmentModel = {
-      title: this.getTitle().value,
-      description: this.getDescription().value,
-      link: this.getLink().value,
-      location: this.getLocation().value,
-      date: this.getDate().value,
-      deadline: this.getDeadline().value,
-      maxEnrollments: this.getMaxEnrollments().value,
-      additions: this.parseAdditionsFromForm(),
-      driverAddition: this.getDriverAddition().value,
-      administrators: this.administrators,
-      files: this.fileList,
-    };
-
-    this.appointmentService
-      .create(output)
-      .subscribe(
-        result => {
-          if (result.type === HttpEventType.UploadProgress) {
-            this.percentDone = Math.round(100 * result.loaded / result.total);
-          } else if (result.type === HttpEventType.Response) {
-            setTimeout(() => {
-              if (result.status === HttpStatus.CREATED) {
-                this.router.navigate([`enroll`], {
-                  queryParams: {
-                    a: result.body.link
-                  }
-                });
-              }
-            }, 2000);
-          }
-        },
-        (err: HttpErrorResponse) => {
-          if (err.status === HttpStatus.BAD_REQUEST) {
-            if (err.error.code === 'DUPLICATE_ENTRY') {
-              err.error.error.forEach(fColumn => {
-                  const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
-                  const fnName: string = 'get' + uppercaseName;
-                  this[fnName]().setErrors({inUse: true});
-                  const fnNameForIndex = 'getFormGroupIndexOf' + uppercaseName;
-                  this.stepper.selectedIndex = this[fnNameForIndex]();
-                }
-              );
-            }
-          }
-        }
-      );
-  }
-
-  /* Administration Form */
-  addAdministratorToList(event: MatChipInputEvent) {
-    if (!this.matAutocomplete.isOpen) {
-      const input = event.input;
-      const value = event.value;
-
-      if ((value || '').trim()) {
-        this.administrators.push(value.trim());
-      }
-
-      if (input) {
-        input.value = '';
-      }
-
-      this.administrationFormGroup.get('users').setValue(null);
-    }
-  }
-
-  removeAdministratorFromList(user): void {
-    const index = this.administrators.indexOf(user);
-
-    if (index >= 0) {
-      this.administrators.splice(index, 1);
-    }
-  }
-
-  selectedAdministratorFromAutocomplete(event: MatAutocompleteSelectedEvent): void {
-    this.administrators.push(event.option.viewValue);
-    this.userInput.nativeElement.value = '';
-    this.administrationFormGroup.get('users').setValue(null);
+    // if (!this.overallDataFormGroup.valid ||
+    //   !this.additionFormGroup.valid ||
+    //   !this.linkFormGroup.valid ||
+    //   !this.doneGroup.valid ||
+    //   !this.administrationFormGroup.valid) {
+    //   return;
+    // }
+    //
+    // const output: CreateAppointmentModel = {
+    //   title: this.getTitle().value,
+    //   description: this.getDescription().value,
+    //   link: this.getLink().value,
+    //   location: this.getLocation().value,
+    //   date: this.getDate().value,
+    //   deadline: this.getDeadline().value,
+    //   maxEnrollments: this.getMaxEnrollments().value,
+    //   additions: this.parseAdditionsFromForm(),
+    //   driverAddition: this.getDriverAddition().value,
+    //   administrators: this.administrators,
+    //   files: this.fileList,
+    // };
+    //
+    // this.appointmentService
+    //   .create(output)
+    //   .subscribe(
+    //     result => {
+    //       if (result.type === HttpEventType.UploadProgress) {
+    //         this.percentDone = Math.round(100 * result.loaded / result.total);
+    //       } else if (result.type === HttpEventType.Response) {
+    //         setTimeout(() => {
+    //           if (result.status === HttpStatus.CREATED) {
+    //             this.router.navigate([`enroll`], {
+    //               queryParams: {
+    //                 a: result.body.link
+    //               }
+    //             });
+    //           }
+    //         }, 2000);
+    //       }
+    //     },
+    //     (err: HttpErrorResponse) => {
+    //       if (err.status === HttpStatus.BAD_REQUEST) {
+    //         if (err.error.code === 'DUPLICATE_ENTRY') {
+    //           err.error.error.forEach(fColumn => {
+    //               const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
+    //               const fnName: string = 'get' + uppercaseName;
+    //               this[fnName]().setErrors({inUse: true});
+    //               const fnNameForIndex = 'getFormGroupIndexOf' + uppercaseName;
+    //               this.stepper.selectedIndex = this[fnNameForIndex]();
+    //             }
+    //           );
+    //         }
+    //       }
+    //     }
+    //   );
   }
 
   // Dialogs
@@ -195,78 +126,24 @@ export class AppointmentCreateComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (isObject(result)) {
-        this.overallDataFormGroup.get('title').setValue(result.title);
-        this.overallDataFormGroup.get('location').setValue(result.location);
-        this.overallDataFormGroup.get('maxEnrollments').setValue(result.maxEnrollments);
-
-        this.linkFormGroup.get('description').setValue(result.description);
-        result.additions.forEach(addition => {
-          this.addAdditionFormControlToFormArray(addition.name);
-        });
-
-        this.getDriverAddition().setValue(result.driverAddition);
+        // this.overallDataFormGroup.get('title').setValue(result.title);
+        // this.overallDataFormGroup.get('location').setValue(result.location);
+        // this.overallDataFormGroup.get('maxEnrollments').setValue(result.maxEnrollments);
+        //
+        // this.linkFormGroup.get('description').setValue(result.description);
+        // result.additions.forEach(addition => {
+        //   // add additions
+        // });
+        //
+        // this.getDriverAddition().setValue(result.driverAddition);
       }
     });
-  };
-
-  // Form Util
-  addAdditionFormControlToFormArray(value: string | null = null) {
-    return (this.additionFormGroup.controls.additions as FormArray).push(new FormControl(value));
-  }
-
-  removeAdditionFromFormArray(index: number) {
-    this.additionFormGroup.controls.additions.removeAt(index);
-  }
-
-  // From values
-  getLinkErrorMessage(): string {
-    if (this.getLink().hasError('inUse')) {
-      return 'Dieser Link ist leider schon in Benutzung';
-    }
-  }
-
-  private parseAdditionsFromForm() {
-    const additions = [];
-    this.additionFormGroup.controls.additions.controls.forEach(field => field.value != null ? additions.push({name: field.value}) : '');
-    return additions;
   };
 
   private _filterAdministratorAutocomplete(value: string): string[] {
     const filterValue = value.toLowerCase();
 
     return this.allUsers.filter(user => user.toLowerCase().indexOf(filterValue) === 0);
-  }
-
-  private getMaxEnrollments() {
-    return this.overallDataFormGroup.get('maxEnrollments');
-  }
-
-  private getDeadline() {
-    return this.overallDataFormGroup.get('deadline');
-  }
-
-  private getDate() {
-    return this.overallDataFormGroup.get('date');
-  }
-
-  private getLocation() {
-    return this.overallDataFormGroup.get('location');
-  }
-
-  private getTitle() {
-    return this.overallDataFormGroup.get('title');
-  }
-
-  private getLink() {
-    return this.linkFormGroup.get('link');
-  }
-
-  private getDescription() {
-    return this.linkFormGroup.get('description');
-  }
-
-  private getDriverAddition() {
-    return this.additionFormGroup.get('driverAddition');
   }
 
   // Stepper Indices
