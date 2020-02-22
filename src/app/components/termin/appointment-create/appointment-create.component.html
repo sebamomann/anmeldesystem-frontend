@@ -9,24 +9,32 @@
   <mat-vertical-stepper #stepper>
     <!-- OVERALL DATA-->
     <mat-step>
-      <ng-template matStepLabel>Allgemein</ng-template>
-      <app-overall-data (save)="getOverallData($event)"
-                        [button]="'Weiter'">
+      <ng-template matStepLabel>
+        Allgemein
+      </ng-template>
+      <app-overall-data
+        (save)="getOverallData($event)"
+        [button]="'Weiter'">
       </app-overall-data>
     </mat-step>
 
     <!-- ADDITIONS-->
     <mat-step>
-      <ng-template matStepLabel>Zusätze</ng-template>
-      <app-additions (save)="getAdditions($event)"
-                     [button]="'Weiter'">
+      <ng-template matStepLabel>
+        Zusätze
+      </ng-template>
+      <app-additions
+        (save)="getAdditions($event)"
+        [button]="'Weiter'">
       </app-additions>
       <button mat-button matStepperPrevious>Zurück</button>
     </mat-step>
 
     <!-- LINK DATA -->
     <mat-step>
-      <ng-template matStepLabel>Link</ng-template>
+      <ng-template matStepLabel>
+        Link
+      </ng-template>
       <app-additions
         (save)="getLinkData($event)"
         [button]="'Weiter'">>
@@ -37,7 +45,9 @@
     <!-- DONE -->
     <mat-step [stepControl]="doneGroup">
       <form [formGroup]="doneGroup">
-        <ng-template matStepLabel> Fertig</ng-template>
+        <ng-template matStepLabel>
+          Fertig
+        </ng-template>
         <!--        <div class="tooltip-container">-->
         <!--          <mat-checkbox formControlName="saveAsTemplate">-->
         <!--            Als Vorlage Speichern-->
@@ -51,8 +61,11 @@
         <!--          </mat-icon>-->
         <!--        </div>-->
         <div class="stepper-navigation">
-          <button (click)="create()" mat-button mat-stroked-button>Erstellen</button>
-          <button mat-button matStepperPrevious>Zurück</button>
+          <button (click)="create()"
+                  mat-stroked-button>
+            Erstellen
+          </button>
+          <button matStepperPrevious>Zurück</button>
         </div>
       </form>
     </mat-step>
@@ -69,6 +82,8 @@
       <mat-icon>check_circle_outline</mat-icon>
     </span>
   </ng-container>
-  <mat-progress-bar [value]="percentDone" mode="determinate"></mat-progress-bar>
+  <mat-progress-bar
+    [value]="percentDone"
+    mode="determinate"></mat-progress-bar>
 </div>
 
