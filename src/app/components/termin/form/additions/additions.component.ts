@@ -23,7 +23,7 @@ export class AdditionsComponent implements OnInit {
 
   ngOnInit() {
     this.additionFormGroup = this.formBuilder.group({
-      additions: new FormArray([new FormControl()]),
+      additions: new FormArray([]),
       driverAddition: [false]
     });
 
@@ -32,24 +32,28 @@ export class AdditionsComponent implements OnInit {
     }
   }
 
-  addAdditionFormControlToFormArray(value: string | null = null) {
+  private parseIntoForm() {
+    this.appointment.additions.forEach(fAddition => {
+      this.addAddition(fAddition.name);
+    });
+
+    if (this.appointment.additions.length === 0) {
+      this.addAddition();
+    }
+
+    this.additionFormGroup.get('driverAddition').setValue(this.appointment.driverAddition);
+  }
+
+  private addAddition(value: string | null = null) {
     return (this.additionFormGroup.controls.additions as FormArray).push(new FormControl(value));
   }
 
-  removeAdditionFromFormArray(index: number) {
+  private removeAddition(index: number) {
     this.additionFormGroup.controls.additions.removeAt(index);
   }
 
-  formHavingAdditions() {
+  private hasAdditions() {
     return this.additionFormGroup.controls.additions.controls.some(addition => addition.value !== null)
       || this.additionFormGroup.get('driverAddition').value;
-  }
-
-  private parseIntoForm() {
-    this.appointment.additions.forEach(fAddition => {
-      this.addAdditionFormControlToFormArray(fAddition.name);
-    });
-
-    this.additionFormGroup.get('driverAddition').setValue(this.appointment.driverAddition);
   }
 }

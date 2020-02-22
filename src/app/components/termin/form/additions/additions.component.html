@@ -27,14 +27,14 @@
                    matInput
                    placeholder="Zusatz {{i + 1}}">
           </label>
-          <mat-icon (click)="removeAdditionFromFormArray(i)"
+          <mat-icon (click)="removeAddition(i)"
                     matSuffix>clear
           </mat-icon>
         </mat-form-field>
       </div>
     </div>
   </ng-container>
-  <button (click)="addAdditionFormControlToFormArray()"
+  <button (click)="addAddition()"
           class="solo"
           mat-stroked-button>
     Hinzufügen
