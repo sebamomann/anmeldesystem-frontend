@@ -23,6 +23,7 @@ import {FileDeleteModule} from '../file/file-delete/file-delete.module';
 import {OverallDataModule} from '../form/overall-data/overall-data.module';
 import {AdditionsModule} from '../form/additions/additions.module';
 import {LinkDataModule} from '../form/link-data/link-data.module';
+import {AdministratorModule} from '../administrator/administrator.module';
 
 const routes: Routes = [
   {path: '', component: AppointmentSettingsComponent}
@@ -52,6 +53,7 @@ const routes: Routes = [
     OverallDataModule,
     AdditionsModule,
     LinkDataModule,
+    AdministratorModule,
   ]
 })
 export class AppointmentSettingsModule {

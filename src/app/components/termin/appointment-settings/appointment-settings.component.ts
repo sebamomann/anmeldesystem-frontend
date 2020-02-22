@@ -7,7 +7,7 @@ import {EnrollmentService} from '../../../services/enrollment.service';
 import {Location} from '@angular/common';
 import {DomSanitizer} from '@angular/platform-browser';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
-import {FormBuilder, FormControl} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {UrlService} from '../../../services/url.service';
 import {IFileModelUpload} from '../../../models/IFileModelUpload.model';
 
@@ -17,23 +17,9 @@ import {IFileModelUpload} from '../../../models/IFileModelUpload.model';
   styleUrls: ['./appointment-settings.component.scss']
 })
 export class AppointmentSettingsComponent implements OnInit {
-  private isEdit = true;
-
   private link: any;
   private appointment: IAppointmentModel;
-  private overallDataFormGroup: any;
-  private additionFormGroup: any;
-  private linkFormGroup: any;
-  private administratorFormGroup: any;
 
-  private numberOfShares = 10;
-
-  private administrators: string[] = [
-    'benutzer1@sebamomann.de',
-    'text@example.de',
-    'mama@mia.com',
-    'foo@bar.tld',
-    'hallo@helmut.rofl'];
 
   // FILE
   public files: Array<{ name: string; id: string }> = [{name: 'test1.pdf', id: '123'}, {name: 'test2.png', id: '234'}];
@@ -54,10 +40,6 @@ export class AppointmentSettingsComponent implements OnInit {
         this.link = params.link;
         this.router.navigate(['/enroll'], {queryParams: {a: this.link}}).then(() => '');
       }
-    });
-
-    this.administratorFormGroup = this.formBuilder.group({
-      name: new FormControl()
     });
   }
 
@@ -122,6 +104,8 @@ export class AppointmentSettingsComponent implements OnInit {
   }
 
   saveLink($event: any) {
+  }
 
+  saveAdministrators($event: any) {
   }
 }

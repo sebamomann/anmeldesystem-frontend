@@ -23,7 +23,10 @@
         </app-link-data>
       </mat-tab>
       <mat-tab label="Adminsitration">
-        <ng-container *ngTemplateOutlet="administration"></ng-container>
+        <app-administrator
+          (save)="saveAdministrators($event)"
+          [appointment]="appointment">
+        </app-administrator>
       </mat-tab>
       <mat-tab label="Anhänge">
         <ng-container *ngTemplateOutlet="fileUpload"></ng-container>
@@ -35,34 +38,6 @@
 <ng-template #loading>
   <mat-spinner>
   </mat-spinner>
-</ng-template>
-
-<ng-template #administration>
-  <form [formGroup]="administratorFormGroup">
-    <span class="info">Erlaube jemandem die Administration dieses Termins</span>
-    <div class="input-with-button-wrapper">
-      <mat-form-field>
-        <input aria-label="Number"
-               formControlName="name"
-               matInput
-               placeholder="Benutzername"
-               type="text">
-      </mat-form-field>
-      <button mat-raised-button>Speichern</button>
-    </div>
-
-    <ng-container *ngIf="administrators.length > 0">
-      <span class="separator center colored middle extra-tall"></span>
-      <div class="administrator-wrapper">
-        <app-administrator-delete
-          *ngFor="let admin of administrators"
-          [admin]="admin"
-          [appointment]="appointment">
-
-        </app-administrator-delete>
-      </div>
-    </ng-container>
-  </form>
 </ng-template>
 
 <ng-template #fileUpload>
