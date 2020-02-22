@@ -24,6 +24,7 @@ import {OverallDataModule} from '../form/overall-data/overall-data.module';
 import {AdditionsModule} from '../form/additions/additions.module';
 import {LinkDataModule} from '../form/link-data/link-data.module';
 import {AdministratorModule} from '../administrator/administrator.module';
+import {FileModule} from '../file/file.module';
 
 const routes: Routes = [
   {path: '', component: AppointmentSettingsComponent}
@@ -54,6 +55,7 @@ const routes: Routes = [
     AdditionsModule,
     LinkDataModule,
     AdministratorModule,
+    FileModule,
   ]
 })
 export class AppointmentSettingsModule {

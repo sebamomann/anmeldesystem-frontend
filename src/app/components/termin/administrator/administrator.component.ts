@@ -11,17 +11,18 @@ export class AdministratorComponent implements OnInit {
 
   @Output()
   save = new EventEmitter<any>();
+  @Input()
+  private appointment: IAppointmentModel;
+  @Input()
+  private button = 'Speichern';
+
+  private event: any;
   public administrators: string[] = [
     'benutzer1@sebamomann.de',
     'text@example.de',
     'mama@mia.com',
     'foo@bar.tld',
     'hallo@helmut.rofl'];
-  @Input()
-  private appointment: IAppointmentModel;
-  @Input()
-  private button = 'Speichern';
-  private event: any;
 
   constructor(private formBuilder: FormBuilder) {
   }
@@ -31,5 +32,4 @@ export class AdministratorComponent implements OnInit {
       name: new FormControl()
     });
   }
-
 }

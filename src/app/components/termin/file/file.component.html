@@ -1,0 +1,27 @@
+<form>
+  <span class="info">
+    Datei zum Download
+  </span>
+  <button (click)="selectFilesFromComputer()"
+          class="file-upload"
+          mat-raised-button>
+    <mat-icon>file_upload</mat-icon>
+    Hochladen
+  </button>
+  <input id="fileUpload"
+         multiple="multiple"
+         name="fileUpload"
+         style="display:none;"
+         type="file"/>
+
+  <ng-container *ngIf="files.length > 0">
+    <span class="separator center colored middle extra-tall"></span>
+    <div class="file-wrapper">
+      <app-file-delete
+        *ngFor="let file of files"
+        [appointment]="appointment"
+        [file]="file">
+      </app-file-delete>
+    </div>
+  </ng-container>
+</form>
