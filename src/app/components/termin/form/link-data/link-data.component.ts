@@ -33,14 +33,6 @@ export class LinkDataComponent implements OnInit {
     }
   }
 
-  getLinkErrorMessage(): string {
-    if (this.event.get('link').hasError('inUse')) {
-      return 'Dieser Link ist leider schon in Benutzung';
-    } else if (this.event.get('link').hasError('new')) {
-      return 'Beachte, dein alter Link wird sofort ungültig';
-    }
-  }
-
   private parseIntoForm() {
     this.event.setValue({
       link: this.appointment.link,
@@ -60,5 +52,13 @@ export class LinkDataComponent implements OnInit {
   public saveFnc() {
     const data = {};
     this.save.emit(data);
+  }
+
+  getLinkErrorMessage(): string {
+    if (this.event.get('link').hasError('inUse')) {
+      return 'Dieser Link ist leider schon in Benutzung';
+    } else if (this.event.get('link').hasError('new')) {
+      return 'Beachte, dein alter Link wird sofort ungültig';
+    }
   }
 }
