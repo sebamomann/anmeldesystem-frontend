@@ -7,6 +7,7 @@ import {MatButtonModule, MatCardModule, MatIconModule, MatProgressBarModule, Mat
 import {OverallDataModule} from '../form/overall-data/overall-data.module';
 import {AdditionsModule} from '../form/additions/additions.module';
 import {ReactiveFormsModule} from '@angular/forms';
+import {LinkDataModule} from '../form/link-data/link-data.module';
 
 const routes: Routes = [
   {path: '', component: AppointmentCreateComponent, canActivate: [AuthGuard]}
@@ -27,6 +28,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     MatIconModule,
     MatProgressBarModule,
+    LinkDataModule,
   ],
   exports: [],
   providers: []

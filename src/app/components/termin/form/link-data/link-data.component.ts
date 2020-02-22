@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {UrlService} from '../../../../services/url.service';
 
 @Component({
@@ -24,8 +24,8 @@ export class LinkDataComponent implements OnInit {
 
   ngOnInit() {
     this.event = this.formBuilder.group({
-      link: new FormControl(),
-      description: new FormControl()
+      link: new FormControl(''),
+      description: new FormControl('', [Validators.minLength(10)])
     });
 
     if (this.appointment !== undefined) {
@@ -42,23 +42,34 @@ export class LinkDataComponent implements OnInit {
     this.checkLink();
   }
 
-  private checkLink() {
-    if (this.event.get('link').value !== this.appointment.link) {
-      this.event.get('link').setErrors({new: true});
-      this.event.get('link').markAsTouched();
-    }
-  }
-
   public saveFnc() {
-    const data = {};
-    this.save.emit(data);
+    if (this.event.valid) {
+      const data = {
+        link: this.get('link').value,
+        description: this.get('description').value,
+      };
+
+      this.save.emit(data);
+    }
   }
 
   getLinkErrorMessage(): string {
-    if (this.event.get('link').hasError('inUse')) {
+    if (this.get('link').hasError('inUse')) {
       return 'Dieser Link ist leider schon in Benutzung';
-    } else if (this.event.get('link').hasError('new')) {
+    } else if (this.get('link').hasError('new')) {
       return 'Beachte, dein alter Link wird sofort ungültig';
     }
+  }
+
+  private checkLink() {
+    if (this.appointment !== undefined
+      && this.get('link').value !== this.appointment.link) {
+      this.get('link').setErrors({new: true});
+      this.get('link').markAsTouched();
+    }
+  }
+
+  private get(str: string) {
+    return this.event.get(str);
   }
 }

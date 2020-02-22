@@ -3,8 +3,6 @@ import {FormBuilder, FormControl} from '@angular/forms';
 import {MatAutocomplete, MatDialog, MatStepper} from '@angular/material';
 import {HttpClient} from '@angular/common/http';
 import {DomSanitizer} from '@angular/platform-browser';
-import {TemplateDialogComponent} from '../../dialogs/template-dialog/template-dialog.component';
-import {isObject} from 'util';
 import {AppointmentService} from '../../../services/appointment.service';
 import {Router} from '@angular/router';
 
@@ -39,11 +37,6 @@ export class AppointmentCreateComponent implements OnInit {
 
 
   ngOnInit() {
-    // Not yet working
-    // noinspection TypeScriptValidateJSTypes
-    // this.filteredUsers = this.administrationFormGroup.get('users').valueChanges.pipe(
-    //   startWith(null),
-    //   map((user: string | null) => user ? this._filterAdministratorAutocomplete(user) : this.allUsers.slice()));
   }
 
   async create() {
@@ -105,29 +98,29 @@ export class AppointmentCreateComponent implements OnInit {
   }
 
   // Dialogs
-  public _openAppointmentTemplateDialog: () => void = () => {
-    const dialogRef = this.dialog.open(TemplateDialogComponent, {
-      width: '90%',
-      maxWidth: '500px',
-      height: 'auto',
-      maxHeight: '80vh',
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (isObject(result)) {
-        // this.overallDataFormGroup.get('title').setValue(result.title);
-        // this.overallDataFormGroup.get('location').setValue(result.location);
-        // this.overallDataFormGroup.get('maxEnrollments').setValue(result.maxEnrollments);
-        //
-        // this.linkFormGroup.get('description').setValue(result.description);
-        // result.additions.forEach(addition => {
-        //   // add additions
-        // });
-        //
-        // this.getDriverAddition().setValue(result.driverAddition);
-      }
-    });
-  };
+  // public _openAppointmentTemplateDialog: () => void = () => {
+  //   const dialogRef = this.dialog.open(TemplateDialogComponent, {
+  //     width: '90%',
+  //     maxWidth: '500px',
+  //     height: 'auto',
+  //     maxHeight: '80vh',
+  //   });
+  //
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (isObject(result)) {
+  // this.overallDataFormGroup.get('title').setValue(result.title);
+  // this.overallDataFormGroup.get('location').setValue(result.location);
+  // this.overallDataFormGroup.get('maxEnrollments').setValue(result.maxEnrollments);
+  //
+  // this.linkFormGroup.get('description').setValue(result.description);
+  // result.additions.forEach(addition => {
+  //   // add additions
+  // });
+  //
+  // this.getDriverAddition().setValue(result.driverAddition);
+  //     }
+  //   });
+  // };
 
   getOverallData(data: any) {
     this.output.title = data.title;
@@ -140,8 +133,6 @@ export class AppointmentCreateComponent implements OnInit {
   }
 
   getAdditions(data: any) {
-    console.log(data);
-
     this.output.driverAddition = data.driverAddition;
     this.output.additions = data.additions;
 
@@ -149,6 +140,9 @@ export class AppointmentCreateComponent implements OnInit {
   }
 
   getLinkData(data: any) {
+    this.output.link = data.link;
+    this.output.description = data.description;
+
     this.stepper.next();
   }
 }
