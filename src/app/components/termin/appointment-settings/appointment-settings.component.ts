@@ -66,35 +66,7 @@ export class AppointmentSettingsComponent implements OnInit {
       .getAppointment(this.link, false)
       .subscribe(sAppointment => {
         this.appointment = sAppointment;
-
-        this.parseDataIntoForms();
       });
-  }
-
-
-
-  public privateGetOverall(str: string) {
-    return this.overallDataFormGroup.get(str);
-  }
-
-  private parseDataIntoForms() {
-    this.parseLinkData();
-  }
-
-  private parseLinkData() {
-    this.linkFormGroup.setValue({
-      link: this.appointment.link,
-      description: this.appointment.description,
-    });
-
-    this.checkLink();
-  }
-
-  private checkLink() {
-    if (this.linkFormGroup.get('link').value !== this.appointment.link) {
-      this.linkFormGroup.get('link').setErrors({new: true});
-      this.linkFormGroup.get('link').markAsTouched();
-    }
   }
 
   selectFilesFromComputer() {

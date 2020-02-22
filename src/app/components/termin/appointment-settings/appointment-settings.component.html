@@ -19,8 +19,8 @@
       <mat-tab label="Link">
         <app-link-data
           (save)="saveLink($event)"
-          [appointment]="appointment"></app-link-data>
-        <ng-container *ngTemplateOutlet="link"></ng-container>
+          [appointment]="appointment">
+        </app-link-data>
       </mat-tab>
       <mat-tab label="Adminsitration">
         <ng-container *ngTemplateOutlet="administration"></ng-container>

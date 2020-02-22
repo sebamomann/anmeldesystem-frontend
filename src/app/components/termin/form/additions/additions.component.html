@@ -1,4 +1,4 @@
-<form [formGroup]="additionFormGroup">
+<form [formGroup]="event">
   <span class="info">
     Zusätze, welche beim Anmelden mit Ja/Nein beantwortet werden
   </span>
@@ -18,7 +18,7 @@
     </div>
     <div class="addition-wrapper">
       <!--suppress AngularInvalidExpressionResultType, JSUnusedGlobalSymbols -->
-      <div *ngFor="let addition of additionFormGroup.controls.additions.controls; let i = index"
+      <div *ngFor="let addition of event.controls.additions.controls; let i = index"
            formArrayName="additions">
         <mat-form-field>
           <label for="{{i}}">

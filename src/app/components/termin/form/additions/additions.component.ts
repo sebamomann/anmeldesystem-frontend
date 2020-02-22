@@ -16,13 +16,13 @@ export class AdditionsComponent implements OnInit {
   @Input()
   private button = 'Speichern';
 
-  private additionFormGroup: any;
+  private event: any;
 
   constructor(private formBuilder: FormBuilder) {
   }
 
   ngOnInit() {
-    this.additionFormGroup = this.formBuilder.group({
+    this.event = this.formBuilder.group({
       additions: new FormArray([]),
       driverAddition: [false]
     });
@@ -41,19 +41,19 @@ export class AdditionsComponent implements OnInit {
       this.addAddition();
     }
 
-    this.additionFormGroup.get('driverAddition').setValue(this.appointment.driverAddition);
+    this.event.get('driverAddition').setValue(this.appointment.driverAddition);
   }
 
   private addAddition(value: string | null = null) {
-    return (this.additionFormGroup.controls.additions as FormArray).push(new FormControl(value));
+    return (this.event.controls.additions as FormArray).push(new FormControl(value));
   }
 
   private removeAddition(index: number) {
-    this.additionFormGroup.controls.additions.removeAt(index);
+    this.event.controls.additions.removeAt(index);
   }
 
   private hasAdditions() {
-    return this.additionFormGroup.controls.additions.controls.some(addition => addition.value !== null)
-      || this.additionFormGroup.get('driverAddition').value;
+    return this.event.controls.additions.controls.some(addition => addition.value !== null)
+      || this.event.get('driverAddition').value;
   }
 }
