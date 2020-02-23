@@ -40,8 +40,6 @@ export class AppointmentCreateComponent implements OnInit {
   }
 
   async create() {
-    console.log(JSON.stringify(this.output));
-
     this.output.administrators = [];
     this.output.files = [];
 
