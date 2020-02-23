@@ -41,10 +41,27 @@
         </div>
       </div>
     </mat-card-content>
-    <mat-icon
-      (click)="copyLink()"
-      class="share">
-      share
-    </mat-icon>
+
+    <button [matMenuTriggerFor]="menu"
+            aria-label="Menu icon for this appointment"
+            class="share"
+            mat-icon-button>
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button (click)="copyLink()"
+              mat-menu-item>
+        <mat-icon>share</mat-icon>
+        <span>Teilen</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>bookmark_border</mat-icon>
+        <span>Anpinnen</span>
+      </button>
+      <button mat-menu-item>
+        <mat-icon>settings</mat-icon>
+        <span>Einstellungen</span>
+      </button>
+    </mat-menu>
   </mat-card>
 </div>
