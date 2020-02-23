@@ -43,6 +43,7 @@
     </mat-card-content>
 
     <button [matMenuTriggerFor]="menu"
+            *ngIf="!preview"
             aria-label="Menu icon for this appointment"
             class="share"
             mat-icon-button>
