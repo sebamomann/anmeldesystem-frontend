@@ -41,14 +41,10 @@
         </div>
       </div>
     </mat-card-content>
-
-    <mat-card-actions *ngIf="!preview" class="link-management">
-      <mat-form-field>
-        <label>
-          <input #inputElement matInput placeholder="" readonly value="{{urlService.getHostname() + appointment.link}}">
-        </label>
-      </mat-form-field>
-      <button (click)="copyInputMessage(inputElement)" mat-raised-button>Kopieren</button>
-    </mat-card-actions>
+    <mat-icon
+      (click)="copyLink()"
+      class="share">
+      share
+    </mat-icon>
   </mat-card>
 </div>
