@@ -3,6 +3,7 @@ import {AppointmentService} from '../../../services/appointment.service';
 import {MatDialog} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
+import {HttpEventType} from '@angular/common/http';
 
 @Component({
   selector: 'app-appointment-settings',
@@ -12,7 +13,6 @@ import {IAppointmentModel} from '../../../models/IAppointment.model';
 export class AppointmentSettingsComponent implements OnInit {
   private link: any;
   private appointment: IAppointmentModel;
-  private isSending = true;
   private saveSuccess: boolean;
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog,
@@ -38,7 +38,14 @@ export class AppointmentSettingsComponent implements OnInit {
   }
 
   saveOverall(data: any) {
-    this.isSending = true;
+    this._save(data);
+  }
+
+  saveAdditions(data: any) {
+    this._save(data);
+  }
+
+  private _save(data: any) {
     const toChange = {};
     for (const [key, value] of Object.entries(data)) {
       if (data[key] !== this.appointment[key]) {
@@ -47,19 +54,19 @@ export class AppointmentSettingsComponent implements OnInit {
     }
 
     if (toChange !== {}) {
-      console.log('sending overall data changes');
       this.appointmentService
         .updateValues(toChange, this.appointment)
         .subscribe(
           res => {
-            this.saved();
+            if (res.type === HttpEventType.Response) {
+              if (res.status <= 299) {
+                this.saved();
+              }
+            }
           },
           error => {
           });
     }
-  }
-
-  saveAdditions(data: any) {
   }
 
   saveLink($event: any) {

@@ -75,6 +75,10 @@ export class AppointmentService {
     return this.hasUpdate$.asObservable();
   }
 
+  manualUpdate() {
+    this.clear$.next();
+  }
+
   resetAvailableUpdate() {
     this.hasUpdate$.next(false);
   }
