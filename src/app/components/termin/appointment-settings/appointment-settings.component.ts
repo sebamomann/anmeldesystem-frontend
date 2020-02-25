@@ -45,6 +45,12 @@ export class AppointmentSettingsComponent implements OnInit {
     this._save(data);
   }
 
+
+  saveLink(data: any) {
+    this._save(data);
+  }
+
+
   private _save(data: any) {
     const toChange = {};
     for (const [key, value] of Object.entries(data)) {
@@ -67,9 +73,6 @@ export class AppointmentSettingsComponent implements OnInit {
           error => {
           });
     }
-  }
-
-  saveLink($event: any) {
   }
 
   saveAdministrators($event: any) {

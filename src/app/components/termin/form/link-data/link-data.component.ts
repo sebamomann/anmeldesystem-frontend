@@ -43,7 +43,7 @@ export class LinkDataComponent implements OnInit {
   }
 
   public saveFnc() {
-    if (this.event.valid) {
+    if (this.get('description').value.length > 10 && !this.get('link').hasError('inUse')) {
       const data = {
         link: this.get('link').value,
         description: this.get('description').value,
@@ -59,6 +59,10 @@ export class LinkDataComponent implements OnInit {
     } else if (this.get('link').hasError('new')) {
       return 'Beachte, dein alter Link wird sofort ungültig';
     }
+  }
+
+  getDescriptionErrorMessage() {
+    return 'Mindestens 10 Zeichen notwendig';
   }
 
   private checkLink() {

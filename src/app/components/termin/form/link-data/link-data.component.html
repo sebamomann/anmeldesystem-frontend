@@ -39,6 +39,7 @@
               align="start">
       Noch mindestens {{10 - description.value.length}} Zeichen
     </mat-hint>
+    <mat-error>{{ this.getDescriptionErrorMessage() }}</mat-error>
   </mat-form-field>
   <button
     (click)="saveFnc()"
