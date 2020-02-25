@@ -13,6 +13,7 @@ export class AppointmentSettingsComponent implements OnInit {
   private link: any;
   private appointment: IAppointmentModel;
   private isSending = true;
+  private saveSuccess: boolean;
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog,
               private route: ActivatedRoute, private router: Router) {
@@ -51,9 +52,7 @@ export class AppointmentSettingsComponent implements OnInit {
         .updateValues(toChange, this.appointment)
         .subscribe(
           res => {
-            // setTimeout(function() {
-            //   this.loading = false;
-            // }, 2000);
+            this.saved();
           },
           error => {
           });
@@ -70,5 +69,13 @@ export class AppointmentSettingsComponent implements OnInit {
   }
 
   saveFile($event: any) {
+  }
+
+  private saved() {
+    this.saveSuccess = true;
+    const self = this;
+    setTimeout(() => {
+      self.saveSuccess = false;
+    }, 3000);
   }
 }
