@@ -70,7 +70,7 @@ export class AppointmentSettingsComponent implements OnInit {
                   this.router.navigate(['/appointment/settings'], {
                     queryParams: {a: res.body.link},
                     queryParamsHandling: 'merge'
-                  });
+                  }).then(() => this.appointment.link = res.body.link);
                 }
                 this.saved();
               }
