@@ -150,7 +150,7 @@ export class AppointmentService {
     return this.httpClient.request(req);
   }
 
-  updateValues(toChange: {}, {link}) {
+  updateValues(toChange: {}, {link}): Observable<HttpEvent<IAppointmentModel>> {
     console.log('update appointment', toChange);
     const req = new HttpRequest('PUT', `${environment.api.url}appointment/${link}`, toChange, {
       reportProgress: true,
