@@ -12,6 +12,7 @@ import {IAppointmentModel} from '../../../models/IAppointment.model';
 export class AppointmentSettingsComponent implements OnInit {
   private link: any;
   private appointment: IAppointmentModel;
+  private isSending = true;
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog,
               private route: ActivatedRoute, private router: Router) {
@@ -36,6 +37,27 @@ export class AppointmentSettingsComponent implements OnInit {
   }
 
   saveOverall(data: any) {
+    this.isSending = true;
+    const toChange = {};
+    for (const [key, value] of Object.entries(data)) {
+      if (data[key] !== this.appointment[key]) {
+        toChange[key] = value;
+      }
+    }
+
+    if (toChange !== {}) {
+      console.log('sending overall data changes');
+      this.appointmentService
+        .updateValues(toChange, this.appointment)
+        .subscribe(
+          res => {
+            // setTimeout(function() {
+            //   this.loading = false;
+            // }, 2000);
+          },
+          error => {
+          });
+    }
   }
 
   saveAdditions(data: any) {

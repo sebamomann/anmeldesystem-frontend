@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {OverallDataComponent} from './overall-data.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {MatButtonModule, MatDatepickerModule, MatFormFieldModule, MatInputModule} from '@angular/material';
+import {MatButtonModule, MatDatepickerModule, MatFormFieldModule, MatInputModule, MatProgressSpinnerModule} from '@angular/material';
 import {NgxMatDatetimePickerModule} from 'ngx-mat-datetime-picker';
 
 
@@ -18,7 +18,8 @@ import {NgxMatDatetimePickerModule} from 'ngx-mat-datetime-picker';
     MatInputModule,
     NgxMatDatetimePickerModule,
     MatDatepickerModule,
-    MatButtonModule
+    MatButtonModule,
+    MatProgressSpinnerModule
   ]
 })
 export class OverallDataModule {

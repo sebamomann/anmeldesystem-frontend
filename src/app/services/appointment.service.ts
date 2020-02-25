@@ -146,6 +146,14 @@ export class AppointmentService {
     return this.httpClient.request(req);
   }
 
+  updateValues(toChange: {}, {link}) {
+    console.log('update appointment', toChange);
+    const req = new HttpRequest('PUT', `${environment.api.url}appointment/${link}`, toChange, {
+      reportProgress: true,
+    });
+    return this.httpClient.request(req);
+  }
+
   getTemplates(): IAppointmentTemplateModel[] {
     return [
       {
