@@ -200,6 +200,15 @@ export class AppointmentService {
   //   return this.httpClient.request(req);
   //   // return this.httpClient.post<any>(url, enrollment, {observe: 'response'});
   // }
+  addAdministrator(adminUsername: string, appointment: IAppointmentModel): Observable<HttpEvent<void>> {
+    const req = new HttpRequest('POST', `${environment.api.url}appointment/${appointment.link}/administrator`,
+      {username: adminUsername},
+      {
+        reportProgress: true,
+      });
+    return this.httpClient.request(req);
+  }
+
   removeAdministration(adminUsername: string, appointment: IAppointmentModel): Observable<HttpEvent<void>> {
     const req = new HttpRequest('DELETE', `${environment.api.url}appointment/${appointment.link}/administrator/${adminUsername}`, {
       reportProgress: true,

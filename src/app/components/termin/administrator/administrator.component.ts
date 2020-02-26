@@ -29,7 +29,11 @@ export class AdministratorComponent implements OnInit {
 
   ngOnInit() {
     this.event = this.formBuilder.group({
-      name: new FormControl()
+      username: new FormControl('')
     });
+  }
+
+  add() {
+    this.save.emit(this.event.get('username').value);
   }
 }

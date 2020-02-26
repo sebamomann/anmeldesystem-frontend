@@ -5,12 +5,12 @@
   <div class="input-with-button-wrapper">
     <mat-form-field>
       <input aria-label="Number"
-             formControlName="name"
+             formControlName="username"
              matInput
              placeholder="Benutzername"
              type="text">
     </mat-form-field>
-    <button mat-raised-button>Hinzufügen</button>
+    <button (click)="add()" mat-raised-button>Hinzufügen</button>
   </div>
 
   <ng-container *ngIf="administrators.length > 0">

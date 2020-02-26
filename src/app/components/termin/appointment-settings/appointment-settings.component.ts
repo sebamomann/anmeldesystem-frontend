@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AppointmentService} from '../../../services/appointment.service';
-import {MatDialog} from '@angular/material';
+import {MatDialog, MatSnackBar} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {HttpEventType} from '@angular/common/http';
@@ -16,7 +16,8 @@ export class AppointmentSettingsComponent implements OnInit {
   private saveSuccess: boolean;
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog,
-              private route: ActivatedRoute, private router: Router) {
+              private route: ActivatedRoute, private router: Router,
+              private snackBar: MatSnackBar) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
     });
@@ -81,7 +82,23 @@ export class AppointmentSettingsComponent implements OnInit {
     }
   }
 
-  saveAdministrators($event: any) {
+  saveAdministrators(data: any) {
+    this.appointmentService
+      .addAdministrator(data, this.appointment)
+      .subscribe(
+        res => {
+          if (res.type === HttpEventType.Response) {
+            if (res.status <= 299) {
+              this.snackBar.open('Hinzugefügt', null, {
+                duration: 2000,
+                panelClass: 'snackbar-default'
+              });
+            }
+          }
+        },
+        err => {
+
+        });
   }
 
   saveFile($event: any) {
