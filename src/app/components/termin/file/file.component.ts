@@ -72,6 +72,14 @@ export class FileComponent implements OnInit {
 
   private async convertFile(file) {
     this.fileBlob = await new Blob([file.file]);
+
+    if (this.fileBlob.size > 4 * (1000000)) {
+      this.snackBar.open('Datei zu Groß (max 4MB)', null, {
+        duration: 2000,
+        panelClass: 'snackbar-error'
+      });
+      return;
+    }
     const result = await this.blobToBase64(this.fileBlob).catch(e => e);
     if (result instanceof Error) {
       return;
