@@ -2,12 +2,21 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import {AppointmentCreateComponent} from './appointment-create.component';
+import {
+  MatButtonModule,
+  MatCardModule,
+  MatDialogModule,
+  MatIconModule,
+  MatListModule,
+  MatProgressBarModule,
+  MatStepperModule
+} from '@angular/material';
+import {ReactiveFormsModule} from '@angular/forms';
 import {AuthGuard} from '../../../_helper/auth.guard';
-import {MatButtonModule, MatCardModule, MatIconModule, MatProgressBarModule, MatStepperModule} from '@angular/material';
 import {OverallDataModule} from '../form/overall-data/overall-data.module';
 import {AdditionsModule} from '../form/additions/additions.module';
-import {ReactiveFormsModule} from '@angular/forms';
 import {LinkDataModule} from '../form/link-data/link-data.module';
+import {TemplateDialogComponent} from '../../dialogs/template-dialog/template-dialog.component';
 
 const routes: Routes = [
   {path: '', component: AppointmentCreateComponent, canActivate: [AuthGuard]}
@@ -16,6 +25,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppointmentCreateComponent,
+    TemplateDialogComponent
   ],
   imports: [
     CommonModule,
@@ -29,9 +39,12 @@ const routes: Routes = [
     MatIconModule,
     MatProgressBarModule,
     LinkDataModule,
+    MatListModule,
+    MatDialogModule,
   ],
   exports: [],
-  providers: []
+  providers: [TemplateDialogComponent],
+  entryComponents: [TemplateDialogComponent]
 })
 export class AppointmentCreateModule {
 }

@@ -11,7 +11,9 @@
       </mat-expansion-panel-header>
 
       <!--suppress AngularInvalidTemplateReferenceVariable -->
-      <form #formDirective="ngForm" (ngSubmit)="comment(enrollment); formDirective.resetForm()" [formGroup]="event">
+      <form #formDirective="ngForm"
+            (ngSubmit)="comment(enrollment); formDirective.resetForm()"
+            [formGroup]="event">
         <mat-form-field>
           <input matInput
                  id="name"

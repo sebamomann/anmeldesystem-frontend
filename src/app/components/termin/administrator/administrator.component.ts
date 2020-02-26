@@ -12,11 +12,11 @@ export class AdministratorComponent implements OnInit {
   @Output()
   save = new EventEmitter<any>();
   @Input()
-  private appointment: IAppointmentModel;
+  public appointment: IAppointmentModel;
   @Input()
-  private button = 'Speichern';
+  public button = 'Speichern';
 
-  private event: any;
+  public event: any;
   public administrators: any;
 
   constructor(private formBuilder: FormBuilder) {

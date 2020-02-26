@@ -15,11 +15,11 @@ export class LinkDataComponent implements OnInit {
   @Input()
   private appointment: IAppointmentModel;
   @Input()
-  private button = 'Speichern';
+  public button = 'Speichern';
 
-  private event: FormGroup;
+  public event: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private urlService: UrlService) {
+  constructor(private formBuilder: FormBuilder, public urlService: UrlService) {
   }
 
   ngOnInit() {
@@ -61,11 +61,11 @@ export class LinkDataComponent implements OnInit {
     }
   }
 
-  getDescriptionErrorMessage() {
+  public getDescriptionErrorMessage() {
     return 'Mindestens 10 Zeichen notwendig';
   }
 
-  private checkLink() {
+  public checkLink() {
     if (this.appointment !== undefined
       && this.get('link').value !== this.appointment.link) {
       this.get('link').setErrors({new: true});
