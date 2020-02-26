@@ -109,7 +109,31 @@ export class AppointmentSettingsComponent implements OnInit {
         });
   }
 
-  saveFile($event: any) {
+  saveFile(data: any) {
+    this.appointmentService
+      .addFile(data, this.appointment)
+      .subscribe(
+        res => {
+          if (res.type === HttpEventType.Response) {
+            if (res.status <= 299) {
+              this.snackBar.open('Hinzugefügt', null, {
+                duration: 2000,
+                panelClass: 'snackbar-default'
+              });
+            }
+          }
+        },
+        err => {
+          console.log(err);
+          if (err instanceof HttpErrorResponse) {
+            if (err.status === 400) {
+              this.snackBar.open('Sorry, etwas hat nicht geklappt', null, {
+                duration: 2000,
+                panelClass: 'snackbar-error'
+              });
+            }
+          }
+        });
   }
 
   private saved() {

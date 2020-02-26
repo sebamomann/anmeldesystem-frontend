@@ -12,7 +12,7 @@ export class FileComponent implements OnInit {
 
   @Output()
   save = new EventEmitter<any>();
-  public files: Array<{ name: string; id: string }> = [{name: 'test1.pdf', id: '123'}, {name: 'test2.png', id: '234'}];
+  public files: { name: string; id: string }[];
   public fileList: IFileModelUpload[] = [];
   @Input()
   private appointment: IAppointmentModel;
@@ -25,6 +25,7 @@ export class FileComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.files = this.appointment.files;
   }
 
   selectFilesFromComputer() {
@@ -64,12 +65,18 @@ export class FileComponent implements OnInit {
     });
   }
 
+  removeFile(data: any) {
+    const removeIndex = this.files.indexOf(data);
+    this.files.splice(removeIndex, 1);
+  }
+
   private async convertFile(file) {
-    this.fileBlob = new Blob([file.file], {type: 'application/octet-stream'});
+    this.fileBlob = await new Blob([file.file]);
     const result = await this.blobToBase64(this.fileBlob).catch(e => e);
     if (result instanceof Error) {
       return;
     }
-    this.fileList.push({name: file.file.name, data: result.toString()});
+
+    this.save.emit({name: file.file.name, data: result});
   }
 }

@@ -35,7 +35,6 @@ export class AdministratorComponent implements OnInit {
   }
 
   removeAdministrator(data: any) {
-    console.log('removed', JSON.stringify(data));
     const removeIndex = this.administrators.indexOf(data);
     this.administrators.splice(removeIndex, 1);
   }

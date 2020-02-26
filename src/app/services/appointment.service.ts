@@ -210,16 +210,30 @@ export class AppointmentService {
   }
 
   removeAdministration(admin: any, appointment: IAppointmentModel): Observable<HttpEvent<void>> {
-    const req = new HttpRequest('DELETE', `${environment.api.url}appointment/${appointment.link}/administrator/${admin.username}`, {
-      reportProgress: true,
-    });
+    const req = new HttpRequest('DELETE',
+      `${environment.api.url}appointment/${appointment.link}/administrator/${admin.username}`,
+      {
+        reportProgress: true,
+      });
+    return this.httpClient.request(req);
+  }
+
+  addFile(data: any, appointment: IAppointmentModel) {
+    const req = new HttpRequest('POST',
+      `${environment.api.url}appointment/${appointment.link}/file`,
+      data,
+      {
+        reportProgress: true,
+      });
     return this.httpClient.request(req);
   }
 
   removeFile(fileId: string, appointment: IAppointmentModel) {
-    const req = new HttpRequest('DELETE', `${environment.api.url}appointment/${appointment.link}/file/${fileId}`, {
-      reportProgress: true,
-    });
+    const req = new HttpRequest('DELETE',
+      `${environment.api.url}appointment/${appointment.link}/file/${fileId}`,
+      {
+        reportProgress: true,
+      });
     return this.httpClient.request(req);
   }
 }
