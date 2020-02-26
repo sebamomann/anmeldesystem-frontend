@@ -19,6 +19,7 @@
       <app-administrator-delete
         *ngFor="let admin of administrators"
         [admin]="admin"
+        (deleted)="removeAdministrator($event)"
         [appointment]="appointment">
       </app-administrator-delete>
     </div>
