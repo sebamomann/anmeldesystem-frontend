@@ -24,11 +24,11 @@ export class OverallDataComponent implements OnInit {
   @Output()
   valid = false;
   @Input()
-  private appointment: IAppointmentModel;
+  public appointment: IAppointmentModel;
   @Input()
-  private button = 'Speichern';
+  public button = 'Speichern';
 
-  private event: FormGroup;
+  public event: FormGroup;
 
   constructor(private formBuilder: FormBuilder, private _adapter: DateAdapter<any>) {
   }
@@ -59,7 +59,7 @@ export class OverallDataComponent implements OnInit {
     });
   }
 
-  private saveFnc() {
+  public saveFnc() {
     if (this.event.valid) {
       const data = {
         title: this.get('title').value,

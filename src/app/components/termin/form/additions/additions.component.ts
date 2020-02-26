@@ -12,11 +12,11 @@ export class AdditionsComponent implements OnInit {
   @Output()
   save = new EventEmitter<any>();
   @Input()
-  private appointment: IAppointmentModel;
+  public appointment: IAppointmentModel;
   @Input()
-  private button = 'Speichern';
+  public button = 'Speichern';
 
-  private event: any;
+  public event: any;
 
   constructor(private formBuilder: FormBuilder) {
   }
@@ -63,15 +63,15 @@ export class AdditionsComponent implements OnInit {
     return additions;
   };
 
-  private addAddition(value: string | null = null) {
+  public addAddition(value: string | null = null) {
     return (this.event.controls.additions as FormArray).push(new FormControl(value));
   }
 
-  private removeAddition(index: number) {
+  public removeAddition(index: number) {
     this.event.controls.additions.removeAt(index);
   }
 
-  private hasAdditions() {
+  public hasAdditions() {
     return this.event.controls.additions.controls.some(addition => addition.value !== null)
       || this.event.get('driverAddition').value;
   }

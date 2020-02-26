@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
-import {IFileModelUpload} from '../../../models/IFileModelUpload.model';
 import {MatSnackBar} from '@angular/material';
 
 @Component({
@@ -13,14 +12,12 @@ export class FileComponent implements OnInit {
   @Output()
   save = new EventEmitter<any>();
   public files: { name: string; id: string }[];
-  public fileList: IFileModelUpload[] = [];
   @Input()
-  private appointment: IAppointmentModel;
+  public appointment: IAppointmentModel;
   @Input()
-  private button = 'Speichern';
+  public button = 'Speichern';
   @Input()
-  private uploading: any = [];
-  private uploadingCorrect: any = [];
+  public uploading: any = [];
   private fileForUpload: Array<{ file: File, done: boolean }> = [];
   private fileBlob: Blob;
 

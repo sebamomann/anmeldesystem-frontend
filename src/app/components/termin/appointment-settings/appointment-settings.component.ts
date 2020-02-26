@@ -16,11 +16,11 @@ export class AppointmentSettingsComponent implements OnInit {
   linkDataComponent: LinkDataComponent;
 
   private link: any;
-  private appointment: IAppointmentModel;
-  private saveSuccess: boolean;
-  private uploadingFile: any = [];
+  public appointment: IAppointmentModel;
+  public saveSuccess: boolean;
+  public uploadingFile: any = [];
   private error: any = [];
-  private permission = null;
+  public permission = null;
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog,
               private route: ActivatedRoute, private router: Router,
