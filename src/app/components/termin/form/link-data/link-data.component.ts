@@ -76,4 +76,9 @@ export class LinkDataComponent implements OnInit {
   private get(str: string) {
     return this.event.get(str);
   }
+
+  public updateErrors(err) {
+    this.get(err.attr).setErrors({[err.error]: true});
+  }
 }
+

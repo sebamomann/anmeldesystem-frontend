@@ -44,7 +44,6 @@ export class AdministratorDeleteComponent implements OnInit {
         .removeAdministration(this.admin, this.appointment)
         .subscribe(
           () => {
-            console.log('DELETED');
             this.deleted.emit(this.admin);
             this.elementReference.nativeElement.remove();
           },

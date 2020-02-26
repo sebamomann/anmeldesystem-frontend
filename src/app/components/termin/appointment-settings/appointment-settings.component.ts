@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {AppointmentService} from '../../../services/appointment.service';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
+import {LinkDataComponent} from '../form/link-data/link-data.component';
 
 @Component({
   selector: 'app-appointment-settings',
@@ -11,10 +12,14 @@ import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
   styleUrls: ['./appointment-settings.component.scss']
 })
 export class AppointmentSettingsComponent implements OnInit {
+  @ViewChild(LinkDataComponent, null)
+  linkDataComponent: LinkDataComponent;
+
   private link: any;
   private appointment: IAppointmentModel;
   private saveSuccess: boolean;
   private uploadingFile: any = [];
+  private error: any = [];
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog,
               private route: ActivatedRoute, private router: Router,
@@ -80,6 +85,18 @@ export class AppointmentSettingsComponent implements OnInit {
             }
           },
           error => {
+            if (error instanceof HttpErrorResponse) {
+              if (error.status === 400) {
+                if (error.error.code === 'ER_DUP_ENTRY') {
+                  error.error.error.columns.forEach(fColumn => {
+                      if (fColumn === 'link') {
+                        this.linkDataComponent.updateErrors({attr: 'link', error: 'inUse'});
+                      }
+                    }
+                  );
+                }
+              }
+            }
           });
     }
   }
