@@ -1,11 +1,21 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material';
+import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
 
 @Component({
   selector: 'app-overall-data',
   templateUrl: './overall-data.component.html',
-  styleUrls: ['./overall-data.component.scss']
+  styleUrls: ['./overall-data.component.scss'],
+  providers: [
+    {provide: MAT_DATE_LOCALE, useValue: 'de-DE'},
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    },
+    {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS}]
 })
 export class OverallDataComponent implements OnInit {
 
@@ -20,10 +30,12 @@ export class OverallDataComponent implements OnInit {
 
   private event: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private _adapter: DateAdapter<any>) {
   }
 
   ngOnInit() {
+    this._adapter.setLocale('de');
+
     this.event = this.formBuilder.group({
       title: ['', Validators.required],
       date: ['', Validators.required],
