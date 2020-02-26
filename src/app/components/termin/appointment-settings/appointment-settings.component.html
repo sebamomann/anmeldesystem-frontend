@@ -3,7 +3,7 @@
     <mat-card-title class="headline">
       {{appointment.title}}
     </mat-card-title>
-    <mat-tab-group [selectedIndex]="4" dynamicHeight>
+    <mat-tab-group [selectedIndex]="0" dynamicHeight>
       <mat-tab label="Allgemein">
         <app-overall-data
           (save)="saveOverall($event)"
@@ -48,7 +48,11 @@
 
 <ng-template #loading>
   <div class="spinner-wrapper">
-    <mat-spinner>
+    <mat-spinner
+      *ngIf="permission !== false">
     </mat-spinner>
+    <span *ngIf="permission === null">Berechtigungen werden geprüft</span>
+    <span *ngIf="permission === true">Lade Einstellungen</span>
+    <span *ngIf="permission === false">Fehlende Berechtigungen</span>
   </div>
 </ng-template>

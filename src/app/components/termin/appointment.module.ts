@@ -5,10 +5,15 @@ import {EnrollmentListModule} from './enrollment/enrollment-list/enrollment-list
 import {AppointmentDataModule} from './appointment-data/appointment-data.module';
 import {MatIconModule, MatProgressBarModule} from '@angular/material';
 import {RouterModule, Routes} from '@angular/router';
+import {AuthGuard} from '../../_helper/auth.guard';
 
 const routes: Routes = [
   {path: '', component: AppointmentComponent},
-  {path: 'settings', loadChildren: './appointment-settings/appointment-settings.module#AppointmentSettingsModule'},
+  {
+    path: 'settings',
+    loadChildren: './appointment-settings/appointment-settings.module#AppointmentSettingsModule',
+    canActivate: [AuthGuard]
+  },
   {path: 'driver', loadChildren: './driver/driver.module#DriverModule'}
 ];
 

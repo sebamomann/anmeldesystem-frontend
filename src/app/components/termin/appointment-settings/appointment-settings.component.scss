@@ -30,6 +30,12 @@ mat-tab-group {
   mat-spinner {
     margin: 0 auto;
   }
+
+  span {
+    display: block;
+    text-align: center;
+    width: 100%;
+  }
 }
 
 .save-success-wrapper {

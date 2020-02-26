@@ -56,4 +56,8 @@ export class AppointmentDataComponent implements OnInit {
       panelClass: 'snackbar-default'
     });
   }
+
+  settings() {
+    this.router.navigate(['appointment/settings'], {queryParamsHandling: 'merge'});
+  }
 }

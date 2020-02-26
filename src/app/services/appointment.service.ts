@@ -236,4 +236,15 @@ export class AppointmentService {
       });
     return this.httpClient.request(req);
   }
+
+  async hasPermission(link: any) {
+    console.log('checkPermission');
+
+    const req = new HttpRequest('GET',
+      `${environment.api.url}appointment/${link}/permission/`,
+      {
+        reportProgress: true,
+      });
+    return this.httpClient.request(req);
+  }
 }

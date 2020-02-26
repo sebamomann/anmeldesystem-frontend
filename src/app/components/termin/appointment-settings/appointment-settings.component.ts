@@ -20,6 +20,7 @@ export class AppointmentSettingsComponent implements OnInit {
   private saveSuccess: boolean;
   private uploadingFile: any = [];
   private error: any = [];
+  private permission = null;
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog,
               private route: ActivatedRoute, private router: Router,
@@ -36,11 +37,25 @@ export class AppointmentSettingsComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.appointmentService
-      .getAppointment(this.link, false)
-      .subscribe(sAppointment => {
-        this.appointment = sAppointment;
+  async ngOnInit() {
+    (await this.appointmentService.hasPermission(this.link))
+      .subscribe(res => {
+        if (res.type === HttpEventType.Response) {
+          if (res.body === true) {
+            this.permission = true;
+            this.appointmentService
+              .getAppointment(this.link, false)
+              .subscribe(sAppointment => {
+                this.appointment = sAppointment;
+              });
+          } else {
+            this.permission = false;
+            const router = this.router;
+            setTimeout(() => {
+              router.navigate(['/enroll'], {queryParamsHandling: 'merge'});
+            }, 2000);
+          }
+        }
       });
   }
 
