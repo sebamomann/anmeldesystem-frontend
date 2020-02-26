@@ -54,15 +54,16 @@ export class DriverComponent implements OnInit {
     this.appointment$ = merge(initialAppointment$, updates$);
     this.appointment$.subscribe(sAppointment => {
       this.appointment = sAppointment;
+      const reload$ = this.forceReload$.pipe(switchMap(() => this.getNotifications()));
+      const initialNotifications$ = this.getNotifications();
+      const show$ = merge(initialNotifications$, reload$).pipe(mapTo(true));
+      const hide$ = this.update$.pipe(mapTo(false));
+      this.showNotification$ = merge(show$, hide$);
+
+      this.sucessfulRequest();
+    }, error => {
+      this.appointment = undefined;
     });
-
-    const reload$ = this.forceReload$.pipe(switchMap(() => this.getNotifications()));
-    const initialNotifications$ = this.getNotifications();
-    const show$ = merge(initialNotifications$, reload$).pipe(mapTo(true));
-    const hide$ = this.update$.pipe(mapTo(false));
-    this.showNotification$ = merge(show$, hide$);
-
-    this.sucessfulRequest();
   }
 
   getDataOnce() {

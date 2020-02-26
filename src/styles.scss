@@ -240,7 +240,7 @@ mat-icon {
 
 .main-wrapper {
   position: relative;
-  min-height: calc(100vh - 178px);
+  min-height: calc(100vh - 179px);
   padding-bottom: 100px;
   overflow: auto;
 }
@@ -685,39 +685,6 @@ footer {
   margin: 5px auto 15px;
   font-size: 1em;
   color: #646464;
-}
-
-.error {
-
-  &.empty {
-    background-color: white;
-    border-radius: 25px;
-    box-shadow: 0px 0px 5px gray;
-    padding: 20px;
-    text-align: center;
-    position: relative;
-    width: 75%;
-    margin: 0 auto 0;
-    top: 50vh;
-    font-size: 1.25em;
-    transform: translateY(-50%);
-    font-weight: bold;
-
-    span:first-child {
-      font-size: 1.5em;
-      display: block;
-      color: red;
-      margin-bottom: 25px;
-      font-weight: bold;
-      text-shadow: 1px 1px 5px lightgray;
-    }
-
-    img {
-      margin: 0 auto 25px;
-      display: block;
-      height: 150px;
-    }
-  }
 }
 
 .progress-bar {

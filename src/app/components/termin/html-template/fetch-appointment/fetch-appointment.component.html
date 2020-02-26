@@ -1,0 +1,15 @@
+<ng-container *ngIf="done; else loadingBar">
+  <mat-card class="float error empty block">
+    <h1>Sorry - 404</h1>
+    <img alt="anmeldesystem appointment not found robot icon" src="/assets/img/404.svg">
+    <span> Ich konnte diesen Termin nicht finden!</span>
+  </mat-card>
+</ng-container>
+
+<ng-template #loadingBar>
+  <mat-progress-bar
+    [value]="percentDone"
+    class="progress-bar"
+    mode="determinate">
+  </mat-progress-bar>
+</ng-template>

@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import {DriverComponent} from './driver.component';
 import {MatButtonModule, MatCardModule, MatIconModule, MatProgressBarModule} from '@angular/material';
+import {FetchAppointmentModule} from '../html-template/fetch-appointment/fetch-appointment.module';
 
 const routes: Routes = [
   {path: '', component: DriverComponent}
@@ -20,6 +21,7 @@ const routes: Routes = [
     MatIconModule,
     MatProgressBarModule,
     MatButtonModule,
+    FetchAppointmentModule,
   ]
 })
 export class DriverModule {

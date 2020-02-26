@@ -104,21 +104,9 @@
 </ng-template>
 
 <ng-template #loading>
-  <ng-container *ngIf="appointment === null; else loadingBar">
-    <div class="error empty">
-      <span>Sorry - 404</span>
-      <img src="/assets/img/404.svg">
-      Ich konnte diesen Termin nicht finden!
-    </div>
-  </ng-container>
+  <app-fetch-appointment
+    [done]="appointment === undefined"
+    [percentDone]="percentDone">
+  </app-fetch-appointment>
 </ng-template>
-
-<ng-template #loadingBar>
-  <mat-progress-bar [@fadeInOut]
-                    [value]="percentDone"
-                    class="progress-bar"
-                    mode="determinate">
-  </mat-progress-bar>
-</ng-template>
-
 
