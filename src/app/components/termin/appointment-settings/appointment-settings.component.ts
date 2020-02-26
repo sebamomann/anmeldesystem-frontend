@@ -69,6 +69,7 @@ export class AppointmentSettingsComponent implements OnInit {
             if (res.type === HttpEventType.Response) {
               if (res.status <= 299) {
                 if (this.link !== res.body.link) {
+                  this.appointment.link = res.body.link;
                   this.router.navigate(['/appointment/settings'], {
                     queryParams: {a: res.body.link},
                     queryParamsHandling: 'merge'
