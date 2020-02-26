@@ -17,17 +17,14 @@ export class AdministratorComponent implements OnInit {
   private button = 'Speichern';
 
   private event: any;
-  public administrators: string[] = [
-    'benutzer1@sebamomann.de',
-    'text@example.de',
-    'mama@mia.com',
-    'foo@bar.tld',
-    'hallo@helmut.rofl'];
+  public administrators: any;
 
   constructor(private formBuilder: FormBuilder) {
   }
 
   ngOnInit() {
+    this.administrators = this.appointment.administrators;
+
     this.event = this.formBuilder.group({
       username: new FormControl('')
     });

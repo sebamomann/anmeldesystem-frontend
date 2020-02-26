@@ -14,7 +14,7 @@ export class AdministratorDeleteComponent implements OnInit {
   private elementReference: ElementRef;
 
   @Input()
-  admin: string;
+  admin: any;
   @Input()
   appointment: IAppointmentModel;
   public icon: string;
