@@ -15,8 +15,6 @@ import {Globals} from './globals';
 import localeDe from '@angular/common/locales/de';
 import {AppRoutingModule} from './app-routing.module';
 
-const HttpStatus = require('http-status-codes');
-
 registerLocaleData(localeDe);
 
 @NgModule({
