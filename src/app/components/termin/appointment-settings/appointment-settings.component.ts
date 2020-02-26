@@ -3,7 +3,7 @@ import {AppointmentService} from '../../../services/appointment.service';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
-import {HttpEventType} from '@angular/common/http';
+import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
 
 @Component({
   selector: 'app-appointment-settings',
@@ -97,7 +97,15 @@ export class AppointmentSettingsComponent implements OnInit {
           }
         },
         err => {
-
+          console.log(err);
+          if (err instanceof HttpErrorResponse) {
+            if (err.status === 400) {
+              this.snackBar.open('Benutzer nicht gefunden', null, {
+                duration: 2000,
+                panelClass: 'snackbar-error'
+              });
+            }
+          }
         });
   }
 
