@@ -1,0 +1,63 @@
+<form [formGroup]="event">
+  <span class="info">Kerninformationen</span>
+  <mat-form-field class="">
+    <label for="title">
+      <input formControlName="title"
+             id="title"
+             matInput
+             placeholder="Titel"
+             required>
+    </label>
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <label for="date">
+      <input [ngxMatDatetimePicker]="datePicker"
+             formControlName="date"
+             id="date"
+             matInput
+             placeholder="Datum"
+             required>
+    </label>
+    <mat-datepicker-toggle
+      [for]="datePicker"
+      matSuffix>
+    </mat-datepicker-toggle>
+    <ngx-mat-datetime-picker #datePicker></ngx-mat-datetime-picker>
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <label for="deadline">
+      <input [ngxMatDatetimePicker]="deadlinePicker"
+             formControlName="deadline"
+             id="deadline"
+             matInput
+             placeholder="Anmeldefrist">
+    </label>
+    <mat-datepicker-toggle
+      [for]="deadlinePicker"
+      matSuffix>
+    </mat-datepicker-toggle>
+    <ngx-mat-datetime-picker #deadlinePicker></ngx-mat-datetime-picker>
+  </mat-form-field>
+  <mat-form-field class="">
+    <label for="location">
+      <input formControlName="location"
+             id="location"
+             matInput
+             placeholder="Ort"
+             required>
+    </label>
+  </mat-form-field>
+  <mat-form-field class="">
+    <label for="maxEnrollments">
+      <input formControlName="maxEnrollments"
+             id="maxEnrollments"
+             matInput
+             placeholder="Maximale Teilnehmer">
+    </label>
+  </mat-form-field>
+  <button
+    (click)="saveFnc()"
+    mat-raised-button>
+    {{button}}
+  </button>
+</form>

@@ -110,7 +110,7 @@ body {
 }
 
 mat-icon {
-  vertical-align: middle;
+  vertical-align: sub;
 }
 
 .menu-wrapper {
@@ -533,6 +533,14 @@ mat-card {
   }
 }
 
+mat-form-field {
+  width: 100%;
+
+  &.compressed {
+    margin-top: -0.5em;
+  }
+}
+
 mat-expansion-panel {
   &.integrated {
     box-shadow: none !important;
@@ -668,47 +676,15 @@ footer {
   }
 
   mat-icon {
+
   }
 }
 
 .info {
   display: block;
-  margin: 5px auto 10px;
-  font-size: 0.85em;
-  color: gray;
-}
-
-.error {
-
-  &.empty {
-    background-color: white;
-    border-radius: 25px;
-    box-shadow: 0px 0px 5px gray;
-    padding: 20px;
-    text-align: center;
-    position: relative;
-    width: 75%;
-    margin: 0 auto 0;
-    top: 50vh;
-    font-size: 1.25em;
-    transform: translateY(-50%);
-    font-weight: bold;
-
-    span:first-child {
-      font-size: 1.5em;
-      display: block;
-      color: red;
-      margin-bottom: 25px;
-      font-weight: bold;
-      text-shadow: 1px 1px 5px lightgray;
-    }
-
-    img {
-      margin: 0 auto 25px;
-      display: block;
-      height: 150px;
-    }
-  }
+  margin: 5px auto 15px;
+  font-size: 1em;
+  color: #646464;
 }
 
 .progress-bar {
@@ -880,6 +856,19 @@ footer {
   }
 }
 
+.input-with-button-wrapper {
+  mat-form-field {
+    width: 65% !important;
+  }
+
+  button {
+    margin-top: 12px;
+    float: right;
+    line-height: 32px;
+    min-width: initial;
+    padding: 0 12px;
+  }
+}
 
 @media all and (min-width: 1024px) {
   .svg-wrapper {

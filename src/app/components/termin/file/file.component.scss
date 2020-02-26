@@ -1,0 +1,44 @@
+@import "src/variables";
+
+.file-upload {
+  color: $primary_dark;
+  margin: 10px auto 20px;
+  display: block;
+}
+
+span {
+  display: inline-block;
+  width: 100%;
+  margin: 2px auto;
+
+  span {
+    vertical-align: sub;
+    display: inline-block;
+    width: calc(100% - 24px);
+    position: absolute;
+    z-index: -1;
+  }
+
+  mat-progress-spinner,
+  mat-icon {
+    display: block;
+    background-image: linear-gradient(to right, transparent 0px, white 30px, white 100%);
+    float: right;
+    vertical-align: middle;
+  }
+
+  mat-icon {
+    animation: 1s turn-in;
+  }
+}
+
+@keyframes turn-in {
+  0% {
+    transform: rotateY(90deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+

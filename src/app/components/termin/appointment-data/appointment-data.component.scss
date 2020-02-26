@@ -31,9 +31,17 @@
     text-align: center;
     z-index: 10;
 
+    .share {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
     mat-card-title {
       font-size: 1.4em;
       color: $secondary;
+      max-width: 87.5%;
+      margin: 0 auto;
     }
 
     & > * {

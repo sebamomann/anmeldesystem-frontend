@@ -1,0 +1,27 @@
+<form [formGroup]="event">
+  <span class="info">
+    Erlaube jemandem die Administration dieses Termins
+  </span>
+  <div class="input-with-button-wrapper">
+    <mat-form-field>
+      <input aria-label="Number"
+             formControlName="username"
+             matInput
+             placeholder="Benutzername"
+             type="text">
+    </mat-form-field>
+    <button (click)="add()" mat-raised-button>Hinzufügen</button>
+  </div>
+
+  <ng-container *ngIf="administrators.length > 0">
+    <span class="separator center colored middle extra-tall"></span>
+    <div class="administrator-wrapper">
+      <app-administrator-delete
+        *ngFor="let admin of administrators"
+        [admin]="admin"
+        (deleted)="removeAdministrator($event)"
+        [appointment]="appointment">
+      </app-administrator-delete>
+    </div>
+  </ng-container>
+</form>

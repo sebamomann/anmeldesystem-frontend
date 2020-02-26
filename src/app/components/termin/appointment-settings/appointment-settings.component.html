@@ -1,0 +1,58 @@
+<mat-card class="float high">
+  <ng-container *ngIf="appointment != undefined; else loading">
+    <mat-card-title class="headline">
+      {{appointment.title}}
+    </mat-card-title>
+    <mat-tab-group [selectedIndex]="0" dynamicHeight>
+      <mat-tab label="Allgemein">
+        <app-overall-data
+          (save)="saveOverall($event)"
+          [appointment]="appointment">
+        </app-overall-data>
+      </mat-tab>
+      <mat-tab label="Zusätze">
+        <app-additions
+          (save)="saveAdditions($event)"
+          [appointment]="appointment">
+        </app-additions>
+      </mat-tab>
+      <mat-tab label="Link">
+        <app-link-data
+          (save)="saveLink($event)"
+          [appointment]="appointment">
+        </app-link-data>
+      </mat-tab>
+      <mat-tab label="Adminsitration">
+        <app-administrator
+          (save)="saveAdministrators($event)"
+          [appointment]="appointment">
+        </app-administrator>
+      </mat-tab>
+      <mat-tab label="Anhänge">
+        <app-file
+          (save)="saveFile($event)"
+          [appointment]="appointment"
+          [uploading]="uploadingFile">
+        </app-file>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-container>
+</mat-card>
+
+<div *ngIf="saveSuccess" class="save-success-wrapper">
+  <div class="save-success">
+    <mat-icon>thumb_up</mat-icon>
+    <span>Gespeichert</span>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="spinner-wrapper">
+    <mat-spinner
+      *ngIf="permission !== false">
+    </mat-spinner>
+    <span *ngIf="permission === null">Berechtigungen werden geprüft</span>
+    <span *ngIf="permission === true">Lade Einstellungen</span>
+    <span *ngIf="permission === false">Fehlende Berechtigungen</span>
+  </div>
+</ng-template>

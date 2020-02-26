@@ -3,11 +3,18 @@ import {CommonModule} from '@angular/common';
 import {AppointmentComponent} from './appointment.component';
 import {EnrollmentListModule} from './enrollment/enrollment-list/enrollment-list.module';
 import {AppointmentDataModule} from './appointment-data/appointment-data.module';
-import {MatIconModule, MatProgressBarModule} from '@angular/material';
+import {MatCardModule, MatIconModule} from '@angular/material';
 import {RouterModule, Routes} from '@angular/router';
+import {AuthGuard} from '../../_helper/auth.guard';
+import {FetchAppointmentModule} from './html-template/fetch-appointment/fetch-appointment.module';
 
 const routes: Routes = [
   {path: '', component: AppointmentComponent},
+  {
+    path: 'settings',
+    loadChildren: './appointment-settings/appointment-settings.module#AppointmentSettingsModule',
+    canActivate: [AuthGuard]
+  },
   {path: 'driver', loadChildren: './driver/driver.module#DriverModule'}
 ];
 
@@ -22,7 +29,8 @@ const routes: Routes = [
     EnrollmentListModule,
     MatIconModule,
     RouterModule,
-    MatProgressBarModule,
+    MatCardModule,
+    FetchAppointmentModule,
   ]
 })
 export class AppointmentModule {

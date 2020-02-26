@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.model';
 import {HttpClient, HttpEvent, HttpHeaders, HttpRequest} from '@angular/common/http';
-import {BehaviorSubject, merge, Observable, Subject, timer} from 'rxjs';
+import {BehaviorSubject, merge, Observable, of, Subject, timer} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
 import {environment} from '../../environments/environment';
 import {Globals} from '../globals';
@@ -75,6 +75,10 @@ export class AppointmentService {
     return this.hasUpdate$.asObservable();
   }
 
+  manualUpdate() {
+    this.clear$.next();
+  }
+
   resetAvailableUpdate() {
     this.hasUpdate$.next(false);
   }
@@ -112,25 +116,47 @@ export class AppointmentService {
       reportProgress: true,
       headers
     });
+
     const resp = this.httpClient.request(req);
 
 
     const res = this.httpClient.get(url, {headers, observe: 'response'});
     res.toPromise().then(response => {
+      console.log('...', response);
       this.etag.last = this.etag.current;
       this.etag.current = response.headers.get('etag');
       if (this.etag.last !== this.etag.current && !this.first) {
-        console.log('update');
         this.hasUpdate$.next(true);
       }
 
       this.first = false;
+    }, err => {
+      return of(undefined);
     });
 
 
     return res.pipe(
       map(response => response.body as IAppointmentModel)
     );
+
+    // const res = this.httpClient.get(url, {headers, observe: 'response'})
+    //   .subscribe(response => {
+    //     if (response.type === HttpEventType.Response) {
+    //       console.log('...', response);
+    //       this.etag.last = this.etag.current;
+    //       this.etag.current = response.headers.get('etag');
+    //       if (this.etag.last !== this.etag.current && !this.first) {
+    //         this.hasUpdate$.next(true);
+    //       }
+    //
+    //       this.first = false;
+    //
+    //       return res.pipe(
+    //         map(_response => _response as IAppointmentModel)
+    //       );
+    //     }
+    //   }, err => {
+    //   });
   }
 
   getAppointments(slim: boolean = false): Observable<HttpEvent<IAppointmentModel[]>> {
@@ -143,6 +169,14 @@ export class AppointmentService {
       reportProgress: true,
     });
 
+    return this.httpClient.request(req);
+  }
+
+  updateValues(toChange: {}, {link}): Observable<HttpEvent<IAppointmentModel>> {
+    console.log('update appointment', toChange);
+    const req = new HttpRequest('PUT', `${environment.api.url}appointment/${link}`, toChange, {
+      reportProgress: true,
+    });
     return this.httpClient.request(req);
   }
 
@@ -188,4 +222,51 @@ export class AppointmentService {
   //   return this.httpClient.request(req);
   //   // return this.httpClient.post<any>(url, enrollment, {observe: 'response'});
   // }
+  addAdministrator(adminUsername: string, appointment: IAppointmentModel): Observable<HttpEvent<void>> {
+    const req = new HttpRequest('POST', `${environment.api.url}appointment/${appointment.link}/administrator`,
+      {username: adminUsername},
+      {
+        reportProgress: true,
+      });
+    return this.httpClient.request(req);
+  }
+
+  removeAdministration(admin: any, appointment: IAppointmentModel): Observable<HttpEvent<void>> {
+    const req = new HttpRequest('DELETE',
+      `${environment.api.url}appointment/${appointment.link}/administrator/${admin.username}`,
+      {
+        reportProgress: true,
+      });
+    return this.httpClient.request(req);
+  }
+
+  addFile(data: any, appointment: IAppointmentModel) {
+    const req = new HttpRequest('POST',
+      `${environment.api.url}appointment/${appointment.link}/file`,
+      data,
+      {
+        reportProgress: true,
+      });
+    return this.httpClient.request(req);
+  }
+
+  removeFile(fileId: string, appointment: IAppointmentModel) {
+    const req = new HttpRequest('DELETE',
+      `${environment.api.url}appointment/${appointment.link}/file/${fileId}`,
+      {
+        reportProgress: true,
+      });
+    return this.httpClient.request(req);
+  }
+
+  async hasPermission(link: any) {
+    console.log('checkPermission');
+
+    const req = new HttpRequest('GET',
+      `${environment.api.url}appointment/${link}/permission/`,
+      {
+        reportProgress: true,
+      });
+    return this.httpClient.request(req);
+  }
 }

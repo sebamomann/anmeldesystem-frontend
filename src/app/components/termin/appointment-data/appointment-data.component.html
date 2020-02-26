@@ -42,13 +42,28 @@
       </div>
     </mat-card-content>
 
-    <mat-card-actions *ngIf="!preview" class="link-management">
-      <mat-form-field>
-        <label>
-          <input #inputElement matInput placeholder="" readonly value="{{urlService.getHostname() + appointment.link}}">
-        </label>
-      </mat-form-field>
-      <button (click)="copyInputMessage(inputElement)" mat-raised-button>Kopieren</button>
-    </mat-card-actions>
+    <button [matMenuTriggerFor]="menu"
+            *ngIf="!preview"
+            aria-label="Menu icon for this appointment"
+            class="share"
+            mat-icon-button>
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button (click)="copyLink()"
+              mat-menu-item>
+        <mat-icon>share</mat-icon>
+        <span>Teilen</span>
+      </button>
+      <button [disabled]="true" mat-menu-item>
+        <mat-icon>bookmark_border</mat-icon>
+        <span>Anpinnen</span>
+      </button>
+      <button (click)="settings()"
+              mat-menu-item>
+        <mat-icon>settings</mat-icon>
+        <span>Einstellungen</span>
+      </button>
+    </mat-menu>
   </mat-card>
 </div>

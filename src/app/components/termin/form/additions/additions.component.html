@@ -1,0 +1,48 @@
+<form [formGroup]="event">
+  <span class="info">
+    Zusätze, welche beim Anmelden mit Ja/Nein beantwortet werden
+  </span>
+  <ng-container id="additionList">
+    <div class="tooltip-container">
+      <mat-checkbox formControlName="driverAddition">
+        Fahrer
+      </mat-checkbox>
+      <!--suppress TypeScriptUnresolvedFunction -->
+      <mat-icon #driverAdditionTooltip="matTooltip"
+                (click)="driverAdditionTooltip.toggle()"
+                class="tooltip"
+                matTooltip="{{ 'Hierbei können sich Teilnehmer als Fahrer melden. Sie geben unter Anderem die ' +
+                       'Anzahl freier Plätze ein und in welche Richtung sie fahren.'}}">
+        info
+      </mat-icon>
+    </div>
+    <div class="addition-wrapper">
+      <!--suppress AngularInvalidExpressionResultType, JSUnusedGlobalSymbols -->
+      <div *ngFor="let addition of event.controls.additions.controls; let i = index"
+           formArrayName="additions">
+        <mat-form-field>
+          <label for="{{i}}">
+            <input [formControlName]="i.toString()"
+                   id="{{i}}"
+                   matInput
+                   placeholder="Zusatz {{i + 1}}">
+          </label>
+          <mat-icon (click)="removeAddition(i)"
+                    matSuffix>clear
+          </mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+  </ng-container>
+  <button (click)="addAddition()"
+          class="solo"
+          mat-stroked-button>
+    Hinzufügen
+  </button>
+  <div class="stepper-navigation">
+    <button (click)="saveFnc()"
+            mat-stroked-button>
+      {{ button === 'Speichern' ? button : (hasAdditions() ? button : 'Nein danke') }}
+    </button>
+  </div>
+</form>
