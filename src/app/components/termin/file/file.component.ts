@@ -78,5 +78,7 @@ export class FileComponent implements OnInit {
     }
 
     this.save.emit({name: file.file.name, data: result});
+    const removeIndex = this.fileForUpload.indexOf(file);
+    this.fileForUpload.splice(removeIndex, 1);
   }
 }
