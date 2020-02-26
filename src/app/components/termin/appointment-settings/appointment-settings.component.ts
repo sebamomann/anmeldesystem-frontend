@@ -14,6 +14,7 @@ export class AppointmentSettingsComponent implements OnInit {
   private link: any;
   private appointment: IAppointmentModel;
   private saveSuccess: boolean;
+  private uploadingFile: any = [];
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog,
               private route: ActivatedRoute, private router: Router,
@@ -110,11 +111,20 @@ export class AppointmentSettingsComponent implements OnInit {
   }
 
   saveFile(data: any) {
+    const d = new Date();
+    const n = d.getMilliseconds();
+    this.uploadingFile.push({index: n, name: data.name, progress: 0});
     this.appointmentService
       .addFile(data, this.appointment)
       .subscribe(
         res => {
-          if (res.type === HttpEventType.Response) {
+          if (res.type === HttpEventType.UploadProgress) {
+            this.uploadingFile.forEach(fFile => {
+              if (fFile.index === n) {
+                fFile.progress = Math.round(100 * res.loaded / res.total);
+              }
+            });
+          } else if (res.type === HttpEventType.Response) {
             if (res.status <= 299) {
               this.snackBar.open('Hinzugefügt', null, {
                 duration: 2000,

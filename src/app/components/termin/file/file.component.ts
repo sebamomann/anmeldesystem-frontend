@@ -18,6 +18,9 @@ export class FileComponent implements OnInit {
   private appointment: IAppointmentModel;
   @Input()
   private button = 'Speichern';
+  @Input()
+  private uploading: any = [];
+  private uploadingCorrect: any = [];
   private fileForUpload: Array<{ file: File, done: boolean }> = [];
   private fileBlob: Blob;
 

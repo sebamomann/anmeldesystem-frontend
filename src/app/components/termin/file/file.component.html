@@ -12,12 +12,33 @@
        style="display:none;"
        type="file"/>
 
+<ng-container *ngIf="uploading.length > 0">
+  <span class="separator center colored middle extra-tall"></span>
+  <div *ngFor="let file of uploading" class="file-upload-progress">
+    <span>
+      <mat-icon
+        *ngIf="file.progress === 100">
+        done_outline
+      </mat-icon>
+      <mat-progress-spinner
+        *ngIf="file.progress < 100"
+        [diameter]="25"
+        [mode]="'determinate'"
+        [value]="file.progress"
+        class="example-margin"
+        strokeWidth="4">
+    </mat-progress-spinner>
+      {{file.name}}
+    </span>
+  </div>
+</ng-container>
+
 <ng-container *ngIf="files.length > 0">
   <span class="separator center colored middle extra-tall"></span>
   <div class="file-wrapper">
     <app-file-delete
-      (deleted)="removeFile($event)"
       *ngFor="let file of files"
+      (deleted)="removeFile($event)"
       [appointment]="appointment"
       [file]="file">
     </app-file-delete>

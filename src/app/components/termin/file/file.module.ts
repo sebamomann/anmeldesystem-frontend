@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FileComponent} from './file.component';
-import {MatButtonModule, MatIconModule} from '@angular/material';
+import {MatButtonModule, MatIconModule, MatProgressBarModule, MatProgressSpinnerModule} from '@angular/material';
 import {FileDeleteModule} from './file-delete/file-delete.module';
 
 
@@ -14,7 +14,9 @@ import {FileDeleteModule} from './file-delete/file-delete.module';
     CommonModule,
     MatButtonModule,
     MatIconModule,
-    FileDeleteModule
+    FileDeleteModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule
   ]
 })
 export class FileModule {
