@@ -28,45 +28,81 @@
         *ngIf="!done; else doneTemplate"
         [formGroup]="event"
         class="register-form">
+    <mat-form-field class="name">
+      <label for="name">
+        <input formControlName="name"
+               id="name"
+               matInput
+               placeholder="Anzeigename"
+               required>
+      </label>
+      <button mat-icon-button matSuffix type="button">
+        <!--suppress TypeScriptUnresolvedFunction -->
+        <mat-icon #name="matTooltip"
+                  (click)="name.toggle()"
+                  class="tooltip"
+                  matTooltip="{{'Erlaubte Beispiele: \r\n\r\n Max \r\n \r\n Max M \r\n Max1999 \r\n Max J M' }}">
+          info
+        </mat-icon>
+      </button>
+      <mat-error>{{ getErrorMessage('name') }}</mat-error>
+    </mat-form-field>
     <mat-form-field class="username">
-      <input formControlName="username"
-             id="username"
-             matInput
-             placeholder="Benutzername"
-             required>
-      <mat-error>{{ getUsernameErrorMessage() }}</mat-error>
+      <label for="username">
+        <input formControlName="username"
+               id="username"
+               matInput
+               placeholder="Benutzername"
+               required>
+      </label>
+      <button mat-icon-button matSuffix type="button">
+        <!--suppress TypeScriptUnresolvedFunction -->
+        <mat-icon #username="matTooltip"
+                  (click)="username.toggle()"
+                  class="tooltip"
+                  matTooltip="{{'Erlaubte Beispiele: \r\n\r\n max \r\n max123 \r\n max_m \r\n max_123_muster \r\n\r\n Mindestens 3 Buchstaben. \r\n Kein _ am Anfang oder Ende. \r\n Nur ein _ in Folge.' }}">
+          info
+        </mat-icon>
+      </button>
+      <mat-error>{{ getErrorMessage('username') }}</mat-error>
     </mat-form-field>
     <mat-form-field class="email">
-      <input formControlName="email"
-             id="email"
-             matInput
-             placeholder="E-Mail"
-             required>
-      <mat-error>{{ getEmailErrorMessage() }}</mat-error>
+      <label for="email">
+        <input formControlName="email"
+               id="email"
+               matInput
+               placeholder="E-Mail"
+               required>
+      </label>
+      <mat-error>{{ getErrorMessage('email') }}</mat-error>
     </mat-form-field>
     <mat-form-field class="pass" formGroupName="passwords">
-      <input [type]="hide ? 'password' : 'text'"
-             formControlName="password"
-             id="password"
-             matInput
-             placeholder="Passwort"
-             required>
+      <label for="password">
+        <input [type]="hide ? 'password' : 'text'"
+               formControlName="password"
+               id="password"
+               matInput
+               placeholder="Passwort"
+               required>
+      </label>
       <button (click)="hide = !hide" aria-label="toggle password visibility" mat-icon-button matSuffix type="button">
         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
-      <mat-error>{{ getPasswordErrorMessage() }}</mat-error>
+      <mat-error>{{ getErrorMessage('') }}</mat-error>
     </mat-form-field>
     <mat-form-field class="pass" formGroupName="passwords">
-      <input [type]="hide ? 'password' : 'text'"
-             formControlName="passwordVerify"
-             id="passwordVerify"
-             matInput
-             placeholder="Passwort wiederholen"
-             required>
+      <label for="passwordVerify">
+        <input [type]="hide ? 'password' : 'text'"
+               formControlName="passwordVerify"
+               id="passwordVerify"
+               matInput
+               placeholder="Passwort wiederholen"
+               required>
+      </label>
       <button (click)="hide = !hide" aria-label="toggle password visibility" mat-icon-button matSuffix type="button">
         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
-      <mat-error>{{ getPasswordVerifyErrorMessage() }} </mat-error>
+      <mat-error>{{ getErrorMessage('') }} </mat-error>
     </mat-form-field>
     <span>
         Du hast bereits einen Account?

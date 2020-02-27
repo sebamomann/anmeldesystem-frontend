@@ -17,6 +17,30 @@ function passwordVerifyCheck(): ValidatorFn {
   };
 }
 
+function usernameValidator(): ValidatorFn {
+  return (control: FormGroup): ValidationErrors => {
+    const val = control.value;
+
+    // throw error if not in format and not at least 3 non-digit characters
+    return (!val.match(/^([a-z0-9])+([_]?[a-z0-9]+)*$/g)
+      || (val.replace(new RegExp('[0-9_]', 'g'), '').length < 3))
+      ? {invalidUsername: true}
+      : null;
+  };
+}
+
+function nameValidator(): ValidatorFn {
+  return (control: FormGroup): ValidationErrors => {
+    const val = control.value;
+
+    // throw error if not in format and not at least 3 non-digit characters
+    return (!val.match(/^([A-Za-z0-9])+([ ]?[A-Za-z0-9]+)*$/g)
+      || (val.replace(new RegExp('[0-9 ]', 'g'), '').length < 3))
+      ? {invalidUsername: true}
+      : null;
+  };
+}
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -34,7 +58,8 @@ export class RegisterComponent implements OnInit {
   public verified = false;
 
   event = new FormGroup({
-    username: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, nameValidator()]),
+    username: new FormControl('', [Validators.required, usernameValidator()]),
     email: new FormControl('', [Validators.email, Validators.required]),
     passwords: new FormGroup({
       password: new FormControl('', [Validators.required]),
@@ -81,9 +106,9 @@ export class RegisterComponent implements OnInit {
     if (this.event.valid) {
 
       const userData = {
-        mail: this.getMail().value,
+        mail: this.get('mail').value,
         password: this.getPassword().value,
-        username: this.getUsername().value,
+        username: this.get('username').value,
       };
 
       this.accountService.register(userData).subscribe(res => {
@@ -107,53 +132,30 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  getUsernameErrorMessage(): string {
-    if (this.getUsername().hasError('required')) {
-      return 'Bitte gebe einen Benutezrnamen an';
-    }
-
-    if (this.getUsername().hasError('inUse')) {
-      return 'Dieser Benutzername ist bereits vergeben';
-    }
-  }
-
-  getEmailErrorMessage(): string {
-    if (this.getMail().hasError('required')) {
-      return 'Bitte gebe eine Email-Adresse an';
-    }
-
-    if (this.getMail().hasError('email')) {
-      return 'Diese Email-Adresse hat kein gültiges Format';
-    }
-
-    if (this.getMail().hasError('inUse')) {
-      return 'Diese Email wird bereits verwendet';
+  getErrorMessage(str: string) {
+    if (str !== '') {
+      if (this.get(str).hasError('required')) {
+        return 'Erforderlich';
+      } else if (this.get(str).hasError('inUse')) {
+        return 'Bereits in Benutzung';
+      } else if (this.get(str).hasError('email')) {
+        return 'Diese Email-Adresse hat kein gültiges Format';
+      } else if (this.get(str).hasError('invalidUsername')) {
+        return 'Invalides Format (i)';
+      }
+    } else {
+      if (this.getPasswordGroup().hasError('mismatch')) {
+        return 'Die Passwörter stimmen nicht überein';
+      } else if (this.getPasswordGroup().get('password').hasError('required')) {
+        return 'Erforderlich';
+      }
     }
   }
 
-  getPasswordErrorMessage(): string {
-    if (this.getPassword().hasError('required')) {
-      return 'Bitte gebe ein Passwort an';
-    }
+  private get(str: string) {
+    return this.event.get(str);
   }
 
-  getPasswordVerifyErrorMessage(): string {
-    if (this.getPasswordVerify().hasError('required')) {
-      return 'Bitte wiederhole dein Passwort';
-    }
-
-    if (this.getPasswordGroup().hasError('mismatch')) {
-      return 'Die Passwörter stimmen nicht überein';
-    }
-  }
-
-  private getUsername() {
-    return this.event.get('username');
-  }
-
-  private getMail() {
-    return this.event.get('email');
-  }
 
   private getPasswordGroup() {
     return this.event.get('passwords');

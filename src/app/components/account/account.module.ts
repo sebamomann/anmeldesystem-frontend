@@ -10,7 +10,8 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatTooltipModule
 } from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ValidatorService} from '../../_helper/validatorService';
@@ -41,6 +42,7 @@ const routes: Routes = [
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
   ],
   providers: [
     ValidatorService

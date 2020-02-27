@@ -539,6 +539,12 @@ mat-form-field {
   &.compressed {
     margin-top: -0.5em;
   }
+
+  button {
+    mat-icon {
+      @include md-icon-size(22px !important);
+    }
+  }
 }
 
 mat-expansion-panel {
@@ -850,11 +856,6 @@ footer {
   bottom: 0;
 }
 
-.pass button {
-  mat-icon {
-    @include md-icon-size(25px !important);
-  }
-}
 
 .input-with-button-wrapper {
   mat-form-field {
