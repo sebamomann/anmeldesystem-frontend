@@ -34,7 +34,7 @@ function nameValidator(): ValidatorFn {
     const val = control.value;
 
     // throw error if not in format and not at least 3 non-digit characters
-    return (!val.match(/^([A-Za-z0-9])+([ ]?[A-Za-z0-9]+)*$/g)
+    return (!val.match(/^([A-Za-z0-9äüöß])+([ ]?[A-Za-z0-9äüöß]+)*$/g)
       || (val.replace(new RegExp('[0-9 ]', 'g'), '').length < 3))
       ? {invalidUsername: true}
       : null;
@@ -106,7 +106,8 @@ export class RegisterComponent implements OnInit {
     if (this.event.valid) {
 
       const userData = {
-        mail: this.get('mail').value,
+        name: this.get('name').value,
+        mail: this.get('email').value,
         password: this.getPassword().value,
         username: this.get('username').value,
       };
@@ -118,9 +119,7 @@ export class RegisterComponent implements OnInit {
           if (err.status === HttpStatus.BAD_REQUEST) {
             if (err.error.code === 'DUPLICATE_ENTRY') {
               err.error.error.forEach(fColumn => {
-                  const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
-                  const fnName: string = 'get' + uppercaseName;
-                  this[fnName]().setErrors({inUse: true});
+                this.get(fColumn).setErrors({inUse: true});
                 }
               );
             }
