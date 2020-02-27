@@ -1,45 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AccountService} from '../../../services/account.service';
 import {HttpErrorResponse} from '@angular/common/http';
+import {UserDataComponent} from '../../user/form/user-data/user-data.component';
 
 const HttpStatus = require('http-status-codes');
-
-function passwordVerifyCheck(): ValidatorFn {
-  return (control: FormGroup): ValidationErrors => {
-    const pass = control.controls.password.value;
-    const passVerify = control.controls.passwordVerify.value;
-
-    return (passVerify !== pass)
-      ? {mismatch: true}
-      : null;
-  };
-}
-
-function usernameValidator(): ValidatorFn {
-  return (control: FormGroup): ValidationErrors => {
-    const val = control.value;
-
-    // throw error if not in format and not at least 3 non-digit characters
-    return (!val.match(/^([a-z0-9])+([_]?[a-z0-9]+)*$/g)
-      || (val.replace(new RegExp('[0-9_]', 'g'), '').length < 3))
-      ? {invalidUsername: true}
-      : null;
-  };
-}
-
-function nameValidator(): ValidatorFn {
-  return (control: FormGroup): ValidationErrors => {
-    const val = control.value;
-
-    // throw error if not in format and not at least 3 non-digit characters
-    return (!val.match(/^([A-Za-z0-9äüöß])+([ ]?[A-Za-z0-9äüöß]+)*$/g)
-      || (val.replace(new RegExp('[0-9 ]', 'g'), '').length < 3))
-      ? {invalidUsername: true}
-      : null;
-  };
-}
 
 @Component({
   selector: 'app-register',
@@ -47,25 +12,16 @@ function nameValidator(): ValidatorFn {
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
+  @ViewChild(UserDataComponent, null)
+  userDataComponent: UserDataComponent;
 
-  public hide = true;
-  public done = false;
+  public done;
 
   // verify
   public mail: string;
   public token: string;
   public error = null;
   public verified = false;
-
-  event = new FormGroup({
-    name: new FormControl('', [Validators.required, nameValidator()]),
-    username: new FormControl('', [Validators.required, usernameValidator()]),
-    email: new FormControl('', [Validators.email, Validators.required]),
-    passwords: new FormGroup({
-      password: new FormControl('', [Validators.required]),
-      passwordVerify: new FormControl('', [Validators.required]),
-    }, passwordVerifyCheck()),
-  });
 
   constructor(private router: Router, private accountService: AccountService,
               private route: ActivatedRoute) {
@@ -102,69 +58,25 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  create(): void {
-    if (this.event.valid) {
-
-      const userData = {
-        name: this.get('name').value,
-        mail: this.get('email').value,
-        password: this.getPassword().value,
-        username: this.get('username').value,
-      };
-
-      this.accountService.register(userData).subscribe(res => {
+  createAccount(data: any) {
+    this.accountService
+      .register(data)
+      .subscribe(
+        res => {
           this.done = true;
         },
-        (err: HttpErrorResponse) => {
-          if (err.status === HttpStatus.BAD_REQUEST) {
-            if (err.error.code === 'DUPLICATE_ENTRY') {
-              err.error.error.forEach(fColumn => {
-                this.get(fColumn).setErrors({inUse: true});
-                }
-              );
+        err => {
+          if (err instanceof HttpErrorResponse) {
+            if (err.status === HttpStatus.BAD_REQUEST) {
+              if (err.error.code === 'ER_DUP_ENTRY') {
+                err.error.error.columns.forEach(fColumn => {
+                    this.userDataComponent.updateErrors({attr: fColumn, error: 'inUse'});
+                  }
+                );
+              }
             }
           }
         }
       );
-    } else {
-      this.getPasswordVerify().setErrors({});
-    }
-  }
-
-  getErrorMessage(str: string) {
-    if (str !== '') {
-      if (this.get(str).hasError('required')) {
-        return 'Erforderlich';
-      } else if (this.get(str).hasError('inUse')) {
-        return 'Bereits in Benutzung';
-      } else if (this.get(str).hasError('email')) {
-        return 'Diese Email-Adresse hat kein gültiges Format';
-      } else if (this.get(str).hasError('invalidUsername')) {
-        return 'Invalides Format (i)';
-      }
-    } else {
-      if (this.getPasswordGroup().hasError('mismatch')) {
-        return 'Die Passwörter stimmen nicht überein';
-      } else if (this.getPasswordGroup().get('password').hasError('required')) {
-        return 'Erforderlich';
-      }
-    }
-  }
-
-  private get(str: string) {
-    return this.event.get(str);
-  }
-
-
-  private getPasswordGroup() {
-    return this.event.get('passwords');
-  }
-
-  private getPassword() {
-    return this.event.get('passwords').get('password');
-  }
-
-  private getPasswordVerify() {
-    return this.event.get('passwords').get('passwordVerify');
   }
 }

@@ -1,0 +1,134 @@
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+
+const HttpStatus = require('http-status-codes');
+
+
+function passwordVerifyCheck(): ValidatorFn {
+  return (control: FormGroup): ValidationErrors => {
+    const pass = control.controls.password.value;
+    const passVerify = control.controls.passwordVerify.value;
+
+    return (passVerify !== pass)
+      ? {mismatch: true}
+      : null;
+  };
+}
+
+function usernameValidator(): ValidatorFn {
+  return (control: FormGroup): ValidationErrors => {
+    const val = control.value;
+
+    // throw error if not in format and not at least 3 non-digit characters
+    return (!val.match(/^([a-z0-9])+([_]?[a-z0-9]+)*$/g)
+      || (val.replace(new RegExp('[0-9_]', 'g'), '').length < 3))
+      ? {invalidUsername: true}
+      : null;
+  };
+}
+
+function nameValidator(): ValidatorFn {
+  return (control: FormGroup): ValidationErrors => {
+    const val = control.value;
+
+    // throw error if not in format and not at least 3 non-digit characters
+    return (!val.match(/^([A-Za-z0-9äüöß])+([ ]?[A-Za-z0-9äüöß]+)*$/g)
+      || (val.replace(new RegExp('[0-9 ]', 'g'), '').length < 3))
+      ? {invalidUsername: true}
+      : null;
+  };
+}
+
+@Component({
+  selector: 'app-user-data',
+  templateUrl: './user-data.component.html',
+  styleUrls: ['./user-data.component.scss']
+})
+
+export class UserDataComponent implements OnInit {
+
+  @Output()
+  public save = new EventEmitter<any>();
+  @Input()
+  public register = true;
+  public button = 'Registrieren';
+
+  public hide = true;
+  @Input()
+  public done = false;
+
+  public event: FormGroup;
+
+  constructor() {
+    this.event = new FormGroup({
+      name: new FormControl('', [Validators.required, nameValidator()]),
+      username: new FormControl('', [Validators.required, usernameValidator()]),
+      mail: new FormControl('', [Validators.email, Validators.required]),
+      passwords: new FormGroup({
+        password: new FormControl('', [Validators.required]),
+        passwordVerify: new FormControl('', [Validators.required]),
+      }, passwordVerifyCheck()),
+    });
+  }
+
+  ngOnInit() {
+    if (!this.register) {
+      this.button = 'Speichern';
+    }
+  }
+
+  saveFnc(): any {
+    if (this.event.valid) {
+      const data = {
+        name: this.get('name').value,
+        mail: this.get('mail').value,
+        password: this.getPassword().value,
+        username: this.get('username').value,
+      };
+
+      this.save.emit(data);
+    } else {
+      this.getPasswordVerify().setErrors({});
+    }
+  }
+
+  public updateErrors(err) {
+    this.get(err.attr).setErrors({[err.error]: true});
+  }
+
+  getErrorMessage(str: string) {
+    if (str !== '') {
+      if (this.get(str).hasError('required')) {
+        return 'Erforderlich';
+      } else if (this.get(str).hasError('inUse')) {
+        return 'Bereits in Benutzung';
+      } else if (this.get(str).hasError('email')) {
+        return 'Diese Email-Adresse hat kein gültiges Format';
+      } else if (this.get(str).hasError('invalidUsername')) {
+        return 'Invalides Format (i)';
+      }
+    } else {
+      if (this.getPasswordGroup().hasError('mismatch')) {
+        return 'Die Passwörter stimmen nicht überein';
+      } else if (this.getPasswordGroup().get('password').hasError('required')) {
+        return 'Erforderlich';
+      }
+    }
+  }
+
+  private get(str: string) {
+    return this.event.get(str);
+  }
+
+  private getPasswordGroup() {
+    return this.event.get('passwords');
+  }
+
+  private getPassword() {
+    return this.event.get('passwords').get('password');
+  }
+
+  private getPasswordVerify() {
+    return this.event.get('passwords').get('passwordVerify');
+  }
+}

@@ -15,6 +15,7 @@ import {
 } from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ValidatorService} from '../../_helper/validatorService';
+import {UserDataModule} from '../user/form/user-data/user-data.module';
 
 
 const routes: Routes = [
@@ -43,6 +44,7 @@ const routes: Routes = [
     MatButtonModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
+    UserDataModule,
   ],
   providers: [
     ValidatorService
