@@ -1,0 +1,15 @@
+<mat-card class="form float high">
+  <mat-card-title class="headline">
+    Bearbeiten
+  </mat-card-title>
+
+  <mat-card-content>
+    <app-user-data
+      (save)="save($event)"
+      [register]="false"
+      [userData]="userData">
+    </app-user-data>
+  </mat-card-content>
+</mat-card>
+
+<app-saved *ngIf="saveSuccess"></app-saved>

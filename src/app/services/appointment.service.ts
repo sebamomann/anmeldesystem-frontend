@@ -122,7 +122,6 @@ export class AppointmentService {
 
     const res = this.httpClient.get(url, {headers, observe: 'response'});
     res.toPromise().then(response => {
-      console.log('...', response);
       this.etag.last = this.etag.current;
       this.etag.current = response.headers.get('etag');
       if (this.etag.last !== this.etag.current && !this.first) {

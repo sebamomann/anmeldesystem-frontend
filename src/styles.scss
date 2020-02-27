@@ -356,11 +356,14 @@ a {
 /* ACCENTS */
 
 .separator {
-
   &:after {
     display: block;
     border-bottom: 2px solid black;
     content: '';
+  }
+
+  &.hidden {
+    visibility: hidden;
   }
 
   /* WIDTH */
@@ -419,6 +422,10 @@ a {
 
   &.extra-tall:after {
     margin: 10px 0;
+  }
+
+  &.extra-extra-tall:after {
+    margin: 15px 0;
   }
 
   &.center:after {
@@ -538,6 +545,12 @@ mat-form-field {
 
   &.compressed {
     margin-top: -0.5em;
+  }
+
+  button {
+    mat-icon {
+      @include md-icon-size(22px !important);
+    }
   }
 }
 
@@ -850,11 +863,6 @@ footer {
   bottom: 0;
 }
 
-.pass button {
-  mat-icon {
-    @include md-icon-size(25px !important);
-  }
-}
 
 .input-with-button-wrapper {
   mat-form-field {

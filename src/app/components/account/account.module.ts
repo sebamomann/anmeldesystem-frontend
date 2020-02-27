@@ -1,8 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {LoginComponent} from './login/login.component';
-import {RegisterComponent} from './register/register.component';
-import {PasswordresetComponent} from './passwordreset/passwordreset.component';
+import {PasswordresetComponent} from './main/passwordreset/passwordreset.component';
 import {RouterModule, Routes} from '@angular/router';
 import {
   MatButtonModule,
@@ -10,13 +8,22 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatTooltipModule
 } from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ValidatorService} from '../../_helper/validatorService';
+import {UserDataModule} from './form/user-data/user-data.module';
+import {AccountComponent} from './account.component';
+import {AccountProfileComponent} from './account-profile/account-profile.component';
+import {SavedModule} from '../html-template/saved/saved.module';
+import {LoginComponent} from './main/login/login.component';
+import {RegisterComponent} from './main/register/register.component';
 
 
 const routes: Routes = [
+  {path: '', component: AccountComponent},
+  {path: 'profile', component: AccountProfileComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'verify/:mail/:token', component: RegisterComponent},
@@ -29,7 +36,9 @@ const routes: Routes = [
   declarations: [
     LoginComponent,
     RegisterComponent,
-    PasswordresetComponent
+    PasswordresetComponent,
+    AccountComponent,
+    AccountProfileComponent
   ],
   imports: [
     CommonModule,
@@ -41,6 +50,9 @@ const routes: Routes = [
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
+    UserDataModule,
+    SavedModule,
   ],
   providers: [
     ValidatorService

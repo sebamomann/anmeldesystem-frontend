@@ -6,6 +6,8 @@ import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import {LinkDataComponent} from '../form/link-data/link-data.component';
 
+const HttpStatus = require('http-status-codes');
+
 @Component({
   selector: 'app-appointment-settings',
   templateUrl: './appointment-settings.component.html',
@@ -101,7 +103,7 @@ export class AppointmentSettingsComponent implements OnInit {
           },
           error => {
             if (error instanceof HttpErrorResponse) {
-              if (error.status === 400) {
+              if (error.status === HttpStatus.BAD_REQUEST) {
                 if (error.error.code === 'ER_DUP_ENTRY') {
                   error.error.error.columns.forEach(fColumn => {
                       if (fColumn === 'link') {

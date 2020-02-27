@@ -35,4 +35,9 @@ export class AuthenticationService {
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
   }
+
+  setCurrentUser(user: IUserModel) {
+    this.currentUserSubject.next(user);
+    localStorage.setItem('currentUser', JSON.stringify(this.currentUserValue));
+  }
 }
