@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import {IUserModel} from '../../../models/IUserModel.model';
-import {UserDataComponent} from '../../user/form/user-data/user-data.component';
+import {UserDataComponent} from '../form/user-data/user-data.component';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {UserService} from '../../../services/user.service';
 

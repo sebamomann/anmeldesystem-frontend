@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AccountService} from '../../../services/account.service';
-import {AuthenticationService} from '../../../services/authentication.service';
+import {AccountService} from '../../../../services/account.service';
+import {AuthenticationService} from '../../../../services/authentication.service';
 import {first} from 'rxjs/operators';
-import {AlertService} from '../../../services/alert.service';
+import {AlertService} from '../../../../services/alert.service';
 import {DatePipe} from '@angular/common';
-import {ValidatorService} from '../../../_helper/validatorService';
+import {ValidatorService} from '../../../../_helper/validatorService';
 
 @Component({
   selector: 'app-login',

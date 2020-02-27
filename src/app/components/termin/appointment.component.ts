@@ -147,7 +147,6 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   successfulRequest() {
     this.appointment$.subscribe(sAppointment => {
-      console.log('sapp', sAppointment);
       if (sAppointment !== undefined) {
         this.enrollmentsCorrect = [];
         this.enrollments = sAppointment.enrollments;

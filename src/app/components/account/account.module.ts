@@ -1,8 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {LoginComponent} from './login/login.component';
-import {RegisterComponent} from './register/register.component';
-import {PasswordresetComponent} from './passwordreset/passwordreset.component';
+import {PasswordresetComponent} from './main/passwordreset/passwordreset.component';
 import {RouterModule, Routes} from '@angular/router';
 import {
   MatButtonModule,
@@ -15,10 +13,12 @@ import {
 } from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ValidatorService} from '../../_helper/validatorService';
-import {UserDataModule} from '../user/form/user-data/user-data.module';
+import {UserDataModule} from './form/user-data/user-data.module';
 import {AccountComponent} from './account.component';
 import {AccountProfileComponent} from './account-profile/account-profile.component';
 import {SavedModule} from '../html-template/saved/saved.module';
+import {LoginComponent} from './main/login/login.component';
+import {RegisterComponent} from './main/register/register.component';
 
 
 const routes: Routes = [

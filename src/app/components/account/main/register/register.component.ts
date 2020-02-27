@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AccountService} from '../../../services/account.service';
+import {AccountService} from '../../../../services/account.service';
 import {HttpErrorResponse} from '@angular/common/http';
-import {UserDataComponent} from '../../user/form/user-data/user-data.component';
+import {UserDataComponent} from '../../form/user-data/user-data.component';
 
 const HttpStatus = require('http-status-codes');
 
