@@ -8,6 +8,7 @@ import {AdditionsModule} from '../form/additions/additions.module';
 import {LinkDataModule} from '../form/link-data/link-data.module';
 import {AdministratorModule} from '../administrator/administrator.module';
 import {FileModule} from '../file/file.module';
+import {SavedModule} from '../../html-template/saved/saved.module';
 
 const routes: Routes = [
   {path: '', component: AppointmentSettingsComponent}
@@ -27,6 +28,7 @@ const routes: Routes = [
     FileModule,
     MatProgressSpinnerModule,
     MatIconModule,
+    SavedModule,
   ]
 })
 export class AppointmentSettingsModule {

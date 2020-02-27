@@ -30,15 +30,13 @@ export class AccountProfileComponent implements OnInit {
     const toChange = {};
     for (const [key, value] of Object.entries(data)) {
       if (data[key] !== this.userData[key]) {
-        if (key === 'password' && value === '') {
-          continue;
+        if (!(key === 'password' && value === '')) {
+          toChange[key] = value;
         }
-
-        toChange[key] = value;
       }
     }
 
-    if (toChange !== {}) {
+    if (JSON.stringify(toChange) !== JSON.stringify({})) {
       this.userService
         .updateValues(toChange, this.userData)
         .subscribe(
@@ -46,6 +44,7 @@ export class AccountProfileComponent implements OnInit {
             if (res.type === HttpEventType.Response) {
               if (res.status <= 299) {
                 this.authenticationService.setCurrentUser(res.body);
+                this.userData = res.body;
                 this.saved();
               }
             }

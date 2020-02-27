@@ -39,7 +39,7 @@ registerLocaleData(localeDe);
   bootstrap: [AppComponent],
   exports: [
     DatePipe,
-    PwaDialogComponent
+    PwaDialogComponent,
   ],
   entryComponents: [
     PwaDialogComponent

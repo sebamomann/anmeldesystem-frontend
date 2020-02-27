@@ -39,12 +39,7 @@
   </ng-container>
 </mat-card>
 
-<div *ngIf="saveSuccess" class="save-success-wrapper">
-  <div class="save-success">
-    <mat-icon>thumb_up</mat-icon>
-    <span>Gespeichert</span>
-  </div>
-</div>
+<app-saved *ngIf="saveSuccess"></app-saved>
 
 <ng-template #loading>
   <div class="spinner-wrapper">

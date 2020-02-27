@@ -18,6 +18,7 @@ import {ValidatorService} from '../../_helper/validatorService';
 import {UserDataModule} from '../user/form/user-data/user-data.module';
 import {AccountComponent} from './account.component';
 import {AccountProfileComponent} from './account-profile/account-profile.component';
+import {SavedModule} from '../html-template/saved/saved.module';
 
 
 const routes: Routes = [
@@ -51,6 +52,7 @@ const routes: Routes = [
     MatProgressSpinnerModule,
     MatTooltipModule,
     UserDataModule,
+    SavedModule,
   ],
   providers: [
     ValidatorService
