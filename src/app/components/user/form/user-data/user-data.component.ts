@@ -73,8 +73,8 @@ export class UserDataComponent implements OnInit {
       username: new FormControl('', [Validators.required, usernameValidator()]),
       mail: new FormControl('', [Validators.email, Validators.required]),
       passwords: new FormGroup({
-        password: new FormControl('', [Validators.required]),
-        passwordVerify: new FormControl('', [Validators.required]),
+        password: new FormControl(''),
+        passwordVerify: new FormControl(''),
       }, passwordVerifyCheck()),
     });
 
@@ -87,6 +87,8 @@ export class UserDataComponent implements OnInit {
       this.button = 'Speichern';
       this.tooltip = 'Du kannst deinen Benutzernamen (noch) nicht ändern.';
     } else {
+      this.getPassword().setValidators([Validators.required]);
+      this.getPasswordVerify().setValidators([Validators.required]);
       this.tooltip = 'Erlaubte Beispiele: '
         + '\r\n'
         + '\r\n max'

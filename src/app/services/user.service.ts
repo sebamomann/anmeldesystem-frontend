@@ -14,9 +14,10 @@ export class UserService {
 
   updateValues(toChange: {}, {id}): Observable<HttpEvent<IUserModel>> {
     console.log('update user', toChange);
-    const req = new HttpRequest('PUT', `${environment.api.url}user/${id}`, toChange, {
+    const req = new HttpRequest('PUT', `${environment.api.url}user`, toChange, {
       reportProgress: true,
     });
     return this.httpClient.request(req);
   }
 }
+

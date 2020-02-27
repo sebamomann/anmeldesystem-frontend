@@ -30,6 +30,10 @@ export class AccountProfileComponent implements OnInit {
     const toChange = {};
     for (const [key, value] of Object.entries(data)) {
       if (data[key] !== this.userData[key]) {
+        if (key === 'password' && value === '') {
+          continue;
+        }
+
         toChange[key] = value;
       }
     }
@@ -41,6 +45,7 @@ export class AccountProfileComponent implements OnInit {
           res => {
             if (res.type === HttpEventType.Response) {
               if (res.status <= 299) {
+                this.authenticationService.setCurrentUser(res.body);
                 this.saved();
               }
             }
@@ -50,9 +55,7 @@ export class AccountProfileComponent implements OnInit {
               if (error.status === HttpStatus.BAD_REQUEST) {
                 if (error.error.code === 'ER_DUP_ENTRY') {
                   error.error.error.columns.forEach(fColumn => {
-                      if (fColumn === 'link') {
-                        this.userDataComponent.updateErrors({attr: fColumn, error: 'inUse'});
-                      }
+                    this.userDataComponent.updateErrors({attr: fColumn, error: 'inUse'});
                     }
                   );
                 }

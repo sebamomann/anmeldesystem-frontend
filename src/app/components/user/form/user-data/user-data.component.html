@@ -21,6 +21,10 @@
     </button>
     <mat-error>{{ getErrorMessage('username') }}</mat-error>
   </mat-form-field>
+
+  <span *ngIf="!register"
+        class="separator extra-extra-tall hidden"></span>
+
   <mat-form-field class="name">
     <label for="name">
       <input formControlName="name"
@@ -66,7 +70,7 @@
              formControlName="password"
              id="password"
              matInput
-             placeholder="Passwort"
+             placeholder="{{register ? '' : 'Neues '}}Passwort"
              [required]="register">
     </label>
     <button (click)="hide = !hide"
