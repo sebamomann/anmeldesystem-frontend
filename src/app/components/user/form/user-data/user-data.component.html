@@ -2,13 +2,32 @@
       *ngIf="!done; else doneTemplate"
       [formGroup]="event"
       class="register-form">
+  <mat-form-field class="username">
+    <label for="username">
+      <input [required]="register"
+             formControlName="username"
+             id="username"
+             matInput
+             placeholder="Benutzername">
+    </label>
+    <button mat-icon-button matSuffix type="button">
+      <!--suppress TypeScriptUnresolvedFunction -->
+      <mat-icon #username="matTooltip"
+                (click)="username.toggle()"
+                class="tooltip"
+                matTooltip="{{tooltip}}">
+        info
+      </mat-icon>
+    </button>
+    <mat-error>{{ getErrorMessage('username') }}</mat-error>
+  </mat-form-field>
   <mat-form-field class="name">
     <label for="name">
       <input formControlName="name"
              id="name"
              matInput
              placeholder="Anzeigename"
-             required>
+             [required]="register">
     </label>
     <button mat-icon-button matSuffix type="button">
       <!--suppress TypeScriptUnresolvedFunction -->
@@ -16,30 +35,16 @@
         #name="matTooltip"
         (click)="name.toggle()"
         class="tooltip"
-        matTooltip="{{'Erlaubte Beispiele: \r\n\r\n Max \r\n Max M \r\n Max1999 \r\n Max J M' }}">
+        matTooltip="{{'Erlaubte Beispiele:'
+                + '\r\n'
+                + '\r\n Max'
+                + '\r\n Max M'
+                + '\r\n Max1999'
+                + '\r\n Max J M' }}">
         info
       </mat-icon>
     </button>
     <mat-error>{{ getErrorMessage('name') }}</mat-error>
-  </mat-form-field>
-  <mat-form-field class="username">
-    <label for="username">
-      <input formControlName="username"
-             id="username"
-             matInput
-             placeholder="Benutzername"
-             required>
-    </label>
-    <button mat-icon-button matSuffix type="button">
-      <!--suppress TypeScriptUnresolvedFunction -->
-      <mat-icon #username="matTooltip"
-                (click)="username.toggle()"
-                class="tooltip"
-                matTooltip="{{'Erlaubte Beispiele: \r\n\r\n max \r\n max123 \r\n max_m \r\n max_123_muster \r\n\r\n Mindestens 3 Buchstaben. \r\n Kein _ am Anfang oder Ende. \r\n Nur ein _ in Folge.' }}">
-        info
-      </mat-icon>
-    </button>
-    <mat-error>{{ getErrorMessage('username') }}</mat-error>
   </mat-form-field>
   <mat-form-field class="mail">
     <label for="mail">
@@ -47,10 +52,14 @@
              id="mail"
              matInput
              placeholder="E-Mail"
-             required>
+             [required]="register">
     </label>
     <mat-error>{{ getErrorMessage('mail') }}</mat-error>
   </mat-form-field>
+
+  <span *ngIf="!register"
+        class="separator extra-extra-tall hidden"></span>
+
   <mat-form-field class="pass" formGroupName="passwords">
     <label for="password">
       <input [type]="hide ? 'password' : 'text'"
@@ -58,9 +67,13 @@
              id="password"
              matInput
              placeholder="Passwort"
-             required>
+             [required]="register">
     </label>
-    <button (click)="hide = !hide" aria-label="toggle password visibility" mat-icon-button matSuffix type="button">
+    <button (click)="hide = !hide"
+            aria-label="toggle password visibility"
+            mat-icon-button
+            matSuffix
+            type="button">
       <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
     <mat-error>{{ getErrorMessage('') }}</mat-error>
@@ -72,9 +85,13 @@
              id="passwordVerify"
              matInput
              placeholder="Passwort wiederholen"
-             required>
+             [required]="register">
     </label>
-    <button (click)="hide = !hide" aria-label="toggle password visibility" mat-icon-button matSuffix type="button">
+    <button (click)="hide = !hide"
+            aria-label="toggle password visibility"
+            mat-icon-button
+            matSuffix
+            type="button">
       <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
     <mat-error>{{ getErrorMessage('') }} </mat-error>

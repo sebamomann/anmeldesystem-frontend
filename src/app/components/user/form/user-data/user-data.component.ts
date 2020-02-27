@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {IUserModel} from '../../../../models/IUserModel.model';
 
 const HttpStatus = require('http-status-codes');
 
@@ -51,15 +52,22 @@ export class UserDataComponent implements OnInit {
   public save = new EventEmitter<any>();
   @Input()
   public register = true;
-  public button = 'Registrieren';
-
-  public hide = true;
+  @Input()
+  public userData: IUserModel;
   @Input()
   public done = false;
 
+  public button = 'Registrieren';
+
+  public hide = true;
+
   public event: FormGroup;
+  public tooltip: string;
 
   constructor() {
+  }
+
+  ngOnInit() {
     this.event = new FormGroup({
       name: new FormControl('', [Validators.required, nameValidator()]),
       username: new FormControl('', [Validators.required, usernameValidator()]),
@@ -69,12 +77,36 @@ export class UserDataComponent implements OnInit {
         passwordVerify: new FormControl('', [Validators.required]),
       }, passwordVerifyCheck()),
     });
+
+    if (this.userData !== undefined) {
+      this.parseOverallData();
+    }
+
+    if (!this.register) {
+      this.event.get('username').disable();
+      this.button = 'Speichern';
+      this.tooltip = 'Du kannst deinen Benutzernamen (noch) nicht ändern.';
+    } else {
+      this.tooltip = 'Erlaubte Beispiele: '
+        + '\r\n'
+        + '\r\n max'
+        + '\r\n max123 '
+        + '\r\n max_m '
+        + '\r\n max_123_muster '
+        + '\r\n'
+        + '\r\n Mindestens 3 Buchstaben. '
+        + '\r\n Kein _ am Anfang oder Ende. '
+        + '\r\n Nur ein _ in Folge.';
+    }
   }
 
-  ngOnInit() {
-    if (!this.register) {
-      this.button = 'Speichern';
-    }
+  private parseOverallData() {
+    this.event.setValue({
+      name: this.userData.name,
+      username: this.userData.username,
+      mail: this.userData.mail,
+      passwords: {password: '', passwordVerify: ''},
+    });
   }
 
   saveFnc(): any {

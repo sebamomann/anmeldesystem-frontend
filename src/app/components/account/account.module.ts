@@ -16,9 +16,13 @@ import {
 import {ReactiveFormsModule} from '@angular/forms';
 import {ValidatorService} from '../../_helper/validatorService';
 import {UserDataModule} from '../user/form/user-data/user-data.module';
+import {AccountComponent} from './account.component';
+import {AccountProfileComponent} from './account-profile/account-profile.component';
 
 
 const routes: Routes = [
+  {path: '', component: AccountComponent},
+  {path: 'profile', component: AccountProfileComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'verify/:mail/:token', component: RegisterComponent},
@@ -31,7 +35,9 @@ const routes: Routes = [
   declarations: [
     LoginComponent,
     RegisterComponent,
-    PasswordresetComponent
+    PasswordresetComponent,
+    AccountComponent,
+    AccountProfileComponent
   ],
   imports: [
     CommonModule,
