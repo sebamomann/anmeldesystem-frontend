@@ -4,6 +4,7 @@ import {IUserModel} from '../../../models/IUserModel.model';
 import {UserDataComponent} from '../form/user-data/user-data.component';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {UserService} from '../../../services/user.service';
+import {AccountService} from '../../../services/account.service';
 
 const HttpStatus = require('http-status-codes');
 
@@ -19,14 +20,27 @@ export class AccountProfileComponent implements OnInit {
   public userData: IUserModel;
   public saveSuccess: boolean;
 
-  constructor(private authenticationService: AuthenticationService, private userService: UserService) {
+  constructor(private authenticationService: AuthenticationService, private userService: UserService,
+              private accountService: AccountService) {
   }
 
   ngOnInit() {
-    this.userData = this.authenticationService.currentUserValue;
+    this.accountService
+      .get()
+      .subscribe(
+        sUserData => {
+          if (sUserData.type === HttpEventType.Response) {
+            if (sUserData.status === HttpStatus.OK) {
+              this.userData = sUserData.body;
+            }
+          }
+        }, err => {
+          console.log(err);
+        });
   }
 
   save(data: any) {
+    console.log(data);
     const toChange = {};
     for (const [key, value] of Object.entries(data)) {
       if (data[key] !== this.userData[key]) {

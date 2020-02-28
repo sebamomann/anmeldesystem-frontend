@@ -547,10 +547,23 @@ mat-form-field {
     margin-top: -0.5em;
   }
 
+  mat-icon {
+    @include md-icon-size(22px !important);
+  }
+
+  mat-spinner {
+    margin-bottom: -5px;
+  }
+}
+
+.input-additions {
+  text-align: left;
+
   button {
-    mat-icon {
-      @include md-icon-size(22px !important);
-    }
+    margin: 0 5px 0 0;
+    padding: 0 10px;
+    line-height: 30px;
+    font-size: 0.8em;
   }
 }
 

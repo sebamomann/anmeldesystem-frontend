@@ -1,5 +1,4 @@
-<form (ngSubmit)="saveFnc()"
-      *ngIf="!done; else doneTemplate"
+<form *ngIf="!done; else doneTemplate"
       [formGroup]="event"
       class="register-form">
   <mat-form-field class="username">
@@ -58,8 +57,26 @@
              placeholder="E-Mail"
              [required]="register">
     </label>
+    <!--suppress TypeScriptUnresolvedFunction -->
+    <mat-spinner #mailPending="matTooltip"
+                 (click)="mailPending.toggle()"
+                 *ngIf="mailPending"
+                 [diameter]="22"
+                 [strokeWidth]="3"
+                 class="tooltip"
+                 matSuffix
+                 matTooltip="{{'Warte auf Bestätigung.'
+                + '\r\n'
+                + '\r\n Aktuelle Email:'
+                + '\r\n ' + this.userData.mail}}">
+    </mat-spinner>
     <mat-error>{{ getErrorMessage('mail') }}</mat-error>
   </mat-form-field>
+  <div *ngIf="mailPending"
+       class="input-additions">
+    <button (click)="resend()" mat-raised-button>Email erneut senden</button>
+    <button (click)="cancelMailChange()" mat-button>Rückgängig</button>
+  </div>
 
   <span *ngIf="!register"
         class="separator extra-extra-tall hidden"></span>
@@ -109,7 +126,10 @@
   </span>
 
   <mat-card-actions>
-    <button color="primary" id="submit" mat-raised-button>
+    <button (click)="saveFnc()"
+            color="primary"
+            id="submit"
+            mat-raised-button>
       {{button}}
     </button>
   </mat-card-actions>

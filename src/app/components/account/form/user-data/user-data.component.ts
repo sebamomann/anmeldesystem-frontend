@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {IUserModel} from '../../../../models/IUserModel.model';
 import {ActivatedRoute} from '@angular/router';
+import {AccountService} from '../../../../services/account.service';
 
 const HttpStatus = require('http-status-codes');
 
@@ -66,8 +67,9 @@ export class UserDataComponent implements OnInit {
   public tooltip: string;
 
   private mailSuccess: string;
+  private mailPending = false;
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private accountService: AccountService) {
     this.route.queryParams.subscribe(params => {
       this.mailSuccess = params.mail;
     });
@@ -108,13 +110,8 @@ export class UserDataComponent implements OnInit {
     }
   }
 
-  private parseOverallData() {
-    this.event.setValue({
-      name: this.userData.name,
-      username: this.userData.username,
-      mail: this.userData.mail,
-      passwords: {password: '', passwordVerify: ''},
-    });
+  resend() {
+    this.accountService.resendMailChange();
   }
 
   saveFnc(): any {
@@ -170,5 +167,23 @@ export class UserDataComponent implements OnInit {
 
   private getPasswordVerify() {
     return this.event.get('passwords').get('passwordVerify');
+  }
+
+  cancelMailChange() {
+    this.accountService.cancelMailChange();
+  }
+
+  private parseOverallData() {
+    this.event.setValue({
+      name: this.userData.name,
+      username: this.userData.username,
+      mail: this.userData.mail,
+      passwords: {password: '', passwordVerify: ''},
+    });
+
+    if (this.userData.emailChange !== undefined) {
+      this.get('mail').setValue(this.userData.emailChange[0].newMail);
+      this.mailPending = true;
+    }
   }
 }
