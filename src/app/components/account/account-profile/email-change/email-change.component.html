@@ -1,0 +1,13 @@
+<mat-card class="float high">
+  <ng-container *ngIf="error === null; else err">
+    <div class="spinner-wrapper">
+      <mat-spinner>
+      </mat-spinner>
+      <span>Prüfe ... </span>
+    </div>
+  </ng-container>
+</mat-card>
+
+<ng-template #err>
+  <span>{{error}}</span>
+</ng-template>

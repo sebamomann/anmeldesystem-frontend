@@ -46,4 +46,9 @@ export class AccountService {
     const url = `${environment.api.url}user/verify/${mail}/${token}`;
     return this.httpClient.get<null>(url, {observe: 'response', reportProgress: true});
   }
+
+  changeEmail(mail: string, token: string) {
+    const url = `${environment.api.url}user/mail/verify/${mail}/${token}`;
+    return this.httpClient.get<null>(url, {observe: 'response', reportProgress: true});
+  }
 }

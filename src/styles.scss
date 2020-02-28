@@ -878,6 +878,24 @@ footer {
   }
 }
 
+
+.spinner-wrapper {
+  padding: 25px;
+
+  mat-spinner {
+    margin: 10px auto;
+  }
+
+  span {
+    display: block;
+    text-align: center;
+    width: 100%;
+    margin-top: 25px;
+    font-size: 1.15em;
+  }
+}
+
+
 @media all and (min-width: 1024px) {
   .svg-wrapper {
     svg {
