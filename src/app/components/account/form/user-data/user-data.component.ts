@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {IUserModel} from '../../../../models/IUserModel.model';
+import {ActivatedRoute} from '@angular/router';
 
 const HttpStatus = require('http-status-codes');
 
@@ -64,7 +65,12 @@ export class UserDataComponent implements OnInit {
   public event: FormGroup;
   public tooltip: string;
 
-  constructor() {
+  private mailSuccess: string;
+
+  constructor(private route: ActivatedRoute) {
+    this.route.queryParams.subscribe(params => {
+      this.mailSuccess = params.mail;
+    });
   }
 
   ngOnInit() {
