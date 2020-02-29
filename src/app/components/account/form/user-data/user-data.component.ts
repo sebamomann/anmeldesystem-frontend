@@ -122,8 +122,10 @@ export class UserDataComponent implements OnInit {
     this.accountService.resendMailChange()
       .toPromise()
       .then(() => {
-        this.update.emit();
         this.isResend = true;
+        setTimeout(() => {
+          this.isResend = false;
+        }, 2000);
       });
   }
 
