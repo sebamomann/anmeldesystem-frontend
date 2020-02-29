@@ -8,6 +8,7 @@ import {
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
+  MatListModule,
   MatProgressSpinnerModule,
   MatTooltipModule
 } from '@angular/material';
@@ -21,12 +22,14 @@ import {LoginComponent} from './main/login/login.component';
 import {RegisterComponent} from './main/register/register.component';
 import {EmailChangeComponent} from './account-profile/email-change/email-change.component';
 import {EmailChangeModule} from './account-profile/email-change/email-change.module';
+import {LogoutComponent} from './main/logout/logout.component';
 
 
 const routes: Routes = [
   {path: '', component: AccountComponent},
   {path: 'profile', component: AccountProfileComponent},
   {path: 'login', component: LoginComponent},
+  {path: 'logout', component: LogoutComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'verify/:mail/:token', component: RegisterComponent},
   {path: 'mail/verify/:mail/:token', component: EmailChangeComponent},
@@ -42,6 +45,7 @@ const routes: Routes = [
     PasswordresetComponent,
     AccountComponent,
     AccountProfileComponent,
+    LogoutComponent,
   ],
   imports: [
     CommonModule,
@@ -56,7 +60,8 @@ const routes: Routes = [
     MatTooltipModule,
     UserDataModule,
     SavedModule,
-    EmailChangeModule
+    EmailChangeModule,
+    MatListModule
   ],
   providers: [
     ValidatorService

@@ -181,7 +181,7 @@ export class UserDataComponent implements OnInit {
         + '\r\n Kein _ am Anfang oder Ende. '
         + '\r\n Nur ein _ in Folge.';
     } else {
-      return 'Du kannst deinen Benutzernamen (noch) nicht ändern.';
+      return 'Du kannst deinen Benutzernamen (noch) nicht ändern. Melde dich bei mir!';
     }
   }
 }
