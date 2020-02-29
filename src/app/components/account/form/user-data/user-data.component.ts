@@ -4,6 +4,7 @@ import {IUserModel} from '../../../../models/IUserModel.model';
 import {ActivatedRoute} from '@angular/router';
 import {AccountService} from '../../../../services/account.service';
 import {HttpEventType} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
 const HttpStatus = require('http-status-codes');
 
@@ -52,7 +53,6 @@ function nameValidator(): ValidatorFn {
 export class UserDataComponent implements OnInit {
   @ViewChild('resendButton', {static: true})
   public resendButton: ElementRef;
-
   @Output()
   public save = new EventEmitter<any>();
   @Output()
@@ -60,21 +60,19 @@ export class UserDataComponent implements OnInit {
   @Input()
   public register = true;
   @Input()
-  public userData: IUserModel;
+  public userData$: Observable<IUserModel>;
+  public event: FormGroup;
   @Input()
   public done = false;
+  public hide = true;
+  private userData: IUserModel;
 
   public button = 'Registrieren';
-
-  public hide = true;
-
-  public event: FormGroup;
   public tooltip: string;
 
   private mailSuccess: string;
   private mailPending = false;
   private isResend = false;
-  private isCanceled = false;
 
   constructor(private route: ActivatedRoute, private accountService: AccountService) {
     this.route.queryParams.subscribe(params => {
@@ -93,9 +91,13 @@ export class UserDataComponent implements OnInit {
       }, passwordVerifyCheck()),
     });
 
-    if (this.userData !== undefined) {
-      this.parseOverallData();
-    }
+    this.userData$.subscribe(sUserData => {
+      console.log('change');
+      this.userData = sUserData;
+      if (this.userData !== undefined) {
+        this.parseOverallData();
+      }
+    });
 
     if (!this.register) {
       this.event.get('username').disable();
@@ -120,8 +122,8 @@ export class UserDataComponent implements OnInit {
   resend() {
     this.accountService.resendMailChange()
       .toPromise()
-      .then(res => {
-        this.fetchData();
+      .then(() => {
+        this.update.emit();
         this.isResend = true;
       });
   }
@@ -129,8 +131,8 @@ export class UserDataComponent implements OnInit {
   cancelMailChange() {
     this.accountService.cancelMailChange()
       .toPromise()
-      .then(err => {
-        this.fetchData();
+      .then(() => {
+        this.update.emit();
       });
   }
 

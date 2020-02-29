@@ -5,6 +5,7 @@ import {UserDataComponent} from '../form/user-data/user-data.component';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {UserService} from '../../../services/user.service';
 import {AccountService} from '../../../services/account.service';
+import {BehaviorSubject, of} from 'rxjs';
 
 const HttpStatus = require('http-status-codes');
 
@@ -17,6 +18,7 @@ export class AccountProfileComponent implements OnInit {
   @ViewChild(UserDataComponent, null)
   userDataComponent: UserDataComponent;
 
+  public userData$: BehaviorSubject<IUserModel> = new BehaviorSubject<IUserModel>(null);
   public userData: IUserModel;
   public saveSuccess: boolean;
 
@@ -32,7 +34,6 @@ export class AccountProfileComponent implements OnInit {
   save(data: any) {
 
     // DONT SAVE IF MAIL IS PENDING MAIL
-
     const toChange = {};
     for (const [key, value] of Object.entries(data)) {
       if (data[key] !== this.userData[key]) {
@@ -51,6 +52,7 @@ export class AccountProfileComponent implements OnInit {
               if (res.status <= 299) {
                 this.authenticationService.setCurrentUser(res.body);
                 this.userData = res.body;
+                this.userData$.next(this.userData);
                 this.saved();
               }
             }
@@ -71,7 +73,8 @@ export class AccountProfileComponent implements OnInit {
     }
   }
 
-  fetchUpdate($event) {
+  fetchUpdate() {
+    console.log('update');
     this.fetchData();
   }
 
@@ -83,6 +86,15 @@ export class AccountProfileComponent implements OnInit {
     }, 3000);
   }
 
+  of(userData: IUserModel) {
+    return of(userData);
+  }
+
+  public update() {
+    console.log('update');
+    this.fetchData();
+  }
+
   private fetchData() {
     this.accountService
       .get()
@@ -91,6 +103,7 @@ export class AccountProfileComponent implements OnInit {
           if (sUserData.type === HttpEventType.Response) {
             if (sUserData.status === HttpStatus.OK) {
               this.userData = sUserData.body;
+              this.userData$.next(this.userData);
             }
           }
         }, err => {

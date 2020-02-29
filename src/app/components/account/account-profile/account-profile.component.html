@@ -7,9 +7,9 @@
     <app-user-data
       *ngIf="userData != undefined; else loading"
       (save)="save($event)"
-      (update)="fetchUpdate($event)"
+      (update)="fetchUpdate()"
       [register]="false"
-      [userData]="userData">
+      [userData$]="userData$">
     </app-user-data>
   </mat-card-content>
 </mat-card>
