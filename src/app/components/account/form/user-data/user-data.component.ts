@@ -21,7 +21,7 @@ export class UserDataComponent implements OnInit {
 
   @Input() public isRegister = true;
   @Input() public done = false;
-  @Input() public userData$: Observable<IUserModel>;
+  @Input() public userData$: Observable<IUserModel> = new Observable<IUserModel>();
 
   private userData: IUserModel;
 
