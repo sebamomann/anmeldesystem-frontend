@@ -24,6 +24,7 @@ export class AppointmentCreateComponent implements OnInit {
 
   public output: any = {};
   public percentDone = 0;
+  public stepValid = [false, false, false];
 
   constructor(private formBuilder: FormBuilder,
               private http: HttpClient, private sanitizer: DomSanitizer,
@@ -104,6 +105,7 @@ export class AppointmentCreateComponent implements OnInit {
   // };
 
   getOverallData(data: any) {
+    this.stepValid[0] = true;
     this.output.title = data.title;
     this.output.date = data.date;
     this.output.deadline = data.deadline;
@@ -114,6 +116,7 @@ export class AppointmentCreateComponent implements OnInit {
   }
 
   getAdditions(data: any) {
+    this.stepValid[1] = true;
     this.output.driverAddition = data.driverAddition;
     this.output.additions = data.additions;
 
@@ -121,6 +124,7 @@ export class AppointmentCreateComponent implements OnInit {
   }
 
   getLinkData(data: any) {
+    this.stepValid[2] = true;
     this.output.link = data.link;
     this.output.description = data.description;
 

@@ -5,6 +5,10 @@
   line-height: $size;
 }
 
+::ng-deep .mat-vertical-stepper-header {
+  pointer-events: none !important;
+}
+
 .mat-card {
   margin: 25px auto;
 
