@@ -1,48 +1,13 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {IUserModel} from '../../../../models/IUserModel.model';
 import {ActivatedRoute} from '@angular/router';
 import {AccountService} from '../../../../services/account.service';
 import {HttpEventType} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {ValidatorUtil} from '../../../../_util/validatorUtil.util';
 
 const HttpStatus = require('http-status-codes');
-
-
-function passwordVerifyCheck(): ValidatorFn {
-  return (control: FormGroup): ValidationErrors => {
-    const pass = control.controls.password.value;
-    const passVerify = control.controls.passwordVerify.value;
-
-    return (passVerify !== pass)
-      ? {mismatch: true}
-      : null;
-  };
-}
-
-function usernameValidator(): ValidatorFn {
-  return (control: FormGroup): ValidationErrors => {
-    const val = control.value;
-
-    // throw error if not in format and not at least 3 non-digit characters
-    return (!val.match(/^([a-z0-9])+([_]?[a-z0-9]+)*$/g)
-      || (val.replace(new RegExp('[0-9_]', 'g'), '').length < 3))
-      ? {invalidUsername: true}
-      : null;
-  };
-}
-
-function nameValidator(): ValidatorFn {
-  return (control: FormGroup): ValidationErrors => {
-    const val = control.value;
-
-    // throw error if not in format and not at least 3 non-digit characters
-    return (!val.match(/^([A-Za-z0-9äüöß])+([ ]?[A-Za-z0-9äüöß]+)*$/g)
-      || (val.replace(new RegExp('[0-9 ]', 'g'), '').length < 3))
-      ? {invalidUsername: true}
-      : null;
-  };
-}
 
 @Component({
   selector: 'app-user-data',
@@ -82,13 +47,13 @@ export class UserDataComponent implements OnInit {
 
   ngOnInit() {
     this.event = new FormGroup({
-      name: new FormControl('', [Validators.required, nameValidator()]),
-      username: new FormControl('', [Validators.required, usernameValidator()]),
+      name: new FormControl('', [Validators.required, ValidatorUtil.displayname]),
+      username: new FormControl('', [Validators.required, ValidatorUtil.username]),
       mail: new FormControl('', [Validators.email, Validators.required]),
       passwords: new FormGroup({
         password: new FormControl(''),
         passwordVerify: new FormControl(''),
-      }, passwordVerifyCheck()),
+      }, ValidatorUtil.password),
     });
 
     this.userData$.subscribe(sUserData => {
