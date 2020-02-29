@@ -7,6 +7,7 @@
     <app-user-data
       *ngIf="userData != undefined; else loading"
       (save)="save($event)"
+      (update)="fetchUpdate($event)"
       [register]="false"
       [userData]="userData">
     </app-user-data>

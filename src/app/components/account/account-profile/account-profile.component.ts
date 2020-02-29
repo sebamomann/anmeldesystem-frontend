@@ -25,22 +25,14 @@ export class AccountProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.accountService
-      .get()
-      .subscribe(
-        sUserData => {
-          if (sUserData.type === HttpEventType.Response) {
-            if (sUserData.status === HttpStatus.OK) {
-              this.userData = sUserData.body;
-            }
-          }
-        }, err => {
-          console.log(err);
-        });
+    this.fetchData();
   }
 
+
   save(data: any) {
-    console.log(data);
+
+    // DONT SAVE IF MAIL IS PENDING MAIL
+
     const toChange = {};
     for (const [key, value] of Object.entries(data)) {
       if (data[key] !== this.userData[key]) {
@@ -68,7 +60,7 @@ export class AccountProfileComponent implements OnInit {
               if (error.status === HttpStatus.BAD_REQUEST) {
                 if (error.error.code === 'ER_DUP_ENTRY') {
                   error.error.error.columns.forEach(fColumn => {
-                    this.userDataComponent.updateErrors({attr: fColumn, error: 'inUse'});
+                      this.userDataComponent.updateErrors({attr: fColumn, error: 'inUse'});
                     }
                   );
                 }
@@ -79,11 +71,30 @@ export class AccountProfileComponent implements OnInit {
     }
   }
 
+  fetchUpdate($event) {
+    this.fetchData();
+  }
+
   private saved() {
     this.saveSuccess = true;
     const self = this;
     setTimeout(() => {
       self.saveSuccess = false;
     }, 3000);
+  }
+
+  private fetchData() {
+    this.accountService
+      .get()
+      .subscribe(
+        sUserData => {
+          if (sUserData.type === HttpEventType.Response) {
+            if (sUserData.status === HttpStatus.OK) {
+              this.userData = sUserData.body;
+            }
+          }
+        }, err => {
+          console.log(err);
+        });
   }
 }

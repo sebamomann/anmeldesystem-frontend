@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {IUserModel} from '../../../../models/IUserModel.model';
 import {ActivatedRoute} from '@angular/router';
@@ -49,9 +49,13 @@ function nameValidator(): ValidatorFn {
 })
 
 export class UserDataComponent implements OnInit {
+  @ViewChild('resendButton', {static: true})
+  public resendButton: ElementRef;
 
   @Output()
   public save = new EventEmitter<any>();
+  @Output()
+  public update = new EventEmitter<null>();
   @Input()
   public register = true;
   @Input()
@@ -68,8 +72,11 @@ export class UserDataComponent implements OnInit {
 
   private mailSuccess: string;
   private mailPending = false;
+  private isResend = false;
+  private isCanceled = false;
 
-  constructor(private route: ActivatedRoute, private accountService: AccountService) {
+  constructor(private route: ActivatedRoute, private accountService: AccountService,
+              private renderer: Renderer2) {
     this.route.queryParams.subscribe(params => {
       this.mailSuccess = params.mail;
     });
@@ -111,7 +118,19 @@ export class UserDataComponent implements OnInit {
   }
 
   resend() {
-    this.accountService.resendMailChange();
+    this.accountService.resendMailChange()
+      .toPromise()
+      .then(res => {
+        this.isResend = true;
+      });
+  }
+
+  cancelMailChange() {
+    this.accountService.cancelMailChange()
+      .toPromise()
+      .then(err => {
+        this.isCanceled = true;
+      });
   }
 
   saveFnc(): any {
@@ -167,10 +186,6 @@ export class UserDataComponent implements OnInit {
 
   private getPasswordVerify() {
     return this.event.get('passwords').get('passwordVerify');
-  }
-
-  cancelMailChange() {
-    this.accountService.cancelMailChange();
   }
 
   private parseOverallData() {

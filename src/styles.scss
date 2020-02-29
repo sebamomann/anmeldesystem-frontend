@@ -111,6 +111,15 @@ body {
 
 mat-icon {
   vertical-align: sub;
+
+  &.small {
+    @include md-icon-size(18px);
+  }
+
+  &.wrapped {
+    margin: 0 5px;
+    vertical-align: sub !important;
+  }
 }
 
 .menu-wrapper {

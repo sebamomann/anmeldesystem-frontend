@@ -61,6 +61,7 @@ export class AccountService {
   }
 
   resendMailChange() {
+    console.log('resend');
     const url = `${environment.api.url}user/mail/change/resend`;
     const domain = this.window.location.hostname + '/account/mail/verify';
     const req = new HttpRequest('POST', url, {domain}, {
@@ -70,6 +71,7 @@ export class AccountService {
   }
 
   cancelMailChange() {
+    console.log('cancel mail change');
     const url = `${environment.api.url}user/mail/change/cancel`;
     const req = new HttpRequest('GET', url, {
       reportProgress: true,
