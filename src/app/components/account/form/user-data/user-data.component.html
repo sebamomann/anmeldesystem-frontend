@@ -3,7 +3,7 @@
       class="register-form">
   <mat-form-field class="username">
     <label for="username">
-      <input [required]="register"
+      <input [required]="isRegister"
              formControlName="username"
              id="username"
              matInput
@@ -21,7 +21,7 @@
     <mat-error>{{ getErrorMessage('username') }}</mat-error>
   </mat-form-field>
 
-  <span *ngIf="!register"
+  <span *ngIf="!isRegister"
         class="separator extra-extra-tall hidden"></span>
 
   <mat-form-field class="name">
@@ -30,7 +30,7 @@
              id="name"
              matInput
              placeholder="Anzeigename"
-             [required]="register">
+             [required]="isRegister">
     </label>
     <button mat-icon-button matSuffix type="button">
       <!--suppress TypeScriptUnresolvedFunction -->
@@ -55,7 +55,7 @@
              id="mail"
              matInput
              placeholder="E-Mail"
-             [required]="register">
+             [required]="isRegister">
     </label>
     <!--suppress TypeScriptUnresolvedFunction -->
     <mat-spinner #mailPending="matTooltip"
@@ -88,7 +88,7 @@
     <button (click)="cancelMailChange()" mat-button>Rückgängig</button>
   </div>
 
-  <span *ngIf="!register"
+  <span *ngIf="!isRegister"
         class="separator extra-extra-tall hidden"></span>
 
   <mat-form-field class="pass" formGroupName="passwords">
@@ -97,8 +97,8 @@
              formControlName="password"
              id="password"
              matInput
-             placeholder="{{register ? '' : 'Neues '}}Passwort"
-             [required]="register">
+             [required]="isRegister"
+             placeholder="{{isRegister ? '' : 'Neues '}}Passwort">
     </label>
     <button (click)="hide = !hide"
             aria-label="toggle password visibility"
@@ -116,7 +116,7 @@
              id="passwordVerify"
              matInput
              placeholder="Passwort wiederholen"
-             [required]="register">
+             [required]="isRegister">
     </label>
     <button (click)="hide = !hide"
             aria-label="toggle password visibility"
@@ -127,7 +127,7 @@
     </button>
     <mat-error>{{ getErrorMessage('') }} </mat-error>
   </mat-form-field>
-  <span *ngIf="register">
+  <span *ngIf="isRegister">
     Du hast bereits einen Account?
     <br/>
     <a [routerLink]="['/account/login']">

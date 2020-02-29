@@ -3,11 +3,8 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {IUserModel} from '../../../../models/IUserModel.model';
 import {ActivatedRoute} from '@angular/router';
 import {AccountService} from '../../../../services/account.service';
-import {HttpEventType} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {ValidatorUtil} from '../../../../_util/validatorUtil.util';
-
-const HttpStatus = require('http-status-codes');
 
 @Component({
   selector: 'app-user-data',
@@ -18,21 +15,20 @@ const HttpStatus = require('http-status-codes');
 export class UserDataComponent implements OnInit {
   @ViewChild('resendButton', {static: true})
   public resendButton: ElementRef;
-  @Output()
-  public save = new EventEmitter<any>();
-  @Output()
-  public update = new EventEmitter<null>();
-  @Input()
-  public register = true;
-  @Input()
-  public userData$: Observable<IUserModel>;
-  public event: FormGroup;
-  @Input()
-  public done = false;
-  public hide = true;
+
+  @Output() public save = new EventEmitter<any>();
+  @Output() public updateParent = new EventEmitter<null>();
+
+  @Input() public isRegister = true;
+  @Input() public done = false;
+  @Input() public userData$: Observable<IUserModel>;
+
   private userData: IUserModel;
 
-  public button = 'Registrieren';
+  public event: FormGroup;
+  public hide = true;
+
+  public button: string;
   public tooltip: string;
 
   private mailSuccess: string;
@@ -43,9 +39,7 @@ export class UserDataComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.mailSuccess = params.mail;
     });
-  }
 
-  ngOnInit() {
     this.event = new FormGroup({
       name: new FormControl('', [Validators.required, ValidatorUtil.displayname]),
       username: new FormControl('', [Validators.required, ValidatorUtil.username]),
@@ -55,35 +49,49 @@ export class UserDataComponent implements OnInit {
         passwordVerify: new FormControl(''),
       }, ValidatorUtil.password),
     });
+  }
 
+  ngOnInit() {
+    this.button = this.isRegister ? 'Registrieren' : 'Speichern';
+    this.tooltip = this.getToolTip();
+
+    if (!this.isRegister) {
+      this.event.get('username').disable();
+    } else {
+      this.setPasswordRequired();
+    }
+
+    // listen to change from parent component (@Input)
     this.userData$.subscribe(sUserData => {
       this.userData = sUserData;
       if (this.userData !== undefined) {
-        this.parseOverallData();
+        this.parse();
       }
     });
+  }
 
-    if (!this.register) {
-      this.event.get('username').disable();
-      this.button = 'Speichern';
-      this.tooltip = 'Du kannst deinen Benutzernamen (noch) nicht ändern.';
+  public saveFnc(): any {
+    if (this.event.valid) {
+      const data = {
+        name: this.get('name').value,
+        mail: this.get('mail').value,
+        password: this.getPassword().value,
+        username: this.get('username').value,
+      };
+
+      // change mail back to current, if mail change is pending
+      // used for not sending to backend if nothing changed
+      if (this.mailPending) {
+        data.mail = this.userData.mail;
+      }
+
+      this.save.emit(data);
     } else {
-      this.getPassword().setValidators([Validators.required]);
-      this.getPasswordVerify().setValidators([Validators.required]);
-      this.tooltip = 'Erlaubte Beispiele: '
-        + '\r\n'
-        + '\r\n max'
-        + '\r\n max123 '
-        + '\r\n max_m '
-        + '\r\n max_123_muster '
-        + '\r\n'
-        + '\r\n Mindestens 3 Buchstaben. '
-        + '\r\n Kein _ am Anfang oder Ende. '
-        + '\r\n Nur ein _ in Folge.';
+      this.getPassword('passwordVerify').setErrors({});
     }
   }
 
-  resend() {
+  public resend() {
     this.accountService.resendMailChange()
       .toPromise()
       .then(() => {
@@ -94,39 +102,16 @@ export class UserDataComponent implements OnInit {
       });
   }
 
-  cancelMailChange() {
-    this.accountService.cancelMailChange()
+  public cancelMailChange() {
+    this.accountService
+      .cancelMailChange()
       .toPromise()
       .then(() => {
-        this.update.emit();
+        this.updateParent.emit();
       });
   }
 
-  saveFnc(): any {
-    if (this.event.valid) {
-      const data = {
-        name: this.get('name').value,
-        mail: this.get('mail').value,
-        password: this.getPassword().value,
-        username: this.get('username').value,
-      };
-
-      // change mail back to current, if mail change is pending
-      if (this.mailPending) {
-        data.mail = this.userData.mail;
-      }
-
-      this.save.emit(data);
-    } else {
-      this.getPasswordVerify().setErrors({});
-    }
-  }
-
-  public updateErrors(err) {
-    this.get(err.attr).setErrors({[err.error]: true});
-  }
-
-  getErrorMessage(str: string) {
+  public getErrorMessage(str: string) {
     if (str !== '') {
       if (this.get(str).hasError('required')) {
         return 'Erforderlich';
@@ -146,23 +131,11 @@ export class UserDataComponent implements OnInit {
     }
   }
 
-  private get(str: string) {
-    return this.event.get(str);
+  public updateErrors(err) {
+    this.get(err.attr).setErrors({[err.error]: true});
   }
 
-  private getPasswordGroup() {
-    return this.event.get('passwords');
-  }
-
-  private getPassword() {
-    return this.event.get('passwords').get('password');
-  }
-
-  private getPasswordVerify() {
-    return this.event.get('passwords').get('passwordVerify');
-  }
-
-  private parseOverallData() {
+  private parse() {
     this.event.setValue({
       name: this.userData.name,
       username: this.userData.username,
@@ -178,19 +151,37 @@ export class UserDataComponent implements OnInit {
     }
   }
 
-  private fetchData() {
-    this.accountService
-      .get()
-      .subscribe(
-        sUserData => {
-          if (sUserData.type === HttpEventType.Response) {
-            if (sUserData.status === HttpStatus.OK) {
-              this.userData = sUserData.body;
-              this.parseOverallData();
-            }
-          }
-        }, err => {
-          console.log(err);
-        });
+  private get(str: string) {
+    return this.event.get(str);
+  }
+
+  private getPasswordGroup() {
+    return this.event.get('passwords');
+  }
+
+  private getPassword(str = 'password') {
+    return this.event.get('passwords').get(str);
+  }
+
+  private setPasswordRequired() {
+    this.getPassword().setValidators([Validators.required]);
+    this.getPassword('passwordVerify').setValidators([Validators.required]);
+  }
+
+  private getToolTip() {
+    if (this.isRegister) {
+      return 'Erlaubte Beispiele: '
+        + '\r\n'
+        + '\r\n max'
+        + '\r\n max123 '
+        + '\r\n max_m '
+        + '\r\n max_123_muster '
+        + '\r\n'
+        + '\r\n Mindestens 3 Buchstaben. '
+        + '\r\n Kein _ am Anfang oder Ende. '
+        + '\r\n Nur ein _ in Folge.';
+    } else {
+      return 'Du kannst deinen Benutzernamen (noch) nicht ändern.';
+    }
   }
 }
