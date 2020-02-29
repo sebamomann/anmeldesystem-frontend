@@ -81,25 +81,11 @@
     </button>
     <ng-template #isResendTmpl>
       <button mat-raised-button>
-        <mat-icon class="small wrapped">
-          done_outline
-        </mat-icon>
+        <mat-icon class="small wrapped">done_outline</mat-icon>
         Gesendet
       </button>
     </ng-template>
-    <button (click)="cancelMailChange()"
-            *ngIf="!isCanceled; else isCanceledTmpl"
-            mat-button>
-      Rückgängig
-    </button>
-    <ng-template #isCanceledTmpl>
-      <button mat-button>
-        <mat-icon class="small wrapped">
-          cancel
-        </mat-icon>
-        Abgebrochen
-      </button>
-    </ng-template>
+    <button (click)="cancelMailChange()" mat-button>Rückgängig</button>
   </div>
 
   <span *ngIf="!register"

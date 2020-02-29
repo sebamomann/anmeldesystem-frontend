@@ -3,6 +3,7 @@ import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from 
 import {IUserModel} from '../../../../models/IUserModel.model';
 import {ActivatedRoute} from '@angular/router';
 import {AccountService} from '../../../../services/account.service';
+import {HttpEventType} from '@angular/common/http';
 
 const HttpStatus = require('http-status-codes');
 
@@ -120,6 +121,7 @@ export class UserDataComponent implements OnInit {
     this.accountService.resendMailChange()
       .toPromise()
       .then(res => {
+        this.fetchData();
         this.isResend = true;
       });
   }
@@ -128,7 +130,7 @@ export class UserDataComponent implements OnInit {
     this.accountService.cancelMailChange()
       .toPromise()
       .then(err => {
-        this.isCanceled = true;
+        this.fetchData();
       });
   }
 
@@ -203,6 +205,24 @@ export class UserDataComponent implements OnInit {
     if (this.userData.emailChange !== undefined) {
       this.get('mail').setValue(this.userData.emailChange[0].newMail);
       this.mailPending = true;
+    } else {
+      this.mailPending = false;
     }
+  }
+
+  private fetchData() {
+    this.accountService
+      .get()
+      .subscribe(
+        sUserData => {
+          if (sUserData.type === HttpEventType.Response) {
+            if (sUserData.status === HttpStatus.OK) {
+              this.userData = sUserData.body;
+              this.parseOverallData();
+            }
+          }
+        }, err => {
+          console.log(err);
+        });
   }
 }
