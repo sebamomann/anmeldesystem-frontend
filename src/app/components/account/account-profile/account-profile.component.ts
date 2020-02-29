@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
+import {HttpErrorResponse, HttpEventType, HttpResponse} from '@angular/common/http';
 import {IUserModel} from '../../../models/IUserModel.model';
 import {UserDataComponent} from '../form/user-data/user-data.component';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {UserService} from '../../../services/user.service';
 import {AccountService} from '../../../services/account.service';
-import {BehaviorSubject, of} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 
 const HttpStatus = require('http-status-codes');
 
@@ -15,25 +15,22 @@ const HttpStatus = require('http-status-codes');
   styleUrls: ['./account-profile.component.scss']
 })
 export class AccountProfileComponent implements OnInit {
+  public userData$: BehaviorSubject<IUserModel>;
   @ViewChild(UserDataComponent, null)
-  userDataComponent: UserDataComponent;
-
-  public userData$: BehaviorSubject<IUserModel> = new BehaviorSubject<IUserModel>(null);
+  private userDataComponent: UserDataComponent;
   public userData: IUserModel;
   public saveSuccess: boolean;
 
   constructor(private authenticationService: AuthenticationService, private userService: UserService,
               private accountService: AccountService) {
+    this.userData$ = new BehaviorSubject<IUserModel>(null);
   }
 
   ngOnInit() {
     this.fetchData();
   }
 
-
-  save(data: any) {
-
-    // DONT SAVE IF MAIL IS PENDING MAIL
+  public save(data: any) {
     const toChange = {};
     for (const [key, value] of Object.entries(data)) {
       if (data[key] !== this.userData[key]) {
@@ -47,12 +44,11 @@ export class AccountProfileComponent implements OnInit {
       this.userService
         .updateValues(toChange, this.userData)
         .subscribe(
-          res => {
-            if (res.type === HttpEventType.Response) {
-              if (res.status <= 299) {
-                this.authenticationService.setCurrentUser(res.body);
-                this.userData = res.body;
-                this.userData$.next(this.userData);
+          sUserData => {
+            if (sUserData.type === HttpEventType.Response) {
+              if (sUserData.status <= 299) {
+                this.authenticationService.setCurrentUser(sUserData.body);
+                this.updateForChild(sUserData);
                 this.saved();
               }
             }
@@ -62,7 +58,7 @@ export class AccountProfileComponent implements OnInit {
               if (error.status === HttpStatus.BAD_REQUEST) {
                 if (error.error.code === 'ER_DUP_ENTRY') {
                   error.error.error.columns.forEach(fColumn => {
-                      this.userDataComponent.updateErrors({attr: fColumn, error: 'inUse'});
+                    this.userDataComponent.updateErrors({attr: fColumn, error: 'inUse'});
                     }
                   );
                 }
@@ -73,9 +69,24 @@ export class AccountProfileComponent implements OnInit {
     }
   }
 
-  fetchUpdate() {
-    console.log('update');
-    this.fetchData();
+  private fetchData() {
+    this.accountService
+      .get()
+      .subscribe(
+        sUserData => {
+          if (sUserData.type === HttpEventType.Response) {
+            if (sUserData.status === HttpStatus.OK) {
+              this.updateForChild(sUserData);
+            }
+          }
+        },
+        err => {
+        });
+  }
+
+  private updateForChild(sUserData: HttpResponse<IUserModel>) {
+    this.userData = sUserData.body;
+    this.userData$.next(this.userData);
   }
 
   private saved() {
@@ -84,30 +95,5 @@ export class AccountProfileComponent implements OnInit {
     setTimeout(() => {
       self.saveSuccess = false;
     }, 3000);
-  }
-
-  of(userData: IUserModel) {
-    return of(userData);
-  }
-
-  public update() {
-    console.log('update');
-    this.fetchData();
-  }
-
-  private fetchData() {
-    this.accountService
-      .get()
-      .subscribe(
-        sUserData => {
-          if (sUserData.type === HttpEventType.Response) {
-            if (sUserData.status === HttpStatus.OK) {
-              this.userData = sUserData.body;
-              this.userData$.next(this.userData);
-            }
-          }
-        }, err => {
-          console.log(err);
-        });
   }
 }

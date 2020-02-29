@@ -92,7 +92,6 @@ export class UserDataComponent implements OnInit {
     });
 
     this.userData$.subscribe(sUserData => {
-      console.log('change');
       this.userData = sUserData;
       if (this.userData !== undefined) {
         this.parseOverallData();
