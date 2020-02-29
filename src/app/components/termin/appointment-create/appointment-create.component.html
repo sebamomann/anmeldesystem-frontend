@@ -27,7 +27,7 @@
         (save)="getAdditions($event)"
         [button]="'Weiter'">
       </app-additions>
-      <button mat-button matStepperPrevious>Zurück</button>
+      <button class="stepper-navigation" mat-button matStepperPrevious>Zurück</button>
     </mat-step>
 
     <!-- LINK DATA -->
@@ -39,7 +39,7 @@
         (save)="getLinkData($event)"
         [button]="'Weiter'">>
       </app-link-data>
-      <button mat-button matStepperPrevious>Zurück</button>
+      <button class="stepper-navigation" mat-button matStepperPrevious>Zurück</button>
     </mat-step>
 
     <!-- DONE -->
@@ -60,13 +60,11 @@
         <!--            info-->
         <!--          </mat-icon>-->
         <!--        </div>-->
-        <div class="stepper-navigation">
-          <button (click)="create()"
-                  mat-stroked-button>
-            Erstellen
-          </button>
-          <button mat-button matStepperPrevious>Zurück</button>
-        </div>
+        <button (click)="create()"
+                mat-stroked-button>
+          Erstellen
+        </button>
+        <button mat-button matStepperPrevious>Zurück</button>
       </form>
     </mat-step>
   </mat-vertical-stepper>

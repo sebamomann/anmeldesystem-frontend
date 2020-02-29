@@ -8,6 +8,10 @@ mat-tab-group {
   min-width: 20px !important;
 }
 
+::ng-deep form {
+  padding: 4px;
+}
+
 ::ng-deep .mat-tab-labels {
   .mat-tab-label {
     height: 35px;
