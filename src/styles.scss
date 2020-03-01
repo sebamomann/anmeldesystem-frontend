@@ -829,60 +829,79 @@ footer {
   }
 }
 
-.bookmark {
-  background: #b00;
-  background-image: -webkit-linear-gradient(to bottom, #b00 0%, #900 100%);
-  background-image: -moz-linear-gradient(to bottom, #b00 0%, #900 100%);
-  background-image: -o-linear-gradient(to bottom, #b00 0%, #900 100%);
-  background-image: -ms-linear-gradient(to bottom, #b00 0%, #b00 100%);
-  background-image: linear-gradient(to bottom, #b00 0%, #900 100%);
-
-  height: 30px;
+.bookmark-wrapper {
   position: absolute;
   top: 0;
-  right: 20px;
-  width: 20px;
+  right: 5px;
 
-  &:hover {
-    transition: 0.5s all;
-    top: -5px;
+  .bookmark-block {
+    margin: 0 2.5px;
+    display: inline-block;
+    position: relative;
   }
 
-  &.enrolled {
-    background: $primary;
-    background-image: -webkit-linear-gradient(to bottom, $primary 0%, $primary_dark 100%);
-    background-image: -moz-linear-gradient(to bottom, $primary 0%, $primary_dark 100%);
-    background-image: -o-linear-gradient(to bottom, $primary 0%, $primary_dark 100%);
-    background-image: -ms-linear-gradient(to bottom, $primary 0%, $primary_dark 100%);
-    background-image: linear-gradient(to bottom, $primary 0%, $primary_dark 100%);
+  .bookmark {
+    background: #b00;
+    background-image: -webkit-linear-gradient(to bottom, #b00 0%, #900 100%);
+    background-image: -moz-linear-gradient(to bottom, #b00 0%, #900 100%);
+    background-image: -o-linear-gradient(to bottom, #b00 0%, #900 100%);
+    background-image: -ms-linear-gradient(to bottom, #b00 0%, #b00 100%);
+    background-image: linear-gradient(to bottom, #b00 0%, #900 100%);
+
+    height: 20px;
+    width: 15px;
+
+    &:after {
+      content: '';
+      display: block;
+      border: 7.5px solid transparent;
+      border-bottom-color: white;
+      position: absolute;
+      bottom: 0;
+    }
+
+    &:hover {
+      transition: 0.5s all;
+      top: -5px;
+    }
+
+    &.enrolled {
+      background: $primary;
+      background-image: -webkit-linear-gradient(to bottom, $primary 0%, $primary_dark 100%);
+      background-image: -moz-linear-gradient(to bottom, $primary 0%, $primary_dark 100%);
+      background-image: -o-linear-gradient(to bottom, $primary 0%, $primary_dark 100%);
+      background-image: -ms-linear-gradient(to bottom, $primary 0%, $primary_dark 100%);
+      background-image: linear-gradient(to bottom, $primary 0%, $primary_dark 100%);
+    }
+
+    &.creator {
+      background: $error;
+      background-image: -webkit-linear-gradient(to bottom, $error 0%, $error_dark 100%);
+      background-image: -moz-linear-gradient(to bottom, $error 0%, $error_dark 100%);
+      background-image: -o-linear-gradient(to bottom, $error 0%, $error_dark 100%);
+      background-image: -ms-linear-gradient(to bottom, $error 0%, $error_dark 100%);
+      background-image: linear-gradient(to bottom, $error 0%, $error_dark 100%);
+    }
+
+    &.admin {
+      background: $accent;
+      background-image: -webkit-linear-gradient(to bottom, $accent 0%, $accent_dark 100%);
+      background-image: -moz-linear-gradient(to bottom, $accent 0%, $accent_dark 100%);
+      background-image: -o-linear-gradient(to bottom, $accent 0%, $accent_dark 100%);
+      background-image: -ms-linear-gradient(to bottom, $accent 0%, $accent_dark 100%);
+      background-image: linear-gradient(to bottom, $accent 0%, $accent_dark 100%);
+    }
+
+    &.pinned {
+      background: $accent;
+      background-image: -webkit-linear-gradient(to bottom, #c5c5c5 0%, #3b3b3b 100%);
+      background-image: -moz-linear-gradient(to bottom, #c5c5c5 0%, #3b3b3b 100%);
+      background-image: -o-linear-gradient(to bottom, #c5c5c5 0%, #3b3b3b 100%);
+      background-image: -ms-linear-gradient(to bottom, #c5c5c5 0%, #3b3b3b 100%);
+      background-image: linear-gradient(to bottom, #c5c5c5 0%, #3b3b3b 100%);
+    }
   }
 
-  &.creator {
-    background: $error;
-    background-image: -webkit-linear-gradient(to bottom, $error 0%, $error_dark 100%);
-    background-image: -moz-linear-gradient(to bottom, $error 0%, $error_dark 100%);
-    background-image: -o-linear-gradient(to bottom, $error 0%, $error_dark 100%);
-    background-image: -ms-linear-gradient(to bottom, $error 0%, $error_dark 100%);
-    background-image: linear-gradient(to bottom, $error 0%, $error_dark 100%);
-  }
-
-  &.admin {
-    background: $accent;
-    background-image: -webkit-linear-gradient(to bottom, $accent 0%, $accent_dark 100%);
-    background-image: -moz-linear-gradient(to bottom, $accent 0%, $accent_dark 100%);
-    background-image: -o-linear-gradient(to bottom, $accent 0%, $accent_dark 100%);
-    background-image: -ms-linear-gradient(to bottom, $accent 0%, $accent_dark 100%);
-    background-image: linear-gradient(to bottom, $accent 0%, $accent_dark 100%);
-  }
-}
-
-.bookmark:after {
-  content: '';
-  display: block;
-  border: 10px solid transparent;
-  border-bottom-color: white;
-  position: absolute;
-  bottom: 0;
 }
 
 

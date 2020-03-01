@@ -10,8 +10,7 @@
     <div [@listAnimation]="appointments.length" class="appointment-list-wrapper">
       <app-appointment-data *ngFor="let appointment of appointments"
                             [appointment]="appointment"
-                            [preview]="true"
-                            [type]="parseClass(appointment)">
+                            [preview]="true">
 
       </app-appointment-data>
     </div>
