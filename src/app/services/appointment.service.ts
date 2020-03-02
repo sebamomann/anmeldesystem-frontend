@@ -7,6 +7,7 @@ import {CreateAppointmentModel} from '../models/createAppointment.model';
 import {environment} from '../../environments/environment';
 import {Globals} from '../globals';
 import {map, shareReplay, switchMap, takeUntil} from 'rxjs/operators';
+import {AppointmentUtil} from '../_util/appointmentUtil.util';
 
 const REFRESH_INTERVAL = 30000;
 const CACHE_SIZE = 1;
@@ -163,6 +164,20 @@ export class AppointmentService {
     if (slim) {
       url = url + '?slim=true';
     }
+
+    const pinned = AppointmentUtil.getPinned();
+    let pinnedQueryParam = '?';
+    if (slim) {
+      pinnedQueryParam = '&';
+    }
+
+    pinned.forEach((fPin, i) => {
+      pinnedQueryParam += 'pin' + (i + 1) + '=' + fPin + '&';
+    });
+    url += pinnedQueryParam;
+
+    console.log(url);
+
     const req = new HttpRequest('GET', url, {
       observe: 'response',
       reportProgress: true,
