@@ -1,10 +1,9 @@
-<form (ngSubmit)="saveFnc()"
-      *ngIf="!done; else doneTemplate"
+<form *ngIf="!done; else doneTemplate"
       [formGroup]="event"
       class="register-form">
   <mat-form-field class="username">
     <label for="username">
-      <input [required]="register"
+      <input [required]="isRegister"
              formControlName="username"
              id="username"
              matInput
@@ -22,7 +21,7 @@
     <mat-error>{{ getErrorMessage('username') }}</mat-error>
   </mat-form-field>
 
-  <span *ngIf="!register"
+  <span *ngIf="!isRegister"
         class="separator extra-extra-tall hidden"></span>
 
   <mat-form-field class="name">
@@ -31,7 +30,7 @@
              id="name"
              matInput
              placeholder="Anzeigename"
-             [required]="register">
+             [required]="isRegister">
     </label>
     <button mat-icon-button matSuffix type="button">
       <!--suppress TypeScriptUnresolvedFunction -->
@@ -56,12 +55,40 @@
              id="mail"
              matInput
              placeholder="E-Mail"
-             [required]="register">
+             [required]="isRegister">
     </label>
+    <!--suppress TypeScriptUnresolvedFunction -->
+    <mat-spinner #mailPending="matTooltip"
+                 (click)="mailPending.toggle()"
+                 *ngIf="mailPending"
+                 [diameter]="22"
+                 [strokeWidth]="3"
+                 class="tooltip"
+                 matSuffix
+                 matTooltip="{{'Warte auf Bestätigung.'
+                + '\r\n'
+                + '\r\n Aktuelle Email:'
+                + '\r\n ' + this.userData.mail}}">
+    </mat-spinner>
     <mat-error>{{ getErrorMessage('mail') }}</mat-error>
   </mat-form-field>
+  <div *ngIf="mailPending"
+       class="input-additions">
+    <button (click)="resend()"
+            *ngIf="!isResend; else isResendTmpl"
+            mat-raised-button>
+      Email erneut senden
+    </button>
+    <ng-template #isResendTmpl>
+      <button mat-raised-button>
+        <mat-icon class="small wrapped">done_outline</mat-icon>
+        Gesendet
+      </button>
+    </ng-template>
+    <button (click)="cancelMailChange()" mat-button>Rückgängig</button>
+  </div>
 
-  <span *ngIf="!register"
+  <span *ngIf="!isRegister"
         class="separator extra-extra-tall hidden"></span>
 
   <mat-form-field class="pass" formGroupName="passwords">
@@ -70,8 +97,8 @@
              formControlName="password"
              id="password"
              matInput
-             placeholder="{{register ? '' : 'Neues '}}Passwort"
-             [required]="register">
+             [required]="isRegister"
+             placeholder="{{isRegister ? '' : 'Neues '}}Passwort">
     </label>
     <button (click)="hide = !hide"
             aria-label="toggle password visibility"
@@ -89,7 +116,7 @@
              id="passwordVerify"
              matInput
              placeholder="Passwort wiederholen"
-             [required]="register">
+             [required]="isRegister">
     </label>
     <button (click)="hide = !hide"
             aria-label="toggle password visibility"
@@ -100,7 +127,7 @@
     </button>
     <mat-error>{{ getErrorMessage('') }} </mat-error>
   </mat-form-field>
-  <span *ngIf="register">
+  <span *ngIf="isRegister">
     Du hast bereits einen Account?
     <br/>
     <a [routerLink]="['/account/login']">
@@ -109,7 +136,10 @@
   </span>
 
   <mat-card-actions>
-    <button color="primary" id="submit" mat-raised-button>
+    <button (click)="saveFnc()"
+            color="primary"
+            id="submit"
+            mat-raised-button>
       {{button}}
     </button>
   </mat-card-actions>

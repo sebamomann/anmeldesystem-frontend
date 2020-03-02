@@ -5,11 +5,21 @@
 
   <mat-card-content>
     <app-user-data
+      *ngIf="userData != undefined; else loading"
       (save)="save($event)"
-      [register]="false"
-      [userData]="userData">
+      (updateParent)="fetchData()"
+      [isRegister]="false"
+      [userData$]="userData$">
     </app-user-data>
   </mat-card-content>
 </mat-card>
 
 <app-saved *ngIf="saveSuccess"></app-saved>
+
+<ng-template #loading>
+  <div class="spinner-wrapper">
+    <mat-spinner>
+    </mat-spinner>
+    <span>Lade Einstellungen</span>
+  </div>
+</ng-template>

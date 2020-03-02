@@ -1,44 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {IUserModel} from '../../../../models/IUserModel.model';
-
-const HttpStatus = require('http-status-codes');
-
-
-function passwordVerifyCheck(): ValidatorFn {
-  return (control: FormGroup): ValidationErrors => {
-    const pass = control.controls.password.value;
-    const passVerify = control.controls.passwordVerify.value;
-
-    return (passVerify !== pass)
-      ? {mismatch: true}
-      : null;
-  };
-}
-
-function usernameValidator(): ValidatorFn {
-  return (control: FormGroup): ValidationErrors => {
-    const val = control.value;
-
-    // throw error if not in format and not at least 3 non-digit characters
-    return (!val.match(/^([a-z0-9])+([_]?[a-z0-9]+)*$/g)
-      || (val.replace(new RegExp('[0-9_]', 'g'), '').length < 3))
-      ? {invalidUsername: true}
-      : null;
-  };
-}
-
-function nameValidator(): ValidatorFn {
-  return (control: FormGroup): ValidationErrors => {
-    const val = control.value;
-
-    // throw error if not in format and not at least 3 non-digit characters
-    return (!val.match(/^([A-Za-z0-9äüöß])+([ ]?[A-Za-z0-9äüöß]+)*$/g)
-      || (val.replace(new RegExp('[0-9 ]', 'g'), '').length < 3))
-      ? {invalidUsername: true}
-      : null;
-  };
-}
+import {ActivatedRoute} from '@angular/router';
+import {AccountService} from '../../../../services/account.service';
+import {Observable} from 'rxjs';
+import {ValidatorUtil} from '../../../../_util/validatorUtil.util';
 
 @Component({
   selector: 'app-user-data',
@@ -47,71 +13,64 @@ function nameValidator(): ValidatorFn {
 })
 
 export class UserDataComponent implements OnInit {
+  @ViewChild('resendButton', {static: true})
+  public resendButton: ElementRef;
 
-  @Output()
-  public save = new EventEmitter<any>();
-  @Input()
-  public register = true;
-  @Input()
-  public userData: IUserModel;
-  @Input()
-  public done = false;
+  @Output() public save = new EventEmitter<any>();
+  @Output() public updateParent = new EventEmitter<null>();
 
-  public button = 'Registrieren';
+  @Input() public isRegister = true;
+  @Input() public done = false;
+  @Input() public userData$: Observable<IUserModel> = new Observable<IUserModel>();
 
-  public hide = true;
+  private userData: IUserModel;
 
   public event: FormGroup;
+  public hide = true;
+
+  public button: string;
   public tooltip: string;
 
-  constructor() {
-  }
+  private mailSuccess: string;
+  private mailPending = false;
+  private isResend = false;
 
-  ngOnInit() {
+  constructor(private route: ActivatedRoute, private accountService: AccountService) {
+    this.route.queryParams.subscribe(params => {
+      this.mailSuccess = params.mail;
+    });
+
     this.event = new FormGroup({
-      name: new FormControl('', [Validators.required, nameValidator()]),
-      username: new FormControl('', [Validators.required, usernameValidator()]),
+      name: new FormControl('', [Validators.required, ValidatorUtil.displayname]),
+      username: new FormControl('', [Validators.required, ValidatorUtil.username]),
       mail: new FormControl('', [Validators.email, Validators.required]),
       passwords: new FormGroup({
         password: new FormControl(''),
         passwordVerify: new FormControl(''),
-      }, passwordVerifyCheck()),
+      }, ValidatorUtil.password),
     });
+  }
 
-    if (this.userData !== undefined) {
-      this.parseOverallData();
-    }
+  ngOnInit() {
+    this.button = this.isRegister ? 'Registrieren' : 'Speichern';
+    this.tooltip = this.getToolTip();
 
-    if (!this.register) {
+    if (!this.isRegister) {
       this.event.get('username').disable();
-      this.button = 'Speichern';
-      this.tooltip = 'Du kannst deinen Benutzernamen (noch) nicht ändern.';
     } else {
-      this.getPassword().setValidators([Validators.required]);
-      this.getPasswordVerify().setValidators([Validators.required]);
-      this.tooltip = 'Erlaubte Beispiele: '
-        + '\r\n'
-        + '\r\n max'
-        + '\r\n max123 '
-        + '\r\n max_m '
-        + '\r\n max_123_muster '
-        + '\r\n'
-        + '\r\n Mindestens 3 Buchstaben. '
-        + '\r\n Kein _ am Anfang oder Ende. '
-        + '\r\n Nur ein _ in Folge.';
+      this.setPasswordRequired();
     }
-  }
 
-  private parseOverallData() {
-    this.event.setValue({
-      name: this.userData.name,
-      username: this.userData.username,
-      mail: this.userData.mail,
-      passwords: {password: '', passwordVerify: ''},
+    // listen to change from parent component (@Input)
+    this.userData$.subscribe(sUserData => {
+      this.userData = sUserData;
+      if (this.userData !== undefined) {
+        this.parse();
+      }
     });
   }
 
-  saveFnc(): any {
+  public saveFnc(): any {
     if (this.event.valid) {
       const data = {
         name: this.get('name').value,
@@ -120,17 +79,39 @@ export class UserDataComponent implements OnInit {
         username: this.get('username').value,
       };
 
+      // change mail back to current, if mail change is pending
+      // used for not sending to backend if nothing changed
+      if (this.mailPending) {
+        data.mail = this.userData.mail;
+      }
+
       this.save.emit(data);
     } else {
-      this.getPasswordVerify().setErrors({});
+      this.getPassword('passwordVerify').setErrors({});
     }
   }
 
-  public updateErrors(err) {
-    this.get(err.attr).setErrors({[err.error]: true});
+  public resend() {
+    this.accountService.resendMailChange()
+      .toPromise()
+      .then(() => {
+        this.isResend = true;
+        setTimeout(() => {
+          this.isResend = false;
+        }, 2000);
+      });
   }
 
-  getErrorMessage(str: string) {
+  public cancelMailChange() {
+    this.accountService
+      .cancelMailChange()
+      .toPromise()
+      .then(() => {
+        this.updateParent.emit();
+      });
+  }
+
+  public getErrorMessage(str: string) {
     if (str !== '') {
       if (this.get(str).hasError('required')) {
         return 'Erforderlich';
@@ -150,6 +131,26 @@ export class UserDataComponent implements OnInit {
     }
   }
 
+  public updateErrors(err) {
+    this.get(err.attr).setErrors({[err.error]: true});
+  }
+
+  private parse() {
+    this.event.setValue({
+      name: this.userData.name,
+      username: this.userData.username,
+      mail: this.userData.mail,
+      passwords: {password: '', passwordVerify: ''},
+    });
+
+    if (this.userData.emailChange !== undefined) {
+      this.get('mail').setValue(this.userData.emailChange[0].newMail);
+      this.mailPending = true;
+    } else {
+      this.mailPending = false;
+    }
+  }
+
   private get(str: string) {
     return this.event.get(str);
   }
@@ -158,11 +159,29 @@ export class UserDataComponent implements OnInit {
     return this.event.get('passwords');
   }
 
-  private getPassword() {
-    return this.event.get('passwords').get('password');
+  private getPassword(str = 'password') {
+    return this.event.get('passwords').get(str);
   }
 
-  private getPasswordVerify() {
-    return this.event.get('passwords').get('passwordVerify');
+  private setPasswordRequired() {
+    this.getPassword().setValidators([Validators.required]);
+    this.getPassword('passwordVerify').setValidators([Validators.required]);
+  }
+
+  private getToolTip() {
+    if (this.isRegister) {
+      return 'Erlaubte Beispiele: '
+        + '\r\n'
+        + '\r\n max'
+        + '\r\n max123 '
+        + '\r\n max_m '
+        + '\r\n max_123_muster '
+        + '\r\n'
+        + '\r\n Mindestens 3 Buchstaben. '
+        + '\r\n Kein _ am Anfang oder Ende. '
+        + '\r\n Nur ein _ in Folge.';
+    } else {
+      return 'Du kannst deinen Benutzernamen (noch) nicht ändern. Melde dich bei mir!';
+    }
   }
 }

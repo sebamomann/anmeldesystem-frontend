@@ -39,10 +39,8 @@
           mat-stroked-button>
     Hinzufügen
   </button>
-  <div class="stepper-navigation">
-    <button (click)="saveFnc()"
-            mat-stroked-button>
-      {{ button === 'Speichern' ? button : (hasAdditions() ? button : 'Nein danke') }}
-    </button>
-  </div>
+  <button (click)="saveFnc()"
+          mat-raised-button>
+    {{ button === 'Speichern' ? button : (hasAdditions() ? button : 'Nein danke') }}
+  </button>
 </form>

@@ -8,6 +8,10 @@ mat-tab-group {
   min-width: 20px !important;
 }
 
+::ng-deep form {
+  padding: 4px;
+}
+
 ::ng-deep .mat-tab-labels {
   .mat-tab-label {
     height: 35px;
@@ -22,18 +26,4 @@ mat-tab-group {
 .info {
   font-size: 1.15em;
   margin: 5px auto 28px
-}
-
-.spinner-wrapper {
-  padding: 25px;
-
-  mat-spinner {
-    margin: 10px auto;
-  }
-
-  span {
-    display: block;
-    text-align: center;
-    width: 100%;
-  }
 }

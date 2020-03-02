@@ -3,6 +3,7 @@ import {environment} from '../../environments/environment';
 import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
 import {WINDOW} from '../provider/window.provider';
 import {Observable} from 'rxjs';
+import {IUserModel} from '../models/IUserModel.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,13 @@ export class AccountService {
   constructor(private httpClient: HttpClient, @Inject(WINDOW) private window: Window) {
   }
 
+  get(): Observable<HttpEvent<IUserModel>> {
+    const url = `${environment.api.url}user`;
+    const req = new HttpRequest('GET', url, {
+      reportProgress: true,
+    });
+    return this.httpClient.request(req);
+  }
 
   register(userData: { password: any; mail: any; username: any }) {
     const url = `${environment.api.url}user/`;
@@ -45,5 +53,29 @@ export class AccountService {
   activateUserByEmail(mail: string, token: string) {
     const url = `${environment.api.url}user/verify/${mail}/${token}`;
     return this.httpClient.get<null>(url, {observe: 'response', reportProgress: true});
+  }
+
+  changeEmail(mail: string, token: string) {
+    const url = `${environment.api.url}user/mail/verify/${mail}/${token}`;
+    return this.httpClient.get<null>(url, {observe: 'response', reportProgress: true});
+  }
+
+  resendMailChange() {
+    console.log('resend');
+    const url = `${environment.api.url}user/mail/change/resend`;
+    const domain = this.window.location.hostname + '/account/mail/verify';
+    const req = new HttpRequest('POST', url, {domain}, {
+      reportProgress: true,
+    });
+    return this.httpClient.request(req);
+  }
+
+  cancelMailChange() {
+    console.log('cancel mail change');
+    const url = `${environment.api.url}user/mail/change/cancel`;
+    const req = new HttpRequest('GET', url, {
+      reportProgress: true,
+    });
+    return this.httpClient.request(req);
   }
 }
