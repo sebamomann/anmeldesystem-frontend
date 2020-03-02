@@ -7,6 +7,8 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {WINDOW} from '../../../provider/window.provider';
 import {environment} from '../../../../environments/environment';
 import {AppointmentService} from '../../../services/appointment.service';
+import {AppointmentUtil} from '../../../_util/appointmentUtil.util';
+import {AuthenticationService} from '../../../services/authentication.service';
 
 @Component({
   selector: 'app-appointment-data',
@@ -21,11 +23,12 @@ export class AppointmentDataComponent implements OnInit {
   @Input() public preview = false;
   @Input() public type: string;
 
+  private userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
   public isPinned = false;
 
   constructor(public urlService: UrlService, private snackBar: MatSnackBar, private router: Router,
               public sanitizer: DomSanitizer, @Inject(WINDOW) public window: Window,
-              private appointmentService: AppointmentService) {
+              private appointmentService: AppointmentService, private authenticationService: AuthenticationService) {
     if (!this.preview) {
       this.type = '';
     }
@@ -33,6 +36,11 @@ export class AppointmentDataComponent implements OnInit {
 
   ngOnInit() {
     this.isPinned = this.appointment.reference.includes('PINNED');
+
+    // PIN TO LOCAL IN CASE IT WAS ONLY PINNED ON ACCOUNT
+    if (this.isPinned) {
+      AppointmentUtil.pin(this.appointment.link);
+    }
   }
 
   redirectToAppointment(appointment: IAppointmentModel) {
@@ -62,25 +70,30 @@ export class AppointmentDataComponent implements OnInit {
   }
 
   pin() {
-    this.appointmentService
-      .pin(this.appointment.link)
-      .toPromise()
-      .then(() => {
-        let msg = '';
-        if (this.isPinned) {
-          msg = 'Pin entfernt';
-          this.isPinned = false;
-        } else {
-          msg = 'Angepinnt';
-          this.isPinned = true;
-        }
+    if (this.userIsLoggedIn) {
+      this.appointmentService
+        .pin(this.appointment.link)
+        .toPromise()
+        .then(() => {
+        });
+    }
 
-        this.snackBar.open(msg,
-          '',
-          {
-            duration: 2000,
-            panelClass: 'snackbar-default'
-          });
+    let msg = '';
+    if (this.isPinned) {
+      msg = 'Pin entfernt';
+      this.isPinned = false;
+      AppointmentUtil.unpin(this.appointment.link);
+    } else {
+      msg = 'Angepinnt';
+      this.isPinned = true;
+      AppointmentUtil.pin(this.appointment.link);
+    }
+
+    this.snackBar.open(msg,
+      '',
+      {
+        duration: 2000,
+        panelClass: 'snackbar-default'
       });
   }
 }
