@@ -65,7 +65,8 @@
         <mat-icon>share</mat-icon>
         <span>Teilen</span>
       </button>
-      <button [disabled]="true" mat-menu-item>
+      <button (click)="pin()"
+              mat-menu-item>
         <ng-container *ngIf="!isPinned">
           <mat-icon>bookmark_border</mat-icon>
           <span>Anpinnen</span>

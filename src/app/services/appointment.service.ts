@@ -268,4 +268,14 @@ export class AppointmentService {
       });
     return this.httpClient.request(req);
   }
+
+  pin(link: string) {
+    const url = `${environment.api.url}appointment/${link}/pin`;
+    const req = new HttpRequest('GET', url, {
+      observe: 'response',
+      reportProgress: true,
+    });
+
+    return this.httpClient.request(req);
+  }
 }
