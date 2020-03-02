@@ -32,7 +32,6 @@ export class AppointmentDataComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('inti');
     this.isPinned = this.appointment.reference.includes('PINNED');
   }
 
@@ -66,9 +65,8 @@ export class AppointmentDataComponent implements OnInit {
     this.appointmentService
       .pin(this.appointment.link)
       .toPromise()
-      .then(res => {
+      .then(() => {
         let msg = '';
-        console.log(this.isPinned);
         if (this.isPinned) {
           msg = 'Pin entfernt';
           this.isPinned = false;
