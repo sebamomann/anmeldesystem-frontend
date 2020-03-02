@@ -1,7 +1,12 @@
 <div class="appointment-data-wrapper">
-  <mat-card (click)="preview ? redirectToAppointment(appointment) : ''" [ngClass]="type" class="appointment-data">
-    <div *ngIf="preview" [ngClass]="type"
-         class="bookmark">
+  <mat-card (click)="preview ? redirectToAppointment(appointment) : ''" class="appointment-data">
+    <div class="bookmark-wrapper">
+      <div *ngFor="let ref of appointment.reference" class="bookmark-block">
+        <div *ngIf="preview"
+             [ngClass]="ref| lowercase"
+             class="bookmark">
+        </div>
+      </div>
     </div>
     <mat-card-title class="headline">
       {{appointment.title}}
@@ -14,15 +19,20 @@
     </span>
       <span>
       <mat-icon>verified_user</mat-icon>
-      <span>{{appointment.creator.username}}</span>
+      <span class="hasChild">
+        {{appointment.creator.name}}
+        <span>@{{appointment.creator.username}}</span>
+      </span>
     </span>
       <span>
       <mat-icon>access_time</mat-icon>
-      <span> {{appointment.date | date: 'dd.MM.y, HH:mm' }} Uhr</span>
+      <span> {{(appointment.date | date: 'dd.MM.y')}}<br/>
+        {{(appointment.date | date: 'HH:mm')}}Uhr</span>
     </span>
       <span *ngIf="appointment.date != appointment.deadline && appointment.deadline != null">
       <mat-icon>alarm_on</mat-icon>
-      <span>{{appointment.deadline | date: 'dd.MM.y, HH:mm' }} Uhr</span>
+      <span> {{(appointment.deadline | date: 'dd.MM.y')}}<br/>
+        {{(appointment.deadline | date: 'HH:mm')}}Uhr</span>
     </span>
       <p>{{appointment.description}}</p>
 
@@ -55,9 +65,16 @@
         <mat-icon>share</mat-icon>
         <span>Teilen</span>
       </button>
-      <button [disabled]="true" mat-menu-item>
-        <mat-icon>bookmark_border</mat-icon>
-        <span>Anpinnen</span>
+      <button (click)="pin()"
+              mat-menu-item>
+        <ng-container *ngIf="!isPinned">
+          <mat-icon>bookmark_border</mat-icon>
+          <span>Anpinnen</span>
+        </ng-container>
+        <ng-container *ngIf="isPinned">
+          <mat-icon>bookmark</mat-icon>
+          <span>Entfernen</span>
+        </ng-container>
       </button>
       <button (click)="settings()"
               mat-menu-item>

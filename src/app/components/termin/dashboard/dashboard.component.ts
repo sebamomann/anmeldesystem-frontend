@@ -68,24 +68,4 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/enroll'], {queryParams: {a: appointment.link}});
   }
 
-  public parseClass(appointment: IAppointmentModel) {
-    return (this.isCreator(appointment)
-        ? 'creator'
-        : (this.isAdmin(appointment)
-            ? 'admin'
-            : 'enrolled'
-        )
-    );
-  }
-
-  private isAdmin(appointment: IAppointmentModel) {
-    return appointment.administrators.some(val => {
-      return val.mail === this.authenticationService.currentUserValue.mail;
-    });
-  }
-
-  private isCreator(appointment: IAppointmentModel) {
-    return appointment.creator.username === this.authenticationService.currentUserValue.username;
-  }
-
 }
