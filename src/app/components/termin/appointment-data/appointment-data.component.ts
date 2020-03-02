@@ -16,14 +16,11 @@ export class AppointmentDataComponent implements OnInit {
 
   public apiUrl = environment.api.url;
 
-  @Input()
-  public appointment: IAppointmentModel;
+  @Input() public appointment: IAppointmentModel;
+  @Input() public preview = false;
+  @Input() public type: string;
 
-  @Input()
-  public preview = false;
-
-  @Input()
-  public type: string;
+  public isPinned: boolean;
 
   constructor(public urlService: UrlService, private snackBar: MatSnackBar, private router: Router,
               public sanitizer: DomSanitizer, @Inject(WINDOW) public window: Window) {
@@ -33,6 +30,7 @@ export class AppointmentDataComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isPinned = this.appointment.reference.includes('PINNED');
   }
 
   redirectToAppointment(appointment: IAppointmentModel) {

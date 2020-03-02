@@ -19,15 +19,19 @@
     </span>
       <span>
       <mat-icon>verified_user</mat-icon>
-      <span>{{appointment.creator.username}}</span>
+      <span>{{appointment.creator.name}}
+        <span>@{{appointment.creator.username}}</span>
+      </span>
     </span>
       <span>
       <mat-icon>access_time</mat-icon>
-      <span> {{appointment.date | date: 'dd.MM.y, HH:mm' }} Uhr</span>
+      <span> {{(appointment.date | date: 'dd.MM.y')}}<br/>
+        {{(appointment.date | date: 'HH:mm')}}Uhr</span>
     </span>
       <span *ngIf="appointment.date != appointment.deadline && appointment.deadline != null">
       <mat-icon>alarm_on</mat-icon>
-      <span>{{appointment.deadline | date: 'dd.MM.y, HH:mm' }} Uhr</span>
+      <span> {{(appointment.deadline | date: 'dd.MM.y')}}<br/>
+        {{(appointment.deadline | date: 'HH:mm')}}Uhr</span>
     </span>
       <p>{{appointment.description}}</p>
 
@@ -61,8 +65,14 @@
         <span>Teilen</span>
       </button>
       <button [disabled]="true" mat-menu-item>
-        <mat-icon>bookmark_border</mat-icon>
-        <span>Anpinnen</span>
+        <ng-container *ngIf="!isPinned">
+          <mat-icon>bookmark_border</mat-icon>
+          <span>Anpinnen</span>
+        </ng-container>
+        <ng-container *ngIf="isPinned">
+          <mat-icon>bookmark</mat-icon>
+          <span>Entfernen</span>
+        </ng-container>
       </button>
       <button (click)="settings()"
               mat-menu-item>
