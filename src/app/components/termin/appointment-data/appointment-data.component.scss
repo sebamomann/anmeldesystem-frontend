@@ -101,10 +101,15 @@
           width: calc(100% - 40px);
           vertical-align: middle;
 
+          &.hasChild {
+            line-height: 0.9em;
+          }
+
           span {
             font-size: 0.75em;
             color: gray;
             margin: 0;
+            width: 100%;
           }
         }
       }
