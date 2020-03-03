@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
   hide = true;
 
   event = new FormGroup({
-    username: new FormControl('', [Validators.required, Validators.email]),
+    username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
   });
 
@@ -65,10 +65,6 @@ export class LoginComponent implements OnInit {
   getUsernameErrorMessage(): string {
     if (this.getUsername().hasError('required')) {
       return 'Bitte gebe deine E-Mail ein';
-    }
-
-    if (this.getUsername().hasError('email')) {
-      return 'Bitte gebe eine gültige E-Mail ein';
     }
   }
 
