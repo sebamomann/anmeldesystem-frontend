@@ -45,7 +45,7 @@
             <div *ngFor="let addition of getAdditionsControls(); let i = index;"
                  formArrayName="additions">
               <mat-checkbox
-                [formControlName]="i">
+                [formControlName]="'' + i">
                 {{appointment.additions[i].name}}
               </mat-checkbox>
             </div>
