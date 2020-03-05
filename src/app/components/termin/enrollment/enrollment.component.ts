@@ -103,7 +103,7 @@ export class EnrollmentComponent implements OnInit {
     // Needed due to error permanent trigger, if value is put in via form [value]
     if (this.userIsLoggedIn && !this.edit) {
       this.getName().markAsTouched();
-      this.getName().setValue(this.authenticationService.currentUserValue.username);
+      this.getName().setValue(this.authenticationService.currentUserValue.name);
     }
 
     const initialAppointment$ = this.getDataOnce();
