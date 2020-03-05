@@ -113,31 +113,20 @@
         </mat-form-field>
 
 
-        <!--        <div *ngIf="!getSelfEnrollment().value"-->
-        <!--             [formGroup]="mailEvent"-->
-        <!--             class="token-select">-->
-        <!--          <div class="separator colored extra-tall bold middle center"></div>-->
-        <!--          <mat-form-field>-->
-        <!--            <mat-label>Bestehender Token</mat-label>-->
-        <!--            <mat-select formControlName="existingKey">-->
-        <!--              <mat-option *ngFor="let key of localStorageKeys" [value]="key">{{ key }}</mat-option>-->
-        <!--            </mat-select>-->
-        <!--            <mat-error *ngIf="mailEvent.get('existingKey').invalid">-->
-        <!--              {{ getExistingKeyErrorMessage() }}-->
-        <!--            </mat-error>-->
-        <!--          </mat-form-field>-->
-        <!--          <mat-form-field>-->
-        <!--            <input formControlName="key"-->
-        <!--                   matInput-->
-        <!--                   placeholder="Neuer Token">-->
-        <!--            <mat-error *ngIf="!keyEventValid()">-->
-        <!--              {{ getKeyErrorMessage() }}-->
-        <!--            </mat-error>-->
-        <!--          </mat-form-field>-->
-        <!--        </div>-->
-        <!--        <div *ngIf="mailEvent.invalid">-->
-        <!--          {{ getKeyEventErrorMessage() }}-->
-        <!--        </div>-->
+        <div *ngIf="!getSelfEnrollment().value"
+             [formGroup]="mailEvent">
+          <div class="separator colored extra-extra-tall bolder middle center"></div>
+          <mat-form-field>
+            <label>
+              <input formControlName="mail"
+                     matInput
+                     placeholder="Mail-Adresse">
+            </label>
+            <mat-error>
+              {{ getMailErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+        </div>
 
         <mat-card-actions>
           <button id="submit" mat-raised-button color="primary">

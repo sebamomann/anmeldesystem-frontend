@@ -907,7 +907,8 @@ footer {
 
 .input-with-button-wrapper {
   mat-form-field {
-    width: 65% !important;
+    padding: 0 10px 0 0 !important;
+    width: calc(70% - 10px) !important;
   }
 
   button {
