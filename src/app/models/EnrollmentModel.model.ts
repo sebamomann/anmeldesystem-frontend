@@ -9,7 +9,7 @@ export class EnrollmentModel implements IEnrollmentModel {
   public comment: string;
   public comments: ICommentModel[];
   public driver: IDriverModel | null;
-  public editKey: string;
+  public mail?: string;
   public iat: string;
   public id: string;
   public name: string;
