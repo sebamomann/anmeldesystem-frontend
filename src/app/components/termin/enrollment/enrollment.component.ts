@@ -250,12 +250,6 @@ export class EnrollmentComponent implements OnInit {
     }
   };
 
-  public getKeyErrorMessage(): string {
-    if (this.getMail().hasError('required')) {
-      return 'Bitte angeben';
-    }
-  }
-
   private getAdditionIdList: () => IAdditionModel[] = () => {
     const additionListRaw = this.event.value.additions
       .map((v, i) => v ? this.appointment.additions[i].id : null)
@@ -330,6 +324,9 @@ export class EnrollmentComponent implements OnInit {
               || result.status === HttpStatus.OK) {
               if (functionName === 'create') {
                 this.appointment.enrollments.push(result.body);
+                if (result.body.token !== undefined) {
+                  this.handleTokenPermission(this.link, result.body);
+                }
               } else if (functionName === 'update') {
                 this.appointment.enrollments.map(obj => {
                   if (obj.id === result.body.id) {
@@ -469,5 +466,33 @@ export class EnrollmentComponent implements OnInit {
 
   goBack() {
     this.location.back();
+  }
+
+  private handleTokenPermission(link: string, body: IEnrollmentModel) {
+
+    let permissions = JSON.parse(localStorage.getItem('permissions'));
+    if (permissions === null ||
+      permissions === undefined) {
+      console.log('undef1');
+      permissions = [];
+    }
+
+    let linkElem = permissions.find(fElement => fElement.link === link);
+    let push = false;
+    if (linkElem === undefined) {
+      linkElem = {link, enrollments: []};
+      push = true;
+    }
+
+    if (!linkElem.enrollments.some(sPermission => sPermission === {id: body.id, token: body.token})) {
+      console.log('push');
+      linkElem.enrollments.push({id: body.id, token: body.token});
+    }
+
+    if (push) {
+      permissions.push(linkElem);
+    }
+
+    localStorage.setItem('permissions', JSON.stringify(permissions));
   }
 }

@@ -15,4 +15,5 @@ export interface IEnrollmentModel {
   iat?: string;
   mail?: string;
   createdByUser?: boolean;
+  token?: string;
 }
