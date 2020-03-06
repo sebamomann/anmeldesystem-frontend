@@ -192,7 +192,7 @@ export class EnrollmentComponent implements OnInit {
     if (this.userIsLoggedIn &&
       !this.getSelfEnrollment().value) {
       if (this.mailEvent.valid) {
-        this.output.mail = this.getMail().value;
+        this.output.editMail = this.getMail().value;
       } else {
         this.mailEvent.markAllAsTouched();
         this.getMail().setErrors({invalid: true});
@@ -237,7 +237,7 @@ export class EnrollmentComponent implements OnInit {
     // Set key, if logged in but not selfenroll
     // Set key if not logged in and token specified by after enroll screen
     if ((!this.userIsLoggedIn || (this.userIsLoggedIn && !this.getSelfEnrollment().value)) && !this.edit) {
-      this.output.mail = this.getMail().value;
+      this.output.editMail = this.getMail().value;
     }
 
     if (this.userIsLoggedIn || this.mailEvent.valid || this.edit) {
@@ -458,7 +458,7 @@ export class EnrollmentComponent implements OnInit {
     // If user selected selfEnrollment
     // Or if key is set
     if (((this.getSelfEnrollment().value && this.userIsLoggedIn)
-      || this.output.mail !== undefined) || this.edit) {
+      || this.output.editMail !== undefined) || this.edit) {
       this.sendEnrollment().then(() => '');
     } else {
       // TempStore item for possible login redirect

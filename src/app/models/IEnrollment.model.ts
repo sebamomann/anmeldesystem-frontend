@@ -4,6 +4,7 @@ import {IAdditionModel} from './IAddition.model';
 import {IPassengerModel} from './IPassengerModel.model';
 
 export interface IEnrollmentModel {
+  editMail?: any;
   id?: string;
   name: string;
   comment: string;

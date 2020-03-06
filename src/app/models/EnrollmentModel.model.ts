@@ -5,11 +5,13 @@ import {IDriverModel} from './IDriverModel.model';
 import {IPassengerModel} from './IPassengerModel.model';
 
 export class EnrollmentModel implements IEnrollmentModel {
+  public mail?: string;
+  public createdByUser?: boolean;
   public additions: IAdditionModel[];
   public comment: string;
   public comments: ICommentModel[];
   public driver: IDriverModel | null;
-  public mail?: string;
+  public editMail?: string;
   public iat: string;
   public id: string;
   public name: string;
