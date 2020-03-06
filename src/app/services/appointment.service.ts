@@ -106,7 +106,6 @@ export class AppointmentService {
       url = url + '?slim=true';
     }
 
-    const pinned = AppointmentUtil.getPinned();
     let pinnedQueryParam = '?';
     if (slim) {
       pinnedQueryParam = '&';
@@ -116,7 +115,7 @@ export class AppointmentService {
     permissions = permissions.find(fPermission => fPermission.link === link);
 
     permissions.enrollments.forEach((fPermission, i) => {
-      pinnedQueryParam += 'perm' + (i + 1) + '=' + fPermission.id + '&token' + (i + 1) + '=' + fPermission.token;
+      pinnedQueryParam += 'perm' + (i + 1) + '=' + fPermission.id + '&token' + (i + 1) + '=' + fPermission.token + '&';
     });
 
     url += pinnedQueryParam;
