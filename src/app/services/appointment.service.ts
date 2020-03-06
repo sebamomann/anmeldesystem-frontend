@@ -101,9 +101,25 @@ export class AppointmentService {
     //
     // } else {
     url = `${environment.api.url}appointment/${link}`;
+
     if (slim) {
-      url += '?slim=true';
+      url = url + '?slim=true';
     }
+
+    const pinned = AppointmentUtil.getPinned();
+    let pinnedQueryParam = '?';
+    if (slim) {
+      pinnedQueryParam = '&';
+    }
+
+    let permissions = JSON.parse(localStorage.getItem('permissions'));
+    permissions = permissions.find(fPermission => fPermission.link === link);
+
+    permissions.enrollments.forEach((fPermission, i) => {
+      pinnedQueryParam += 'perm' + (i + 1) + '=' + fPermission.id + '&token' + (i + 1) + '=' + fPermission.token;
+    });
+
+    url += pinnedQueryParam;
 
     let headers = new HttpHeaders();
     if (this.first) {
