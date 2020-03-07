@@ -415,11 +415,12 @@ export class EnrollmentListComponent implements OnInit {
 
   private getTokenForEnrollment(id: string, link: string) {
     const permissions = JSON.parse(localStorage.getItem('permissions'));
-    const linkElem = permissions.find(fElement => fElement.link === link);
-    const elem = linkElem.enrollments.filter(sPermission => sPermission.id === id);
-    if (elem !== undefined) {
-      return elem[0].token;
-    } else {
+    if (permissions != null) {
+      const linkElem = permissions.find(fElement => fElement.link === link);
+      const elem = linkElem.enrollments.filter(sPermission => sPermission.id === id);
+      if (elem[0] !== undefined) {
+        return elem[0].token;
+      }
       return '';
     }
   }

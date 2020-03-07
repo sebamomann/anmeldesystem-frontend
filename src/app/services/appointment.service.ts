@@ -112,13 +112,15 @@ export class AppointmentService {
     }
 
     let permissions = JSON.parse(localStorage.getItem('permissions'));
-    permissions = permissions.find(fPermission => fPermission.link === link);
+    if (permissions !== null) {
+      permissions = permissions.find(fPermission => fPermission.link === link);
 
-    permissions.enrollments.forEach((fPermission, i) => {
-      pinnedQueryParam += 'perm' + (i + 1) + '=' + fPermission.id + '&token' + (i + 1) + '=' + fPermission.token + '&';
-    });
+      permissions.enrollments.forEach((fPermission, i) => {
+        pinnedQueryParam += 'perm' + (i + 1) + '=' + fPermission.id + '&token' + (i + 1) + '=' + fPermission.token + '&';
+      });
 
-    url += pinnedQueryParam;
+      url += pinnedQueryParam;
+    }
 
     let headers = new HttpHeaders();
     if (this.first) {
