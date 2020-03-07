@@ -285,14 +285,11 @@ export class EnrollmentListComponent implements OnInit {
               }
           });
         }
+
         return;
       })
       .catch(err => {
-        if (!enrollment.createdByUser) {
-          return this.allowedToEditByToken(enrollment, operation);
-        }
-
-        throw err;
+        return this.allowedToEditByToken(enrollment, operation);
       })
       .then(value => {
         if (typeof value === 'boolean') {
@@ -310,15 +307,6 @@ export class EnrollmentListComponent implements OnInit {
               queryParamsHandling: 'merge'
             });
           }
-        }
-      })
-      .catch(err2 => {
-        if (err2 !== null) {
-          this.snackBar.open(`Du hast nicht die benötigte Berechtigung diese Anmeldung zu ` +
-            `${operation === 'edit' ? 'bearbeiten' : 'löschen'}`, 'OK', {
-            duration: 2000,
-            panelClass: 'snackbar-error'
-          });
         }
       });
   };
@@ -352,7 +340,7 @@ export class EnrollmentListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.enrollmentService
-          .delete(enrollment)
+          .delete(enrollment, this.appointment.link)
           .subscribe(
             deletionResult => {
               if (deletionResult.type === HttpEventType.Response) {
@@ -399,7 +387,6 @@ export class EnrollmentListComponent implements OnInit {
   }
 
   private allowedToEditByToken(enrollment: IEnrollmentModel, operation: string) {
-    // VALIDATE TOKEN FIRST
     this.enrollmentService
       .validateToken(enrollment, this.appointment.link)
       .subscribe(
@@ -420,9 +407,10 @@ export class EnrollmentListComponent implements OnInit {
             }
           }
         },
-        error => {
-          return this.openResendDialog(enrollment, operation);
-        });
+        () => {
+          this.openResendDialog(enrollment, operation);
+        }
+      );
   }
 
   private getTokenForEnrollment(id: string, link: string) {

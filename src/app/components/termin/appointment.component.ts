@@ -469,7 +469,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.enrollmentService
-          .delete(enrollment)
+          .delete(enrollment, this.appointment.link)
           .subscribe(
             deletionResult => {
               if (deletionResult.type === HttpEventType.Response) {

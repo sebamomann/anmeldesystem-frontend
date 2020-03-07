@@ -3,7 +3,7 @@ import {IEnrollmentModel} from '../models/IEnrollment.model';
 import {HttpClient, HttpRequest, HttpResponse} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {IAppointmentModel} from '../models/IAppointment.model';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {WINDOW} from '../provider/window.provider';
 
 @Injectable({
@@ -26,16 +26,9 @@ export class EnrollmentService {
     return this.httpClient.put<IEnrollmentModel>(url, enrollment, {observe: 'response', reportProgress: true});
   }
 
-  delete(enrollment: IEnrollmentModel) {
-    let body = null;
-    const localStorageKey = localStorage.getItem('editKeyByKeyDialog');
-    if (localStorageKey !== null) {
-      body = {key: localStorageKey};
-    }
-
-    localStorage.removeItem('editKeyByKeyDialog');
-
-    const req = new HttpRequest('DELETE', `${environment.api.url}enrollment/${enrollment.id}`, body, {});
+  delete(enrollment: IEnrollmentModel, link) {
+    const token = this.getTokenForEnrollment(enrollment.id, link);
+    const req = new HttpRequest('DELETE', `${environment.api.url}enrollment/${enrollment.id}/${token}`, {});
     return this.httpClient.request(req);
   }
 
@@ -46,11 +39,11 @@ export class EnrollmentService {
 
   validateToken(enrollment: IEnrollmentModel, link): Observable<HttpResponse<void>> {
     const token = this.getTokenForEnrollment(enrollment.id, link);
-    if (token !== '') {
+    if (token !== undefined && token !== '') {
       const url = `${environment.api.url}enrollment/${enrollment.id}/validateToken/${token}`;
       return this.httpClient.get<void>(url, {observe: 'response', reportProgress: true});
     } else {
-      throw new Error();
+      return throwError('');
     }
   }
 
@@ -58,7 +51,7 @@ export class EnrollmentService {
     const permissions = JSON.parse(localStorage.getItem('permissions'));
     const linkElem = permissions.find(fElement => fElement.link === link);
     const elem = linkElem.enrollments.filter(sPermission => sPermission.id === id);
-    if (elem !== undefined) {
+    if (elem[0] !== undefined) {
       return elem[0].token;
     } else {
       return '';

@@ -508,6 +508,13 @@ export class EnrollmentComponent implements OnInit {
 
     if (!linkElem.enrollments.some(sPermission => sPermission.id === body.id)) {
       linkElem.enrollments.push({id: body.id, token: body.token});
+    } else {
+      linkElem.enrollments.map(sPermission => {
+        if (sPermission.id === body.id) {
+          sPermission.token = body.token;
+          return;
+        }
+      });
     }
 
     if (push) {
@@ -521,7 +528,7 @@ export class EnrollmentComponent implements OnInit {
     const permissions = JSON.parse(localStorage.getItem('permissions'));
     const linkElem = permissions.find(fElement => fElement.link === link);
     const elem = linkElem.enrollments.filter(sPermission => sPermission.id === id);
-    if (elem !== undefined) {
+    if (elem[0] !== undefined) {
       return elem[0].token;
     } else {
       return '';
