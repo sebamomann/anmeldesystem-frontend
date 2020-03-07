@@ -9,10 +9,10 @@
           {{filter.name}}
         </mat-checkbox>
       </div>
+      <div class="separator tall brighter center semi"></div>
     </ng-container>
 
     <ng-container *ngIf="data.appointment.driverAddition">
-      <div class="separator tall brighter center semi"></div>
       <mat-radio-group [(ngModel)]="dialogFilter.driverPassenger">
         <mat-radio-button [value]="'driver'"
                           class="filter-element">
@@ -27,11 +27,11 @@
           Beide
         </mat-radio-button>
       </mat-radio-group>
+      <div class="separator tall brighter center semi"></div>
     </ng-container>
 
 
     <div class="filter-block">
-      <div class="separator tall brighter center semi"></div>
       <!--suppress TypeScriptUnresolvedFunction -->
       <mat-icon class="tooltip"
                 #tooltip="matTooltip"
