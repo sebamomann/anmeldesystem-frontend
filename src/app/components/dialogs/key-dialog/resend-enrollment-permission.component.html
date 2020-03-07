@@ -1,0 +1,42 @@
+<div class="key-dialog">
+  <h2 mat-dialog-title>
+    Berechtigungen
+  </h2>
+  <div *ngIf="!userIsLoggedIn"
+       mat-dialog-content>
+    <span>
+      Logge dich ein um, um ggf mehr Berechtigungen zu haben.
+    </span>
+    <button
+      (click)="this.matDialogRef.close(false)"
+      [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url +
+        '&editId=' + enrollment.id +
+        '&editOperation=' + (this.operation === 'delete' ? 'delete' : 'edit')}"
+      [routerLink]="['/account/login']"
+      color="primary"
+      mat-raised-button>
+      Login
+    </button>
+  </div>
+
+  <div *ngIf="userIsLoggedIn" mat-dialog-content>
+    <span>
+      Sorry {{ this.authenticationService.currentUserValue.username }}. Du keine Berechtigung für diese Anmeldung.
+    </span>
+  </div>
+
+  <div class="separator colored tall center bold middle"></div>
+
+  <div mat-dialog-content>
+    <span>
+    Wenn du die Anmeldung erstellt hast und deine Email angegeben hast, dann folge erneut dem Link in dieser Mail.
+    Die Berechtigungen füt deine Anmeldung werden auf dem Gerät abgespeichert mit welchem du auf den Link
+      </span>
+    <span>// TODO RESEND MAIL</span>
+  </div>
+
+  <div mat-dialog-actions>
+    <button (click)="onNoClick()" mat-button>Abbrechen</button>
+    <button (click)="setToken()" cdkFocusInitial mat-button>Absenden</button>
+  </div>
+</div>

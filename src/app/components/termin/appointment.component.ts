@@ -12,7 +12,7 @@ import {animate, query, stagger, state, style, transition, trigger} from '@angul
 import {AuthenticationService} from '../../services/authentication.service';
 import {ConfirmationDialogComponent} from '../dialogs/confirmation-dialog/confirmation-dialog.component';
 import {EnrollmentService} from '../../services/enrollment.service';
-import {KeyDialogComponent} from '../dialogs/key-dialog/key-dialog.component';
+import {ResendEnrollmentPermissionComponent} from '../dialogs/key-dialog/resend-enrollment-permission.component';
 import {Location} from '@angular/common';
 import {EnrollmentUtil} from '../../_util/enrollmentUtil.util';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -399,7 +399,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   };
 
   public _openAskForKeyDialog = (enrollment: IEnrollmentModel, operation: string): Promise<boolean> => {
-    const dialogRef = this.dialog.open(KeyDialogComponent, {
+    const dialogRef = this.dialog.open(ResendEnrollmentPermissionComponent, {
       width: '90%',
       maxWidth: '500px',
       height: 'auto',
@@ -414,7 +414,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
       const result = await dialogRef.afterClosed().toPromise();
       if (result !== undefined && result !== false) {
         this.enrollmentService
-          .validateKey(enrollment, result)
+          .validateToken(enrollment, result)
           .subscribe(
             sResult => {
               if (sResult.type === HttpEventType.Response) {

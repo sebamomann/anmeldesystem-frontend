@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {KeyDialogComponent} from './key-dialog.component';
+import {ResendEnrollmentPermissionComponent} from './resend-enrollment-permission.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule} from '@angular/material';
@@ -9,8 +9,8 @@ import {MatDialogRef} from '@angular/material/dialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('KeyDialogComponent', () => {
-  let component: KeyDialogComponent;
-  let fixture: ComponentFixture<KeyDialogComponent>;
+  let component: ResendEnrollmentPermissionComponent;
+  let fixture: ComponentFixture<ResendEnrollmentPermissionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -21,7 +21,7 @@ describe('KeyDialogComponent', () => {
         MatSelectModule, HttpClientTestingModule,
         BrowserAnimationsModule
       ],
-      declarations: [KeyDialogComponent],
+      declarations: [ResendEnrollmentPermissionComponent],
       providers: [{
         provide: MatDialogRef, useValue: {}
       }, {
@@ -35,7 +35,7 @@ describe('KeyDialogComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(KeyDialogComponent);
+    fixture = TestBed.createComponent(ResendEnrollmentPermissionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

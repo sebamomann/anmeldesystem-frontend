@@ -13,7 +13,7 @@ import {AuthenticationService} from '../../../../services/authentication.service
 import {EnrollmentService} from '../../../../services/enrollment.service';
 import {Location} from '@angular/common';
 import {DomSanitizer} from '@angular/platform-browser';
-import {KeyDialogComponent} from '../../../dialogs/key-dialog/key-dialog.component';
+import {ResendEnrollmentPermissionComponent} from '../../../dialogs/key-dialog/resend-enrollment-permission.component';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
 
 const HttpStatus = require('http-status-codes');
@@ -162,8 +162,8 @@ export class EnrollmentListComponent implements OnInit {
     });
   };
 
-  public _openAskForKeyDialog = (enrollment: IEnrollmentModel, operation: string): Promise<boolean> => {
-    const dialogRef = this.dialog.open(KeyDialogComponent, {
+  public openResendDialog = (enrollment: IEnrollmentModel, operation: string) => {
+    const dialogRef = this.dialog.open(ResendEnrollmentPermissionComponent, {
       width: '90%',
       maxWidth: 'initial',
       height: 'auto',
@@ -171,30 +171,6 @@ export class EnrollmentListComponent implements OnInit {
       data: {
         enrollment,
         operation
-      }
-    });
-
-    return new Promise<boolean>(async (resolve, reject) => {
-      const result = await dialogRef.afterClosed().toPromise();
-      if (result !== undefined && result !== false) {
-        this.enrollmentService
-          .validateKey(enrollment, result)
-          .subscribe(
-            sResult => {
-              if (sResult.type === HttpEventType.Response) {
-                if (sResult.status === HttpStatus.OK) {
-                  localStorage.setItem('editKeyByKeyDialog', result);
-                  return resolve(true);
-                }
-
-                return resolve(sResult.status === HttpStatus.OK);
-              }
-            }, error => {
-              console.log(error);
-              reject(false);
-            });
-      } else {
-        reject(null);
       }
     });
   };
@@ -294,8 +270,6 @@ export class EnrollmentListComponent implements OnInit {
   };
 
   public precheckOpenConfirmationDialog = async (enrollment: IEnrollmentModel, operation: string): Promise<void> => {
-    localStorage.removeItem('editKeyByKeyDialog');
-
     this.allowedToEditByUserId(enrollment)
       .then(value => {
         if (operation === 'delete') {
@@ -425,6 +399,40 @@ export class EnrollmentListComponent implements OnInit {
   }
 
   private allowedToEditByToken(enrollment: IEnrollmentModel, operation: string) {
-    return this._openAskForKeyDialog(enrollment, operation);
+    // VALIDATE TOKEN FIRST
+    this.enrollmentService
+      .validateToken(enrollment, this.appointment.link)
+      .subscribe(
+        sResult => {
+          if (sResult.type === HttpEventType.Response) {
+            if (sResult.status === HttpStatus.OK) {
+              this.router.navigate(['/enrollment'], {
+                queryParams:
+                  {
+                    a: this.appointment.link,
+                    e: enrollment.id,
+                    t: this.getTokenForEnrollment(enrollment.id, this.appointment.link),
+                    editId: null,
+                    editOperation: null
+                  },
+                queryParamsHandling: 'merge'
+              });
+            }
+          }
+        },
+        error => {
+          return this.openResendDialog(enrollment, operation);
+        });
+  }
+
+  private getTokenForEnrollment(id: string, link: string) {
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const linkElem = permissions.find(fElement => fElement.link === link);
+    const elem = linkElem.enrollments.filter(sPermission => sPermission.id === id);
+    if (elem !== undefined) {
+      return elem[0].token;
+    } else {
+      return '';
+    }
   }
 }

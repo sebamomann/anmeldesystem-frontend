@@ -7,10 +7,10 @@ import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 
 @Component({
   selector: 'app-key-dialog',
-  templateUrl: './key-dialog.component.html',
-  styleUrls: ['./key-dialog.component.scss']
+  templateUrl: './resend-enrollment-permission.component.html',
+  styleUrls: ['./resend-enrollment-permission.component.scss']
 })
-export class KeyDialogComponent implements OnInit {
+export class ResendEnrollmentPermissionComponent implements OnInit {
   enrollment: IEnrollmentModel;
   userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
 
@@ -25,7 +25,7 @@ export class KeyDialogComponent implements OnInit {
   operation: string;
 
   constructor(public authenticationService: AuthenticationService, private formBuilder: FormBuilder,
-              public matDialogRef: MatDialogRef<KeyDialogComponent>, private router: Router,
+              public matDialogRef: MatDialogRef<ResendEnrollmentPermissionComponent>, private router: Router,
               @Inject(MAT_DIALOG_DATA) public data) {
     this.enrollment = data.enrollment;
     this.operation = data.operation;

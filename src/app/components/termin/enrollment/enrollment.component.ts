@@ -74,7 +74,9 @@ export class EnrollmentComponent implements OnInit {
       this.token = params.t;
       this.autoSend = params.send === 'true';
 
-      this.handleTokenPermission(this.link, {id: this.enrollmentId, token: this.token});
+      if (this.token !== null && this.token !== undefined) {
+        this.handleTokenPermission(this.link, {id: this.enrollmentId, token: this.token});
+      }
       // const ids = [];
       // const tokens = [];
       // for (const queryKey of Object.keys(params)) {

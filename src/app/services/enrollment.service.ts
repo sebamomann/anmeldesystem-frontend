@@ -44,8 +44,24 @@ export class EnrollmentService {
     return this.httpClient.get<void>(url, {observe: 'response', reportProgress: true});
   }
 
-  validateKey(enrollment: IEnrollmentModel, key: string): Observable<HttpResponse<void>> {
-    const url = `${environment.api.url}enrollment/${enrollment.id}/validateKey`;
-    return this.httpClient.post<void>(url, {key}, {observe: 'response', reportProgress: true});
+  validateToken(enrollment: IEnrollmentModel, link): Observable<HttpResponse<void>> {
+    const token = this.getTokenForEnrollment(enrollment.id, link);
+    if (token !== '') {
+      const url = `${environment.api.url}enrollment/${enrollment.id}/validateToken/${token}`;
+      return this.httpClient.get<void>(url, {observe: 'response', reportProgress: true});
+    } else {
+      throw new Error();
+    }
+  }
+
+  private getTokenForEnrollment(id: string, link: string) {
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const linkElem = permissions.find(fElement => fElement.link === link);
+    const elem = linkElem.enrollments.filter(sPermission => sPermission.id === id);
+    if (elem !== undefined) {
+      return elem[0].token;
+    } else {
+      return '';
+    }
   }
 }
