@@ -19,4 +19,5 @@ export interface IAppointmentModel {
   enrollments: IEnrollmentModel[];
   files: IFileModel[];
   reference?: any;
+  numberOfEnrollments?: number;
 }
