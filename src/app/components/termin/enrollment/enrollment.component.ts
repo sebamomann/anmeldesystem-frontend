@@ -334,7 +334,8 @@ export class EnrollmentComponent implements OnInit {
   }
 
   private async sendEnrollmentRequest(functionName: string) {
-    this.output.token = this.token;
+    console.log(this.getTokenForEnrollment(this.enrollmentId, this.link));
+    this.output.token = this.getTokenForEnrollment(this.enrollmentId, this.link);
     this.enrollmentService[functionName](this.output, this.appointment)
       .subscribe(
         result => {
@@ -503,7 +504,7 @@ export class EnrollmentComponent implements OnInit {
       push = true;
     }
 
-    if (!linkElem.enrollments.some(sPermission => sPermission === {id: body.id, token: body.token})) {
+    if (!linkElem.enrollments.some(sPermission => sPermission.id === body.id)) {
       linkElem.enrollments.push({id: body.id, token: body.token});
     }
 
@@ -512,5 +513,16 @@ export class EnrollmentComponent implements OnInit {
     }
 
     localStorage.setItem('permissions', JSON.stringify(permissions));
+  }
+
+  private getTokenForEnrollment(id: string, link: string) {
+    const permissions = JSON.parse(localStorage.getItem('permissions'));
+    const linkElem = permissions.find(fElement => fElement.link === link);
+    const elem = linkElem.enrollments.filter(sPermission => sPermission.id === id);
+    if (elem !== undefined) {
+      return elem[0].token;
+    } else {
+      return '';
+    }
   }
 }
