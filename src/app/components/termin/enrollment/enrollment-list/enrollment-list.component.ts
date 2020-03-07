@@ -273,10 +273,8 @@ export class EnrollmentListComponent implements OnInit {
     this.allowedToEditByUserId(enrollment)
       .then(value => {
         if (operation === 'delete') {
-          console.log('open1');
           this._openConfirmationDialog(enrollment);
         } else if (operation === 'edit') {
-          console.log('redir1');
           this.router.navigate(['/enrollment'], {
             queryParams:
               {
@@ -296,10 +294,8 @@ export class EnrollmentListComponent implements OnInit {
       .then(value => {
         if (typeof value === 'boolean') {
           if (operation === 'delete') {
-            console.log('open2');
             this._openConfirmationDialog(enrollment);
           } else if (operation === 'edit') {
-            console.log('redir2');
             this.router.navigate(['/enrollment'], {
               queryParams:
                 {
