@@ -106,20 +106,23 @@ export class AppointmentService {
       url = url + '?slim=true';
     }
 
-    let pinnedQueryParam = '?';
-    if (slim) {
-      pinnedQueryParam = '&';
-    }
+    // IF HIDDEN ONLY
+    if (true) {
+      let pinnedQueryParam = '?';
+      if (slim) {
+        pinnedQueryParam = '&';
+      }
 
-    let permissions = JSON.parse(localStorage.getItem('permissions'));
-    if (permissions !== null) {
-      permissions = permissions.find(fPermission => fPermission.link === link);
+      let permissions = JSON.parse(localStorage.getItem('permissions'));
+      if (permissions !== null) {
+        permissions = permissions.find(fPermission => fPermission.link === link);
 
-      permissions.enrollments.forEach((fPermission, i) => {
-        pinnedQueryParam += 'perm' + (i + 1) + '=' + fPermission.id + '&token' + (i + 1) + '=' + fPermission.token + '&';
-      });
+        permissions.enrollments.forEach((fPermission, i) => {
+          pinnedQueryParam += 'perm' + (i + 1) + '=' + fPermission.id + '&token' + (i + 1) + '=' + fPermission.token + '&';
+        });
 
-      url += pinnedQueryParam;
+        url += pinnedQueryParam;
+      }
     }
 
     let headers = new HttpHeaders();
