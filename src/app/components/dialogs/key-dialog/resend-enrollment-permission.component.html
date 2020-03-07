@@ -1,6 +1,6 @@
 <div class="key-dialog">
   <h2 mat-dialog-title>
-    Berechtigungen
+    Berechtigungen (fehlen)
   </h2>
   <div *ngIf="!userIsLoggedIn"
        mat-dialog-content>
@@ -21,7 +21,7 @@
 
   <div *ngIf="userIsLoggedIn" mat-dialog-content>
     <span>
-      Sorry {{ this.authenticationService.currentUserValue.username }}. Du keine Berechtigung für diese Anmeldung.
+      Sorry <b>{{ this.authenticationService.currentUserValue.name }}</b>. Du keine Berechtigung für diese Anmeldung.
     </span>
   </div>
 
@@ -37,6 +37,5 @@
 
   <div mat-dialog-actions>
     <button (click)="onNoClick()" mat-button>Abbrechen</button>
-    <button (click)="setToken()" cdkFocusInitial mat-button>Absenden</button>
   </div>
 </div>

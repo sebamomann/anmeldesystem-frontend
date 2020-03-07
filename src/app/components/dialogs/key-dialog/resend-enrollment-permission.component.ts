@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {AuthenticationService} from '../../../services/authentication.service';
-import {FormBuilder, FormControl} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Router, RouterStateSnapshot} from '@angular/router';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
@@ -11,21 +11,15 @@ import {IEnrollmentModel} from '../../../models/IEnrollment.model';
   styleUrls: ['./resend-enrollment-permission.component.scss']
 })
 export class ResendEnrollmentPermissionComponent implements OnInit {
-  enrollment: IEnrollmentModel;
-  userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
+  public enrollment: IEnrollmentModel;
+  public userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
+  public currentUrlSnapshotWithParameter: RouterStateSnapshot;
+  public operation: string;
 
-  keyEvent = this.formBuilder.group({
-    key: new FormControl('', []),
-    existingKey: new FormControl(),
-  });
-
-  ENROLLMENT_KEY_KEY = 'enrollmentKeys';
-  localStorageKeys: string[];
-  currentUrlSnapshotWithParameter: RouterStateSnapshot;
-  operation: string;
-
-  constructor(public authenticationService: AuthenticationService, private formBuilder: FormBuilder,
-              public matDialogRef: MatDialogRef<ResendEnrollmentPermissionComponent>, private router: Router,
+  constructor(private formBuilder: FormBuilder,
+              private router: Router,
+              public authenticationService: AuthenticationService,
+              public matDialogRef: MatDialogRef<ResendEnrollmentPermissionComponent>,
               @Inject(MAT_DIALOG_DATA) public data) {
     this.enrollment = data.enrollment;
     this.operation = data.operation;
@@ -33,72 +27,9 @@ export class ResendEnrollmentPermissionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.localStorageKeys = JSON.parse(localStorage.getItem(this.ENROLLMENT_KEY_KEY));
-    if (this.localStorageKeys === null) {
-      this.localStorageKeys = [];
-    }
   }
 
   onNoClick() {
     this.matDialogRef.close();
-  }
-
-  setToken() {
-    if (!this.keyEventValid()) {
-      this.keyEvent.markAllAsTouched();
-      this.getKey().setErrors({required: true});
-      return;
-    }
-
-    this.matDialogRef.close(this.addKeyIfNotExisting());
-  }
-
-  // TODO DUPLICATE
-  private addKeyIfNotExisting() {
-    let value;
-    if (this.keyEvent.get('key').value !== '') {
-      value = this.keyEvent.get('key').value;
-    } else {
-      value = this.keyEvent.get('existingKey').value;
-    }
-
-    if (!this.localStorageKeys.includes(value)) {
-      this.localStorageKeys.push(value);
-    }
-
-    localStorage.setItem(this.ENROLLMENT_KEY_KEY, JSON.stringify(this.localStorageKeys));
-
-    return value;
-  }
-
-  public keyEventValid() {
-    return this.keyEvent.get('key').value !== ''
-      || this.keyEvent.get('existingKey').value !== null;
-  }
-
-  public getKeyErrorMessage(): string {
-    if (this.getKey().hasError('required')) {
-      return 'Bitte angeben';
-    }
-  }
-
-  public getExistingKeyErrorMessage(): string {
-    if (this.getKey().hasError('required')) {
-      return 'Bitte auswählen';
-    }
-  }
-
-  public getKeyEventErrorMessage(): string {
-    if (this.keyEvent.hasError('required')) {
-      return 'Bitte spezifiziere einen Token';
-    }
-  }
-
-  private getKey() {
-    return this.keyEvent.get('key');
-  }
-
-  private getExistingKey() {
-    return this.keyEvent.get('existingKey');
   }
 }
