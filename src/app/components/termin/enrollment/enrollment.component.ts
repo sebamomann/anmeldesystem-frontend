@@ -59,6 +59,7 @@ export class EnrollmentComponent implements OnInit {
 
   public appointment: IAppointmentModel = null;
   public edit: any;
+  public token: any;
 
   constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
               private location: Location,
@@ -70,7 +71,25 @@ export class EnrollmentComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
       this.enrollmentId = params.e;
+      this.token = params.t;
       this.autoSend = params.send === 'true';
+
+      this.handleTokenPermission(this.link, {id: this.enrollmentId, token: this.token});
+      // const ids = [];
+      // const tokens = [];
+      // for (const queryKey of Object.keys(params)) {
+      //   if (queryKey.startsWith('perm')) {
+      //     ids.push(params[queryKey]);
+      //   }
+      //
+      //   if (queryKey.startsWith('token')) {
+      //     tokens.push(params[queryKey]);
+      //   }
+      // }
+      //
+      // ids.forEach((fId, i) => {
+      //   this.handleTokenPermission(this.link, {id: fId, token: tokens[i]});
+      // });
     });
   }
 
@@ -315,6 +334,7 @@ export class EnrollmentComponent implements OnInit {
   }
 
   private async sendEnrollmentRequest(functionName: string) {
+    this.output.token = this.token;
     this.enrollmentService[functionName](this.output, this.appointment)
       .subscribe(
         result => {
@@ -468,12 +488,11 @@ export class EnrollmentComponent implements OnInit {
     this.location.back();
   }
 
-  private handleTokenPermission(link: string, body: IEnrollmentModel) {
-
+  private handleTokenPermission(link: string, body: any) {
     let permissions = JSON.parse(localStorage.getItem('permissions'));
+
     if (permissions === null ||
       permissions === undefined) {
-      console.log('undef1');
       permissions = [];
     }
 
@@ -485,7 +504,6 @@ export class EnrollmentComponent implements OnInit {
     }
 
     if (!linkElem.enrollments.some(sPermission => sPermission === {id: body.id, token: body.token})) {
-      console.log('push');
       linkElem.enrollments.push({id: body.id, token: body.token});
     }
 
