@@ -14,6 +14,7 @@ import {EnrollmentService} from '../../../services/enrollment.service';
 import {EnrollmentModel} from '../../../models/EnrollmentModel.model';
 import {merge, Observable, Subject} from 'rxjs';
 import {mapTo, mergeMap, skip, switchMap, take} from 'rxjs/operators';
+import {TokenUtil} from '../../../_util/tokenUtil.util';
 
 const HttpStatus = require('http-status-codes');
 
@@ -336,8 +337,7 @@ export class EnrollmentComponent implements OnInit {
   }
 
   private async sendEnrollmentRequest(functionName: string) {
-    console.log(this.getTokenForEnrollment(this.enrollmentId, this.link));
-    this.output.token = this.getTokenForEnrollment(this.enrollmentId, this.link);
+    this.output.token = TokenUtil.getTokenForEnrollment(this.enrollmentId, this.link);
     this.enrollmentService[functionName](this.output, this.appointment)
       .subscribe(
         result => {
@@ -522,17 +522,5 @@ export class EnrollmentComponent implements OnInit {
     }
 
     localStorage.setItem('permissions', JSON.stringify(permissions));
-  }
-
-  private getTokenForEnrollment(id: string, link: string) {
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
-    if (permissions != null) {
-      const linkElem = permissions.find(fElement => fElement.link === link);
-      const elem = linkElem.enrollments.filter(sPermission => sPermission.id === id);
-      if (elem[0] !== undefined) {
-        return elem[0].token;
-      }
-      return '';
-    }
   }
 }

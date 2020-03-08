@@ -5,6 +5,7 @@ import {environment} from '../../environments/environment';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {Observable, throwError} from 'rxjs';
 import {WINDOW} from '../provider/window.provider';
+import {TokenUtil} from '../_util/tokenUtil.util';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class EnrollmentService {
   }
 
   delete(enrollment: IEnrollmentModel, link) {
-    const token = this.getTokenForEnrollment(enrollment.id, link);
+    const token = TokenUtil.getTokenForEnrollment(enrollment.id, link);
     const req = new HttpRequest('DELETE', `${environment.api.url}enrollment/${enrollment.id}/${token}`, {});
     return this.httpClient.request(req);
   }
@@ -38,24 +39,12 @@ export class EnrollmentService {
   }
 
   validateToken(enrollment: IEnrollmentModel, link): Observable<HttpResponse<void>> {
-    const token = this.getTokenForEnrollment(enrollment.id, link);
+    const token = TokenUtil.getTokenForEnrollment(enrollment.id, link);
     if (token !== undefined && token !== '') {
       const url = `${environment.api.url}enrollment/${enrollment.id}/validateToken/${token}`;
       return this.httpClient.get<void>(url, {observe: 'response', reportProgress: true});
     } else {
       return throwError('');
-    }
-  }
-
-  private getTokenForEnrollment(id: string, link: string) {
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
-    if (permissions != null) {
-      const linkElem = permissions.find(fElement => fElement.link === link);
-      const elem = linkElem.enrollments.filter(sPermission => sPermission.id === id);
-      if (elem[0] !== undefined) {
-        return elem[0].token;
-      }
-      return '';
     }
   }
 }

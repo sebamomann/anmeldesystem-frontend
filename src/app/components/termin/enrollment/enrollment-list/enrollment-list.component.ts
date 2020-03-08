@@ -15,6 +15,7 @@ import {Location} from '@angular/common';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ResendEnrollmentPermissionComponent} from '../../../dialogs/key-dialog/resend-enrollment-permission.component';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
+import {TokenUtil} from '../../../../_util/tokenUtil.util';
 
 const HttpStatus = require('http-status-codes');
 
@@ -401,7 +402,7 @@ export class EnrollmentListComponent implements OnInit {
                     {
                       a: this.appointment.link,
                       e: enrollment.id,
-                      t: this.getTokenForEnrollment(enrollment.id, this.appointment.link),
+                      t: TokenUtil.getTokenForEnrollment(enrollment.id, this.appointment.link),
                       editId: null,
                       editOperation: null
                     },
@@ -415,17 +416,5 @@ export class EnrollmentListComponent implements OnInit {
           this.openResendDialog(enrollment, operation);
         }
       );
-  }
-
-  private getTokenForEnrollment(id: string, link: string) {
-    const permissions = JSON.parse(localStorage.getItem('permissions'));
-    if (permissions != null) {
-      const linkElem = permissions.find(fElement => fElement.link === link);
-      const elem = linkElem.enrollments.filter(sPermission => sPermission.id === id);
-      if (elem[0] !== undefined) {
-        return elem[0].token;
-      }
-      return '';
-    }
   }
 }
