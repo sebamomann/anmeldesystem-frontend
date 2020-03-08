@@ -3,10 +3,13 @@
      class="enrollment-list block decent">
   <div class="header">
     <h2 class="headline medium">
-      {{title}} [{{ enrollmentsFiltered.length }}{{ appointment.maxEnrollments !== null && main
-      ? '/' + appointment.maxEnrollments : '' }}]
+      {{title}}
+      <ng-container *ngIf="!appointment.hidden">
+        [{{ enrollmentsFiltered.length }}{{ appointment.maxEnrollments !== null
+      && main ? '/' + appointment.maxEnrollments : '' }}]
+      </ng-container>
       <span *ngIf="getNumberOfActiveFilter() > 0">
-        [<mat-icon>filter_list</mat-icon>: {{ enrollmentsFiltered.length }}]
+        [<mat-icon>filter_list</mat-icon>:{{ enrollmentsFiltered.length }}]
       </span>
     </h2>
   </div>
@@ -38,8 +41,7 @@
           </ng-container>
           <div *ngIf="appointment.additions.length > 0"
                class="addition-list">
-              <span *ngIf="appointment.additions.length > 0 && enrollment.comment !== null"
-                    class="separator light small high">
+              <span class="separator light small high">
               </span>
             <ng-container *ngFor="let addition of appointment.additions">
               <div>

@@ -1,0 +1,21 @@
+<form [formGroup]="event">
+  <div class="tooltip-container">
+    <mat-checkbox formControlName="hidden">
+      Anonym
+    </mat-checkbox>
+    <!--suppress TypeScriptUnresolvedFunction -->
+    <mat-icon #anonymous="matTooltip"
+              (click)="anonymous.toggle()"
+              class="tooltip"
+              matTooltip="{{ 'Ist diese Option aktiv, so ist die Teilnehmerliste nicht mehr für normale Teilnehmer ' +
+               'zugänglich. Nur die eigens angelegten Teilnehmer sind einsehbar. Administratoren oder der Ersteller des ' +
+               'Termins sehen jedoch weiterhin alle Teilnehmer.'}}">
+      info
+    </mat-icon>
+  </div>
+  <button
+    (click)="saveFnc()"
+    mat-raised-button>
+    {{button}}
+  </button>
+</form>

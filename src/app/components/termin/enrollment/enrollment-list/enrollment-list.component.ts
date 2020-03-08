@@ -13,7 +13,7 @@ import {AuthenticationService} from '../../../../services/authentication.service
 import {EnrollmentService} from '../../../../services/enrollment.service';
 import {Location} from '@angular/common';
 import {DomSanitizer} from '@angular/platform-browser';
-import {KeyDialogComponent} from '../../../dialogs/key-dialog/key-dialog.component';
+import {ResendEnrollmentPermissionComponent} from '../../../dialogs/key-dialog/resend-enrollment-permission.component';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
 
 const HttpStatus = require('http-status-codes');
@@ -162,8 +162,8 @@ export class EnrollmentListComponent implements OnInit {
     });
   };
 
-  public _openAskForKeyDialog = (enrollment: IEnrollmentModel, operation: string): Promise<boolean> => {
-    const dialogRef = this.dialog.open(KeyDialogComponent, {
+  public openResendDialog = (enrollment: IEnrollmentModel, operation: string) => {
+    const dialogRef = this.dialog.open(ResendEnrollmentPermissionComponent, {
       width: '90%',
       maxWidth: 'initial',
       height: 'auto',
@@ -171,30 +171,6 @@ export class EnrollmentListComponent implements OnInit {
       data: {
         enrollment,
         operation
-      }
-    });
-
-    return new Promise<boolean>(async (resolve, reject) => {
-      const result = await dialogRef.afterClosed().toPromise();
-      if (result !== undefined && result !== false) {
-        this.enrollmentService
-          .validateKey(enrollment, result)
-          .subscribe(
-            sResult => {
-              if (sResult.type === HttpEventType.Response) {
-                if (sResult.status === HttpStatus.OK) {
-                  localStorage.setItem('editKeyByKeyDialog', result);
-                  return resolve(true);
-                }
-
-                return resolve(sResult.status === HttpStatus.OK);
-              }
-            }, error => {
-              console.log(error);
-              reject(false);
-            });
-      } else {
-        reject(null);
       }
     });
   };
@@ -294,58 +270,24 @@ export class EnrollmentListComponent implements OnInit {
   };
 
   public precheckOpenConfirmationDialog = async (enrollment: IEnrollmentModel, operation: string): Promise<void> => {
-    localStorage.removeItem('editKeyByKeyDialog');
-
     this.allowedToEditByUserId(enrollment)
-      .then(value => {
-        if (operation === 'delete') {
-          this._openConfirmationDialog(enrollment);
-        } else if (operation === 'edit') {
-          this.router.navigate(['/enrollment'], {
-            queryParams:
-              {
-                a: this.appointment.link,
-                e: enrollment.id,
-                editId: null,
-                editOperation: null
-              }
-          });
-        }
+      .then(() => {
+        this.permissionGranted(operation, enrollment);
         return;
       })
-      .catch(err => {
-        if (!enrollment.createdByUser) {
-          return this.allowedToEditByToken(enrollment, operation);
-        }
-
-        throw err;
+      .catch(() => {
+        return this.allowedToEditByToken(enrollment, operation);
       })
-      .then(value => {
-        if (typeof value === 'boolean') {
-          if (operation === 'delete') {
-            this._openConfirmationDialog(enrollment);
-          } else if (operation === 'edit') {
-            this.router.navigate(['/enrollment'], {
-              queryParams:
-                {
-                  a: this.appointment.link,
-                  e: enrollment.id,
-                  editId: null,
-                  editOperation: null
-                },
-              queryParamsHandling: 'merge'
-            });
-          }
-        }
+      .then(() => {
+        this.permissionGranted(operation, enrollment);
       })
-      .catch(err2 => {
-        if (err2 !== null) {
-          this.snackBar.open(`Du hast nicht die benötigte Berechtigung diese Anmeldung zu ` +
-            `${operation === 'edit' ? 'bearbeiten' : 'löschen'}`, 'OK', {
+      .catch(() => {
+        this.snackBar.open('Da ist wohl was schief gelaufen.',
+          '',
+          {
             duration: 2000,
             panelClass: 'snackbar-error'
           });
-        }
       });
   };
 
@@ -378,7 +320,7 @@ export class EnrollmentListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.enrollmentService
-          .delete(enrollment)
+          .delete(enrollment, this.appointment.link)
           .subscribe(
             deletionResult => {
               if (deletionResult.type === HttpEventType.Response) {
@@ -425,6 +367,39 @@ export class EnrollmentListComponent implements OnInit {
   }
 
   private allowedToEditByToken(enrollment: IEnrollmentModel, operation: string) {
-    return this._openAskForKeyDialog(enrollment, operation);
+    return new Promise<boolean>((resolve, reject) => {
+      this.enrollmentService
+        .validateToken(enrollment, this.appointment.link)
+        .subscribe(
+          sResult => {
+            if (sResult.type === HttpEventType.Response) {
+              if (sResult.status === HttpStatus.OK) {
+                resolve(true);
+              }
+            }
+            reject(false);
+          },
+          () => {
+            this.openResendDialog(enrollment, operation);
+          }
+        );
+    });
+  }
+
+  private permissionGranted(operation: string, enrollment: IEnrollmentModel) {
+    if (operation === 'delete') {
+      this._openConfirmationDialog(enrollment);
+    } else if (operation === 'edit') {
+      this.router.navigate(['/enrollment'], {
+        queryParams:
+          {
+            a: this.appointment.link,
+            e: enrollment.id,
+            editId: null,
+            editOperation: null
+          },
+        queryParamsHandling: 'merge'
+      });
+    }
   }
 }

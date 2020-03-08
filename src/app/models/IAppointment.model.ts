@@ -12,10 +12,12 @@ export interface IAppointmentModel {
   deadline: string | null;
   link: string;
   maxEnrollments: number | null;
+  hidden: boolean;
   additions: IAdditionModel[];
   administrators: { mail: string }[];
   driverAddition: boolean;
   enrollments: IEnrollmentModel[];
   files: IFileModel[];
   reference?: any;
+  numberOfEnrollments?: number;
 }

@@ -9,6 +9,7 @@ import {LinkDataModule} from '../form/link-data/link-data.module';
 import {AdministratorModule} from '../administrator/administrator.module';
 import {FileModule} from '../file/file.module';
 import {SavedModule} from '../../html-template/saved/saved.module';
+import {OtherModule} from '../form/other/other.module';
 
 const routes: Routes = [
   {path: '', component: AppointmentSettingsComponent}
@@ -29,6 +30,7 @@ const routes: Routes = [
     MatProgressSpinnerModule,
     MatIconModule,
     SavedModule,
+    OtherModule,
   ]
 })
 export class AppointmentSettingsModule {

@@ -18,7 +18,7 @@ import {FilterDialogComponent} from '../../../dialogs/filter/filterDialog.compon
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommentDialogComponent} from '../../../dialogs/comment/commentDialog.component';
 import {ConfirmationDialogComponent} from '../../../dialogs/confirmation-dialog/confirmation-dialog.component';
-import {KeyDialogComponent} from '../../../dialogs/key-dialog/key-dialog.component';
+import {ResendEnrollmentPermissionComponent} from '../../../dialogs/key-dialog/resend-enrollment-permission.component';
 import {RouterModule} from '@angular/router';
 
 
@@ -28,14 +28,14 @@ import {RouterModule} from '@angular/router';
     FilterDialogComponent,
     CommentDialogComponent,
     ConfirmationDialogComponent,
-    KeyDialogComponent,
+    ResendEnrollmentPermissionComponent,
   ],
   exports: [
     EnrollmentListComponent,
     FilterDialogComponent,
     CommentDialogComponent,
     ConfirmationDialogComponent,
-    KeyDialogComponent,
+    ResendEnrollmentPermissionComponent,
   ],
   imports: [
     CommonModule,
@@ -58,7 +58,7 @@ import {RouterModule} from '@angular/router';
     FilterDialogComponent,
     CommentDialogComponent,
     ConfirmationDialogComponent,
-    KeyDialogComponent,
+    ResendEnrollmentPermissionComponent,
   ]
 })
 export class EnrollmentListModule {

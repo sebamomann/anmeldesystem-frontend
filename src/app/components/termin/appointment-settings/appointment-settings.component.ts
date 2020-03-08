@@ -74,6 +74,10 @@ export class AppointmentSettingsComponent implements OnInit {
     this._save(data);
   }
 
+  saveOther(data: any) {
+    this._save(data);
+  }
+
 
   private _save(data: any) {
     const toChange = {};

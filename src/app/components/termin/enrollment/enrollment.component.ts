@@ -14,6 +14,7 @@ import {EnrollmentService} from '../../../services/enrollment.service';
 import {EnrollmentModel} from '../../../models/EnrollmentModel.model';
 import {merge, Observable, Subject} from 'rxjs';
 import {mapTo, mergeMap, skip, switchMap, take} from 'rxjs/operators';
+import {TokenUtil} from '../../../_util/tokenUtil.util';
 
 const HttpStatus = require('http-status-codes');
 
@@ -53,13 +54,13 @@ export class EnrollmentComponent implements OnInit {
     service: new FormControl('', [])
   });
 
-  keyEvent = this.formBuilder.group({
-    key: new FormControl('', []),
-    existingKey: new FormControl(),
+  mailEvent = this.formBuilder.group({
+    mail: new FormControl('', [Validators.required, Validators.email]),
   });
 
   public appointment: IAppointmentModel = null;
   public edit: any;
+  public token: any;
 
   constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
               private location: Location,
@@ -71,7 +72,27 @@ export class EnrollmentComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
       this.enrollmentId = params.e;
+      this.token = params.t;
       this.autoSend = params.send === 'true';
+
+      if (this.token !== null && this.token !== undefined) {
+        this.handleTokenPermission(this.link, {id: this.enrollmentId, token: this.token});
+      }
+      // const ids = [];
+      // const tokens = [];
+      // for (const queryKey of Object.keys(params)) {
+      //   if (queryKey.startsWith('perm')) {
+      //     ids.push(params[queryKey]);
+      //   }
+      //
+      //   if (queryKey.startsWith('token')) {
+      //     tokens.push(params[queryKey]);
+      //   }
+      // }
+      //
+      // ids.forEach((fId, i) => {
+      //   this.handleTokenPermission(this.link, {id: fId, token: tokens[i]});
+      // });
     });
   }
 
@@ -96,10 +117,6 @@ export class EnrollmentComponent implements OnInit {
   update$ = new Subject<void>();
   forceReload$ = new Subject<void>();
 
-  static handleEditKey() {
-    return localStorage.getItem('editKeyByKeyDialog');
-  }
-
   async ngOnInit() {
     await this.route
       .data
@@ -108,7 +125,7 @@ export class EnrollmentComponent implements OnInit {
     // Needed due to error permanent trigger, if value is put in via form [value]
     if (this.userIsLoggedIn && !this.edit) {
       this.getName().markAsTouched();
-      this.getName().setValue(this.authenticationService.currentUserValue.username);
+      this.getName().setValue(this.authenticationService.currentUserValue.name);
     }
 
     const initialAppointment$ = this.getDataOnce();
@@ -176,12 +193,12 @@ export class EnrollmentComponent implements OnInit {
 
   /**
    * Main function on initializing sending of data to API
+   * Called by usual enroll form
    */
   parseDataFromEnrollmentForm: () => Promise<void> = async () => {
     // TODO
     // refactor
     if (!this.event.valid) {
-      this.event.markAllAsTouched();
       this.driverPassengerEvent.markAllAsTouched();
       return;
     }
@@ -196,11 +213,11 @@ export class EnrollmentComponent implements OnInit {
 
     if (this.userIsLoggedIn &&
       !this.getSelfEnrollment().value) {
-      if (this.keyEventValid()) {
-        this.output.editKey = this.addKeyIfNotExisting();
+      if (this.mailEvent.valid) {
+        this.output.editMail = this.getMail().value;
       } else {
-        this.keyEvent.markAllAsTouched();
-        this.getKey().setErrors({invalid: true});
+        this.mailEvent.markAllAsTouched();
+        this.getMail().setErrors({invalid: true});
         return;
       }
     }
@@ -233,103 +250,27 @@ export class EnrollmentComponent implements OnInit {
    * Eventually sending/updating Enrollment
    */
   sendEnrollment: () => Promise<void> = async () => {
-    if (!this.keyEventValid()
+    if (this.mailEvent.invalid
       && !this.userIsLoggedIn && !this.edit) {
-      this.keyEvent.markAllAsTouched();
+      this.mailEvent.markAllAsTouched();
       return;
     }
 
-    if (this.edit) {
-      const key = EnrollmentComponent.handleEditKey();
-      if (key !== null) {
-        this.output.editKey = key;
-      }
-    }
-
-    // Set key, if logged ind but not selfenroll
+    // Set key, if logged in but not selfenroll
     // Set key if not logged in and token specified by after enroll screen
     if ((!this.userIsLoggedIn || (this.userIsLoggedIn && !this.getSelfEnrollment().value)) && !this.edit) {
-      this.output.editKey = this.addKeyIfNotExisting();
+      this.output.editMail = this.getMail().value;
     }
 
-    if (this.userIsLoggedIn || this.keyEventValid() || this.edit) {
+    if (this.userIsLoggedIn || this.mailEvent.valid || this.edit) {
       if (this.edit) {
         this.sendEnrollmentRequest('update');
       } else {
         this.sendEnrollmentRequest('create');
       }
+      this.event.markAllAsTouched();
     }
   };
-
-  public keyEventValid() {
-    return this.keyEvent.get('key').value !== ''
-      || this.keyEvent.get('existingKey').value !== null;
-  }
-
-  private sendEnrollmentRequest(functionName: string) {
-    this.enrollmentService[functionName](this.output, this.appointment)
-      .subscribe(
-        result => {
-          this.clearLoginAndTokenFormIntercepting();
-          if (result.type === HttpEventType.Response) {
-            if (result.status === HttpStatus.CREATED || result.status === HttpStatus.OK) {
-              if (functionName === 'create') {
-                this.appointment.enrollments.push(result.body);
-              } else if (functionName === 'update') {
-                this.appointment.enrollments.map(obj => {
-                  if (obj.id === result.body.id) {
-                    return result.body;
-                  }
-                });
-              }
-
-              localStorage.removeItem('editKeyByKeyDialog');
-              this.router.navigate([`enroll`], {
-                queryParams: {
-                  a: this.appointment.link
-                }
-              }).then((navigated: boolean) => {
-                if (navigated) {
-                  this.snackBar.open(`Erfolgreich ` + (this.edit ? 'bearbeitet' : 'angemeldet'),
-                    '',
-                    {
-                      duration: 2000,
-                      panelClass: 'snackbar-default'
-                    });
-                }
-              });
-            }
-          }
-        }, (err: HttpErrorResponse) => {
-          this.clearLoginAndTokenFormIntercepting();
-          if (err.status === HttpStatus.BAD_REQUEST) {
-            if (err.error.code === 'DUPLICATE_ENTRY') {
-              err.error.error.forEach(fColumn => {
-                  const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
-                  const fnName: string = 'get' + uppercaseName;
-                  this[fnName]().setErrors({inUse: true});
-                }
-              );
-            }
-          } else if (err.status === HttpStatus.FORBIDDEN) {
-            this.router.navigate([`enroll`], {
-              queryParams: {
-                a: this.appointment.link
-              }
-            }).then((navigated: boolean) => {
-              if (navigated) {
-                this.snackBar.open(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu bearbeiten.`,
-                  '',
-                  {
-                    duration: 4000,
-                    panelClass: 'snackbar-error'
-                  });
-              }
-            });
-          }
-        }
-      );
-  }
 
   private getAdditionIdList: () => IAdditionModel[] = () => {
     const additionListRaw = this.event.value.additions
@@ -369,22 +310,24 @@ export class EnrollmentComponent implements OnInit {
     }
   }
 
-  public getKeyErrorMessage(): string {
-    if (this.getKey().hasError('required')) {
-      return 'Bitte angeben';
-    }
-  }
-
   public getExistingKeyErrorMessage(): string {
-    if (this.getKey().hasError('required')) {
+    if (this.getMail().hasError('required')) {
       return 'Bitte auswählen';
     }
   }
 
-  public getKeyEventErrorMessage(): string {
-    if (this.keyEvent.hasError('required')) {
-      return 'Bitte spezifiziere einen Token';
+  public getMailErrorMessage() {
+    if (this.getMail().hasError('required')) {
+      return 'Bitte angeben';
     }
+    if (this.getMail().hasError('email')) {
+      return 'Bitte eine gültige Email angeben';
+    }
+  }
+
+  public clearLoginAndMailFormIntercepting() {
+    localStorage.removeItem(this.ENROLLMENT_OUTPUT_KEY);
+    this.showLoginAndTokenForm = false;
   }
 
   public getSeatsErrorMessage() {
@@ -393,12 +336,74 @@ export class EnrollmentComponent implements OnInit {
     }
   }
 
-  private getKey() {
-    return this.keyEvent.get('key');
-  }
+  private async sendEnrollmentRequest(functionName: string) {
+    this.output.token = TokenUtil.getTokenForEnrollment(this.enrollmentId, this.link);
+    this.enrollmentService[functionName](this.output, this.appointment)
+      .subscribe(
+        result => {
+          this.clearLoginAndMailFormIntercepting();
+          if (result.type === HttpEventType.Response) {
+            if (result.status === HttpStatus.CREATED
+              || result.status === HttpStatus.OK) {
+              if (functionName === 'create') {
+                this.appointment.enrollments.push(result.body);
+                if (result.body.token !== undefined) {
+                  this.handleTokenPermission(this.link, result.body);
+                }
+              } else if (functionName === 'update') {
+                this.appointment.enrollments.map(obj => {
+                  if (obj.id === result.body.id) {
+                    return result.body;
+                  }
+                });
+              }
 
-  private getExistingKey() {
-    return this.keyEvent.get('existingKey');
+              this.router.navigate([`enroll`], {
+                queryParams: {
+                  a: this.appointment.link
+                }
+              }).then((navigated: boolean) => {
+                if (navigated) {
+                  this.snackBar.open(`Erfolgreich ` + (this.edit ? 'bearbeitet' : 'angemeldet'),
+                    '',
+                    {
+                      duration: 2000,
+                      panelClass: 'snackbar-default'
+                    });
+                }
+              });
+            }
+          }
+        }, async (err: HttpErrorResponse) => {
+          this.clearLoginAndMailFormIntercepting();
+          if (err.status === HttpStatus.BAD_REQUEST) {
+            if (err.error.code === 'DUPLICATE_ENTRY') {
+              this.event.markAllAsTouched();
+              await err.error.error.forEach(fColumn => {
+                const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
+                const fnName: string = 'get' + uppercaseName;
+                this[fnName]().markAsTouched();
+                this[fnName]().setErrors({inUse: true});
+              });
+            }
+          } else if (err.status === HttpStatus.FORBIDDEN) {
+            this.router.navigate([`enroll`], {
+              queryParams: {
+                a: this.appointment.link
+              }
+            }).then((navigated: boolean) => {
+              if (navigated) {
+                this.snackBar.open(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu bearbeiten.`,
+                  '',
+                  {
+                    duration: 4000,
+                    panelClass: 'snackbar-error'
+                  });
+              }
+            });
+          }
+        }
+      );
   }
 
   private getSeats() {
@@ -460,38 +465,20 @@ export class EnrollmentComponent implements OnInit {
     }
   }
 
-  private addKeyIfNotExisting() {
-    let value;
-    if (this.keyEvent.get('key').value !== '') {
-      value = this.keyEvent.get('key').value;
-    } else {
-      value = this.keyEvent.get('existingKey').value;
-    }
-
-    if (!this.localStorageKeys.includes(value)) {
-      this.localStorageKeys.push(value);
-    }
-
-    localStorage.setItem(this.ENROLLMENT_KEY_KEY, JSON.stringify(this.localStorageKeys));
-
-    return value;
-  }
-
-  public clearLoginAndTokenFormIntercepting() {
-    localStorage.removeItem(this.ENROLLMENT_OUTPUT_KEY);
-    this.showLoginAndTokenForm = false;
+  private getMail() {
+    return this.mailEvent.get('mail');
   }
 
   /**
    * Determine if data can be send to API directly. This is the case, if the user is already logged in.
-   * Otherwise, the user is asked to log in with his account, or send the enrollment with a token (for auth purposes). <br/>
+   * Otherwise, the user is asked to login with his account, or send the enrollment with his mail (for auth purposes). <br/>
    * For the possible redirect to the login page, the data needs to be stored locally, to be fetched later.
    */
   private checkForAutomaticSubmit() {
     // If user selected selfEnrollment
     // Or if key is set
     if (((this.getSelfEnrollment().value && this.userIsLoggedIn)
-      || this.output.editKey !== undefined) || this.edit) {
+      || this.output.editMail !== undefined) || this.edit) {
       this.sendEnrollment().then(() => '');
     } else {
       // TempStore item for possible login redirect
@@ -502,5 +489,38 @@ export class EnrollmentComponent implements OnInit {
 
   goBack() {
     this.location.back();
+  }
+
+  private handleTokenPermission(link: string, body: any) {
+    let permissions = JSON.parse(localStorage.getItem('permissions'));
+
+    if (permissions === null ||
+      permissions === undefined) {
+      permissions = [];
+    }
+
+    let linkElem = permissions.find(fElement => fElement.link === link);
+    let push = false;
+    if (linkElem === undefined) {
+      linkElem = {link, enrollments: []};
+      push = true;
+    }
+
+    if (!linkElem.enrollments.some(sPermission => sPermission.id === body.id)) {
+      linkElem.enrollments.push({id: body.id, token: body.token});
+    } else {
+      linkElem.enrollments.map(sPermission => {
+        if (sPermission.id === body.id) {
+          sPermission.token = body.token;
+          return;
+        }
+      });
+    }
+
+    if (push) {
+      permissions.push(linkElem);
+    }
+
+    localStorage.setItem('permissions', JSON.stringify(permissions));
   }
 }

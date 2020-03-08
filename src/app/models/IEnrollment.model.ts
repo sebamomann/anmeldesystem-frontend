@@ -4,6 +4,7 @@ import {IAdditionModel} from './IAddition.model';
 import {IPassengerModel} from './IPassengerModel.model';
 
 export interface IEnrollmentModel {
+  editMail?: any;
   id?: string;
   name: string;
   comment: string;
@@ -12,6 +13,7 @@ export interface IEnrollmentModel {
   passenger: IPassengerModel | null;
   additions: IAdditionModel[];
   iat?: string;
-  editKey: string;
+  mail?: string;
   createdByUser?: boolean;
+  token?: string;
 }
