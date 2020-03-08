@@ -273,21 +273,22 @@ export class EnrollmentListComponent implements OnInit {
     this.allowedToEditByUserId(enrollment)
       .then(() => {
         this.permissionGranted(operation, enrollment);
-        return;
+        return null;
       })
       .catch(() => {
-        return this.allowedToEditByToken(enrollment, operation);
-      })
-      .then(() => {
-        this.permissionGranted(operation, enrollment);
-      })
-      .catch(() => {
-        this.snackBar.open('Da ist wohl was schief gelaufen.',
-          '',
-          {
-            duration: 2000,
-            panelClass: 'snackbar-error'
+        this.allowedToEditByToken(enrollment, operation)
+          .then(() => {
+            this.permissionGranted(operation, enrollment);
+          })
+          .catch(() => {
+            this.snackBar.open('Da ist wohl was schief gelaufen.',
+              '',
+              {
+                duration: 2000,
+                panelClass: 'snackbar-error'
+              });
           });
+
       });
   };
 
