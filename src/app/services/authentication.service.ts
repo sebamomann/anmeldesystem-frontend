@@ -8,15 +8,15 @@ import {IUserModel} from '../models/IUserModel.model';
 
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
-  public currentUser: Observable<IUserModel>;
-  private currentUserSubject: BehaviorSubject<IUserModel>;
+  public currentUser: Observable<any>;
+  private currentUserSubject: BehaviorSubject<any>;
 
   constructor(private http: HttpClient) {
-    this.currentUserSubject = new BehaviorSubject<IUserModel>(JSON.parse(localStorage.getItem('currentUser')));
+    this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
-  public get currentUserValue(): IUserModel {
+  public get currentUserValue() {
     return this.currentUserSubject.value;
   }
 
@@ -24,6 +24,11 @@ export class AuthenticationService {
     return this.http.post<any>(`${environment.api.url}auth/login`, {username: mail, password})
       .pipe(map(user => {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
+        // tslint:disable-next-line:prefer-const
+        let oldDateObj = new Date();
+        const newDateObj = new Date();
+        newDateObj.setTime(oldDateObj.getTime() + (23 * 60 * 60 * 1000));
+        user.exp = newDateObj;
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
         return user;
