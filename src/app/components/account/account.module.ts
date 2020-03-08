@@ -23,11 +23,12 @@ import {RegisterComponent} from './main/register/register.component';
 import {EmailChangeComponent} from './account-profile/email-change/email-change.component';
 import {EmailChangeModule} from './account-profile/email-change/email-change.module';
 import {LogoutComponent} from './main/logout/logout.component';
+import {AuthGuard} from '../../_helper/auth.guard';
 
 
 const routes: Routes = [
   {path: '', component: AccountComponent},
-  {path: 'profile', component: AccountProfileComponent},
+  {path: 'profile', component: AccountProfileComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'logout', component: LogoutComponent},
   {path: 'register', component: RegisterComponent},
