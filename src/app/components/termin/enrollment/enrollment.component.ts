@@ -422,7 +422,7 @@ export class EnrollmentComponent implements OnInit {
     return this.driverPassengerEvent.get('driver');
   }
 
-  private getName() {
+  public getName() {
     return this.event.get('name');
   }
 

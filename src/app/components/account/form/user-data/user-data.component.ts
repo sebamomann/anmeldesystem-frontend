@@ -23,7 +23,7 @@ export class UserDataComponent implements OnInit {
   @Input() public done = false;
   @Input() public userData$: Observable<IUserModel> = new Observable<IUserModel>();
 
-  private userData: IUserModel;
+  public userData: IUserModel;
 
   public event: FormGroup;
   public hide = true;
@@ -31,9 +31,9 @@ export class UserDataComponent implements OnInit {
   public button: string;
   public tooltip: string;
 
-  private mailSuccess: string;
-  private mailPending = false;
-  private isResend = false;
+  public mailSuccess: string;
+  public mailPending = false;
+  public isResend = false;
 
   constructor(private route: ActivatedRoute, private accountService: AccountService) {
     this.route.queryParams.subscribe(params => {
