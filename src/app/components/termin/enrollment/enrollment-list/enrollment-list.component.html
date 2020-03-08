@@ -5,8 +5,8 @@
     <h2 class="headline medium">
       {{title}}
       <ng-container *ngIf="!appointment.hidden">
-        [{{ enrollmentsFiltered.length }}{{ appointment.maxEnrollments !== null && main ? '/' + appointment.maxEnrollments : '' }}
-        ]
+        [{{ enrollmentsFiltered.length }}{{ appointment.maxEnrollments !== null
+      && main ? '/' + appointment.maxEnrollments : '' }}]
       </ng-container>
       <span *ngIf="getNumberOfActiveFilter() > 0">
         [<mat-icon>filter_list</mat-icon>:{{ enrollmentsFiltered.length }}]
