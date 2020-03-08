@@ -69,7 +69,7 @@ export class AccountProfileComponent implements OnInit {
     }
   }
 
-  private fetchData() {
+  public fetchData() {
     this.accountService
       .get()
       .subscribe(
