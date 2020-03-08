@@ -15,7 +15,6 @@ import {Location} from '@angular/common';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ResendEnrollmentPermissionComponent} from '../../../dialogs/key-dialog/resend-enrollment-permission.component';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
-import {TokenUtil} from '../../../../_util/tokenUtil.util';
 
 const HttpStatus = require('http-status-codes');
 
@@ -272,43 +271,23 @@ export class EnrollmentListComponent implements OnInit {
 
   public precheckOpenConfirmationDialog = async (enrollment: IEnrollmentModel, operation: string): Promise<void> => {
     this.allowedToEditByUserId(enrollment)
-      .then(value => {
-        if (operation === 'delete') {
-          this._openConfirmationDialog(enrollment);
-        } else if (operation === 'edit') {
-          this.router.navigate(['/enrollment'], {
-            queryParams:
-              {
-                a: this.appointment.link,
-                e: enrollment.id,
-                editId: null,
-                editOperation: null
-              }
-          });
-        }
-
+      .then(() => {
+        this.permissionGranted(operation, enrollment);
         return;
       })
-      .catch(err => {
+      .catch(() => {
         return this.allowedToEditByToken(enrollment, operation);
       })
-      .then(value => {
-        if (typeof value === 'boolean') {
-          if (operation === 'delete') {
-            this._openConfirmationDialog(enrollment);
-          } else if (operation === 'edit') {
-            this.router.navigate(['/enrollment'], {
-              queryParams:
-                {
-                  a: this.appointment.link,
-                  e: enrollment.id,
-                  editId: null,
-                  editOperation: null
-                },
-              queryParamsHandling: 'merge'
-            });
-          }
-        }
+      .then(() => {
+        this.permissionGranted(operation, enrollment);
+      })
+      .catch(() => {
+        this.snackBar.open('Da ist wohl was schief gelaufen.',
+          '',
+          {
+            duration: 2000,
+            panelClass: 'snackbar-error'
+          });
       });
   };
 
@@ -388,33 +367,39 @@ export class EnrollmentListComponent implements OnInit {
   }
 
   private allowedToEditByToken(enrollment: IEnrollmentModel, operation: string) {
-    this.enrollmentService
-      .validateToken(enrollment, this.appointment.link)
-      .subscribe(
-        sResult => {
-          if (sResult.type === HttpEventType.Response) {
-            if (sResult.status === HttpStatus.OK) {
-              if (operation === 'delete') {
-                this._openConfirmationDialog(enrollment);
-              } else if (operation === 'edit') {
-                this.router.navigate(['/enrollment'], {
-                  queryParams:
-                    {
-                      a: this.appointment.link,
-                      e: enrollment.id,
-                      t: TokenUtil.getTokenForEnrollment(enrollment.id, this.appointment.link),
-                      editId: null,
-                      editOperation: null
-                    },
-                  queryParamsHandling: 'merge'
-                });
+    return new Promise<boolean>((resolve, reject) => {
+      this.enrollmentService
+        .validateToken(enrollment, this.appointment.link)
+        .subscribe(
+          sResult => {
+            if (sResult.type === HttpEventType.Response) {
+              if (sResult.status === HttpStatus.OK) {
+                resolve(true);
               }
             }
+            reject(false);
+          },
+          () => {
+            this.openResendDialog(enrollment, operation);
           }
-        },
-        () => {
-          this.openResendDialog(enrollment, operation);
-        }
-      );
+        );
+    });
+  }
+
+  private permissionGranted(operation: string, enrollment: IEnrollmentModel) {
+    if (operation === 'delete') {
+      this._openConfirmationDialog(enrollment);
+    } else if (operation === 'edit') {
+      this.router.navigate(['/enrollment'], {
+        queryParams:
+          {
+            a: this.appointment.link,
+            e: enrollment.id,
+            editId: null,
+            editOperation: null
+          },
+        queryParamsHandling: 'merge'
+      });
+    }
   }
 }
