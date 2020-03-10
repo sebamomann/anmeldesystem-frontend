@@ -7,6 +7,7 @@ import {MatCardModule, MatIconModule} from '@angular/material';
 import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../../_helper/auth.guard';
 import {FetchAppointmentModule} from './html-template/fetch-appointment/fetch-appointment.module';
+import {LoadingModule} from '../html-template/loading/loading.module';
 
 const routes: Routes = [
   {path: '', component: AppointmentComponent},
@@ -31,6 +32,7 @@ const routes: Routes = [
     RouterModule,
     MatCardModule,
     FetchAppointmentModule,
+    LoadingModule,
   ]
 })
 export class AppointmentModule {
