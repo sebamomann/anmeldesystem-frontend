@@ -6,7 +6,7 @@ import {ActivatedRoute, Router, RouterStateSnapshot} from '@angular/router';
 import {IAdditionModel} from '../../../models/IAddition.model';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import {animate, query, state, style, transition, trigger} from '@angular/animations';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {MatSnackBar} from '@angular/material';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
@@ -29,7 +29,15 @@ const HttpStatus = require('http-status-codes');
         animate(1000, style({opacity: 1})),
         animate(500, style({opacity: 0}))
       ])
-    ])
+    ]),
+    trigger('remove', [
+      transition('* => void', [
+        query('.layer', [
+          style({opacity: '1'}),
+          animate(500, style({opacity: '0'}))
+        ])
+      ])
+    ]),
   ]
 })
 export class EnrollmentComponent implements OnInit {

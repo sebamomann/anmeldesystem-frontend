@@ -33,6 +33,14 @@ const HttpStatus = require('http-status-codes');
         animate(500, style({opacity: 0}))
       ])
     ]),
+    trigger('remove', [
+      transition('* => void', [
+        query('.layer', [
+          style({opacity: '1'}),
+          animate(500, style({opacity: '0'}))
+        ])
+      ])
+    ]),
     trigger('listAnimation', [
       transition('* => *', [
         query('mat-expansion-panel', [
