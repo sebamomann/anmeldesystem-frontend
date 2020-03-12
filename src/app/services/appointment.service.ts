@@ -117,11 +117,13 @@ export class AppointmentService {
       if (permissions !== null) {
         permissions = permissions.find(fPermission => fPermission.link === link);
 
-        permissions.enrollments.forEach((fPermission, i) => {
-          pinnedQueryParam += 'perm' + (i + 1) + '=' + fPermission.id + '&token' + (i + 1) + '=' + fPermission.token + '&';
-        });
+        if (permissions !== undefined) {
+          permissions.enrollments.forEach((fPermission, i) => {
+            pinnedQueryParam += 'perm' + (i + 1) + '=' + fPermission.id + '&token' + (i + 1) + '=' + fPermission.token + '&';
+          });
 
-        url += pinnedQueryParam;
+          url += pinnedQueryParam;
+        }
       }
     }
 
