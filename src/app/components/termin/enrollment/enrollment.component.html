@@ -1,108 +1,109 @@
 <div *ngIf="appointment && !showLoginAndTokenForm; else loading">
-  <h1 class="headline">
-    {{appointment.title}}
-  </h1>
+  <ng-container *ngIf="!empty; else emptyTmpl">
+    <h1 class="headline">
+      {{appointment.title}}
+    </h1>
 
-  <mat-card class="form">
-    <mat-card-title class="headline">
-      {{ edit ? 'Bearbeiten' : 'Anmelden' }}
-    </mat-card-title>
+    <mat-card class="form">
+      <mat-card-title class="headline">
+        {{ edit ? 'Bearbeiten' : 'Anmelden' }}
+      </mat-card-title>
 
-    <mat-card-content>
-      <form (ngSubmit)="parseDataFromEnrollmentForm()"
-            class="register-form">
-        <div *ngIf="userIsLoggedIn && !this.edit"
-             [formGroup]="selfEnrollment"
-             class="additions tooltip-container">
-          <mat-checkbox formControlName="selfEnrollment">
-            Ich melde mich selber an
-          </mat-checkbox>
-          <!--suppress TypeScriptUnresolvedFunction -->
-          <mat-icon #tooltip="matTooltip"
-                    (click)="tooltip.toggle()"
-                    class="tooltip"
-                    matTooltip="{{'Diese Anmeldung wird mit deinem Account verbunden. ' +
+      <mat-card-content>
+        <form (ngSubmit)="parseDataFromEnrollmentForm()"
+              class="register-form">
+          <div *ngIf="userIsLoggedIn && !this.edit"
+               [formGroup]="selfEnrollment"
+               class="additions tooltip-container">
+            <mat-checkbox formControlName="selfEnrollment">
+              Ich melde mich selber an
+            </mat-checkbox>
+            <!--suppress TypeScriptUnresolvedFunction -->
+            <mat-icon #tooltip="matTooltip"
+                      (click)="tooltip.toggle()"
+                      class="tooltip"
+                      matTooltip="{{'Diese Anmeldung wird mit deinem Account verbunden. ' +
                      'Somit kannst du von überall deine Anmeldung bearbeiten oder löschen.'}}">
-            info
-          </mat-icon>
-        </div>
-
-        <div [formGroup]="event">
-          <mat-form-field class="name">
-            <label for="name">
-              <input formControlName="name"
-                     id="name"
-                     matInput
-                     placeholder="Name"
-                     required>
-            </label>
-            <mat-error *ngIf="getName().invalid">
-              {{ getNameErrorMessage() }}
-            </mat-error>
-          </mat-form-field>
-
-          <div class="additions">
-            <div *ngFor="let addition of getAdditionsControls(); let i = index;"
-                 formArrayName="additions">
-              <mat-checkbox
-                [formControlName]="'' + i">
-                {{appointment.additions[i].name}}
-              </mat-checkbox>
-            </div>
+              info
+            </mat-icon>
           </div>
-        </div>
 
-        <div [formGroup]="driverPassengerEvent">
-          <div *ngIf="appointment.driverAddition" class="driverAddition">
-            <div>
-              <mat-checkbox
-                formControlName="driver">
-                Fahrer
-              </mat-checkbox>
-            </div>
-
-            <mat-form-field *ngIf="!getDriver().value; else driver">
-              <mat-label>Mich bitte mitnehmen</mat-label>
-              <mat-select formControlName="requirement" required>
-                <mat-option [value]="0"> ---</mat-option>
-                <mat-option [value]="1"> Nur Hin</mat-option>
-                <mat-option [value]="2"> Nur Zurück</mat-option>
-                <mat-option [value]="3"> Hin und Zurück</mat-option>
-              </mat-select>
-              <mat-error *ngIf="driverPassengerEvent.get('requirement').invalid">
-                {{ getSelectErrorMessage() }}
+          <div [formGroup]="event">
+            <mat-form-field class="name">
+              <label for="name">
+                <input formControlName="name"
+                       id="name"
+                       matInput
+                       placeholder="Name"
+                       required>
+              </label>
+              <mat-error *ngIf="getName().invalid">
+                {{ getNameErrorMessage() }}
               </mat-error>
             </mat-form-field>
 
-            <ng-template #driver>
-              <mat-form-field>
-                <mat-label>Ich fahre</mat-label>
-                <mat-select formControlName="service" required>
+            <div class="additions">
+              <div *ngFor="let addition of getAdditionsControls(); let i = index;"
+                   formArrayName="additions">
+                <mat-checkbox
+                  [formControlName]="'' + i">
+                  {{appointment.additions[i].name}}
+                </mat-checkbox>
+              </div>
+            </div>
+          </div>
+
+          <div [formGroup]="driverPassengerEvent">
+            <div *ngIf="appointment.driverAddition" class="driverAddition">
+              <div>
+                <mat-checkbox
+                  formControlName="driver">
+                  Fahrer
+                </mat-checkbox>
+              </div>
+
+              <mat-form-field *ngIf="!getDriver().value; else driver">
+                <mat-label>Mich bitte mitnehmen</mat-label>
+                <mat-select formControlName="requirement" required>
+                  <mat-option [value]="0"> ---</mat-option>
                   <mat-option [value]="1"> Nur Hin</mat-option>
                   <mat-option [value]="2"> Nur Zurück</mat-option>
                   <mat-option [value]="3"> Hin und Zurück</mat-option>
                 </mat-select>
-                <mat-error *ngIf="driverPassengerEvent.get('service').invalid">
+                <mat-error *ngIf="driverPassengerEvent.get('requirement').invalid">
                   {{ getSelectErrorMessage() }}
                 </mat-error>
               </mat-form-field>
 
-              <mat-form-field class="seats">
-                <input formControlName="seats"
-                       id="seats"
-                       matInput
-                       placeholder="FREIE Plätze"
-                       required
-                       type="number">
-                <mat-error *ngIf="driverPassengerEvent.get('seats').invalid">
-                  {{ getSeatsErrorMessage() }}
-                </mat-error>
-              </mat-form-field>
-            </ng-template>
-          </div>
-        </div>
+              <ng-template #driver>
+                <mat-form-field>
+                  <mat-label>Ich fahre</mat-label>
+                  <mat-select formControlName="service" required>
+                    <mat-option [value]="1"> Nur Hin</mat-option>
+                    <mat-option [value]="2"> Nur Zurück</mat-option>
+                    <mat-option [value]="3"> Hin und Zurück</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="driverPassengerEvent.get('service').invalid">
+                    {{ getSelectErrorMessage() }}
+                  </mat-error>
+                </mat-form-field>
 
-        <mat-form-field [formGroup]="event">
+                <mat-form-field class="seats">
+                  <input formControlName="seats"
+                         id="seats"
+                         matInput
+                         placeholder="FREIE Plätze"
+                         required
+                         type="number">
+                  <mat-error *ngIf="driverPassengerEvent.get('seats').invalid">
+                    {{ getSeatsErrorMessage() }}
+                  </mat-error>
+                </mat-form-field>
+              </ng-template>
+            </div>
+          </div>
+
+          <mat-form-field [formGroup]="event">
           <textarea cdkAutosizeMaxRows="5"
                     cdkAutosizeMinRows="1"
                     cdkTextareaAutosize
@@ -110,35 +111,36 @@
                     id="comment"
                     matInput placeholder="Kommentar">
           </textarea>
-        </mat-form-field>
-
-
-        <div *ngIf="!getSelfEnrollment().value"
-             [formGroup]="mailEvent">
-          <div class="separator colored extra-extra-tall bolder middle center"></div>
-          <mat-form-field>
-            <label>
-              <input formControlName="mail"
-                     matInput
-                     placeholder="Mail-Adresse">
-            </label>
-            <mat-error>
-              {{ getMailErrorMessage() }}
-            </mat-error>
           </mat-form-field>
-        </div>
 
-        <mat-card-actions>
-          <button id="submit" mat-raised-button color="primary">
-            {{ edit ? 'Speichern' : 'Anmelden' }}
-          </button>
-          <a (click)="goBack()" mat-raised-button>
-            Zurück
-          </a>
-        </mat-card-actions>
-      </form>
-    </mat-card-content>
-  </mat-card>
+
+          <div *ngIf="!getSelfEnrollment().value"
+               [formGroup]="mailEvent">
+            <div class="separator colored extra-extra-tall bolder middle center"></div>
+            <mat-form-field>
+              <label>
+                <input formControlName="mail"
+                       matInput
+                       placeholder="Mail-Adresse">
+              </label>
+              <mat-error>
+                {{ getMailErrorMessage() }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <mat-card-actions>
+            <button color="primary" id="submit" mat-raised-button>
+              {{ edit ? 'Speichern' : 'Anmelden' }}
+            </button>
+            <a (click)="goBack()" mat-raised-button>
+              Zurück
+            </a>
+          </mat-card-actions>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
 </div>
 
 <ng-container *ngIf="showLoginAndTokenForm">
@@ -200,21 +202,24 @@
   </mat-card>
 </ng-container>
 
+<ng-template #emptyTmpl>
+  <mat-card class="float error empty">
+    <img src="/assets/img/404.svg">
+    <span>Sorry, diese Anmeldung gibt es lieder nicht mehr.</span>
+    <button [queryParams]="{a: link}"
+            [routerLink]="['/enroll']"
+            mat-raised-button>
+      Okay
+    </button>
+  </mat-card>
+</ng-template>
+
 <ng-template #loading>
-  <ng-container *ngIf="appointment === undefined; else loadingBar">
-    <div class="error empty">
-      <span>Sorry - 404</span>
-      <img src="/assets/img/404.svg">
-      Ich konnte diesen Termin nicht finden!
-    </div>
-  </ng-container>
+  <app-loading *ngIf="appointment !== undefined"
+               [@remove]>
+  </app-loading>
+  <app-fetch-appointment
+    [done]="appointment === undefined"
+    [percentDone]="percentDone">
+  </app-fetch-appointment>
 </ng-template>
-
-<ng-template #loadingBar>
-  <mat-progress-bar [@fadeInOut]
-                    [value]="percentDone"
-                    class="progress-bar"
-                    mode="determinate">
-  </mat-progress-bar>
-</ng-template>
-

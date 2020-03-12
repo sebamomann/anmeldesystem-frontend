@@ -15,6 +15,8 @@ import {
   MatTooltipModule
 } from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FetchAppointmentModule} from '../html-template/fetch-appointment/fetch-appointment.module';
+import {LoadingModule} from '../../html-template/loading/loading.module';
 
 const routes: Routes = [
   {path: '', component: EnrollmentComponent},
@@ -39,6 +41,8 @@ const routes: Routes = [
     MatProgressBarModule,
     FormsModule,
     MatButtonModule,
+    FetchAppointmentModule,
+    LoadingModule,
   ]
 })
 export class EnrollmentModule {

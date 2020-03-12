@@ -4,7 +4,7 @@ import {AppointmentService} from '../../../services/appointment.service';
 import {Location} from '@angular/common';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {ActivatedRoute} from '@angular/router';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import {animate, query, state, style, transition, trigger} from '@angular/animations';
 import {merge, Observable, Subject} from 'rxjs';
 import {mapTo, mergeMap, skip, switchMap, take} from 'rxjs/operators';
 
@@ -21,12 +21,20 @@ const HttpStatus = require('http-status-codes');
         animate(1000, style({opacity: 1})),
         animate(500, style({opacity: 0}))
       ])
-    ])
+    ]),
+    trigger('remove', [
+      transition('* => void', [
+        query('.layer', [
+          style({opacity: '1'}),
+          animate(500, style({opacity: '0'}))
+        ])
+      ])
+    ]),
   ]
 })
 export class DriverComponent implements OnInit {
 
-  public appointment: IAppointmentModel;
+  public appointment: IAppointmentModel = null;
   public data: MyType = {};
   public drivers: IEnrollmentModel[];
   public link;

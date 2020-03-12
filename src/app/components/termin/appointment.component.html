@@ -48,7 +48,9 @@
 </ng-container>
 
 <ng-template #loading>
-  <app-loading *ngIf="appointment !== undefined"></app-loading>
+  <app-loading *ngIf="appointment !== undefined"
+               [@remove]>
+  </app-loading>
   <app-fetch-appointment
     [done]="appointment === undefined"
     [percentDone]="percentDone">
