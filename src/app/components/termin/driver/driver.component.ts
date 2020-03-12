@@ -26,7 +26,7 @@ const HttpStatus = require('http-status-codes');
 })
 export class DriverComponent implements OnInit {
 
-  public appointment: IAppointmentModel;
+  public appointment: IAppointmentModel = null;
   public data: MyType = {};
   public drivers: IEnrollmentModel[];
   public link;

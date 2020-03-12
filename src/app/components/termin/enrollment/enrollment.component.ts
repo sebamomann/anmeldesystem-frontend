@@ -61,6 +61,7 @@ export class EnrollmentComponent implements OnInit {
   public appointment: IAppointmentModel = null;
   public edit: any;
   public token: any;
+  public empty = false;
 
   constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
               private location: Location,
@@ -122,6 +123,8 @@ export class EnrollmentComponent implements OnInit {
       .data
       .subscribe(v => this.edit = v.edit);
 
+    this.edit = this.enrollmentId !== undefined;
+
     // Needed due to error permanent trigger, if value is put in via form [value]
     if (this.userIsLoggedIn && !this.edit) {
       this.getName().markAsTouched();
@@ -135,9 +138,6 @@ export class EnrollmentComponent implements OnInit {
     );
 
     this.appointment$ = merge(initialAppointment$, updates$);
-    this.appointment$.subscribe(sAppointment => {
-      this.appointment = sAppointment;
-    });
 
     const reload$ = this.forceReload$.pipe(switchMap(() => this.getNotifications()));
     const initialNotifications$ = this.getNotifications();
@@ -163,31 +163,37 @@ export class EnrollmentComponent implements OnInit {
 
   private successfulRequest(): void {
     this.appointment$.subscribe(sAppointment => {
-      this.appointment = sAppointment;
-      this.storageDataToFields();
-      // When e.g. coming from login
-      if (this.showLoginAndTokenForm === true) {
-        // Re-fetch output from local storage
-        this.output = JSON.parse(this.outputRawFromStorage);
-        this.parseOutputIntoForm();
-
-        if (this.autoSend) {
-          this.sendEnrollment();
-        }
-      } else if (this.edit) {
-        const enrollment: IEnrollmentModel = this.appointment.enrollments.filter(fEnrollment => {
-          return fEnrollment.id === this.enrollmentId;
-        })[0];
-
-        if (enrollment !== null) {
-          this.output = enrollment;
+      if (sAppointment !== undefined) {
+        this.appointment = sAppointment;
+        this.storageDataToFields();
+        // When e.g. coming from login
+        if (this.showLoginAndTokenForm === true) {
+          // Re-fetch output from local storage
+          this.output = JSON.parse(this.outputRawFromStorage);
           this.parseOutputIntoForm();
-        }
-      } else {
-        // DO NOTHING, BECAUSE FORM IS EMPTY FOR ADDING NEW ENROLLMENT
-      }
 
-      this.buildFormCheckboxes();
+          if (this.autoSend) {
+            this.sendEnrollment();
+          }
+        } else if (this.edit) {
+          const enrollment: IEnrollmentModel = this.appointment.enrollments.filter(fEnrollment => {
+            return fEnrollment.id === this.enrollmentId;
+          })[0];
+
+          if (enrollment !== undefined) {
+            this.output = enrollment;
+            this.parseOutputIntoForm();
+          } else if (this.enrollmentId !== null && this.token !== null) {
+            this.empty = true;
+          }
+        } else {
+          // DO NOTHING, BECAUSE FORM IS EMPTY FOR ADDING NEW ENROLLMENT
+        }
+
+        this.buildFormCheckboxes();
+      }
+    }, () => {
+      this.appointment = undefined;
     });
   }
 
