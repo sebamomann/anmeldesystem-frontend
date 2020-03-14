@@ -49,13 +49,13 @@
 <ng-template #gotDifferent>
   <div class="analysis-block-wrapper">
     <div class="analysis-block">
-      <span class="title">Hinfahrt: {{data.gotTo}} Plätze</span>
+      <span class="title">Hinfahrt: <br/>{{data.gotTo}} Plätze</span>
       <ng-container [ngTemplateOutletContext]="{nr1:data.gotTo, nr2: data.neededTo}"
                     [ngTemplateOutlet]="calculation">
       </ng-container>
     </div>
     <div class="analysis-block">
-      <span class="title">Rückfahrt: {{data.gotFrom}} Plätze</span>
+      <span class="title">Rückfahrt: <br/>{{data.gotFrom}} Plätze</span>
       <ng-container [ngTemplateOutletContext]="{nr1:data.gotFrom, nr2: data.neededFrom}"
                     [ngTemplateOutlet]="calculation">
       </ng-container>
