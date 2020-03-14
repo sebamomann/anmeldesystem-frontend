@@ -7,6 +7,7 @@ import {ActivatedRoute} from '@angular/router';
 import {animate, query, state, style, transition, trigger} from '@angular/animations';
 import {merge, Observable, Subject} from 'rxjs';
 import {mapTo, mergeMap, skip, switchMap, take} from 'rxjs/operators';
+import {SEOService} from '../../../_helper/_seo.service';
 
 const HttpStatus = require('http-status-codes');
 
@@ -14,6 +15,7 @@ const HttpStatus = require('http-status-codes');
   selector: 'app-driver',
   templateUrl: './driver.component.html',
   styleUrls: ['./driver.component.scss'],
+  providers: [SEOService],
   animations: [
     trigger('fadeInOut', [
       state('in', style({opacity: 100})),
@@ -46,7 +48,8 @@ export class DriverComponent implements OnInit {
   update$ = new Subject<void>();
   forceReload$ = new Subject<void>();
 
-  constructor(private appointmentService: AppointmentService, private location: Location, private route: ActivatedRoute) {
+  constructor(private appointmentService: AppointmentService, private location: Location, private route: ActivatedRoute,
+              private _seoService: SEOService) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
     });
@@ -61,6 +64,9 @@ export class DriverComponent implements OnInit {
 
     this.appointment$ = merge(initialAppointment$, updates$);
     this.appointment$.subscribe(sAppointment => {
+      this._seoService.updateTitle(`${sAppointment.title} - Fahrer`);
+      this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
+
       this.appointment = sAppointment;
       const reload$ = this.forceReload$.pipe(switchMap(() => this.getNotifications()));
       const initialNotifications$ = this.getNotifications();

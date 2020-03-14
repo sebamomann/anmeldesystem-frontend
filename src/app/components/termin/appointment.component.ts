@@ -18,6 +18,7 @@ import {EnrollmentUtil} from '../../_util/enrollmentUtil.util';
 import {DomSanitizer} from '@angular/platform-browser';
 import {merge, Observable, Subject} from 'rxjs';
 import {mapTo, mergeMap, skip, startWith, switchMap, take} from 'rxjs/operators';
+import {SEOService} from '../../_helper/_seo.service';
 
 const HttpStatus = require('http-status-codes');
 
@@ -25,6 +26,7 @@ const HttpStatus = require('http-status-codes');
   selector: 'app-appointment',
   templateUrl: './appointment.component.html',
   styleUrls: ['./appointment.component.scss'],
+  providers: [SEOService],
   animations: [
     trigger('fadeInOut', [
       state('in', style({opacity: 100})),
@@ -86,7 +88,8 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
-              private snackBar: MatSnackBar, private location: Location, private sanitizer: DomSanitizer) {
+              private snackBar: MatSnackBar, private location: Location, private sanitizer: DomSanitizer,
+              private _seoService: SEOService) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
       this.editId = params.editId;
@@ -156,6 +159,9 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   successfulRequest() {
     this.appointment$.subscribe(sAppointment => {
       if (sAppointment !== undefined) {
+        this._seoService.updateTitle(`${sAppointment.title} - Anmeldesystem`);
+        this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
+
         this.enrollmentsCorrect = [];
         this.enrollments = sAppointment.enrollments;
         this.enrollmentsTooLate = this.enrollments.filter(fEnrollment => {
