@@ -15,6 +15,7 @@ import {EnrollmentModel} from '../../../models/EnrollmentModel.model';
 import {merge, Observable, Subject} from 'rxjs';
 import {mapTo, mergeMap, skip, switchMap, take} from 'rxjs/operators';
 import {TokenUtil} from '../../../_util/tokenUtil.util';
+import {SEOService} from '../../../_helper/_seo.service';
 
 const HttpStatus = require('http-status-codes');
 
@@ -22,6 +23,7 @@ const HttpStatus = require('http-status-codes');
   selector: 'app-enrollment',
   templateUrl: './enrollment.component.html',
   styleUrls: ['./enrollment.component.scss'],
+  providers: [SEOService],
   animations: [
     trigger('fadeInOut', [
       state('in', style({opacity: 100})),
@@ -74,7 +76,8 @@ export class EnrollmentComponent implements OnInit {
   constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
               private location: Location,
               private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
-              private authenticationService: AuthenticationService, private snackBar: MatSnackBar) {
+              private authenticationService: AuthenticationService, private snackBar: MatSnackBar,
+              private _seoService: SEOService) {
 
     this.currentUrlSnapshotWithParameter = router.routerState.snapshot;
 
@@ -87,21 +90,6 @@ export class EnrollmentComponent implements OnInit {
       if (this.token !== null && this.token !== undefined) {
         this.handleTokenPermission(this.link, {id: this.enrollmentId, token: this.token});
       }
-      // const ids = [];
-      // const tokens = [];
-      // for (const queryKey of Object.keys(params)) {
-      //   if (queryKey.startsWith('perm')) {
-      //     ids.push(params[queryKey]);
-      //   }
-      //
-      //   if (queryKey.startsWith('token')) {
-      //     tokens.push(params[queryKey]);
-      //   }
-      // }
-      //
-      // ids.forEach((fId, i) => {
-      //   this.handleTokenPermission(this.link, {id: fId, token: tokens[i]});
-      // });
     });
   }
 
@@ -172,6 +160,9 @@ export class EnrollmentComponent implements OnInit {
   private successfulRequest(): void {
     this.appointment$.subscribe(sAppointment => {
       if (sAppointment !== undefined) {
+        this._seoService.updateTitle(`${sAppointment.title} - Anmelden`);
+        this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
+
         this.appointment = sAppointment;
         this.storageDataToFields();
         // When e.g. coming from login
