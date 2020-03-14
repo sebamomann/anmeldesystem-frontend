@@ -219,6 +219,9 @@ export class EnrollmentComponent implements OnInit {
 
     if (this.getDriver().value) {
       if ((this.getService().valid && this.getSeats().valid)) {
+      } else {
+        this.driverPassengerEvent.markAllAsTouched();
+        return;
       }
     } else if (!this.getRequirement().valid) {
       this.driverPassengerEvent.markAllAsTouched();
