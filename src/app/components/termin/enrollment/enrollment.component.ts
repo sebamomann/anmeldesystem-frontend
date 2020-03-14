@@ -159,10 +159,10 @@ export class EnrollmentComponent implements OnInit {
 
   private successfulRequest(): void {
     this.appointment$.subscribe(sAppointment => {
-      this._seoService.updateTitle(`${sAppointment.title} - Anmelden`);
-      this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
-
       if (sAppointment !== undefined) {
+        this._seoService.updateTitle(`${sAppointment.title} - Anmelden`);
+        this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
+
         this.appointment = sAppointment;
         this.storageDataToFields();
         // When e.g. coming from login
