@@ -7,7 +7,7 @@ import {MatDialog, MatSnackBar} from '@angular/material';
 import {CommentDialogComponent} from '../../../dialogs/comment/commentDialog.component';
 import {HttpEventType} from '@angular/common/http';
 import {ConfirmationDialogComponent} from '../../../dialogs/confirmation-dialog/confirmation-dialog.component';
-import {ActivatedRoute, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {AppointmentService} from '../../../../services/appointment.service';
 import {AuthenticationService} from '../../../../services/authentication.service';
 import {EnrollmentService} from '../../../../services/enrollment.service';
@@ -63,8 +63,7 @@ export class EnrollmentListComponent implements OnInit {
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
-              private snackBar: MatSnackBar, private location: Location, private sanitizer: DomSanitizer,
-              private _state: RouterStateSnapshot) {
+              private snackBar: MatSnackBar, private location: Location, private sanitizer: DomSanitizer) {
     setTimeout(() => this.disableAnimation = false);
   }
 
@@ -78,7 +77,7 @@ export class EnrollmentListComponent implements OnInit {
    *
    * @param enrollment IEnrollmentModel Enrollment to delete from list
    */
-  removeAppointment: (enrollment: IEnrollmentModel) => void
+  removeEnrollmentFromAppointment: (enrollment: IEnrollmentModel) => void
     = (enrollment: IEnrollmentModel) => {
     const index = this.enrollments.indexOf(enrollment);
     this.enrollments.splice(index, 1);
@@ -282,17 +281,12 @@ export class EnrollmentListComponent implements OnInit {
             this.permissionGranted(operation, enrollment);
           })
           .catch(() => {
-            const currentUser = this.authenticationService.currentUserValue;
-            if (currentUser && currentUser.exp > new Date()) {
-              this.snackBar.open('Da ist wohl was schief gelaufen.',
-                '',
-                {
-                  duration: 2000,
-                  panelClass: 'snackbar-error'
-                });
-            } else {
-              this.router.navigate(['/account/login'], {queryParams: {returnUrl: this._state.url, mail: currentUser.mail}});
-            }
+            this.snackBar.open('Fehlende Berechtigungen',
+              '',
+              {
+                duration: 2000,
+                panelClass: 'snackbar-error'
+              });
           });
       });
   };
@@ -335,7 +329,8 @@ export class EnrollmentListComponent implements OnInit {
                     duration: 2000,
                     panelClass: 'snackbar-default'
                   });
-                  this.removeAppointment(enrollment);
+
+                  this.removeEnrollmentFromAppointment(enrollment);
                 }
               }
             },
@@ -355,6 +350,8 @@ export class EnrollmentListComponent implements OnInit {
   private allowedToEditByUserId(enrollment: IEnrollmentModel) {
     return new Promise<boolean>((resolve, reject) => {
       if (this.userIsLoggedIn) {
+        this.authenticationService.check(this.router.routerState.snapshot);
+
         this.enrollmentService
           .allowEdit(enrollment)
           .subscribe(
