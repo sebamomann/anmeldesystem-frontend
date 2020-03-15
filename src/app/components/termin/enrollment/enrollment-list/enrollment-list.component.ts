@@ -77,7 +77,7 @@ export class EnrollmentListComponent implements OnInit {
    *
    * @param enrollment IEnrollmentModel Enrollment to delete from list
    */
-  removeAppointment: (enrollment: IEnrollmentModel) => void
+  removeEnrollmentFromAppointment: (enrollment: IEnrollmentModel) => void
     = (enrollment: IEnrollmentModel) => {
     const index = this.enrollments.indexOf(enrollment);
     this.enrollments.splice(index, 1);
@@ -281,14 +281,13 @@ export class EnrollmentListComponent implements OnInit {
             this.permissionGranted(operation, enrollment);
           })
           .catch(() => {
-            this.snackBar.open('Da ist wohl was schief gelaufen.',
+            this.snackBar.open('Fehlende Berechtigungen',
               '',
               {
                 duration: 2000,
                 panelClass: 'snackbar-error'
               });
           });
-
       });
   };
 
@@ -330,7 +329,8 @@ export class EnrollmentListComponent implements OnInit {
                     duration: 2000,
                     panelClass: 'snackbar-default'
                   });
-                  this.removeAppointment(enrollment);
+
+                  this.removeEnrollmentFromAppointment(enrollment);
                 }
               }
             },
@@ -350,6 +350,8 @@ export class EnrollmentListComponent implements OnInit {
   private allowedToEditByUserId(enrollment: IEnrollmentModel) {
     return new Promise<boolean>((resolve, reject) => {
       if (this.userIsLoggedIn) {
+        this.authenticationService.check(this.router.routerState.snapshot);
+
         this.enrollmentService
           .allowEdit(enrollment)
           .subscribe(
