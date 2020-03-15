@@ -7,7 +7,7 @@ import {MatDialog, MatSnackBar} from '@angular/material';
 import {CommentDialogComponent} from '../../../dialogs/comment/commentDialog.component';
 import {HttpEventType} from '@angular/common/http';
 import {ConfirmationDialogComponent} from '../../../dialogs/confirmation-dialog/confirmation-dialog.component';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, RouterStateSnapshot} from '@angular/router';
 import {AppointmentService} from '../../../../services/appointment.service';
 import {AuthenticationService} from '../../../../services/authentication.service';
 import {EnrollmentService} from '../../../../services/enrollment.service';
@@ -63,7 +63,8 @@ export class EnrollmentListComponent implements OnInit {
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
-              private snackBar: MatSnackBar, private location: Location, private sanitizer: DomSanitizer) {
+              private snackBar: MatSnackBar, private location: Location, private sanitizer: DomSanitizer,
+              private _state: RouterStateSnapshot) {
     setTimeout(() => this.disableAnimation = false);
   }
 
@@ -281,14 +282,18 @@ export class EnrollmentListComponent implements OnInit {
             this.permissionGranted(operation, enrollment);
           })
           .catch(() => {
-            this.snackBar.open('Da ist wohl was schief gelaufen.',
-              '',
-              {
-                duration: 2000,
-                panelClass: 'snackbar-error'
-              });
+            const currentUser = this.authenticationService.currentUserValue;
+            if (currentUser && currentUser.exp > new Date()) {
+              this.snackBar.open('Da ist wohl was schief gelaufen.',
+                '',
+                {
+                  duration: 2000,
+                  panelClass: 'snackbar-error'
+                });
+            } else {
+              this.router.navigate(['/account/login'], {queryParams: {returnUrl: this._state.url, mail: currentUser.mail}});
+            }
           });
-
       });
   };
 
