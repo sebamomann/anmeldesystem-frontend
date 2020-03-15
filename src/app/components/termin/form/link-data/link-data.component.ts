@@ -43,7 +43,7 @@ export class LinkDataComponent implements OnInit {
   }
 
   public saveFnc() {
-    if (this.get('description').value.length > 10 && !this.get('link').hasError('inUse')) {
+    if (this.get('description').value.length >= 10 && !this.get('link').hasError('inUse')) {
       const data = {
         link: this.get('link').value,
         description: this.get('description').value,
