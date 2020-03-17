@@ -16,7 +16,7 @@ div {
 
     div {
       background-color: transparent;
-      width: 100%;
+      width: calc(100% - 50px);
       height: auto;
       top: 50%;
       transform: translateY(-50%);
