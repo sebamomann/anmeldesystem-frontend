@@ -5,6 +5,7 @@ import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from 
 import {DatePipe} from '@angular/common';
 import {HttpEventType} from '@angular/common/http';
 import {ValidatorService} from '../../../../_helper/validatorService';
+import {animate, query, style, transition, trigger} from '@angular/animations';
 
 const HttpStatus = require('http-status-codes');
 
@@ -22,7 +23,17 @@ export function passwordVerifyCheck(): ValidatorFn {
 @Component({
   selector: 'app-passwordreset',
   templateUrl: './passwordreset.component.html',
-  styleUrls: ['./passwordreset.component.scss']
+  styleUrls: ['./passwordreset.component.scss'],
+  animations: [
+    trigger('remove', [
+      transition('* => void', [
+        query('.layer', [
+          style({opacity: '1'}),
+          animate(500, style({opacity: '0'}))
+        ])
+      ])
+    ])
+  ]
 })
 export class PasswordresetComponent implements OnInit {
   public done = false;
@@ -40,8 +51,10 @@ export class PasswordresetComponent implements OnInit {
       passwordVerify: new FormControl('', [Validators.required]),
     }, passwordVerifyCheck()),
   });
+
   public doneMsg: string;
   private date: any;
+  private validated = false;
 
   constructor(private route: ActivatedRoute, private accountService: AccountService,
               private validatorService: ValidatorService) {
@@ -60,8 +73,8 @@ export class PasswordresetComponent implements OnInit {
       await this.accountService
         .validatePasswordresetToken(this.mail, this.token)
         .subscribe(
-          result => {
-            console.log(result);
+          () => {
+            this.validated = true;
           },
           error => {
             let message = '';
@@ -86,10 +99,13 @@ export class PasswordresetComponent implements OnInit {
                   break;
               }
 
+              this.validated = true;
               this.error = message;
             }
           }
         );
+    } else {
+      this.validated = true;
     }
   }
 
