@@ -52,17 +52,7 @@ pipeline {
 
         script {
           env_data = """
-            SALT_JWT=${SALT_JWT}
-            SALT_MAIL=${SALT_MAIL}
-            SALT_ENROLLMENT=${SALT_ENROLLMENT}
-            MAIL_ECA=${MAIL_ECA}
-            MAIL_ECA_PASSWORD=${MAIL_ECA_PASSWORD}
-            DOMAIN=${DOMAIN}
-            DB_HOST=${DB_HOST}
-            DB_PORT=${DB_PORT}
-            DB_USERNAME=${DB_USERNAME}
-            DB_PASSWORD=${DB_PASSWORD}
-            DB_DATABASE=${DB_DATABASE}
+            API_URL=${API_URL}
           """
         }
 
