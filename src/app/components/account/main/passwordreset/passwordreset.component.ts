@@ -54,7 +54,7 @@ export class PasswordresetComponent implements OnInit {
 
   public doneMsg: string;
   private date: any;
-  private validated = false;
+  public validated = false;
 
   constructor(private route: ActivatedRoute, private accountService: AccountService,
               private validatorService: ValidatorService) {

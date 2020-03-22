@@ -43,7 +43,7 @@ const HttpStatus = require('http-status-codes');
   ]
 })
 export class EnrollmentComponent implements OnInit {
-  private link: string;
+  public link: string;
 
   userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
 
