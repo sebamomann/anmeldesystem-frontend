@@ -69,6 +69,6 @@
     "typescript": "~3.5.3"
   },
   "resolutions": {
-    "@babel/present-env": "^7.8.7"
+    "@babel/preset-env": "7.5.5"
   }
 }
