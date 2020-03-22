@@ -5,6 +5,7 @@ WORKDIR /usr/src/app
 
 COPY package.json ./
 
+RUN npx npm-force-resolutions
 RUN npm install
 
 COPY . .
