@@ -3,7 +3,7 @@ FROM node:12.7-alpine AS build
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
+COPY package*.json ./
 
 RUN npx npm-force-resolutions
 RUN npm install
