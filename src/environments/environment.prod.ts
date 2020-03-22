@@ -1,4 +1,8 @@
+require('dotenv').config();
+
 export const environment = {
-  production: true,
-  api: {url: 'https://api.eca.cg-hh.de/'},
+  production: false,
+  api: {
+    url: process.env.API_URL
+  },
 };
