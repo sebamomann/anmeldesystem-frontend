@@ -36,6 +36,7 @@
     "http-status-codes": "^1.4.0",
     "moment": "^2.24.0",
     "ngx-mat-datetime-picker": "^1.0.2",
+    "npm-force-resolutions": "0.0.3",
     "particles.js": "^2.0.0",
     "rxjs": "~6.4.0",
     "source-map-explorer": "^2.2.2",
