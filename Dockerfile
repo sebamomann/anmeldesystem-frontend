@@ -15,5 +15,5 @@ RUN npm run build:prod
 ## STAGE 2
 
 FROM nginx:1.17.1-alpine
-
+COPY /usr/src/nginx-default.conf /etc/nginx/conf.d/deault.conf
 COPY --from=build /usr/src/app/dist/anmeldesystem-frontend /usr/share/nginx/html
