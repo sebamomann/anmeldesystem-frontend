@@ -99,7 +99,7 @@ export class EnrollmentComponent implements OnInit {
   private ENROLLMENT_KEY_KEY = 'enrollmentKeys';
   private outputRawFromStorage: string;
   private output: IEnrollmentModel = new EnrollmentModel();
-  public showLoginAndTokenForm: boolean;
+  public showLoginAndTokenForm = false;
   public currentUrlSnapshotWithParameter: RouterStateSnapshot;
   // Key fields
   private ENROLLMENT_OUTPUT_KEY = 'enrollmentOutput';
@@ -115,6 +115,12 @@ export class EnrollmentComponent implements OnInit {
   forceReload$ = new Subject<void>();
 
   async ngOnInit() {
+    const initialAppointment$ = this.getDataOnce();
+
+    const updates$ = merge(this.update$, this.forceReload$).pipe(
+      mergeMap(() => this.getDataOnce())
+    );
+
     await this.route
       .data
       .subscribe(v => this.edit = v.edit);
@@ -127,21 +133,16 @@ export class EnrollmentComponent implements OnInit {
       this.getName().setValue(this.authenticationService.currentUserValue.name);
     }
 
-    const initialAppointment$ = this.getDataOnce();
-
-    const updates$ = merge(this.update$, this.forceReload$).pipe(
-      mergeMap(() => this.getDataOnce())
-    );
 
     this.appointment$ = merge(initialAppointment$, updates$);
+
+    this.successfulRequest();
 
     const reload$ = this.forceReload$.pipe(switchMap(() => this.getNotifications()));
     const initialNotifications$ = this.getNotifications();
     const show$ = merge(initialNotifications$, reload$).pipe(mapTo(true));
     const hide$ = this.update$.pipe(mapTo(false));
     this.showNotification$ = merge(show$, hide$);
-
-    this.successfulRequest();
   }
 
   getDataOnce() {

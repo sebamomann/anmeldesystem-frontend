@@ -16,6 +16,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular-material-components/datetime-picker": "^2.0.2",
     "@angular/animations": "^8.2.14",
     "@angular/cdk": "^8.2.3",
     "@angular/common": "~8.2.12",
@@ -24,6 +25,7 @@
     "@angular/flex-layout": "^8.0.0-beta.27",
     "@angular/forms": "~8.2.12",
     "@angular/material": "^8.2.3",
+    "@angular/material-moment-adapter": "latest",
     "@angular/platform-browser": "~8.2.12",
     "@angular/platform-browser-dynamic": "~8.2.12",
     "@angular/router": "~8.2.12",
@@ -37,8 +39,7 @@
     "rxjs": "~6.4.0",
     "source-map-explorer": "^2.2.2",
     "tslib": "^1.10.0",
-    "zone.js": "~0.9.1",
-    "@angular/material-moment-adapter": "latest"
+    "zone.js": "~0.9.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.803.23",
