@@ -12,8 +12,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:ci": "npm run build:prod",
-    "stats": "webpack-bundle-analyzer dist/stats.json",
-    "preinstall": "npx npm-force-resolutions"
+    "stats": "webpack-bundle-analyzer dist/stats.json"
   },
   "private": true,
   "dependencies": {
