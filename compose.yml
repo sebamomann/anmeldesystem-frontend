@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  anmeldeystem-frontend:
+    image: sebamomann/anmeldesystem-frontend:latest
+    restart: always
+    container_name: anmeldesystem-frontend
+    env_file:
+      - ./.env
+    ports:
+      - 80:80
