@@ -1,6 +1,7 @@
 {
   "extends": "tslint:recommended",
   "rules": {
+    "object-shorthand": "never",
     "semicolon": false,
     "variable-name": {
       "options": [

@@ -76,10 +76,11 @@ export class PasswordresetComponent implements OnInit {
           () => {
             this.validated = true;
           },
-          error => {
+          err => {
             let message = '';
-            if (error.status === HttpStatus.BAD_REQUEST) {
-              switch (error.error.code) {
+
+            if (err.status === HttpStatus.BAD_REQUEST) {
+              switch (err.error.code) {
                 case 'INVALID':
                   message = 'Mit diesem Link kann ich leider nichts anfangen. Hast du ihn versehentlich nicht komplett kopiert?';
                   break;
@@ -89,7 +90,7 @@ export class PasswordresetComponent implements OnInit {
                   break;
                 case 'USED':
                   const pipe = new DatePipe('de-DE');
-                  this.date = pipe.transform(new Date(error.error.error.date), 'dd.MM.y, HH:mm');
+                  this.date = pipe.transform(new Date(err.error.data.date), 'dd.MM.y, HH:mm');
                   message = `Sieht so aus, als hättest du bereits dein Passwort mit diesem Link am ` +
                     `${(this.date)} Uhr zurückgesetzt. Erstelle dir einfach einen neuen Link und komm wieder!`;
                   break;
@@ -112,7 +113,7 @@ export class PasswordresetComponent implements OnInit {
   initReset() {
     if (this.mailEvent.valid) {
       this.loading = true;
-      this.accountService.initReset(this.getMail().value).subscribe(value => {
+      this.accountService.initializePasswordReset(this.getMail().value).subscribe(value => {
         if (value.status === 204) {
           setTimeout(() => {
             this.loading = false;
@@ -132,12 +133,10 @@ export class PasswordresetComponent implements OnInit {
           result => {
             if (result.type === HttpEventType.Response) {
               this.done = true;
-              this.doneMsg = 'Top. Ich habe dein passwort geändert!';
+              this.doneMsg = 'Top. Ich habe dein Passwort aktualisiert!';
             }
           },
-          err => {
-            console.log('se' + err);
-            console.log(err);
+          () => {
             this.error = 'Huch, da ist etwas schief gegangen. Ich kann dir leider nicht weiterhelfen. Versuche es später nochmal.';
           });
     } else {

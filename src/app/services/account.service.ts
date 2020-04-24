@@ -4,6 +4,7 @@ import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
 import {WINDOW} from '../provider/window.provider';
 import {Observable} from 'rxjs';
 import {IUserModel} from '../models/IUserModel.model';
+import {IUserModelRegister} from '../models/IUserModelRegister.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class AccountService {
   constructor(private httpClient: HttpClient, @Inject(WINDOW) private window: Window) {
   }
 
-  get(): Observable<HttpEvent<IUserModel>> {
+  public get(): Observable<HttpEvent<IUserModel>> {
     const url = `${environment.api.url}user`;
     const req = new HttpRequest('GET', url, {
       reportProgress: true,
@@ -21,58 +22,82 @@ export class AccountService {
     return this.httpClient.request(req);
   }
 
-  register(userData: { password: any; mail: any; username: any }) {
-    const url = `${environment.api.url}user/`;
-    return this.httpClient.post<any>(url, {
+  public register(userData: IUserModelRegister) {
+    const url = `${environment.api.url}users`;
+    const body = {
       user: userData,
-      domain: this.window.location.hostname + '/account/verify'
-    }, {observe: 'response', reportProgress: true});
+      domain: `${this.window.location.hostname}/account/verify`
+    };
+
+    return this.httpClient
+      .post<IUserModel>(url, body, {
+          observe: 'response',
+          reportProgress: true
+        }
+      );
   }
 
-  validatePasswordresetToken(mail: string, token: string) {
-    const url = `${environment.api.url}user/passwordreset/validate/${mail}/${token}`;
+  public updateValues(body: any): Observable<HttpEvent<IUserModel>> {
+    body.domain = this.window.location.hostname + '/account/mail/verify';
+
+    const url = `${environment.api.url}user`;
+
+    const req = new HttpRequest('PUT', url, body, {
+      reportProgress: true,
+    });
+    return this.httpClient.request(req);
+  }
+
+  public activate(mail: string, token: string) {
+    const url = `${environment.api.url}users/verify/${mail}/${token}`;
     return this.httpClient.get<null>(url, {observe: 'response', reportProgress: true});
   }
 
-  initReset(mail: string) {
-    const url = `${environment.api.url}user/passwordreset/`;
-    return this.httpClient.post<{ mail: string, domain: string }>(url, {
-      mail,
+  public initializePasswordReset(mail: string) {
+    const url = `${environment.api.url}users/passwordreset`;
+    const body = {
+      mail: mail,
       domain: this.window.location.hostname + '/account/passwordreset'
-    }, {observe: 'response', reportProgress: true});
+    };
+
+    return this.httpClient.post<void>(url, body, {observe: 'response', reportProgress: true});
   }
 
-  resetPassword(password: string, mail: string, token: string): Observable<HttpEvent<string>> {
-    const url = `${environment.api.url}user/passwordreset/${mail}/${token}`;
+  public validatePasswordresetToken(mail: string, token: string) {
+    const url = `${environment.api.url}users/passwordreset/validate/${mail}/${token}`;
+
+    return this.httpClient.get<void>(url, {observe: 'response', reportProgress: true});
+  }
+
+
+  public resetPassword(password: string, mail: string, token: string) {
+    const url = `${environment.api.url}users/passwordreset/${mail}/${token}`;
     const req = new HttpRequest('PUT', url, {password}, {
       reportProgress: true,
     });
+
     return this.httpClient.request(req);
   }
 
-  activateUserByEmail(mail: string, token: string) {
-    const url = `${environment.api.url}user/verify/${mail}/${token}`;
-    return this.httpClient.get<null>(url, {observe: 'response', reportProgress: true});
+  public changeEmail(mail: string, token: string) {
+    const url = `${environment.api.url}users/mail/verify/${mail}/${token}`;
+
+    return this.httpClient.get<void>(url, {observe: 'response', reportProgress: true});
   }
 
-  changeEmail(mail: string, token: string) {
-    const url = `${environment.api.url}user/mail/verify/${mail}/${token}`;
-    return this.httpClient.get<null>(url, {observe: 'response', reportProgress: true});
-  }
-
-  resendMailChange() {
-    console.log('resend');
-    const url = `${environment.api.url}user/mail/change/resend`;
+  public resendMailChange() {
+    const url = `${environment.api.url}users/mail/change/resend`;
     const domain = this.window.location.hostname + '/account/mail/verify';
+
     const req = new HttpRequest('POST', url, {domain}, {
       reportProgress: true,
     });
+
     return this.httpClient.request(req);
   }
 
-  cancelMailChange() {
-    console.log('cancel mail change');
-    const url = `${environment.api.url}user/mail/change/cancel`;
+  public cancelMailChange() {
+    const url = `${environment.api.url}users/mail/change/cancel`;
     const req = new HttpRequest('GET', url, {
       reportProgress: true,
     });
