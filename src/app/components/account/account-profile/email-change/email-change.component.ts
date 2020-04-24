@@ -4,6 +4,7 @@ import {DatePipe} from '@angular/common';
 import {AccountService} from '../../../../services/account.service';
 
 const HttpStatus = require('http-status-codes');
+const atob = require('atob');
 
 @Component({
   selector: 'app-email-change',
@@ -20,7 +21,7 @@ export class EmailChangeComponent implements OnInit {
   constructor(private route: ActivatedRoute, private accountService: AccountService,
               private router: Router) {
     this.route.params.subscribe(params => {
-      this.mail = params.mail;
+      this.mail = atob(params.mail);
       this.token = params.token;
     });
   }
@@ -51,7 +52,7 @@ export class EmailChangeComponent implements OnInit {
                   break;
                 case 'USED':
                   const pipe = new DatePipe('de-DE');
-                  this.date = pipe.transform(new Date(err.error.error.date), 'dd.MM.y, HH:mm');
+                  this.date = pipe.transform(new Date(err.error.data.date), 'dd.MM.y, HH:mm');
                   message = `Sieht so aus, als hättest du bereits deine Email mit diesem Link am ` +
                     `${(this.date)} Uhr geändert. Erstelle dir einfach einen neuen Link und komm wieder!`;
                   break;

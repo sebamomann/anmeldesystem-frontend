@@ -15,7 +15,7 @@ export class AccountService {
   }
 
   public get(): Observable<HttpEvent<IUserModel>> {
-    const url = `${environment.api.url}user`;
+    const url = `${environment.api.url}users`;
     const req = new HttpRequest('GET', url, {
       reportProgress: true,
     });
@@ -37,20 +37,20 @@ export class AccountService {
       );
   }
 
+  public activate(mail: string, token: string) {
+    const url = `${environment.api.url}users/verify/${window.btoa(mail)}/${token}`;
+    return this.httpClient.get<null>(url, {observe: 'response', reportProgress: true});
+  }
+
   public updateValues(body: any): Observable<HttpEvent<IUserModel>> {
     body.domain = this.window.location.hostname + '/account/mail/verify';
 
-    const url = `${environment.api.url}user`;
+    const url = `${environment.api.url}users`;
 
     const req = new HttpRequest('PUT', url, body, {
       reportProgress: true,
     });
     return this.httpClient.request(req);
-  }
-
-  public activate(mail: string, token: string) {
-    const url = `${environment.api.url}users/verify/${mail}/${token}`;
-    return this.httpClient.get<null>(url, {observe: 'response', reportProgress: true});
   }
 
   public initializePasswordReset(mail: string) {
@@ -64,14 +64,14 @@ export class AccountService {
   }
 
   public validatePasswordresetToken(mail: string, token: string) {
-    const url = `${environment.api.url}users/passwordreset/validate/${mail}/${token}`;
+    const url = `${environment.api.url}users/passwordreset/validate/${window.btoa(mail)}/${token}`;
 
     return this.httpClient.get<void>(url, {observe: 'response', reportProgress: true});
   }
 
 
   public resetPassword(password: string, mail: string, token: string) {
-    const url = `${environment.api.url}users/passwordreset/${mail}/${token}`;
+    const url = `${environment.api.url}users/passwordreset/${window.btoa(mail)}/${token}`;
     const req = new HttpRequest('PUT', url, {password}, {
       reportProgress: true,
     });
@@ -80,7 +80,7 @@ export class AccountService {
   }
 
   public changeEmail(mail: string, token: string) {
-    const url = `${environment.api.url}users/mail/verify/${mail}/${token}`;
+    const url = `${environment.api.url}users/mail/verify/${window.btoa(mail)}/${token}`;
 
     return this.httpClient.get<void>(url, {observe: 'response', reportProgress: true});
   }

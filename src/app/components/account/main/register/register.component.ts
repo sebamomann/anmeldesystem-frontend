@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit {
   constructor(private router: Router, private accountService: AccountService,
               private route: ActivatedRoute) {
     this.route.params.subscribe(params => {
-      this.mail = params.mail;
+      this.mail = window.atob(params.mail);
       this.token = params.token;
     });
   }
