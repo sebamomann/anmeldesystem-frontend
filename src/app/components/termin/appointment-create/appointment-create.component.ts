@@ -63,6 +63,7 @@ export class AppointmentCreateComponent implements OnInit {
           }
         },
         (err: HttpErrorResponse) => {
+          this.percentDone = 0;
           if (err.status === HttpStatus.BAD_REQUEST) {
             if (err.error.code === 'DUPLICATE_ENTRY') {
               err.error.error.forEach(fColumn => {
