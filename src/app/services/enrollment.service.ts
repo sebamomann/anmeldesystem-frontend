@@ -48,4 +48,10 @@ export class EnrollmentService {
       return throwError('');
     }
   }
+
+  checkPermission(enrollment: IEnrollmentModel, link: string = '') {
+    const token = TokenUtil.getTokenForEnrollment(enrollment.id, link);
+    const url = `${environment.api.url}enrollment/${enrollment.id}/check-permission?token=${token}`;
+    return this.httpClient.get<void>(url, {observe: 'response', reportProgress: true});
+  }
 }

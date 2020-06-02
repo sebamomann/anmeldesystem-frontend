@@ -270,25 +270,24 @@ export class EnrollmentListComponent implements OnInit {
   };
 
   public precheckOpenConfirmationDialog = async (enrollment: IEnrollmentModel, operation: string): Promise<void> => {
-    this.allowedToEditByUserId(enrollment)
-      .then(() => {
-        this.permissionGranted(operation, enrollment);
-        return null;
-      })
-      .catch(() => {
-        this.allowedToEditByToken(enrollment, operation)
-          .then(() => {
-            this.permissionGranted(operation, enrollment);
-          })
-          .catch(() => {
+    this.enrollmentService
+      .checkPermission(enrollment, this.appointment.link)
+      .subscribe(() => {
+          this.permissionGranted(operation, enrollment);
+          return null;
+        },
+        () => {
+          if (this.authenticationService.currentUserValue !== null) {
             this.snackBar.open('Fehlende Berechtigungen',
               '',
               {
                 duration: 2000,
                 panelClass: 'snackbar-error'
               });
-          });
-      });
+          } else {
+            this.openResendDialog(enrollment, operation);
+          }
+        });
   };
 
   /**
