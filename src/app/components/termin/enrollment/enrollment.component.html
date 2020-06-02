@@ -215,7 +215,7 @@
 </ng-template>
 
 <ng-template #loading>
-  <app-loading *ngIf="appointment !== undefined"
+  <app-loading *ngIf="appointment !== undefined && !showLoginAndTokenForm"
                [@remove]>
   </app-loading>
   <app-fetch-appointment
