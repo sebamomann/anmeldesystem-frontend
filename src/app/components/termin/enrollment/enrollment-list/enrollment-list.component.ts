@@ -322,16 +322,12 @@ export class EnrollmentListComponent implements OnInit {
           .delete(enrollment, this.appointment.link)
           .subscribe(
             deletionResult => {
-              if (deletionResult.type === HttpEventType.Response) {
-                if (deletionResult.status === HttpStatus.OK) {
-                  this.snackBar.open(`"${enrollment.name}" gelöscht`, null, {
-                    duration: 2000,
-                    panelClass: 'snackbar-default'
-                  });
+              this.snackBar.open(`"${enrollment.name}" gelöscht`, null, {
+                duration: 2000,
+                panelClass: 'snackbar-default'
+              });
 
-                  this.removeEnrollmentFromAppointment(enrollment);
-                }
-              }
+              this.removeEnrollmentFromAppointment(enrollment);
             },
             error => {
               if (error.status === HttpStatus.FORBIDDEN) {

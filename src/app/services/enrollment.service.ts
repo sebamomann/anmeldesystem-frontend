@@ -1,6 +1,6 @@
 import {Inject, Injectable} from '@angular/core';
 import {IEnrollmentModel} from '../models/IEnrollment.model';
-import {HttpClient, HttpRequest, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {Observable, throwError} from 'rxjs';
@@ -30,8 +30,10 @@ export class EnrollmentService {
 
   delete(enrollment: IEnrollmentModel, link) {
     const token = TokenUtil.getTokenForEnrollment(enrollment.id, link);
-    const req = new HttpRequest('DELETE', `${environment.api.url}enrollment/${enrollment.id}/${token}`, {});
-    return this.httpClient.request(req);
+    return this.httpClient.delete<void>(`${environment.api.url}enrollment/${enrollment.id}/${token}`, {
+      observe: 'response',
+      reportProgress: true
+    });
   }
 
   allowEdit(enrollment: IEnrollmentModel): Observable<HttpResponse<void>> {
