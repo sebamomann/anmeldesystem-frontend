@@ -50,7 +50,7 @@ export class AuthenticationService {
   }
 
   check = (state: RouterStateSnapshot): boolean => {
-    if (this.currentUserValue && this.currentUserValue.exp > new Date()) {
+    if (this.currentUserValue && (new Date(this.currentUserValue.exp).getTime()) > (new Date().getTime())) {
       return true;
     } else {
       // not logged in so redirect to login page with the return url
