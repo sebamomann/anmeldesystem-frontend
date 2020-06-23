@@ -1,6 +1,6 @@
 import {Inject, Injectable} from '@angular/core';
 import {IEnrollmentModel} from '../models/IEnrollment.model';
-import {HttpClient, HttpRequest, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {Observable, throwError} from 'rxjs';
@@ -18,7 +18,8 @@ export class EnrollmentService {
   create(enrollment: IEnrollmentModel, appointment: IAppointmentModel): Observable<HttpResponse<IEnrollmentModel>> {
     const _enrollment: any = enrollment;
     _enrollment.domain = this.window.location.hostname + '/enrollment?a=' + appointment.link;
-    const url = `${environment.API_URL}enrollment?link=${appointment.link}&asquery=true`;
+    _enrollment.appointment = {link: appointment.link};
+    const url = `${environment.API_URL}enrollment?asquery=true`;
     return this.httpClient.post<IEnrollmentModel>(url, _enrollment, {observe: 'response', reportProgress: true});
   }
 
@@ -29,8 +30,10 @@ export class EnrollmentService {
 
   delete(enrollment: IEnrollmentModel, link) {
     const token = TokenUtil.getTokenForEnrollment(enrollment.id, link);
-    const req = new HttpRequest('DELETE', `${environment.API_URL}enrollment/${enrollment.id}/${token}`, {});
-    return this.httpClient.request(req);
+    return this.httpClient.delete<void>(`${environment.API_URL}enrollment/${enrollment.id}/${token}`, {
+      observe: 'response',
+      reportProgress: true
+    });
   }
 
   allowEdit(enrollment: IEnrollmentModel): Observable<HttpResponse<void>> {
@@ -46,5 +49,11 @@ export class EnrollmentService {
     } else {
       return throwError('');
     }
+  }
+
+  checkPermission(enrollment: IEnrollmentModel, link: string = '') {
+    const token = TokenUtil.getTokenForEnrollment(enrollment.id, link);
+    const url = `${environment.API_URL}enrollment/${enrollment.id}/check-permission?token=${token}`;
+    return this.httpClient.get<void>(url, {observe: 'response', reportProgress: true});
   }
 }

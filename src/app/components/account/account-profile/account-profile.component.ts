@@ -41,8 +41,8 @@ export class AccountProfileComponent implements OnInit {
     }
 
     if (JSON.stringify(toChange) !== JSON.stringify({})) {
-      this.userService
-        .updateValues(toChange, this.userData)
+      this.accountService
+        .updateValues(toChange)
         .subscribe(
           sUserData => {
             if (sUserData.type === HttpEventType.Response) {
@@ -56,12 +56,16 @@ export class AccountProfileComponent implements OnInit {
           error => {
             if (error instanceof HttpErrorResponse) {
               if (error.status === HttpStatus.BAD_REQUEST) {
-                if (error.error.code === 'ER_DUP_ENTRY') {
-                  error.error.error.columns.forEach(fColumn => {
-                    this.userDataComponent.updateErrors({attr: fColumn, error: 'inUse'});
+                if (error.error.code === 'DUPLICATE_ENTRY') {
+                  error.error.data.forEach(fColumn => {
+                      fColumn = fColumn === 'email' ? 'mail' : fColumn;
+                      this.userDataComponent.updateErrors({attr: fColumn, error: 'inUse'});
                     }
                   );
                 }
+              } else if (true) {
+                // TODO
+                // ENTITY NOT FOUND EXCEPTION
               }
             }
           }

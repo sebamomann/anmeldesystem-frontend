@@ -13,8 +13,8 @@ export class AccountService {
   constructor(private httpClient: HttpClient, @Inject(WINDOW) private window: Window) {
   }
 
-  get(): Observable<HttpEvent<IUserModel>> {
-    const url = `${environment.API_URL}user`;
+  public get(): Observable<HttpEvent<IUserModel>> {
+    const url = `${environment.API_URL}users`;
     const req = new HttpRequest('GET', url, {
       reportProgress: true,
     });
