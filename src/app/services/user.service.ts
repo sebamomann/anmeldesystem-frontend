@@ -16,7 +16,7 @@ export class UserService {
   updateValues(toChange: any, {id}): Observable<HttpEvent<IUserModel>> {
     console.log('update user', toChange);
     toChange.domain = this.window.location.hostname + '/account/mail/verify';
-    const req = new HttpRequest('PUT', `${environment.api.url}user`, toChange, {
+    const req = new HttpRequest('PUT', `${environment.API_URL}user`, toChange, {
       reportProgress: true,
     });
     return this.httpClient.request(req);

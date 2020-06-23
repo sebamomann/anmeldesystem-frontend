@@ -13,6 +13,6 @@ export class CommentService {
   }
 
   comment(comment: ICommentModel, enrollment: IEnrollmentModel) {
-    return this.httpClient.post<ICommentModel>(`${environment.api.url}comment?id=${enrollment.id}`, comment);
+    return this.httpClient.post<ICommentModel>(`${environment.API_URL}comment?id=${enrollment.id}`, comment);
   }
 }

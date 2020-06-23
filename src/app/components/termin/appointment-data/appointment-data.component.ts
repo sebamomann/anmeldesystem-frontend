@@ -17,7 +17,7 @@ import {AuthenticationService} from '../../../services/authentication.service';
 })
 export class AppointmentDataComponent implements OnInit {
 
-  public apiUrl = environment.api.url;
+  public apiUrl = environment.API_URL;
 
   @Input() public appointment: IAppointmentModel;
   @Input() public preview = false;

@@ -1,6 +1,4 @@
 export const environment = {
-  production: false,
-  api: {
-    url: 'https://api.eca.cg-hh.de/'
-  },
+  production: true,
+  API_URL: window['env']['API_URL'] || 'http://localhost:8080',
 };

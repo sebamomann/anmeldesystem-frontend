@@ -24,7 +24,7 @@ export class AuthenticationService {
   }
 
   login(mail, password) {
-    return this._http.post<any>(`${environment.api.url}auth/login`, {username: mail, password})
+    return this._http.post<any>(`${environment.API_URL}auth/login`, {username: mail, password})
       .pipe(map(user => {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
         // tslint:disable-next-line:prefer-const

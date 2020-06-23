@@ -13,7 +13,7 @@ export class ReleasenotesService {
   }
 
   getAll(): Observable<HttpEvent<IReleasenote[]>> {
-    const req = new HttpRequest('GET', `${environment.api.url}releasenote`, {
+    const req = new HttpRequest('GET', `${environment.API_URL}releasenote`, {
       reportProgress: true,
     });
 
