@@ -1,65 +1,34 @@
-img = null
-env_data = ""
+def image
+
+properties([
+  parameters([
+    string(name: 'VERSION', defaultValue: '0.0.0'),
+    booleanParam(name: 'LATEST', defaultValue: 'true'),
+  ])
+])
 
 pipeline {
   agent any
 
   stages {
-    //stage('Test App') {
-      // steps {
-        // sh 'npm test'
-      // }
-    //}
     stage('Build Docker image') {
-      steps {  
+      steps {
         script {
-          image = docker.build("sebamomann/anmeldesystem-frontend:${VERSION}", "--build-arg version=${VERSION} .")
+          image = docker.build("anmeldesystem/anmeldesystem-ui")
         }
       }
     }
-    stage('Deploy to HUB version') {
+    stage('Publish to registry') {
       steps {
-        withDockerRegistry([credentialsId: "docker-hub-sebamomann", url: ""]) {
-          script {
-            echo LATEST
+        script {
+          docker.withRegistry('http://localhost:34015') {
+            if (LATEST == 'true') {
+              image.push("latest")
+            }
+
             image.push("${VERSION}")
           }
         }
-      }
-    }
-    stage('Deploy to HUB latest') {
-      when {
-        expression {
-          return LATEST == "true"
-        }
-      }
-      steps {
-        withDockerRegistry([credentialsId: "docker-hub-sebamomann", url: ""]) {
-          script {
-            image.push("latest")
-          }
-        }
-      }
-    }
-    stage('Execute') {
-      when {
-        expression {
-          return LATEST == "true"
-        }
-      }
-      steps {
-        echo 'preparing .env file'
-
-        script {
-          env_data = """
-            API_URL=${API_URL}
-          """
-        }
-
-        writeFile(file: ".env", text: env_data)
-
-        echo 'execute ...'
-        sh 'docker-compose -f compose.yml up -d'
       }
     }
   }
