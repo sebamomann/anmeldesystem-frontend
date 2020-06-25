@@ -74,4 +74,13 @@ export class AuthenticationService {
       return false;
     }
   };
+
+  isExpired() {
+    if (this.currentUserValue && (new Date(this.currentUserValue.exp).getTime()) > (new Date().getTime())) {
+      this.logout();
+      return true;
+    }
+
+    return false;
+  }
 }
