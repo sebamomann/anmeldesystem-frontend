@@ -55,8 +55,10 @@ export class AccountService {
 
   public initializePasswordReset(mail: string) {
     const url = `${environment.API_URL}users/passwordreset`;
+    console.log(url);
+
     const body = {
-      mail: mail,
+      mail,
       domain: this.window.location.hostname + '/account/passwordreset'
     };
 
@@ -71,7 +73,7 @@ export class AccountService {
 
 
   public resetPassword(password: string, mail: string, token: string) {
-    const url = `${environment.API_URL}users/passwordreset/${window.btoa(mail)}/${token}`;
+    const url = `${environment.API_URL}users/passwordreset/${mail}/${token}`;
     const req = new HttpRequest('PUT', url, {password}, {
       reportProgress: true,
     });
