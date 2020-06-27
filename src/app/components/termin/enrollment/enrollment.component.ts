@@ -45,7 +45,7 @@ const HttpStatus = require('http-status-codes');
 export class EnrollmentComponent implements OnInit {
   public link: string;
 
-  userIsLoggedIn: boolean = !this.authenticationService.isExpired();
+  userIsLoggedIn: boolean = !this.authenticationService.isExpired() && this.authenticationService.currentUserValue !== null;
 
   selfEnrollment = this.formBuilder.group({
     selfEnrollment: new FormControl('true', []),
