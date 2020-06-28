@@ -76,6 +76,8 @@ export class AuthenticationService {
   };
 
   isExpired() {
+    console.log((new Date(this.currentUserValue.exp).getTime()));
+    console.log((new Date().getTime()));
     if (this.currentUserValue && (new Date(this.currentUserValue.exp).getTime()) < (new Date().getTime())) {
       this.logout();
       return true;
