@@ -75,12 +75,13 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
                   this.refreshTokenInProgress = false;
 
                   request = this.addAuthenticationToken(request);
+
+                  request.headers.delete('If-None-Match');
+
                   return next.handle(request);
                 }),
                 catchError(e => {
                   this.refreshTokenInProgress = false;
-
-                  console.log(e);
 
                   this.authService.logout();
                   return Observable.throw(error);
