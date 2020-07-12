@@ -104,7 +104,7 @@ export class AuthenticationService {
     const currentUser = this.currentUserValue;
     currentUser.token = token;
 
-    this.currentUserSubject.next(currentUser);
+    this.setCurrentUser(currentUser);
   }
 
   public userIsLoggedIn() {
