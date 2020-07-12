@@ -39,27 +39,27 @@ export class AuthenticationService {
   }
 
   check = (state: RouterStateSnapshot): boolean => {
-    if (this.currentUserValue && (new Date(this.currentUserValue.exp).getTime()) > (new Date().getTime())) {
+    if (this.currentUserValue) {
       return true;
     } else {
-      // not logged in so redirect to login page with the return url
-      if (this.currentUserValue !== null) {
-        this._router.navigate(['/account/login'], {
-          queryParams: {
-            returnUrl: state.url,
-            mail: this.currentUserValue.mail
-          }
-        })
-          .then(() => {
-            return false;
-          });
-      }
-
-      this._router.navigate(['/account/login'], {
-        queryParams: {
-          returnUrl: state.url
-        }
-      });
+      // // not logged in so redirect to login page with the return url
+      // if (this.currentUserValue !== null) {
+      //   this._router.navigate(['/account/login'], {
+      //     queryParams: {
+      //       returnUrl: state.url,
+      //       mail: this.currentUserValue.mail
+      //     }
+      //   })
+      //     .then(() => {
+      //       return false;
+      //     });
+      // }
+      //
+      // this._router.navigate(['/account/login'], {
+      //   queryParams: {
+      //     returnUrl: state.url
+      //   }
+      // });
       return false;
     }
   };
