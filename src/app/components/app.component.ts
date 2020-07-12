@@ -46,6 +46,12 @@ export class AppComponent {
       }
     });
 
+    if (this.authenticationService.currentUserValue !== null
+      && this.authenticationService.currentUserValue.exp !== undefined
+      && this.authenticationService.currentUserValue.exp !== null) {
+      this.authenticationService.logout();
+    }
+
     this.pwa.checkForUpdates();
 
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',

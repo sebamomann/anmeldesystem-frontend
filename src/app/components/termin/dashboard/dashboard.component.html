@@ -16,6 +16,15 @@
     </div>
   </ng-container>
 
+  <div *ngIf="!authenticationService.userIsLoggedIn()" class="empty-list standalone block-scope">
+    <span>
+      Du bist nicht eingeloggt. Logge dich ein um mehr Termine zu sehen bei denen du dabei bist.
+    </span>
+
+    <button mat-raised-button>
+      Einloggen
+    </button>
+  </div>
 
   <ng-container *ngIf="appointmentsArchive.length > 0">
     <h2 class="title">Archiv</h2>

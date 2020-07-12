@@ -643,6 +643,16 @@ mat-hint {
     position: relative;
   }
 
+  &.block-scope {
+    span {
+      display: block;
+    }
+  }
+
+  button {
+    display: block;
+  }
+
   img {
     margin: 0 auto 25px;
     display: inline-block;

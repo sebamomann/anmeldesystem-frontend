@@ -114,4 +114,8 @@ export class AuthenticationService {
 
     this.currentUserSubject.next(currentUser);
   }
+
+  public userIsLoggedIn() {
+    return this.currentUserValue !== null;
+  }
 }
