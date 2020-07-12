@@ -55,7 +55,6 @@ export class AccountService {
 
   public initializePasswordReset(mail: string) {
     const url = `${environment.API_URL}users/passwordreset`;
-    console.log(url);
 
     const body = {
       mail,

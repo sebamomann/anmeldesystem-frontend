@@ -5,7 +5,6 @@ import {MatButtonModule, MatDialogModule, MatProgressSpinnerModule, MatSnackBarM
 import {WINDOW_PROVIDERS} from './provider/window.provider';
 import {DatePipe, LocationStrategy, PathLocationStrategy, registerLocaleData} from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {AuthInterceptor} from './_helper/interceptor/auth.interceptor';
 import {JwtInterceptor} from './_helper/interceptor/jwt.interceptor';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
@@ -14,6 +13,7 @@ import {PwaDialogComponent} from './components/dialogs/pwa-dialog/pwa-dialog.com
 import {Globals} from './globals';
 import localeDe from '@angular/common/locales/de';
 import {AppRoutingModule} from './app-routing.module';
+import {RefreshTokenInterceptor} from './_helper/interceptor/refreshToken.interceptor';
 
 registerLocaleData(localeDe);
 
@@ -35,7 +35,7 @@ registerLocaleData(localeDe);
   providers: [WINDOW_PROVIDERS, PwaService, Globals,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
+    {provide: HTTP_INTERCEPTORS, useClass: RefreshTokenInterceptor, multi: true}],
   bootstrap: [AppComponent],
   exports: [
     DatePipe,

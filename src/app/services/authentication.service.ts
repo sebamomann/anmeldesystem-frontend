@@ -23,19 +23,8 @@ export class AuthenticationService {
     return this.currentUserSubject.value;
   }
 
-  login(mail, password) {
-    return this._http.post<any>(`${environment.API_URL}auth/login`, {username: mail, password})
-      .pipe(map(user => {
-        // store user details and jwt token in local storage to keep user logged in between page refreshes
-        // tslint:disable-next-line:prefer-const
-        let oldDateObj = new Date();
-        const newDateObj = new Date();
-        newDateObj.setTime(oldDateObj.getTime() + (23 * 60 * 60 * 1000));
-        user.exp = newDateObj;
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.currentUserSubject.next(user);
-        return user;
-      }));
+  public get accessToken() {
+    return this.currentUserValue.token;
   }
 
   logout() {
@@ -82,5 +71,47 @@ export class AuthenticationService {
     }
 
     return false;
+  }
+
+  login(mail, password) {
+    return this._http.post<any>(`${environment.API_URL}auth/login`, {username: mail, password})
+      .pipe(map(user => {
+        // store user details and jwt token in local storage to keep user logged in between page refreshes
+        // tslint:disable-next-line:prefer-const
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        this.currentUserSubject.next(user);
+
+        return user;
+      }));
+  }
+
+  public getRefreshToken() {
+    if (this.currentUserValue !== null) {
+      return this.currentUserValue.refreshToken;
+    }
+
+    return '';
+  }
+
+  refreshAccessToken() {
+    return this._http
+      .post<any>(`${environment.API_URL}auth/token`, {
+        user: {
+          id: this.currentUserValue.id,
+        },
+        refreshToken: this.getRefreshToken(),
+      })
+      .pipe(
+        map((res) => {
+          this.setAccessToken(res.data.token);
+        })
+      );
+  }
+
+  private setAccessToken(token: any) {
+    const currentUser = this.currentUserValue;
+    currentUser.token = token;
+
+    this.currentUserSubject.next(currentUser);
   }
 }

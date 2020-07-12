@@ -198,8 +198,6 @@ export class AppointmentService {
     });
     url += pinnedQueryParam;
 
-    console.log(url);
-
     const req = new HttpRequest('GET', url, {
       observe: 'response',
       reportProgress: true,
