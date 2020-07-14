@@ -19,6 +19,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {merge, Observable, Subject} from 'rxjs';
 import {mapTo, mergeMap, skip, startWith, switchMap, take} from 'rxjs/operators';
 import {SEOService} from '../../_helper/_seo.service';
+import {AppointmentSocketioService} from '../../services/appointment-socketio.service';
 
 const HttpStatus = require('http-status-codes');
 
@@ -89,7 +90,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
               private snackBar: MatSnackBar, private location: Location, private sanitizer: DomSanitizer,
-              private _seoService: SEOService) {
+              private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
       this.editId = params.editId;
@@ -111,6 +112,11 @@ export class AppointmentComponent implements OnInit, OnDestroy {
       startWith(false),
       mergeMap(() => this.getDataOnce())
     );
+
+    this.appointmentSocketioService.setupSocketConnection()
+      .then(() => {
+        this.appointmentSocketioService.subscribeAppointment(this.link);
+      });
 
     this.appointment$ = merge(initialAppointment$, updates$);
 

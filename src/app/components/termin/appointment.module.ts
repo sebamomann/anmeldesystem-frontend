@@ -33,7 +33,8 @@ const routes: Routes = [
     MatCardModule,
     FetchAppointmentModule,
     LoadingModule,
-  ]
+  ],
+  providers: []
 })
 export class AppointmentModule {
 }
