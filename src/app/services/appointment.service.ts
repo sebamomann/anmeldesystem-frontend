@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.model';
-import {HttpClient, HttpEvent, HttpHeaders, HttpRequest} from '@angular/common/http';
-import {BehaviorSubject, merge, Observable, of, Subject, timer} from 'rxjs';
+import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
+import {Observable, of} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
 import {environment} from '../../environments/environment';
 import {Globals} from '../globals';
-import {map, shareReplay, switchMap, takeUntil} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {AppointmentUtil} from '../_util/appointmentUtil.util';
 
 const REFRESH_INTERVAL = 30000;
@@ -20,138 +20,43 @@ export class AppointmentService {
 
   // CACHING
   private lastFetched: string;
-  private cache$: Observable<IAppointmentModel>;
-  private reload$ = new Subject<void>();
-  private clear$ = new Subject<void>();
-  private hasUpdate$: BehaviorSubject<boolean>;
   private etag = {current: '', last: ''};
-  private first: boolean;
-  private timerActive: boolean;
 
 
   constructor(private readonly httpClient: HttpClient, private glob: Globals) {
     this.globals = glob;
   }
 
-  getAppointment(link: string, restart: boolean, slim: boolean = false) {
-    if (!this.cache$ || this.lastFetched !== link || (!this.timerActive && restart)) {
-      this.clear$.next();
-      this.lastFetched = link;
-      this.hasUpdate$ = new BehaviorSubject<boolean>(false);
-
-      // Set up timer that ticks every X milliseconds
-      const timer$ = timer(0, REFRESH_INTERVAL);
-
-      // For each timer tick make an http request to fetch new data
-      // We use shareReplay(X) to multicast the cache so that all
-      // subscribers share one underlying source and don't re-create
-      // the source over and over again. We use takeUntil to complete
-      // this stream when the user forces an update.
-      this.first = true;
-
-      const cacheNew$ = timer$.pipe(
-        switchMap(() => this.requestAppointment(link, slim)),
-        takeUntil(this.clear$),
-        shareReplay(CACHE_SIZE)
-      );
-
-      if (restart && this.timerActive) {
-        this.cache$ = merge(this.cache$, cacheNew$);
-      } else {
-        this.cache$ = cacheNew$;
-      }
-    }
-
-    this.timerActive = true;
-
-    return this.cache$;
-  }
-
-  clear() {
-    this.clear$.next();
-    this.timerActive = false;
-  }
-
-  updateAvailable(): Observable<boolean> {
-    return this.hasUpdate$.asObservable();
-  }
-
-  manualUpdate() {
-    this.clear$.next();
-  }
-
-  resetAvailableUpdate() {
-    this.hasUpdate$.next(false);
-  }
-
-  forceReload() {
-    this.reload$.next();
-    this.cache$ = null;
-  }
-
-  requestAppointment(link: string, slim: boolean): Observable<IAppointmentModel> {
-    let url;
-    let req;
-    // if (this.getFromCache(link) !== undefined && this.getFromCache(link) !== null) {
-    //   url = `${environment.API_URL}appointment/newcontent/${link}`;
-    //
-    //   req = new HttpRequest('POST', url, {lastUpdated: new Date()}, {
-    //     reportProgress: true,
-    //   });
-    //
-    // } else {
-    url = `${environment.API_URL}appointment/${link}`;
+  getAppointment(link: string, slim: boolean): Observable<IAppointmentModel> {
+    let url = `${environment.API_URL}appointment/${link}`;
 
     if (slim) {
       url = url + '?slim=true';
     }
 
     // IF HIDDEN ONLY
-    if (true) {
-      let pinnedQueryParam = '?';
-      if (slim) {
-        pinnedQueryParam = '&';
-      }
+    let pinnedQueryParam = '?';
+    if (slim) {
+      pinnedQueryParam = '&';
+    }
 
-      let permissions = JSON.parse(localStorage.getItem('permissions'));
-      if (permissions !== null) {
-        permissions = permissions.find(fPermission => fPermission.link === link);
+    let permissions = JSON.parse(localStorage.getItem('permissions'));
+    if (permissions !== null) {
+      permissions = permissions.find(fPermission => fPermission.link === link);
 
-        if (permissions !== undefined) {
-          permissions.enrollments.forEach((fPermission, i) => {
-            pinnedQueryParam += 'perm' + (i + 1) + '=' + fPermission.id + '&token' + (i + 1) + '=' + fPermission.token + '&';
-          });
+      if (permissions !== undefined) {
+        permissions.enrollments.forEach((fPermission, i) => {
+          pinnedQueryParam += 'perm' + (i + 1) + '=' + fPermission.id + '&token' + (i + 1) + '=' + fPermission.token + '&';
+        });
 
-          url += pinnedQueryParam;
-        }
+        url += pinnedQueryParam;
       }
     }
 
-    let headers = new HttpHeaders();
-    if (this.first) {
-      headers = new HttpHeaders({
-        'If-None-Match': ''
-      });
-    }
-
-    req = new HttpRequest('GET', url, {
-      observe: 'response',
-      reportProgress: true,
-      headers
-    });
-
-    const resp = this.httpClient.request(req);
-
-
-    const res = this.httpClient.get(url, {headers, observe: 'response'});
+    const res = this.httpClient.get(url, {observe: 'response'});
     res.toPromise().then(response => {
       this.etag.last = this.etag.current;
       this.etag.current = response.headers.get('etag');
-      if (this.etag.last !== this.etag.current && !this.first) {
-        this.hasUpdate$.next(true);
-      }
-
-      this.first = false;
     }, err => {
       return of(undefined);
     });
@@ -160,25 +65,6 @@ export class AppointmentService {
     return res.pipe(
       map(response => response.body as IAppointmentModel)
     );
-
-    // const res = this.httpClient.get(url, {headers, observe: 'response'})
-    //   .subscribe(response => {
-    //     if (response.type === HttpEventType.Response) {
-    //       console.log('...', response);
-    //       this.etag.last = this.etag.current;
-    //       this.etag.current = response.headers.get('etag');
-    //       if (this.etag.last !== this.etag.current && !this.first) {
-    //         this.hasUpdate$.next(true);
-    //       }
-    //
-    //       this.first = false;
-    //
-    //       return res.pipe(
-    //         map(_response => _response as IAppointmentModel)
-    //       );
-    //     }
-    //   }, err => {
-    //   });
   }
 
   getAppointments(slim: boolean = false): Observable<HttpEvent<IAppointmentModel[]>> {

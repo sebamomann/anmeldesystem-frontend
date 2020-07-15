@@ -5,8 +5,7 @@ import {Location} from '@angular/common';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {ActivatedRoute} from '@angular/router';
 import {animate, query, state, style, transition, trigger} from '@angular/animations';
-import {merge, Observable, Subject} from 'rxjs';
-import {mapTo, mergeMap, skip, switchMap, take} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
 import {SEOService} from '../../../_helper/_seo.service';
 
 const HttpStatus = require('http-status-codes');
@@ -56,41 +55,18 @@ export class DriverComponent implements OnInit {
   }
 
   async ngOnInit() {
-    const initialAppointment$ = this.getDataOnce();
+    this.appointment$ = this.appointmentService.getAppointment(this.link, false);
 
-    const updates$ = merge(this.update$, this.forceReload$).pipe(
-      mergeMap(() => this.getDataOnce())
-    );
-
-    this.appointment$ = merge(initialAppointment$, updates$);
     this.appointment$.subscribe(sAppointment => {
       this._seoService.updateTitle(`${sAppointment.title} - Fahrer`);
       this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
 
       this.appointment = sAppointment;
-      const reload$ = this.forceReload$.pipe(switchMap(() => this.getNotifications()));
-      const initialNotifications$ = this.getNotifications();
-      const show$ = merge(initialNotifications$, reload$).pipe(mapTo(true));
-      const hide$ = this.update$.pipe(mapTo(false));
-      this.showNotification$ = merge(show$, hide$);
 
       this.sucessfulRequest();
     }, error => {
       this.appointment = undefined;
     });
-  }
-
-  getDataOnce() {
-    return this.appointmentService.getAppointment(this.link, false).pipe(take(1));
-  }
-
-  getNotifications() {
-    return this.appointmentService.getAppointment(this.link, false).pipe(skip(1));
-  }
-
-  forceReload() {
-    this.appointmentService.forceReload();
-    this.forceReload$.next();
   }
 
   private sucessfulRequest() {

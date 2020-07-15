@@ -12,8 +12,7 @@ import {MatSnackBar} from '@angular/material';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {EnrollmentService} from '../../../services/enrollment.service';
 import {EnrollmentModel} from '../../../models/EnrollmentModel.model';
-import {merge, Observable, Subject} from 'rxjs';
-import {mapTo, mergeMap, skip, switchMap, take} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
 import {TokenUtil} from '../../../_util/tokenUtil.util';
 import {SEOService} from '../../../_helper/_seo.service';
 
@@ -115,11 +114,7 @@ export class EnrollmentComponent implements OnInit {
   forceReload$ = new Subject<void>();
 
   async ngOnInit() {
-    const initialAppointment$ = this.getDataOnce();
-
-    const updates$ = merge(this.update$, this.forceReload$).pipe(
-      mergeMap(() => this.getDataOnce())
-    );
+    this.appointment$ = this.appointmentService.getAppointment(this.link, false);
 
     await this.route
       .data
@@ -133,29 +128,7 @@ export class EnrollmentComponent implements OnInit {
       this.getName().setValue(this.authenticationService.currentUserValue.name);
     }
 
-
-    this.appointment$ = merge(initialAppointment$, updates$);
-
     this.successfulRequest();
-
-    const reload$ = this.forceReload$.pipe(switchMap(() => this.getNotifications()));
-    const initialNotifications$ = this.getNotifications();
-    const show$ = merge(initialNotifications$, reload$).pipe(mapTo(true));
-    const hide$ = this.update$.pipe(mapTo(false));
-    this.showNotification$ = merge(show$, hide$);
-  }
-
-  getDataOnce() {
-    return this.appointmentService.getAppointment(this.link, false).pipe(take(1));
-  }
-
-  getNotifications() {
-    return this.appointmentService.getAppointment(this.link, false).pipe(skip(1));
-  }
-
-  forceReload() {
-    this.appointmentService.forceReload();
-    this.forceReload$.next();
   }
 
   private successfulRequest(): void {

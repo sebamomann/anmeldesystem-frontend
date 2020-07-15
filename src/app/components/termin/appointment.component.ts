@@ -16,10 +16,10 @@ import {ResendEnrollmentPermissionComponent} from '../dialogs/key-dialog/resend-
 import {Location} from '@angular/common';
 import {EnrollmentUtil} from '../../_util/enrollmentUtil.util';
 import {DomSanitizer} from '@angular/platform-browser';
-import {merge, Observable, Subject} from 'rxjs';
-import {mapTo, mergeMap, skip, startWith, switchMap, take} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 import {SEOService} from '../../_helper/_seo.service';
 import {AppointmentSocketioService} from '../../services/appointment-socketio.service';
+import {AppointmentProvider} from './appointment.provider';
 
 const HttpStatus = require('http-status-codes');
 
@@ -80,9 +80,6 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   // CACHE
   appointment$: Observable<IAppointmentModel>;
-  showNotification$: Observable<boolean>;
-  update$ = new Subject<void>();
-  forceReload$ = new Subject<void>();
   updateAvailable$: Observable<boolean> = new Observable<boolean>();
   private first = true;
 
@@ -90,7 +87,8 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
               private snackBar: MatSnackBar, private location: Location, private sanitizer: DomSanitizer,
-              private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService) {
+              private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
+              private appointmentProvider: AppointmentProvider) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
       this.editId = params.editId;
@@ -106,60 +104,24 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const initialAppointment$ = this.getDataOnce();
+    this.appointmentSocketioService.setupSocketConnection().then(() => {
+      this.appointmentSocketioService.subscribeAppointment(this.link);
+    });
 
-    const updates$ = merge(this.update$, this.forceReload$).pipe(
-      startWith(false),
-      mergeMap(() => this.getDataOnce())
-    );
+    this.appointment$ = this.appointmentProvider.appointment;
 
-    this.appointmentSocketioService.setupSocketConnection()
-      .then(() => {
-        this.appointmentSocketioService.subscribeAppointment(this.link);
-      });
-
-    this.appointment$ = merge(initialAppointment$, updates$);
-
-    const reload$ = this.forceReload$.pipe(switchMap(() => this.getNotifications()));
-    const initialNotifications$ = this.getNotifications();
-    const show$ = merge(initialNotifications$, reload$).pipe(mapTo(true));
-    const hide$ = this.update$.pipe(mapTo(false));
-    this.updateAvailable$ = null;
-    this.updateAvailable$ = this.appointmentService.updateAvailable();
-
-    // this.appointment$.subscribe(val => {
-    //   console.log(val);
-    //   if (val !== undefined && this.first) {
-    //     this.first = false;
-    //     console.log('lol');
-    //     this.fetchUpdate();
-    //   }
-    // });
-
-    this.showNotification$ = merge(show$, hide$);
+    this.appointmentService
+      .getAppointment(this.link, false)
+      .subscribe(
+        (appointment: IAppointmentModel) => {
+          this.appointmentProvider.update(appointment);
+        }
+      );
 
     this.successfulRequest();
   }
 
   ngOnDestroy() {
-    this.appointmentService.clear();
-  }
-
-  resetUpdateAvailable() {
-    this.appointmentService.resetAvailableUpdate();
-  }
-
-  getDataOnce() {
-    return this.appointmentService.getAppointment(this.link, true).pipe(take(1));
-  }
-
-  getNotifications() {
-    return this.appointmentService.getAppointment(this.link, true).pipe(skip(1));
-  }
-
-  forceReload() {
-    this.appointmentService.forceReload();
-    this.forceReload$.next();
   }
 
   successfulRequest() {
@@ -584,10 +546,5 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   private allowedToEditByToken(enrollment: IEnrollmentModel, operation: string) {
     return this._openAskForKeyDialog(enrollment, operation);
-  }
-
-  fetchUpdate() {
-    this.update$.next();
-    this.resetUpdateAvailable();
   }
 }
