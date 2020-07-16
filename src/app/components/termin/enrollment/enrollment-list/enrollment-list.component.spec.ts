@@ -104,7 +104,7 @@ describe('EnrollmentListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EnrollmentListComponent);
     component = fixture.componentInstance;
-    component.filterGotActivated = true;
+    component.filterDialogApplied = true;
     component.appointment = {
       title: 'Test Termin',
       description: 'This is a very very cool date because I created it lol',

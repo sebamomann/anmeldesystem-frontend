@@ -6,8 +6,7 @@ import {isObject} from 'util';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {CommentDialogComponent} from '../../../dialogs/comment/commentDialog.component';
 import {ConfirmationDialogComponent} from '../../../dialogs/confirmation-dialog/confirmation-dialog.component';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AppointmentService} from '../../../../services/appointment.service';
+import {Router} from '@angular/router';
 import {AuthenticationService} from '../../../../services/authentication.service';
 import {EnrollmentService} from '../../../../services/enrollment.service';
 import {ResendEnrollmentPermissionComponent} from '../../../dialogs/key-dialog/resend-enrollment-permission.component';
@@ -57,12 +56,13 @@ export class EnrollmentListComponent implements OnInit {
 
   public filter: any;
   public disableAnimation = true;
-  public filterGotActivated = false;
-  public enrollments_filtered;
+  public filterDialogApplied = true; // init true for behaviour subject appliance // DO NOT CHANGE
+
   private enrollments_unfiltered;
 
-  constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
-              private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
+  constructor(public dialog: MatDialog, private router: Router,
+              private authenticationService: AuthenticationService,
+              private enrollmentService: EnrollmentService,
               private snackBar: MatSnackBar) {
     setTimeout(() => this.disableAnimation = false);
   }
@@ -72,7 +72,6 @@ export class EnrollmentListComponent implements OnInit {
 
     this.enrollments$.subscribe((enrollments) => {
       this.enrollments_unfiltered = enrollments;
-      this.filterGotActivated = true;
       this.applyFilter();
     });
   }
@@ -118,13 +117,12 @@ export class EnrollmentListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(newFilter => {
-      if (isObject(newFilter)
-        && newFilter !== this.filter
-        && newFilter != null) {
-        this.filterGotActivated = true;
+      if (this._isNewFilter(newFilter)) {
+        this.filterDialogApplied = true;
+
         // Preserve current data
-        const curr_filter = this.filter;
-        const curr_enrollments = this.enrollments_filtered$.getValue();
+        const _current_filter = this.filter;
+        const _current_enrollments = this.enrollments_filtered$.getValue();
 
         this.filter = newFilter;
 
@@ -132,48 +130,16 @@ export class EnrollmentListComponent implements OnInit {
 
         if (this.enrollments_filtered$.getValue().length === 0
           && this.getNumberOfActiveFilter() > 0) {
-          this.enrollments_filtered$.next(curr_enrollments);
+          this.enrollments_filtered$.next(_current_enrollments);
           this._openFilterDialog(true); // Reopen filter if filter shows no results
           // Reset filter
-          this.filter = curr_filter;
+          this.filter = _current_filter;
         }
 
       } else if (newFilter === null) {
-        this.filterGotActivated = false;
+        this.filterDialogApplied = false;
         this.filter = this.initializeFilterObject(this.appointment);
         this.enrollments_filtered$.next(this.enrollments_unfiltered);
-      }
-    });
-  };
-
-  /**
-   * Open dialog in order to see comments of enrollment. <br />
-   * Dialog also gives the opportunity to create a comment.
-   *
-   * @param enrollment Enrollment To get comment list from and sending comments to
-   */
-  public _openCommentDialog = (enrollment: IEnrollmentModel): void => {
-    const dialogRef = this.dialog.open(CommentDialogComponent, {
-      width: '90%',
-      maxWidth: 'initial',
-      height: 'auto',
-      maxHeight: '80vh',
-      data: {enrollment},
-    });
-
-    dialogRef.afterClosed().subscribe(() => {
-    });
-  };
-
-  public openPermissionResendDialog = (enrollment: IEnrollmentModel, operation: string) => {
-    this.dialog.open(ResendEnrollmentPermissionComponent, {
-      width: '90%',
-      maxWidth: 'initial',
-      height: 'auto',
-      maxHeight: '80vh',
-      data: {
-        enrollment,
-        operation
       }
     });
   };
@@ -182,7 +148,7 @@ export class EnrollmentListComponent implements OnInit {
    * Filter enrollment list for applying filters set by filterDialog.
    */
   applyFilter: () => void = () => {
-    if (this.filterGotActivated
+    if (this.filterDialogApplied
       || this.filter.driverPassenger !== '') {
       const output: IEnrollmentModel[] = [];
 
@@ -236,6 +202,8 @@ export class EnrollmentListComponent implements OnInit {
         }
       });
 
+      this.filterDialogApplied = false;
+
       this.enrollments_filtered$.next(output);
       return;
     }
@@ -244,11 +212,43 @@ export class EnrollmentListComponent implements OnInit {
   };
 
   /**
+   * Open dialog in order to see comments of enrollment. <br />
+   * Dialog also gives the opportunity to create a comment.
+   *
+   * @param enrollment Enrollment To get comment list from and sending comments to
+   */
+  public _openCommentDialog = (enrollment: IEnrollmentModel): void => {
+    const dialogRef = this.dialog.open(CommentDialogComponent, {
+      width: '90%',
+      maxWidth: 'initial',
+      height: 'auto',
+      maxHeight: '80vh',
+      data: {enrollment},
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+    });
+  };
+
+  public openPermissionResendDialog = (enrollment: IEnrollmentModel, operation: string) => {
+    this.dialog.open(ResendEnrollmentPermissionComponent, {
+      width: '90%',
+      maxWidth: 'initial',
+      height: 'auto',
+      maxHeight: '80vh',
+      data: {
+        enrollment,
+        operation
+      }
+    });
+  };
+
+  /**
    * Count number of active filter options. <br />
    * #selectedAdditions + (driverPassengerFilter ? 1 : 0) + (explicit ? 1 : 0)
    */
   getNumberOfActiveFilter: () => number = () => {
-    if (!this.filterGotActivated) {
+    if (!this.filterDialogApplied) {
       return 0;
     }
 
@@ -272,6 +272,12 @@ export class EnrollmentListComponent implements OnInit {
 
     return i;
   };
+
+  private _isNewFilter(newFilter) {
+    return isObject(newFilter)
+      && newFilter !== this.filter
+      && newFilter != null;
+  }
 
   public preCheckOpenConfirmationDialog = async (enrollment: IEnrollmentModel, operation: string): Promise<void> => {
     this.enrollmentService
