@@ -1,18 +1,15 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
 import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
 import {FilterDialogComponent} from '../../../dialogs/filter/filterDialog.component';
 import {isObject} from 'util';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {CommentDialogComponent} from '../../../dialogs/comment/commentDialog.component';
-import {HttpEventType} from '@angular/common/http';
 import {ConfirmationDialogComponent} from '../../../dialogs/confirmation-dialog/confirmation-dialog.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AppointmentService} from '../../../../services/appointment.service';
 import {AuthenticationService} from '../../../../services/authentication.service';
 import {EnrollmentService} from '../../../../services/enrollment.service';
-import {Location} from '@angular/common';
-import {DomSanitizer} from '@angular/platform-browser';
 import {ResendEnrollmentPermissionComponent} from '../../../dialogs/key-dialog/resend-enrollment-permission.component';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
 import {BehaviorSubject} from 'rxjs';
@@ -44,33 +41,29 @@ const HttpStatus = require('http-status-codes');
     ])
   ],
 })
-export class EnrollmentListComponent implements OnInit, OnChanges {
-  public userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
-
+export class EnrollmentListComponent implements OnInit {
+  @Input()
+  public subListTitle: string;
   @Input()
   public appointment: IAppointmentModel;
-
-  public enrollments$: BehaviorSubject<IEnrollmentModel[]> = new BehaviorSubject<IEnrollmentModel[]>(undefined);
   @Input()
   public isMain = false; // TODO change to is first
-
-  public enrollmentsFiltered: IEnrollmentModel[];
-  @Input()
-  public title: string;
-
-  public filter: any;
-
-  public disableAnimation = true;
-
   @Input('enrollments') set enrollments(enrollments: IEnrollmentModel[]) {
     this.enrollments$.next(enrollments);
   };
 
+  public enrollments$: BehaviorSubject<IEnrollmentModel[]> = new BehaviorSubject<IEnrollmentModel[]>(undefined);
+  public enrollments_filtered$: BehaviorSubject<IEnrollmentModel[]> = new BehaviorSubject<IEnrollmentModel[]>(undefined);
+
+  public filter: any;
+  public disableAnimation = true;
   public filterGotActivated = false;
+  public enrollments_filtered;
+  private enrollments_unfiltered;
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
               private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
-              private snackBar: MatSnackBar, private location: Location, private sanitizer: DomSanitizer) {
+              private snackBar: MatSnackBar) {
     setTimeout(() => this.disableAnimation = false);
   }
 
@@ -78,12 +71,10 @@ export class EnrollmentListComponent implements OnInit, OnChanges {
     this.filter = this.initializeFilterObject(this.appointment);
 
     this.enrollments$.subscribe((enrollments) => {
-      this.enrollmentsFiltered = enrollments;
-      this.enrollments = enrollments;
+      this.enrollments_unfiltered = enrollments;
+      this.filterGotActivated = true;
+      this.applyFilter();
     });
-  }
-
-  ngOnChanges(changes) {
   }
 
   /**
@@ -133,26 +124,26 @@ export class EnrollmentListComponent implements OnInit, OnChanges {
         this.filterGotActivated = true;
         // Preserve current data
         const curr_filter = this.filter;
-        const curr_enrollments = this.enrollmentsFiltered;
+        const curr_enrollments = this.enrollments_filtered;
 
         this.filter = newFilter;
 
-        const _enrollmentsFiltered = this.filterEnrollments();
+        this.applyFilter();
 
-        if (_enrollmentsFiltered.length === 0
-          && this.getNumberOfActiveFilter() > 0) {
-          this.enrollments = curr_enrollments;
-          // Reopen filter if filter shows no results
-          this._openFilterDialog(true);
-          // Reset filter
-          this.filter = curr_filter;
-        } else {
-          this.enrollmentsFiltered = _enrollmentsFiltered;
-        }
+        // if (_enrollmentsFiltered.length === 0
+        //   && this.getNumberOfActiveFilter() > 0) {
+        //   this.enrollments_filtered = curr_enrollments;
+        //   // Reopen filter if filter shows no results
+        //   this._openFilterDialog(true);
+        //   // Reset filter
+        //   this.filter = curr_filter;
+        // } else {
+        //   this.enrollments_unfiltered = _enrollmentsFiltered;
+        // }
       } else if (newFilter === null) {
         this.filterGotActivated = false;
         this.filter = this.initializeFilterObject(this.appointment);
-        this.enrollmentsFiltered = this.enrollments;
+        this.enrollments_unfiltered = this.enrollments;
       }
     });
   };
@@ -176,8 +167,8 @@ export class EnrollmentListComponent implements OnInit, OnChanges {
     });
   };
 
-  public openResendDialog = (enrollment: IEnrollmentModel, operation: string) => {
-    const dialogRef = this.dialog.open(ResendEnrollmentPermissionComponent, {
+  public openPermissionResendDialog = (enrollment: IEnrollmentModel, operation: string) => {
+    this.dialog.open(ResendEnrollmentPermissionComponent, {
       width: '90%',
       maxWidth: 'initial',
       height: 'auto',
@@ -192,12 +183,14 @@ export class EnrollmentListComponent implements OnInit, OnChanges {
   /**
    * Filter enrollment list for applying filters set by filterDialog.
    */
-  filterEnrollments: () => IEnrollmentModel[] = () => {
+  applyFilter: () => void = () => {
     if (this.filterGotActivated
       || this.filter.driverPassenger !== '') {
       const output: IEnrollmentModel[] = [];
 
-      this.enrollments.forEach(eEnrollment => {
+      console.log(this.enrollments_unfiltered.length);
+
+      this.enrollments_unfiltered.forEach(eEnrollment => {
         try {
           if (this.filter.additions.filter(val => val.active).length > 0) {
             let contains = 0;
@@ -247,10 +240,12 @@ export class EnrollmentListComponent implements OnInit, OnChanges {
         }
       });
 
-      return output;
+      console.log(output.length);
+      this.enrollments_filtered$.next(output);
+      return;
     }
 
-    return [];
+    this.enrollments_filtered$.next([]);
   };
 
   /**
@@ -283,7 +278,7 @@ export class EnrollmentListComponent implements OnInit, OnChanges {
     return i;
   };
 
-  public precheckOpenConfirmationDialog = async (enrollment: IEnrollmentModel, operation: string): Promise<void> => {
+  public preCheckOpenConfirmationDialog = async (enrollment: IEnrollmentModel, operation: string): Promise<void> => {
     this.enrollmentService
       .checkPermission(enrollment, this.appointment.link)
       .subscribe(() => {
@@ -299,7 +294,7 @@ export class EnrollmentListComponent implements OnInit, OnChanges {
                 panelClass: 'snackbar-error'
               });
           } else {
-            this.openResendDialog(enrollment, operation);
+            this.openPermissionResendDialog(enrollment, operation);
           }
         });
   };
@@ -355,48 +350,6 @@ export class EnrollmentListComponent implements OnInit, OnChanges {
       }
     });
   };
-
-  private allowedToEditByUserId(enrollment: IEnrollmentModel) {
-    return new Promise<boolean>((resolve, reject) => {
-      if (this.userIsLoggedIn) {
-        this.authenticationService.check(this.router.routerState.snapshot);
-
-        this.enrollmentService
-          .allowEdit(enrollment)
-          .subscribe(
-            result => {
-              if (result.type === HttpEventType.Response) {
-                resolve(result.status === HttpStatus.OK);
-              }
-            },
-            error => {
-              reject(false);
-            });
-      } else {
-        reject(false);
-      }
-    });
-  }
-
-  private allowedToEditByToken(enrollment: IEnrollmentModel, operation: string) {
-    return new Promise<boolean>((resolve, reject) => {
-      this.enrollmentService
-        .validateToken(enrollment, this.appointment.link)
-        .subscribe(
-          sResult => {
-            if (sResult.type === HttpEventType.Response) {
-              if (sResult.status === HttpStatus.OK) {
-                resolve(true);
-              }
-            }
-            reject(false);
-          },
-          () => {
-            this.openResendDialog(enrollment, operation);
-          }
-        );
-    });
-  }
 
   private permissionGranted(operation: string, enrollment: IEnrollmentModel) {
     if (operation === 'delete') {

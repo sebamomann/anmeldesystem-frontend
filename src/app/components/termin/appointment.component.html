@@ -22,21 +22,21 @@
     <app-enrollment-list [appointment]="appointment"
                          [enrollments]="enrollments$ | async"
                          [isMain]="true"
-                         [title]="'Teilnehmer'"></app-enrollment-list>
+                         [subListTitle]="'Teilnehmer'"></app-enrollment-list>
     <app-enrollment-list *ngIf="limitReachedBeforeEnrollmentDeadline"
                          [appointment]="appointment"
                          [enrollments]="enrollmentsWaitingList$ | async"
                          [isMain]="false"
-                         [title]="'Warteliste'"></app-enrollment-list>
+                         [subListTitle]="'Warteliste'"></app-enrollment-list>
     <app-enrollment-list [appointment]="appointment"
                          [enrollments]="enrollmentsLate$ | async"
                          [isMain]="false"
-                         [title]="'Zu spät angemeldet'"></app-enrollment-list>
+                         [subListTitle]="'Zu spät angemeldet'"></app-enrollment-list>
     <app-enrollment-list *ngIf="!limitReachedBeforeEnrollmentDeadline"
                          [appointment]="appointment"
                          [enrollments]="enrollmentsWaitingList$ | async"
                          [isMain]="false"
-                         [title]="'Warteliste'"></app-enrollment-list>
+                         [subListTitle]="'Warteliste'"></app-enrollment-list>
   </ng-container>
 
   <ng-template #emptyList>

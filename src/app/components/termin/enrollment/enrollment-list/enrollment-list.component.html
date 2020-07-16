@@ -1,16 +1,16 @@
-<ng-container *ngIf="enrollments$ | async as enrollments">
-  <div *ngIf="enrollmentsFiltered.length > 0 || getNumberOfActiveFilter() > 0;"
+<ng-container *ngIf="enrollments_filtered$ | async as _enrollments">
+  <div *ngIf="this._enrollments.length > 0 || getNumberOfActiveFilter() > 0;"
        [ngClass]="isMain ? '' : 'distance'"
        class="enrollment-list block decent">
     <div class="header">
       <h2 class="headline medium">
-        {{title}}
+        {{subListTitle}}
         <ng-container *ngIf="!appointment.hidden">
-          [{{ enrollmentsFiltered.length }}{{ appointment.maxEnrollments !== null
+          [{{ this._enrollments.length }}{{ appointment.maxEnrollments !== null
         && isMain ? '/' + appointment.maxEnrollments : '' }}]
         </ng-container>
         <span *ngIf="getNumberOfActiveFilter() > 0">
-        [<mat-icon>filter_list</mat-icon>:{{ enrollmentsFiltered.length }}]
+        [<mat-icon>filter_list</mat-icon>:{{ this._enrollments.length }}]
       </span>
       </h2>
     </div>
@@ -28,8 +28,8 @@
       filter_list
     </mat-icon>
 
-    <mat-accordion *ngIf="enrollmentsFiltered.length > 0" [@listAnimation]>
-      <ng-container *ngFor="let enrollment of enrollments">
+    <mat-accordion *ngIf="this._enrollments.length > 0" [@listAnimation]>
+      <ng-container *ngFor="let enrollment of _enrollments">
         <mat-expansion-panel [@.disabled]="disableAnimation"
                              class="enrollment">
           <mat-expansion-panel-header [collapsedHeight]="'auto'"
@@ -69,8 +69,8 @@
             <!--            comment-->
             <!--          </mat-icon>-->
             <ng-container>
-              <mat-icon (click)="precheckOpenConfirmationDialog(enrollment, 'edit')">edit</mat-icon>
-              <mat-icon (click)="precheckOpenConfirmationDialog(enrollment, 'delete')">delete</mat-icon>
+              <mat-icon (click)="preCheckOpenConfirmationDialog(enrollment, 'edit')">edit</mat-icon>
+              <mat-icon (click)="preCheckOpenConfirmationDialog(enrollment, 'delete')">delete</mat-icon>
             </ng-container>
           </div>
           <span class="creationDate">
