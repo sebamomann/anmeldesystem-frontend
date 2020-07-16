@@ -72,6 +72,7 @@ export class EnrollmentListComponent implements OnInit {
 
     this.enrollments$.subscribe((enrollments) => {
       this.enrollments_unfiltered = enrollments;
+      this.filterDialogApplied = true; // force filter due to observable update
       this.applyFilter();
     });
   }
