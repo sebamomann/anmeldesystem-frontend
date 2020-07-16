@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
 import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
 import {FilterDialogComponent} from '../../../dialogs/filter/filterDialog.component';
@@ -15,6 +15,7 @@ import {Location} from '@angular/common';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ResendEnrollmentPermissionComponent} from '../../../dialogs/key-dialog/resend-enrollment-permission.component';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
+import {BehaviorSubject} from 'rxjs';
 
 const HttpStatus = require('http-status-codes');
 
@@ -43,13 +44,16 @@ const HttpStatus = require('http-status-codes');
     ])
   ],
 })
-export class EnrollmentListComponent implements OnInit {
+export class EnrollmentListComponent implements OnInit, OnChanges {
   public userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
 
   @Input()
   public appointment: IAppointmentModel;
+
+  public enrollments$: BehaviorSubject<IEnrollmentModel[]> = new BehaviorSubject<IEnrollmentModel[]>(undefined);
   @Input()
-  public enrollments: IEnrollmentModel[];
+  public isMain = false; // TODO change to is first
+
   public enrollmentsFiltered: IEnrollmentModel[];
   @Input()
   public title: string;
@@ -57,8 +61,11 @@ export class EnrollmentListComponent implements OnInit {
   public filter: any;
 
   public disableAnimation = true;
-  @Input()
-  public main = false;
+
+  @Input('enrollments') set enrollments(enrollments: IEnrollmentModel[]) {
+    this.enrollments$.next(enrollments);
+  };
+
   public filterGotActivated = false;
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
@@ -69,7 +76,14 @@ export class EnrollmentListComponent implements OnInit {
 
   ngOnInit() {
     this.filter = this.initializeFilterObject(this.appointment);
-    this.enrollmentsFiltered = this.enrollments;
+
+    this.enrollments$.subscribe((enrollments) => {
+      this.enrollmentsFiltered = enrollments;
+      this.enrollments = enrollments;
+    });
+  }
+
+  ngOnChanges(changes) {
   }
 
   /**

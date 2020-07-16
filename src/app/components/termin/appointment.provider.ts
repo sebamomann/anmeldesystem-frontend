@@ -17,8 +17,6 @@ export class AppointmentProvider {
   }
 
   public update(appointment: IAppointmentModel) {
-    console.log(`Appointment ${appointment.link} updated`);
-
     this._currentAppointment.next(appointment);
   }
 }

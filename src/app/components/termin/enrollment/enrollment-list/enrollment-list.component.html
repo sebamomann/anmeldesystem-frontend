@@ -1,81 +1,83 @@
-<div *ngIf="enrollmentsFiltered.length > 0 || getNumberOfActiveFilter() > 0;"
-     [ngClass]="main ? '' : 'distance'"
-     class="enrollment-list block decent">
-  <div class="header">
-    <h2 class="headline medium">
-      {{title}}
-      <ng-container *ngIf="!appointment.hidden">
-        [{{ enrollmentsFiltered.length }}{{ appointment.maxEnrollments !== null
-      && main ? '/' + appointment.maxEnrollments : '' }}]
-      </ng-container>
-      <span *ngIf="getNumberOfActiveFilter() > 0">
+<ng-container *ngIf="enrollments$ | async as enrollments">
+  <div *ngIf="enrollmentsFiltered.length > 0 || getNumberOfActiveFilter() > 0;"
+       [ngClass]="isMain ? '' : 'distance'"
+       class="enrollment-list block decent">
+    <div class="header">
+      <h2 class="headline medium">
+        {{title}}
+        <ng-container *ngIf="!appointment.hidden">
+          [{{ enrollmentsFiltered.length }}{{ appointment.maxEnrollments !== null
+        && isMain ? '/' + appointment.maxEnrollments : '' }}]
+        </ng-container>
+        <span *ngIf="getNumberOfActiveFilter() > 0">
         [<mat-icon>filter_list</mat-icon>:{{ enrollmentsFiltered.length }}]
       </span>
-    </h2>
-  </div>
+      </h2>
+    </div>
 
-  <!--    <div class="list-style">-->
-  <!--      <mat-icon (click)="list = true">list</mat-icon>-->
-  <!--      <mat-icon (click)="list = false">view_module</mat-icon>-->
-  <!--    </div>-->
+    <!--    <div class="list-style">-->
+    <!--      <mat-icon (click)="list = true">list</mat-icon>-->
+    <!--      <mat-icon (click)="list = false">view_module</mat-icon>-->
+    <!--    </div>-->
 
-  <mat-icon (click)="_openFilterDialog()"
-            class="filter-open"
-            matBadge="{{getNumberOfActiveFilter() > 0 ? getNumberOfActiveFilter() : ''}}"
-            matBadgeColor="info"
-            matBadgeSize="small">
-    filter_list
-  </mat-icon>
+    <mat-icon (click)="_openFilterDialog()"
+              class="filter-open"
+              matBadge="{{getNumberOfActiveFilter() > 0 ? getNumberOfActiveFilter() : ''}}"
+              matBadgeColor="info"
+              matBadgeSize="small">
+      filter_list
+    </mat-icon>
 
-  <mat-accordion *ngIf="enrollmentsFiltered.length > 0" [@listAnimation]>
-    <ng-container *ngFor="let enrollment of enrollmentsFiltered">
-      <mat-expansion-panel [@.disabled]="disableAnimation"
-                           class="enrollment">
-        <mat-expansion-panel-header [collapsedHeight]="'auto'"
-                                    [expandedHeight]="'auto'"
-                                    class="enrollment-info">
-          <span> {{ enrollment.name }} </span>
-          <ng-container *ngIf="enrollment.comment !== null">
-            <span class="separator small colored high"></span>
-            <span class="comment-block"> {{ enrollment.comment }} </span>
-          </ng-container>
-          <div *ngIf="appointment.additions.length > 0"
-               class="addition-list">
+    <mat-accordion *ngIf="enrollmentsFiltered.length > 0" [@listAnimation]>
+      <ng-container *ngFor="let enrollment of enrollments">
+        <mat-expansion-panel [@.disabled]="disableAnimation"
+                             class="enrollment">
+          <mat-expansion-panel-header [collapsedHeight]="'auto'"
+                                      [expandedHeight]="'auto'"
+                                      class="enrollment-info">
+            <span> {{ enrollment.name }} </span>
+            <ng-container *ngIf="enrollment.comment !== null">
+              <span class="separator small colored high"></span>
+              <span class="comment-block"> {{ enrollment.comment }} </span>
+            </ng-container>
+            <div *ngIf="appointment.additions.length > 0"
+                 class="addition-list">
               <span class="separator light small high">
               </span>
-            <ng-container *ngFor="let addition of appointment.additions">
-              <div>
-                <mat-icon *ngIf="enrollmentCheckedAddition(enrollment, addition.id); else blank">check_box
-                </mat-icon>
-                <ng-template #blank>
-                  <mat-icon>check_box_outline_blank</mat-icon>
-                </ng-template>
-                <span> {{ addition.name }} </span>
-              </div>
+              <ng-container *ngFor="let addition of appointment.additions">
+                <div>
+                  <mat-icon *ngIf="enrollmentCheckedAddition(enrollment, addition.id); else blank">check_box
+                  </mat-icon>
+                  <ng-template #blank>
+                    <mat-icon>check_box_outline_blank</mat-icon>
+                  </ng-template>
+                  <span> {{ addition.name }} </span>
+                </div>
+              </ng-container>
+            </div>
+          </mat-expansion-panel-header>
+
+          <div class="enrollment-additions">
+            <!--          <mat-icon-->
+            <!--            (click)="_openCommentDialog(enrollment)"-->
+            <!--            matBadge="{{enrollment.comments != null-->
+            <!--                && enrollment.comments.length > 0-->
+            <!--                  ? enrollment.comments.length-->
+            <!--                  : ''}}"-->
+            <!--            matBadgeColor="info"-->
+            <!--            matBadgeSize="small">-->
+            <!--            comment-->
+            <!--          </mat-icon>-->
+            <ng-container>
+              <mat-icon (click)="precheckOpenConfirmationDialog(enrollment, 'edit')">edit</mat-icon>
+              <mat-icon (click)="precheckOpenConfirmationDialog(enrollment, 'delete')">delete</mat-icon>
             </ng-container>
           </div>
-        </mat-expansion-panel-header>
-
-        <div class="enrollment-additions">
-          <!--          <mat-icon-->
-          <!--            (click)="_openCommentDialog(enrollment)"-->
-          <!--            matBadge="{{enrollment.comments != null-->
-          <!--                && enrollment.comments.length > 0-->
-          <!--                  ? enrollment.comments.length-->
-          <!--                  : ''}}"-->
-          <!--            matBadgeColor="info"-->
-          <!--            matBadgeSize="small">-->
-          <!--            comment-->
-          <!--          </mat-icon>-->
-          <ng-container>
-            <mat-icon (click)="precheckOpenConfirmationDialog(enrollment, 'edit')">edit</mat-icon>
-            <mat-icon (click)="precheckOpenConfirmationDialog(enrollment, 'delete')">delete</mat-icon>
-          </ng-container>
-        </div>
-        <span class="creationDate">
+          <span class="creationDate">
           {{enrollment.iat | date : 'dd.MM.y, HH:mm'}} Uhr
         </span>
-      </mat-expansion-panel>
-    </ng-container>
-  </mat-accordion>
-</div>
+        </mat-expansion-panel>
+      </ng-container>
+    </mat-accordion>
+  </div>
+</ng-container>

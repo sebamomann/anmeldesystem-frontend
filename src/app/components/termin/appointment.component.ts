@@ -16,7 +16,7 @@ import {ResendEnrollmentPermissionComponent} from '../dialogs/key-dialog/resend-
 import {Location} from '@angular/common';
 import {EnrollmentUtil} from '../../_util/enrollmentUtil.util';
 import {DomSanitizer} from '@angular/platform-browser';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {SEOService} from '../../_helper/_seo.service';
 import {AppointmentSocketioService} from '../../services/appointment-socketio.service';
 import {AppointmentProvider} from './appointment.provider';
@@ -68,7 +68,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public enrollmentsCorrectOrig: IEnrollmentModel[] = [];
   public enrollmentsTooLate: IEnrollmentModel[] = [];
   public enrollmentsWaitingList: IEnrollmentModel[] = [];
-  public waitingListBeforeDate: boolean;
+  public limitReachedBeforeEnrollmentDeadline: boolean;
 
   public link: string;
   public filter: any;
@@ -80,12 +80,13 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   // CACHE
   appointment$: Observable<IAppointmentModel>;
-  updateAvailable$: Observable<boolean> = new Observable<boolean>();
-  private first = true;
+  enrollments$: BehaviorSubject<IEnrollmentModel[]> = new BehaviorSubject<IEnrollmentModel[]>(undefined);
+  enrollmentsWaitingList$: BehaviorSubject<IEnrollmentModel[]> = new BehaviorSubject<IEnrollmentModel[]>(undefined);
+  enrollmentsLate$: BehaviorSubject<IEnrollmentModel[]> = new BehaviorSubject<IEnrollmentModel[]>(undefined);
 
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
-              private router: Router, private authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
+              private router: Router, public authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
               private snackBar: MatSnackBar, private location: Location, private sanitizer: DomSanitizer,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
               private appointmentProvider: AppointmentProvider) {
@@ -110,14 +111,6 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
     this.appointment$ = this.appointmentProvider.appointment;
 
-    this.appointmentService
-      .getAppointment(this.link, false)
-      .subscribe(
-        (appointment: IAppointmentModel) => {
-          this.appointmentProvider.update(appointment);
-        }
-      );
-
     this.successfulRequest();
   }
 
@@ -126,69 +119,109 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   successfulRequest() {
     this.appointment$.subscribe(sAppointment => {
+
       if (sAppointment !== undefined) {
         this._seoService.updateTitle(`${sAppointment.title} - Anmeldesystem`);
         this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
 
-        this.enrollmentsCorrect = [];
-        this.enrollments = sAppointment.enrollments;
-        this.enrollmentsTooLate = this.enrollments.filter(fEnrollment => {
-          if (fEnrollment.iat > sAppointment.deadline) {
-            return fEnrollment;
-          } else {
-            this.enrollmentsCorrect.push(fEnrollment);
-          }
-        });
+        this.splitIntoParts(sAppointment);
 
-        if (sAppointment.maxEnrollments != null && sAppointment.maxEnrollments !== 0) {
-          if (this.enrollmentsCorrect.length > sAppointment.maxEnrollments) {
-            const enrollmentsCorrectTmp = this.enrollmentsCorrect
-              .slice(0, sAppointment.maxEnrollments);
-            const enrollmentsWaitingListTmp = this.enrollmentsCorrect
-              .slice(sAppointment.maxEnrollments, sAppointment.maxEnrollments + this.enrollmentsCorrect.length);
+        // this.enrollmentsCorrect = [];
+        // this.enrollments = sAppointment.enrollments;
+        // this.enrollmentsTooLate = this.enrollments.filter(fEnrollment => {
+        //   if (fEnrollment.iat > sAppointment.deadline) {
+        //     return fEnrollment;
+        //   } else {
+        //     this.enrollmentsCorrect.push(fEnrollment);
+        //   }
+        // });
 
-            this.enrollmentsCorrect = enrollmentsCorrectTmp;
-            this.enrollmentsWaitingList = enrollmentsWaitingListTmp;
-            this.waitingListBeforeDate = true;
-          } else {
-            const enrollmentsTooLateTmp = this.enrollmentsTooLate
-              .slice(0, sAppointment.maxEnrollments);
-            const enrollmentsWaitingListTmp = this.enrollmentsTooLate
-              .slice(sAppointment.maxEnrollments, sAppointment.maxEnrollments + this.enrollmentsTooLate.length);
-
-            this.enrollmentsTooLate = enrollmentsTooLateTmp;
-            this.enrollmentsWaitingList = enrollmentsWaitingListTmp;
-            this.waitingListBeforeDate = false;
-          }
-        }
-
-        this.enrollmentsCorrectOrig = this.enrollmentsCorrect;
-
-        this.filter = this.initializeFilterObject(sAppointment);
-        // this.allowModify = this.modificationAllowed();
-        this.allowModify = true;
-        // Auto send if logged in
-        if (this.editId != null) {
-          const enrollmentToEdit = this.enrollments.filter(fEnrollment => {
-            if (fEnrollment.id === this.editId) {
-              return fEnrollment;
-            }
-          })[0];
-          if (enrollmentToEdit !== undefined) {
-            this.location.replaceState('/enroll?a=' + this.link);
-            if (this.editOperation === 'delete') {
-              this.precheckOpenConfirmationDialog(enrollmentToEdit, 'delete');
-            } else if (this.editOperation === 'edit') {
-              this.precheckOpenConfirmationDialog(enrollmentToEdit, 'edit');
-            }
-          }
-        }
-        setTimeout(() => this.disableAnimation = false);
+        // if (sAppointment.maxEnrollments != null && sAppointment.maxEnrollments !== 0) {
+        //   if (this.enrollmentsCorrect.length > sAppointment.maxEnrollments) {
+        //     const enrollmentsCorrectTmp = this.enrollmentsCorrect
+        //       .slice(0, sAppointment.maxEnrollments);
+        //     const enrollmentsWaitingListTmp = this.enrollmentsCorrect
+        //       .slice(sAppointment.maxEnrollments, sAppointment.maxEnrollments + this.enrollmentsCorrect.length);
+        //
+        //     this.enrollmentsCorrect = enrollmentsCorrectTmp;
+        //     this.enrollmentsWaitingList = enrollmentsWaitingListTmp;
+        //     this.limitReachedBeforeEnrollmentDeadline = true;
+        //   } else {
+        //     const enrollmentsTooLateTmp = this.enrollmentsTooLate
+        //       .slice(0, sAppointment.maxEnrollments);
+        //     const enrollmentsWaitingListTmp = this.enrollmentsTooLate
+        //       .slice(sAppointment.maxEnrollments, sAppointment.maxEnrollments + this.enrollmentsTooLate.length);
+        //
+        //     this.enrollmentsTooLate = enrollmentsTooLateTmp;
+        //     this.enrollmentsWaitingList = enrollmentsWaitingListTmp;
+        //     this.limitReachedBeforeEnrollmentDeadline = false;
+        //   }
+        // }
+        //
+        // this.enrollmentsCorrectOrig = this.enrollmentsCorrect;
+        //
+        // this.filter = this.initializeFilterObject(sAppointment);
+        // // this.allowModify = this.modificationAllowed();
+        // this.allowModify = true;
+        // // Auto send if logged in
+        // if (this.editId != null) {
+        //   const enrollmentToEdit = this.enrollments.filter(fEnrollment => {
+        //     if (fEnrollment.id === this.editId) {
+        //       return fEnrollment;
+        //     }
+        //   })[0];
+        //   if (enrollmentToEdit !== undefined) {
+        //     this.location.replaceState('/enroll?a=' + this.link);
+        //     if (this.editOperation === 'delete') {
+        //       this.precheckOpenConfirmationDialog(enrollmentToEdit, 'delete');
+        //     } else if (this.editOperation === 'edit') {
+        //       this.precheckOpenConfirmationDialog(enrollmentToEdit, 'edit');
+        //     }
+        //   }
+        // }
+        // setTimeout(() => this.disableAnimation = false);
       }
     }, error => {
       this.appointment = undefined;
     });
   };
+
+  private splitIntoParts(appointment: IAppointmentModel) {
+    let __enrollments_correct = [];
+    let __enrollments_waitinglist = [];
+    let __enrollments_late;
+
+    // fetch enrollments that were created after the enrollment deadline
+    __enrollments_late = appointment.enrollments.filter(fEnrollment => {
+      if (fEnrollment.iat > appointment.deadline) {
+        return fEnrollment;
+      } else {
+        __enrollments_correct.push(fEnrollment);
+      }
+    });
+
+    if (appointment.maxEnrollments != null && appointment.maxEnrollments > 0) {
+      if (__enrollments_correct.length > appointment.maxEnrollments) {
+        __enrollments_correct = __enrollments_correct
+          .slice(0, appointment.maxEnrollments); // enrollments within the enrollment limit
+        __enrollments_waitinglist = __enrollments_correct
+          .slice(appointment.maxEnrollments, appointment.maxEnrollments + __enrollments_correct.length); // enrollments on waiting list
+
+
+        this.limitReachedBeforeEnrollmentDeadline = true;
+      } else {
+        __enrollments_late = __enrollments_late
+          .slice(0, appointment.maxEnrollments); // enrollments after deadline
+        __enrollments_waitinglist = __enrollments_late
+          .slice(appointment.maxEnrollments, appointment.maxEnrollments + __enrollments_late.length); // enrollments after deadline on waiting list
+
+        this.limitReachedBeforeEnrollmentDeadline = false;
+      }
+    }
+    this.enrollments$.next(__enrollments_correct);
+    this.enrollmentsWaitingList$.next(__enrollments_waitinglist);
+    this.enrollmentsLate$.next(__enrollments_late);
+  }
 
   /**
    * Remove enrollment from appointment list. Used for eliminating the need of re-fetching the entire appointment after enrollment deletion

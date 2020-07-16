@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {AppointmentComponent} from './appointment.component';
 import {EnrollmentListModule} from './enrollment/enrollment-list/enrollment-list.module';
 import {AppointmentDataModule} from './appointment-data/appointment-data.module';
-import {MatCardModule, MatIconModule} from '@angular/material';
+import {MatButtonModule, MatCardModule, MatIconModule} from '@angular/material';
 import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../../_helper/auth.guard';
 import {FetchAppointmentModule} from './html-template/fetch-appointment/fetch-appointment.module';
@@ -33,6 +33,7 @@ const routes: Routes = [
     MatCardModule,
     FetchAppointmentModule,
     LoadingModule,
+    MatButtonModule,
   ],
   providers: []
 })

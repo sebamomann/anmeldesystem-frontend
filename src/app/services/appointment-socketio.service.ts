@@ -4,6 +4,7 @@ import {environment} from '../../environments/environment';
 import {AppointmentProvider} from '../components/termin/appointment.provider';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {AuthenticationService} from './authentication.service';
+import {AppointmentService} from './appointment.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ export class AppointmentSocketioService {
 
   private socket;
 
-  constructor(private appointmentProvider: AppointmentProvider, private authenticationService: AuthenticationService) {
+  constructor(private appointmentProvider: AppointmentProvider, private authenticationService: AuthenticationService,
+              private appointmentService: AppointmentService) {
   }
 
   async setupSocketConnection() {
@@ -26,17 +28,32 @@ export class AppointmentSocketioService {
           }
         }
       });
-      console.log(this.authenticationService.currentUserValue.token);
     } else {
       this.socket = await io(environment.API_URL + 'appointment');
     }
 
-    this.socket.on('update', (data: IAppointmentModel) => {
-      this.appointmentProvider.update(data);
+    this.socket.on('update', (data: any) => {
+      console.log('Update available for Appointment', data);
+
+      this.appointmentService
+        .getAppointment(data, false)
+        .subscribe(
+          (appointment: IAppointmentModel) => {
+            this.appointmentProvider.update(appointment);
+          }
+        );
     });
   }
 
   subscribeAppointment(link: string) {
     this.socket.emit('subscribe-appointment', {appointment: {link}});
+
+    this.appointmentService
+      .getAppointment(link, false)
+      .subscribe(
+        (appointment: IAppointmentModel) => {
+          this.appointmentProvider.update(appointment);
+        }
+      );
   }
 }

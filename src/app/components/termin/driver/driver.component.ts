@@ -5,8 +5,10 @@ import {Location} from '@angular/common';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {ActivatedRoute} from '@angular/router';
 import {animate, query, state, style, transition, trigger} from '@angular/animations';
-import {Observable, Subject} from 'rxjs';
+import {Observable} from 'rxjs';
 import {SEOService} from '../../../_helper/_seo.service';
+import {AppointmentSocketioService} from '../../../services/appointment-socketio.service';
+import {AppointmentProvider} from '../appointment.provider';
 
 const HttpStatus = require('http-status-codes');
 
@@ -41,32 +43,24 @@ export class DriverComponent implements OnInit {
   public link;
   public percentDone: number;
 
-  // CACHE
   appointment$: Observable<IAppointmentModel>;
-  showNotification$: Observable<boolean>;
-  update$ = new Subject<void>();
-  forceReload$ = new Subject<void>();
 
   constructor(private appointmentService: AppointmentService, private location: Location, private route: ActivatedRoute,
-              private _seoService: SEOService) {
+              private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
+              private appointmentProvider: AppointmentProvider) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
     });
   }
 
   async ngOnInit() {
-    this.appointment$ = this.appointmentService.getAppointment(this.link, false);
-
-    this.appointment$.subscribe(sAppointment => {
-      this._seoService.updateTitle(`${sAppointment.title} - Fahrer`);
-      this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
-
-      this.appointment = sAppointment;
-
-      this.sucessfulRequest();
-    }, error => {
-      this.appointment = undefined;
+    this.appointmentSocketioService.setupSocketConnection().then(() => {
+      this.appointmentSocketioService.subscribeAppointment(this.link);
     });
+
+    this.appointment$ = this.appointmentProvider.appointment;
+
+    this.sucessfulRequest();
   }
 
   private sucessfulRequest() {
