@@ -131,6 +131,7 @@ export class EnrollmentListComponent implements OnInit {
 
         if (this.enrollments_filtered$.getValue().length === 0
           && this.getNumberOfActiveFilter() > 0) {
+
           this.enrollments_filtered$.next(_current_enrollments);
           this._openFilterDialog(true); // Reopen filter if filter shows no results
           // Reset filter
@@ -252,9 +253,11 @@ export class EnrollmentListComponent implements OnInit {
    * Count number of active filter options. <br />
    * #selectedAdditions + (driverPassengerFilter ? 1 : 0) + (explicit ? 1 : 0)
    */
-  getNumberOfActiveFilter: () => number = () => {
-    if (!this.filterDialogApplied) {
-      return 0;
+  getNumberOfActiveFilter: (force?: boolean) => number = (force = false) => {
+    if (!force) {
+      if (!this.filterDialogApplied) {
+        return 0;
+      }
     }
 
     let i = 0;
@@ -269,9 +272,10 @@ export class EnrollmentListComponent implements OnInit {
       i++;
     }
 
-    if (this.filter.explicitly === 'explicit'
-      || this.filter.explicitly === 'dynamic'
-      || this.filter.explicitly === 'semiExplicit') {
+    if (i >= 1 &&
+      (this.filter.explicitly === 'explicit'
+        || this.filter.explicitly === 'dynamic'
+        || this.filter.explicitly === 'semiExplicit')) {
       i++;
     }
 

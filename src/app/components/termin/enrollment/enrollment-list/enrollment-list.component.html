@@ -1,5 +1,5 @@
 <ng-container *ngIf="enrollments_filtered$ | async as _enrollments">
-  <div *ngIf="this._enrollments.length > 0 || getNumberOfActiveFilter() > 0;"
+  <div *ngIf="this._enrollments.length > 0 || getNumberOfActiveFilter(true) > 0;"
        [ngClass]="isMain ? '' : 'distance'"
        class="enrollment-list block decent">
     <div class="header">
@@ -9,7 +9,7 @@
           [{{ this._enrollments.length }}{{ appointment.maxEnrollments !== null
         && isMain ? '/' + appointment.maxEnrollments : '' }}]
         </ng-container>
-        <span *ngIf="getNumberOfActiveFilter() > 0">
+        <span *ngIf="getNumberOfActiveFilter(true) > 0">
         [<mat-icon>filter_list</mat-icon>:{{ this._enrollments.length }}]
       </span>
       </h2>
@@ -22,7 +22,7 @@
 
     <mat-icon (click)="_openFilterDialog()"
               class="filter-open"
-              matBadge="{{getNumberOfActiveFilter() > 0 ? getNumberOfActiveFilter() : ''}}"
+              matBadge="{{getNumberOfActiveFilter(true) > 0 ? getNumberOfActiveFilter(true) : ''}}"
               matBadgeColor="info"
               matBadgeSize="small">
       filter_list
