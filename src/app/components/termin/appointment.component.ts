@@ -1,14 +1,9 @@
 import {Component, NgModule, OnDestroy, OnInit} from '@angular/core';
-import {AppointmentService} from '../../services/appointment.service';
-import {MatDialog, MatSnackBar} from '@angular/material';
 import {IEnrollmentModel} from '../../models/IEnrollment.model';
 import {IAppointmentModel} from '../../models/IAppointment.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
 import {AuthenticationService} from '../../services/authentication.service';
-import {EnrollmentService} from '../../services/enrollment.service';
-import {Location} from '@angular/common';
-import {DomSanitizer} from '@angular/platform-browser';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {SEOService} from '../../_helper/_seo.service';
 import {AppointmentSocketioService} from '../../services/appointment-socketio.service';
@@ -50,12 +45,7 @@ import {AppointmentProvider} from './appointment.provider';
 })
 @NgModule({})
 export class AppointmentComponent implements OnInit, OnDestroy {
-  // List to show (enrollments left after filter is applied)
   public link: string;
-  public filter: any;
-  public percentDone;
-  private editId = '';
-  private editOperation = '';
 
   public appointment$: Observable<IAppointmentModel>;
   public enrollments$: BehaviorSubject<IEnrollmentModel[]> = new BehaviorSubject<IEnrollmentModel[]>(undefined);
@@ -66,15 +56,11 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   public loaded = false;
 
-  constructor(private appointmentService: AppointmentService, public dialog: MatDialog, private route: ActivatedRoute,
-              private router: Router, public authenticationService: AuthenticationService, private enrollmentService: EnrollmentService,
-              private snackBar: MatSnackBar, private location: Location, private sanitizer: DomSanitizer,
+  constructor(private route: ActivatedRoute, private router: Router, public authenticationService: AuthenticationService,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
               private appointmentProvider: AppointmentProvider) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
-      this.editId = params.editId;
-      this.editOperation = params.editOperation;
     });
 
     this.route.params.subscribe(params => {
