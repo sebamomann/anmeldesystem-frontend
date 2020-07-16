@@ -25,16 +25,16 @@
                          [title]="'Teilnehmer'"></app-enrollment-list>
     <app-enrollment-list *ngIf="limitReachedBeforeEnrollmentDeadline"
                          [appointment]="appointment"
-                         [enrollments]="enrollmentsWaitingList"
+                         [enrollments]="enrollmentsWaitingList$ | async"
                          [isMain]="false"
                          [title]="'Warteliste'"></app-enrollment-list>
     <app-enrollment-list [appointment]="appointment"
-                         [enrollments]="enrollmentsTooLate"
+                         [enrollments]="enrollmentsLate$ | async"
                          [isMain]="false"
                          [title]="'Zu spät angemeldet'"></app-enrollment-list>
     <app-enrollment-list *ngIf="!limitReachedBeforeEnrollmentDeadline"
                          [appointment]="appointment"
-                         [enrollments]="enrollmentsWaitingList"
+                         [enrollments]="enrollmentsWaitingList$ | async"
                          [isMain]="false"
                          [title]="'Warteliste'"></app-enrollment-list>
   </ng-container>
@@ -59,11 +59,11 @@
 </ng-container>
 
 <ng-template #loading>
-  <app-loading *ngIf="appointment !== undefined"
+  <app-loading *ngIf="!loaded"
                [@remove]>
   </app-loading>
   <app-fetch-appointment
-    [done]="appointment === undefined"
+    [done]="loaded"
     [percentDone]="percentDone">
   </app-fetch-appointment>
 </ng-template>
