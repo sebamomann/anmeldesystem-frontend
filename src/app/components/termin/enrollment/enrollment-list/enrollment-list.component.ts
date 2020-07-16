@@ -124,26 +124,24 @@ export class EnrollmentListComponent implements OnInit {
         this.filterGotActivated = true;
         // Preserve current data
         const curr_filter = this.filter;
-        const curr_enrollments = this.enrollments_filtered;
+        const curr_enrollments = this.enrollments_filtered$.getValue();
 
         this.filter = newFilter;
 
         this.applyFilter();
 
-        // if (_enrollmentsFiltered.length === 0
-        //   && this.getNumberOfActiveFilter() > 0) {
-        //   this.enrollments_filtered = curr_enrollments;
-        //   // Reopen filter if filter shows no results
-        //   this._openFilterDialog(true);
-        //   // Reset filter
-        //   this.filter = curr_filter;
-        // } else {
-        //   this.enrollments_unfiltered = _enrollmentsFiltered;
-        // }
+        if (this.enrollments_filtered$.getValue().length === 0
+          && this.getNumberOfActiveFilter() > 0) {
+          this.enrollments_filtered$.next(curr_enrollments);
+          this._openFilterDialog(true); // Reopen filter if filter shows no results
+          // Reset filter
+          this.filter = curr_filter;
+        }
+
       } else if (newFilter === null) {
         this.filterGotActivated = false;
         this.filter = this.initializeFilterObject(this.appointment);
-        this.enrollments_unfiltered = this.enrollments;
+        this.enrollments_filtered$.next(this.enrollments_unfiltered);
       }
     });
   };
@@ -187,8 +185,6 @@ export class EnrollmentListComponent implements OnInit {
     if (this.filterGotActivated
       || this.filter.driverPassenger !== '') {
       const output: IEnrollmentModel[] = [];
-
-      console.log(this.enrollments_unfiltered.length);
 
       this.enrollments_unfiltered.forEach(eEnrollment => {
         try {
@@ -240,7 +236,6 @@ export class EnrollmentListComponent implements OnInit {
         }
       });
 
-      console.log(output.length);
       this.enrollments_filtered$.next(output);
       return;
     }
