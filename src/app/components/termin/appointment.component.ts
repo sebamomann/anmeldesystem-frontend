@@ -115,40 +115,41 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   };
 
   private splitIntoParts(appointment: IAppointmentModel) {
-    let __enrollments_correct = [];
-    let __enrollments_waitinglist = [];
-    let __enrollments_late;
+    let enrollments_correct = [];
+    let enrollments_waiting = [];
+    let enrollments_late;
 
     // fetch enrollments that were created after the enrollment deadline
-    __enrollments_late = appointment.enrollments.filter(fEnrollment => {
+    enrollments_late = appointment.enrollments.filter(fEnrollment => {
       if (fEnrollment.iat > appointment.deadline) {
         return fEnrollment;
       } else {
-        __enrollments_correct.push(fEnrollment);
+        enrollments_correct.push(fEnrollment);
       }
     });
 
     if (appointment.maxEnrollments != null && appointment.maxEnrollments > 0) {
-      if (__enrollments_correct.length > appointment.maxEnrollments) {
-        __enrollments_correct = __enrollments_correct
+      if (enrollments_correct.length > appointment.maxEnrollments) {
+        enrollments_correct = enrollments_correct
           .slice(0, appointment.maxEnrollments); // enrollments within the enrollment limit
-        __enrollments_waitinglist = __enrollments_correct
-          .slice(appointment.maxEnrollments, appointment.maxEnrollments + __enrollments_correct.length); // enrollments on waiting list
+        enrollments_waiting = enrollments_correct
+          .slice(appointment.maxEnrollments, appointment.maxEnrollments + enrollments_correct.length); // enrollments on waiting list
 
 
         this.limitReachedBeforeEnrollmentDeadline = true;
       } else {
-        __enrollments_late = __enrollments_late
+        enrollments_late = enrollments_late
           .slice(0, appointment.maxEnrollments); // enrollments after deadline
-        __enrollments_waitinglist = __enrollments_late
+        enrollments_waiting = enrollments_late
           // tslint:disable-next-line:max-line-length
-          .slice(appointment.maxEnrollments, appointment.maxEnrollments + __enrollments_late.length); // enrollments after deadline on waiting list
+          .slice(appointment.maxEnrollments, appointment.maxEnrollments + enrollments_late.length); // enrollments after deadline on waiting list
 
         this.limitReachedBeforeEnrollmentDeadline = false;
       }
     }
-    this.enrollments$.next(__enrollments_correct);
-    this.enrollmentsWaitingList$.next(__enrollments_waitinglist);
-    this.enrollmentsLate$.next(__enrollments_late);
+
+    this.enrollments$.next(enrollments_correct);
+    this.enrollmentsWaitingList$.next(enrollments_waiting);
+    this.enrollmentsLate$.next(enrollments_late);
   }
 }
