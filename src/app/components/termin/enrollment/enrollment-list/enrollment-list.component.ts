@@ -205,6 +205,10 @@ export class EnrollmentListComponent implements OnInit {
 
       this.filterDialogApplied = false;
 
+      output.sort((a, b) => {
+        return a.iat > b.iat ? 1 : -1;
+      });
+
       this.enrollments_filtered$.next(output);
       return;
     }
