@@ -28,3 +28,9 @@ AppointmentUtil.getPinned = () => {
   return pins;
 };
 
+AppointmentUtil.isPinned = (link: string) => {
+  const pins: string[] = JSON.parse(localStorage.getItem('appointment-pins'));
+  return pins.includes(link);
+};
+
+
