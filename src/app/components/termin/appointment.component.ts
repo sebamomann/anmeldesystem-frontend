@@ -98,9 +98,6 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
             this.loaded = true;
           }
-        },
-        () => {
-
         });
   };
 

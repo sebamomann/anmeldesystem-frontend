@@ -526,10 +526,11 @@ mat-card {
   }
 
   &.float {
-    margin-top: 15vh;
+    margin-top: 45vh !important;
+    transform: translateY(-50%);
 
     &.high {
-      margin-top: 7.5vh;
+      margin-top: 25vh !important;
     }
   }
 
