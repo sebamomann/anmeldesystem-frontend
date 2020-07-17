@@ -1,7 +1,8 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FetchAppointmentComponent} from './fetch-appointment.component';
-import {MatCardModule, MatProgressBarModule} from '@angular/material';
+import {MatButtonModule, MatCardModule, MatProgressBarModule} from '@angular/material';
+import {RouterModule} from '@angular/router';
 
 
 @NgModule({
@@ -12,7 +13,9 @@ import {MatCardModule, MatProgressBarModule} from '@angular/material';
   imports: [
     CommonModule,
     MatCardModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    RouterModule,
+    MatButtonModule
   ]
 })
 export class FetchAppointmentModule {
