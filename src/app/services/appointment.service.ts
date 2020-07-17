@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.model';
 import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
 import {environment} from '../../environments/environment';
 import {Globals} from '../globals';
@@ -54,16 +54,13 @@ export class AppointmentService {
     }
 
     const res = this.httpClient.get(url, {observe: 'response'});
-    res.toPromise().then(response => {
-      this.etag.last = this.etag.current;
-      this.etag.current = response.headers.get('etag');
-    }, err => {
-      return of(undefined);
-    });
-
 
     return res.pipe(
-      map(response => response.body as IAppointmentModel)
+      map(response => {
+        this.etag.last = this.etag.current;
+        this.etag.current = response.headers.get('etag');
+        return response.body as IAppointmentModel;
+      })
     );
   }
 
