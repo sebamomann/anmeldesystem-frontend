@@ -7,6 +7,7 @@ import {first} from 'rxjs/operators';
 import {AlertService} from '../../../../services/alert.service';
 import {DatePipe} from '@angular/common';
 import {ValidatorService} from '../../../../_helper/validatorService';
+import {MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +28,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private router: Router, private accountService: AccountService, private route: ActivatedRoute,
               private authenticationService: AuthenticationService, private alertService: AlertService,
-              private validatorService: ValidatorService) {
+              private validatorService: ValidatorService, private snackBar: MatSnackBar) {
     this.route.queryParams.subscribe(params => {
       this.getUsername().setValue(validatorService.emailIsValid(params.mail) ? params.mail : '');
     });
@@ -47,8 +48,15 @@ export class LoginComponent implements OnInit {
 
       await this.authenticationService.login(username, password).pipe(first())
         .subscribe(
-          data => {
-            this.router.navigateByUrl(retUrl);
+          () => {
+            this.router.navigateByUrl(retUrl)
+              .then(() => {
+                this.snackBar.open('Erfolgreich eingeloggt',
+                  'OK',
+                  {
+                    duration: 2000,
+                  });
+              });
           },
           error => {
             this.changeDate = new Date(error.error.error);
