@@ -12,7 +12,9 @@
       Logge dich ein um mehr Termine zu sehen bei denen du dabei bist.
     </span>
 
-    <button [routerLink]="'/account/login'" color="primary" mat-raised-button>
+    <button [queryParams]="{returnUrl: router.routerState.snapshot.url}"
+            [routerLink]="'/account/login'"
+            color="primary" mat-raised-button>
       Login
     </button>
   </div>

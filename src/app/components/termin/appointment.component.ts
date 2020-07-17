@@ -56,7 +56,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   public loaded = false;
 
-  constructor(private route: ActivatedRoute, private router: Router, public authenticationService: AuthenticationService,
+  constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
               private appointmentProvider: AppointmentProvider) {
     this.route.queryParams.subscribe(params => {

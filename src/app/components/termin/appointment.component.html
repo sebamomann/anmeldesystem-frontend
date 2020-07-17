@@ -5,6 +5,7 @@
        class="mat-card basic">
     <span>Dir fehlen möglicherweise Berechtigungen für diesen Termin</span>
     <button [routerLink]="['/account/login']"
+            [queryParams]="{returnUrl: router.routerState.snapshot.url}"
             color="primary" mat-raised-button>
       Login
     </button>
