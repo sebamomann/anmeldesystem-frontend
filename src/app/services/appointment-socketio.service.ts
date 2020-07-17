@@ -53,8 +53,6 @@ export class AppointmentSocketioService {
       .subscribe(
         (appointment: IAppointmentModel) => {
           this.appointmentProvider.update(appointment);
-        }, error => {
-          console.log(error);
         }
       );
   }

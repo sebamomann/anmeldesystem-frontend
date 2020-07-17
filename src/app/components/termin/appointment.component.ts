@@ -88,8 +88,9 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.appointment$
       .subscribe(
         (sAppointment) => {
-
-          if (sAppointment !== undefined) {
+          if (sAppointment === null) {
+            this.loaded = true;
+          } else if (sAppointment !== undefined) {
             this._seoService.updateTitle(`${sAppointment.title} - Anmeldesystem`);
             this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
 
@@ -97,6 +98,9 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
             this.loaded = true;
           }
+        },
+        () => {
+
         });
   };
 

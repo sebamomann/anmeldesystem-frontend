@@ -2,11 +2,11 @@ import {Injectable} from '@angular/core';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.model';
 import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
 import {environment} from '../../environments/environment';
 import {Globals} from '../globals';
-import {map} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {AppointmentUtil} from '../_util/appointmentUtil.util';
 
 const REFRESH_INTERVAL = 30000;
@@ -60,6 +60,9 @@ export class AppointmentService {
         this.etag.last = this.etag.current;
         this.etag.current = response.headers.get('etag');
         return response.body as IAppointmentModel;
+      }),
+      catchError(() => {
+        return of(null);
       })
     );
   }
