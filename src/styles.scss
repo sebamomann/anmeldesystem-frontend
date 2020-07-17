@@ -278,6 +278,10 @@ mat-icon {
   text-decoration: none;
   text-align: center;
   font-weight: bolder;
+
+  &.standalone {
+    margin-bottom: 25px !important;
+  }
 }
 
 a {

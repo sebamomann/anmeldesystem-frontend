@@ -46,6 +46,10 @@
   text-align: center;
   margin: 15px auto 5px;
 
+  &:first-child {
+    margin-top: 0;
+  }
+
   &.archive {
     margin: 5px auto 0;
     padding: 10px;
