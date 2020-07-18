@@ -15,6 +15,8 @@ import {EnrollmentModel} from '../../../models/EnrollmentModel.model';
 import {Observable} from 'rxjs';
 import {TokenUtil} from '../../../_util/tokenUtil.util';
 import {SEOService} from '../../../_helper/_seo.service';
+import {AppointmentSocketioService} from '../../../services/appointment-socketio.service';
+import {AppointmentProvider} from '../appointment.provider';
 
 const HttpStatus = require('http-status-codes');
 
@@ -77,7 +79,8 @@ export class EnrollmentComponent implements OnInit {
               private location: Location,
               private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
               private authenticationService: AuthenticationService, private snackBar: MatSnackBar,
-              private _seoService: SEOService) {
+              private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
+              private appointmentProvider: AppointmentProvider) {
 
     this.currentUrlSnapshotWithParameter = router.routerState.snapshot;
 
@@ -112,7 +115,13 @@ export class EnrollmentComponent implements OnInit {
   appointment$: Observable<IAppointmentModel>;
 
   async ngOnInit() {
-    this.appointment$ = this.appointmentService.getAppointment(this.link, false);
+    this.appointmentSocketioService
+      .setupSocketConnection()
+      .then(() => {
+        this.appointmentSocketioService.subscribeAppointment(this.link);
+      });
+
+    this.appointment$ = this.appointmentProvider.appointment;
 
     await this.route
       .data

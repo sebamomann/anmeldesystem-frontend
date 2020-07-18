@@ -56,6 +56,7 @@ export class AppointmentSocketioService {
         .getAppointment(link, false)
         .subscribe(
           (appointment: IAppointmentModel) => {
+            this.current_link = link;
             this.appointmentProvider.update(appointment);
           }
         );
