@@ -58,8 +58,8 @@ export class AppointmentSettingsComponent implements OnInit {
   }
 
   saveOverall(data: any) {
-    this.appointment.title = data.title;
     this._save(data);
+    this.appointment.title = data.title;
   }
 
   saveAdditions(data: any) {
