@@ -223,3 +223,8 @@
     [percentDone]="percentDone">
   </app-fetch-appointment>
 </ng-template>
+
+<app-loading *ngIf="sendingRequest"
+             [@remove]
+             [customMessage]="'Speichere Anmeldung'">
+</app-loading>

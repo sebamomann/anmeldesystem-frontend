@@ -12,7 +12,7 @@ import {MatSnackBar} from '@angular/material';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {EnrollmentService} from '../../../services/enrollment.service';
 import {EnrollmentModel} from '../../../models/EnrollmentModel.model';
-import {Observable, Subject} from 'rxjs';
+import {Observable} from 'rxjs';
 import {TokenUtil} from '../../../_util/tokenUtil.util';
 import {SEOService} from '../../../_helper/_seo.service';
 
@@ -71,6 +71,7 @@ export class EnrollmentComponent implements OnInit {
   public edit: any;
   public token: any;
   public empty = false;
+  private sendingRequest = false;
 
   constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
               private location: Location,
@@ -87,7 +88,7 @@ export class EnrollmentComponent implements OnInit {
       this.autoSend = params.send === 'true';
 
       if (this.token !== null && this.token !== undefined) {
-        this.handleTokenPermission(this.link, {id: this.enrollmentId, token: this.token});
+        this.storeEnrollmentAccessToken(this.link, {id: this.enrollmentId, token: this.token});
       }
     });
   }
@@ -109,12 +110,9 @@ export class EnrollmentComponent implements OnInit {
 
   // CACHE
   appointment$: Observable<IAppointmentModel>;
-  showNotification$: Observable<boolean>;
-  update$ = new Subject<void>();
-  forceReload$ = new Subject<void>();
 
   async ngOnInit() {
-    this.appointment$ = this.appointmentService.getAppointment(this.link, false);
+    this.appointment$ = this.appointmentService.getAppointment(this.link, true);
 
     await this.route
       .data
@@ -232,6 +230,8 @@ export class EnrollmentComponent implements OnInit {
    * Eventually sending/updating Enrollment
    */
   sendEnrollment: () => Promise<void> = async () => {
+    this.sendingRequest = true;
+
     if (this.mailEvent.invalid
       && !this.userIsLoggedIn && !this.edit) {
       this.mailEvent.markAllAsTouched();
@@ -246,12 +246,14 @@ export class EnrollmentComponent implements OnInit {
 
     if (this.userIsLoggedIn || this.mailEvent.valid || this.edit) {
       if (this.edit) {
-        this.sendEnrollmentRequest('update');
+        await this.sendEnrollmentRequest('update');
       } else {
-        this.sendEnrollmentRequest('create');
+        await this.sendEnrollmentRequest('create');
       }
       this.event.markAllAsTouched();
     }
+
+    this.sendingRequest = false;
   };
 
   private getAdditionIdList: () => IAdditionModel[] = () => {
@@ -328,16 +330,9 @@ export class EnrollmentComponent implements OnInit {
             if (result.status === HttpStatus.CREATED
               || result.status === HttpStatus.OK) {
               if (functionName === 'create') {
-                this.appointment.enrollments.push(result.body);
                 if (result.body.token !== undefined) {
-                  this.handleTokenPermission(this.link, result.body);
+                  this.storeEnrollmentAccessToken(this.link, result.body);
                 }
-              } else if (functionName === 'update') {
-                this.appointment.enrollments.map(obj => {
-                  if (obj.id === result.body.id) {
-                    return result.body;
-                  }
-                });
               }
 
               this.router.navigate([`enroll`], {
@@ -473,7 +468,7 @@ export class EnrollmentComponent implements OnInit {
     this.location.back();
   }
 
-  private handleTokenPermission(link: string, body: any) {
+  private storeEnrollmentAccessToken(link: string, body: any) {
     let permissions = JSON.parse(localStorage.getItem('permissions'));
 
     if (permissions === null ||

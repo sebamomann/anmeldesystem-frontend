@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-loading',
@@ -6,6 +6,9 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./loading.component.scss']
 })
 export class LoadingComponent implements OnInit {
+  @Input()
+  private customMessage = '';
+
   public message: string;
   private messages = [
     'Lade Wetter',
@@ -21,10 +24,14 @@ export class LoadingComponent implements OnInit {
   }
 
   async ngOnInit() {
-    while (1 === 1) {
-      const rand = Math.random() * this.messages.length;
-      this.message = this.messages[Math.ceil(rand) - 1];
-      await this.delay(400 + (Math.random() * 1500));
+    this.message = this.customMessage;
+
+    if (this.customMessage === '') {
+      while (true) {
+        const rand = Math.random() * this.messages.length;
+        this.message = this.messages[Math.ceil(rand) - 1];
+        await this.delay(400 + (Math.random() * 1500));
+      }
     }
   }
 
