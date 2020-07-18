@@ -12,6 +12,7 @@ import {AppointmentService} from './appointment.service';
 export class AppointmentSocketioService {
 
   private socket;
+  private current_link = '';
 
   constructor(private appointmentProvider: AppointmentProvider, private authenticationService: AuthenticationService,
               private appointmentService: AppointmentService) {
@@ -48,14 +49,16 @@ export class AppointmentSocketioService {
   }
 
   subscribeAppointment(link: string) {
-    this.socket.emit('subscribe-appointment', {appointment: {link}});
+    if (link !== this.current_link) {
+      this.socket.emit('subscribe-appointment', {appointment: {link}});
 
-    this.appointmentService
-      .getAppointment(link, false)
-      .subscribe(
-        (appointment: IAppointmentModel) => {
-          this.appointmentProvider.update(appointment);
-        }
-      );
+      this.appointmentService
+        .getAppointment(link, false)
+        .subscribe(
+          (appointment: IAppointmentModel) => {
+            this.appointmentProvider.update(appointment);
+          }
+        );
+    }
   }
 }
