@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {catchError, filter, switchMap, take} from 'rxjs/operators';
 import {AuthenticationService} from '../../services/authentication.service';
 
@@ -47,7 +47,7 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
           // If error status is different than 401 we want to skip refresh token
           // So we check that and throw the error if it's the case
           if (error.status !== 401) {
-            return Observable.throw(error);
+            return throwError(error);
           }
 
           if (this.refreshTokenInProgress) {
@@ -84,7 +84,7 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
                   this.refreshTokenInProgress = false;
 
                   this.authService.logout();
-                  return Observable.throw(error);
+                  return throwError(error);
                 })
               );
           }

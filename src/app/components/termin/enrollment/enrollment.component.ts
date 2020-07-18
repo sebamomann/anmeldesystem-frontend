@@ -71,7 +71,7 @@ export class EnrollmentComponent implements OnInit {
   public edit: any;
   public token: any;
   public empty = false;
-  private sendingRequest = false;
+  public sendingRequest = false;
 
   constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
               private location: Location,
@@ -356,7 +356,7 @@ export class EnrollmentComponent implements OnInit {
           if (err.status === HttpStatus.BAD_REQUEST) {
             if (err.error.code === 'DUPLICATE_ENTRY') {
               this.event.markAllAsTouched();
-              await err.error.error.forEach(fColumn => {
+              await err.error.data.forEach(fColumn => {
                 const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
                 const fnName: string = 'get' + uppercaseName;
                 this[fnName]().markAsTouched();
