@@ -17,7 +17,7 @@ export class AppointmentSettingsComponent implements OnInit {
   @ViewChild(LinkDataComponent, null)
   linkDataComponent: LinkDataComponent;
 
-  private link: any;
+  public link: any;
   public appointment: IAppointmentModel;
   public saveSuccess: boolean;
   public uploadingFile: any = [];
