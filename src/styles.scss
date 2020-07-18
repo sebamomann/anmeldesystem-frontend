@@ -272,7 +272,10 @@ mat-icon {
     width: 10px;
     display: inline-block;
     float: left;
-    vertical-align: middle;
+
+    mat-icon {
+      vertical-align: middle;
+    }
   }
 }
 
