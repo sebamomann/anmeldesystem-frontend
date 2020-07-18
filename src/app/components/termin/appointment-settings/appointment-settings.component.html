@@ -1,6 +1,7 @@
 <mat-card class="float high">
   <ng-container *ngIf="appointment != undefined; else loading">
     <mat-card-title class="headline">
+      <span class="redirect"><mat-icon>arrow_back_ios</mat-icon></span>
       {{appointment.title}}
     </mat-card-title>
     <mat-tab-group [selectedIndex]="0" dynamicHeight>
