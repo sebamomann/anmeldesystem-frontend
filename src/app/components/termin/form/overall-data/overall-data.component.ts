@@ -29,6 +29,7 @@ export class OverallDataComponent implements OnInit {
   public button = 'Speichern';
 
   public event: FormGroup;
+  public valuesChanged = true;
 
   constructor(private formBuilder: FormBuilder, private _adapter: DateAdapter<any>) {
   }
@@ -57,6 +58,14 @@ export class OverallDataComponent implements OnInit {
       location: this.appointment.location,
       maxEnrollments: this.appointment.maxEnrollments
     });
+
+    const eventSnapshot = this.event.value;
+
+    this.event.valueChanges.subscribe(
+      result => {
+        this.valuesChanged = JSON.stringify(result) === JSON.stringify(eventSnapshot);
+      }
+    );
   }
 
   public saveFnc() {
