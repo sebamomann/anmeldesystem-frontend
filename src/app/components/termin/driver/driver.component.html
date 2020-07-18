@@ -1,42 +1,44 @@
-<div *ngIf="appointment; else loading">
-  <h1 class="headline">
-    {{appointment.title}}
-  </h1>
+<ng-container *ngIf="appointment$ | async as appointment; else loading">
+  <div>
+    <h1 class="headline">
+      {{appointment.title}}
+    </h1>
 
-  <mat-card class="">
-    <mat-card-title class="headline">
-      Fahrerverwaltung
-    </mat-card-title>
+    <mat-card class="">
+      <mat-card-title class="headline">
+        Fahrerverwaltung
+      </mat-card-title>
 
-    <mat-card-content>
-      <div class="driver-wrapper">
-        <ng-container *ngFor="let driver of drivers">
-          <div class="driver-block">
-            <span>{{driver.name}}</span>
-            <span>{{driver.driver.seats}} freie Plätze</span>
-            <ng-container [ngSwitch]="driver.driver.service">
+      <mat-card-content>
+        <div class="driver-wrapper">
+          <ng-container *ngFor="let driver of drivers">
+            <div class="driver-block">
+              <span>{{driver.name}}</span>
+              <span>{{driver.driver.seats}} freie Plätze</span>
+              <ng-container [ngSwitch]="driver.driver.service">
               <span *ngSwitchCase="3" class='service'>
                 <mat-icon>compare_arrows</mat-icon>
               </span>
-              <span *ngSwitchCase="2" class='service negative'>
+                <span *ngSwitchCase="2" class='service negative'>
                 <mat-icon>arrow_back</mat-icon>
               </span>
-              <span *ngSwitchCase="1" class='service negative'>
+                <span *ngSwitchCase="1" class='service negative'>
                 <mat-icon>arrow_forward</mat-icon>
               </span>
-            </ng-container>
-          </div>
-        </ng-container>
-      </div>
-      <ng-container *ngIf="data.gotTo === data.gotFrom then gotSame; else gotDifferent"></ng-container>
-    </mat-card-content>
-    <mat-card-actions>
-      <button (click)="goBack()" mat-raised-button>
-        Zurück
-      </button>
-    </mat-card-actions>
-  </mat-card>
-</div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+        <ng-container *ngIf="data.gotTo === data.gotFrom then gotSame; else gotDifferent"></ng-container>
+      </mat-card-content>
+      <mat-card-actions>
+        <button (click)="goBack()" mat-raised-button>
+          Zurück
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</ng-container>
 
 <!-- TEMPLATES -->
 <ng-template #gotSame>

@@ -139,43 +139,43 @@ export class EnrollmentComponent implements OnInit {
   }
 
   private successfulRequest(): void {
-    this.appointment$.subscribe(sAppointment => {
-      if (sAppointment !== undefined) {
-        this._seoService.updateTitle(`${sAppointment.title} - Anmelden`);
-        this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
+    this.appointment$
+      .subscribe(sAppointment => {
+        if (sAppointment !== undefined) {
+          this._seoService.updateTitle(`${sAppointment.title} - Anmelden`);
+          this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
 
-        this.appointment = sAppointment;
-        this.storageDataToFields();
-        // When e.g. coming from login
-        if (this.showLoginAndTokenForm === true) {
-          // Re-fetch output from local storage
-          this.output = JSON.parse(this.outputRawFromStorage);
-          this.parseOutputIntoForm();
-
-          if (this.autoSend) {
-            this.sendEnrollment();
-          }
-        } else if (this.edit) {
-          console.log(sAppointment);
-          const enrollment: IEnrollmentModel = sAppointment.enrollments.filter(fEnrollment => {
-            return fEnrollment.id === this.enrollmentId;
-          })[0];
-
-          if (enrollment !== undefined) {
-            this.output = enrollment;
+          this.appointment = sAppointment;
+          this.storageDataToFields();
+          // When e.g. coming from login
+          if (this.showLoginAndTokenForm === true) {
+            // Re-fetch output from local storage
+            this.output = JSON.parse(this.outputRawFromStorage);
             this.parseOutputIntoForm();
-          } else if (this.enrollmentId !== null && this.token !== null) {
-            this.empty = true;
-          }
-        } else {
-          // DO NOTHING, BECAUSE FORM IS EMPTY FOR ADDING NEW ENROLLMENT
-        }
 
-        this.buildFormCheckboxes();
-      }
-    }, () => {
-      this.appointment = undefined;
-    });
+            if (this.autoSend) {
+              this.sendEnrollment();
+            }
+          } else if (this.edit) {
+            const enrollment: IEnrollmentModel = sAppointment.enrollments.filter(fEnrollment => {
+              return fEnrollment.id === this.enrollmentId;
+            })[0];
+
+            if (enrollment !== undefined) {
+              this.output = enrollment;
+              this.parseOutputIntoForm();
+            } else if (this.enrollmentId !== null && this.token !== null) {
+              this.empty = true;
+            }
+          } else {
+            // DO NOTHING, BECAUSE FORM IS EMPTY FOR ADDING NEW ENROLLMENT
+          }
+
+          this.buildFormCheckboxes();
+        }
+      }, () => {
+        this.appointment = undefined;
+      });
   }
 
   /**

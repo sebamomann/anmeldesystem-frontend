@@ -60,42 +60,46 @@ export class DriverComponent implements OnInit {
 
     this.appointment$ = this.appointmentProvider.appointment;
 
-    this.sucessfulRequest();
+    this.successfulRequest();
   }
 
-  private sucessfulRequest() {
-    this.drivers = this.appointment.enrollments.filter(fAppointment => fAppointment.driver !== null);
+  private successfulRequest() {
+    this.appointment$
+      .subscribe(sAppointment => {
+        if (sAppointment !== undefined) {
+          this.drivers = sAppointment.enrollments.filter(fAppointment => fAppointment.driver !== null);
 
-    this.data.neededTo = this.appointment.enrollments.filter(fAppointment => {
-      if (fAppointment.passenger != null
-        && (fAppointment.passenger.requirement === 1 || fAppointment.passenger.requirement === 3)) {
-        return fAppointment;
-      }
-    }).length;
-    this.data.gotTo = 0;
-    // tslint:disable-next-line:no-unused-expression
-    this.appointment.enrollments.filter(fAppointment => {
-      if (fAppointment.driver != null
-        && (fAppointment.driver.service === 1 || fAppointment.driver.service === 3)) {
-        this.data.gotTo += fAppointment.driver.seats;
-      }
-    }).length;
-    this.data.neededFrom = this.appointment.enrollments.filter(fAppointment => {
-      if (fAppointment.passenger != null
-        && (fAppointment.passenger.requirement === 2 || fAppointment.passenger.requirement === 3)) {
-        return fAppointment;
-      }
-    }).length;
-    this.data.gotFrom = 0;
-    // tslint:disable-next-line:no-unused-expression
-    this.appointment.enrollments.filter(fAppointment => {
-      if (fAppointment.driver != null
-        && (fAppointment.driver.service === 2 || fAppointment.driver.service === 3)) {
-        this.data.gotFrom += fAppointment.driver.seats;
-      }
-    }).length;
+          this.data.neededTo = sAppointment.enrollments.filter(fAppointment => {
+            if (fAppointment.passenger != null
+              && (fAppointment.passenger.requirement === 1 || fAppointment.passenger.requirement === 3)) {
+              return fAppointment;
+            }
+          }).length;
+          this.data.gotTo = 0;
+          // tslint:disable-next-line:no-unused-expression
+          sAppointment.enrollments.filter(fAppointment => {
+            if (fAppointment.driver != null
+              && (fAppointment.driver.service === 1 || fAppointment.driver.service === 3)) {
+              this.data.gotTo += fAppointment.driver.seats;
+            }
+          }).length;
+          this.data.neededFrom = sAppointment.enrollments.filter(fAppointment => {
+            if (fAppointment.passenger != null
+              && (fAppointment.passenger.requirement === 2 || fAppointment.passenger.requirement === 3)) {
+              return fAppointment;
+            }
+          }).length;
+          this.data.gotFrom = 0;
+          // tslint:disable-next-line:no-unused-expression
+          sAppointment.enrollments.filter(fAppointment => {
+            if (fAppointment.driver != null
+              && (fAppointment.driver.service === 2 || fAppointment.driver.service === 3)) {
+              this.data.gotFrom += fAppointment.driver.seats;
+            }
+          }).length;
+        }
+      });
   }
-
 
   compare(nr1: number, nr2: number) {
     if (nr1 > nr2) {
