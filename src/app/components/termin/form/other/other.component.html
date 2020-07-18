@@ -15,6 +15,7 @@
   </div>
   <button
     (click)="saveFnc()"
+    [disabled]="sameValues"
     mat-raised-button>
     {{button}}
   </button>

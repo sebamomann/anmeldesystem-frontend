@@ -40,6 +40,7 @@
     Hinzufügen
   </button>
   <button (click)="saveFnc()"
+          [disabled]="sameValues"
           mat-raised-button>
     {{ button === 'Speichern' ? button : (hasAdditions() ? button : 'Nein danke') }}
   </button>

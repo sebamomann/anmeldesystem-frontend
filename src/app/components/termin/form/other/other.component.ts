@@ -16,6 +16,7 @@ export class OtherComponent implements OnInit {
   public event: FormGroup;
   @Input()
   private appointment: IAppointmentModel;
+  private sameValues = true;
 
   constructor(private formBuilder: FormBuilder) {
   }
@@ -28,6 +29,14 @@ export class OtherComponent implements OnInit {
     if (this.appointment !== undefined) {
       this.parseIntoForm();
     }
+
+    const eventSnapshot = this.event.value;
+
+    this.event.valueChanges.subscribe(
+      result => {
+        this.sameValues = JSON.stringify(result) === JSON.stringify(eventSnapshot);
+      }
+    );
   }
 
   public saveFnc() {

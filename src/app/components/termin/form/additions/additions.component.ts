@@ -17,6 +17,7 @@ export class AdditionsComponent implements OnInit {
   public button = 'Speichern';
 
   public event: any;
+  public sameValues = true;
 
   constructor(private formBuilder: FormBuilder) {
   }
@@ -32,6 +33,14 @@ export class AdditionsComponent implements OnInit {
     } else {
       this.addAddition();
     }
+
+    const eventSnapshot = this.event.value;
+
+    this.event.valueChanges.subscribe(
+      result => {
+        this.sameValues = JSON.stringify(result) === JSON.stringify(eventSnapshot);
+      }
+    );
   }
 
   private parseIntoForm() {

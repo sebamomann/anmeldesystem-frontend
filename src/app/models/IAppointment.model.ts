@@ -14,7 +14,7 @@ export interface IAppointmentModel {
   maxEnrollments: number | null;
   hidden: boolean;
   additions: IAdditionModel[];
-  administrators: { mail: string }[];
+  administrators: { username: string }[];
   driverAddition: boolean;
   enrollments: IEnrollmentModel[];
   files: IFileModel[];

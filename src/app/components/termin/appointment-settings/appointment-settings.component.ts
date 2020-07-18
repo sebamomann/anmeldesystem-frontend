@@ -130,11 +130,12 @@ export class AppointmentSettingsComponent implements OnInit {
                 duration: 2000,
                 panelClass: 'snackbar-default'
               });
+              // TODO ADD ADMIN TO LIST
+              // MAYBE ALSO FORCE ADMIN TO ACCEPT CIA MAIL
             }
           }
         },
         err => {
-          console.log(err);
           if (err instanceof HttpErrorResponse) {
             if (err.status === 400) {
               this.snackBar.open('Benutzer nicht gefunden', null, {

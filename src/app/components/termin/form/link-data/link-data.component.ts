@@ -18,6 +18,7 @@ export class LinkDataComponent implements OnInit {
   public button = 'Speichern';
 
   public event: FormGroup;
+  public sameValues = true;
 
   constructor(private formBuilder: FormBuilder, public urlService: UrlService) {
   }
@@ -31,6 +32,14 @@ export class LinkDataComponent implements OnInit {
     if (this.appointment !== undefined) {
       this.parseIntoForm();
     }
+
+    const eventSnapshot = this.event.value;
+
+    this.event.valueChanges.subscribe(
+      result => {
+        this.sameValues = JSON.stringify(result) === JSON.stringify(eventSnapshot);
+      }
+    );
   }
 
   private parseIntoForm() {
