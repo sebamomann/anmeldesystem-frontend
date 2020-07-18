@@ -72,9 +72,11 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.appointmentSocketioService.setupSocketConnection().then(() => {
-      this.appointmentSocketioService.subscribeAppointment(this.link);
-    });
+    this.appointmentSocketioService
+      .setupSocketConnection()
+      .then(() => {
+        this.appointmentSocketioService.subscribeAppointment(this.link);
+      });
 
     this.appointment$ = this.appointmentProvider.appointment;
 
