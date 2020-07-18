@@ -84,7 +84,7 @@ export class AppointmentSettingsComponent implements OnInit {
       }
     }
 
-    if (toChange !== {}) {
+    if (JSON.stringify(toChange) !== JSON.stringify({})) {
       this.appointmentService
         .updateValues(toChange, this.appointment)
         .subscribe(
