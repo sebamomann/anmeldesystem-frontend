@@ -130,6 +130,7 @@ export class AppointmentSettingsComponent implements OnInit {
                 duration: 2000,
                 panelClass: 'snackbar-default'
               });
+
               // TODO ADD ADMIN TO LIST
               // MAYBE ALSO FORCE ADMIN TO ACCEPT CIA MAIL
             }

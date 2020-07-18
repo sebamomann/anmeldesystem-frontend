@@ -16,7 +16,7 @@ export class OtherComponent implements OnInit {
   public event: FormGroup;
   @Input()
   private appointment: IAppointmentModel;
-  private sameValues = true;
+  public sameValues = true;
 
   constructor(private formBuilder: FormBuilder) {
   }

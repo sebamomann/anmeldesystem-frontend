@@ -112,7 +112,7 @@ export class EnrollmentComponent implements OnInit {
   appointment$: Observable<IAppointmentModel>;
 
   async ngOnInit() {
-    this.appointment$ = this.appointmentService.getAppointment(this.link, true);
+    this.appointment$ = this.appointmentService.getAppointment(this.link, false);
 
     await this.route
       .data
@@ -147,7 +147,8 @@ export class EnrollmentComponent implements OnInit {
             this.sendEnrollment();
           }
         } else if (this.edit) {
-          const enrollment: IEnrollmentModel = this.appointment.enrollments.filter(fEnrollment => {
+          console.log(sAppointment);
+          const enrollment: IEnrollmentModel = sAppointment.enrollments.filter(fEnrollment => {
             return fEnrollment.id === this.enrollmentId;
           })[0];
 

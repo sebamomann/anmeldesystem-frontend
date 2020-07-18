@@ -23,8 +23,9 @@ export class EnrollmentService {
     return this.httpClient.post<IEnrollmentModel>(url, _enrollment, {observe: 'response', reportProgress: true});
   }
 
-  update(enrollment: IEnrollmentModel): Observable<HttpResponse<IEnrollmentModel>> {
-    const url = `${environment.API_URL}enrollment/${enrollment.id}`;
+  update(enrollment: IEnrollmentModel, appointment: IAppointmentModel): Observable<HttpResponse<IEnrollmentModel>> {
+    const token = TokenUtil.getTokenForEnrollment(enrollment.id, appointment.link);
+    const url = `${environment.API_URL}enrollment/${enrollment.id}/${token}`;
     return this.httpClient.put<IEnrollmentModel>(url, enrollment, {observe: 'response', reportProgress: true});
   }
 
