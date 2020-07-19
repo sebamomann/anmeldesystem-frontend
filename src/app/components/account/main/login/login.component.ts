@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
 
   public returnUrl = '';
   private changeDate: Date;
+  public message = '';
 
   constructor(private router: Router, private accountService: AccountService, private route: ActivatedRoute,
               private authenticationService: AuthenticationService, private alertService: AlertService,
@@ -68,7 +69,8 @@ export class LoginComponent implements OnInit {
                 this.getPassword().setErrors({invalid: true});
               }
             } catch (e) {
-              this.getUsername().setErrors({activate: true});
+              this.getPassword().setErrors({invalid: true});
+              this.message = 'Ist dein Account neu? HGast du ihn vergessen mit der mail zu aktivieren?';
             }
           });
     }
@@ -77,9 +79,6 @@ export class LoginComponent implements OnInit {
   getUsernameErrorMessage(): string {
     if (this.getUsername().hasError('required')) {
       return 'Bitte gebe deine E-Mail ein';
-    }
-    if (this.getUsername().hasError('activate')) {
-      return 'Ist dein Account bereits aktiviert?';
     }
   }
 
