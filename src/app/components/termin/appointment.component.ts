@@ -94,7 +94,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
           if (sAppointment === null) {
             this.loaded = true;
           } else if (sAppointment !== undefined) {
-            this._seoService.updateTitle(`${sAppointment.title} - Anmeldesystem`);
+            this._seoService.updateTitle(`${sAppointment.title} | GJM - Anmeldesystem`);
             this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
 
             this.splitIntoParts(sAppointment);
