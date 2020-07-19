@@ -240,13 +240,13 @@ export class EnrollmentComponent implements OnInit {
    * Eventually sending/updating Enrollment
    */
   sendEnrollment: () => Promise<void> = async () => {
-    this.sendingRequest = true;
-
     if (this.mailEvent.invalid
       && !this.userIsLoggedIn && !this.edit) {
       this.mailEvent.markAllAsTouched();
       return;
     }
+
+    this.sendingRequest = true;
 
     // Set key, if logged in but not selfenroll
     // Set key if not logged in and token specified by after enroll screen
@@ -255,12 +255,13 @@ export class EnrollmentComponent implements OnInit {
     }
 
     if (this.userIsLoggedIn || this.mailEvent.valid || this.edit) {
+      this.event.markAllAsTouched();
+
       if (this.edit) {
         await this.sendEnrollmentRequest('update');
       } else {
         await this.sendEnrollmentRequest('create');
       }
-      this.event.markAllAsTouched();
     }
 
     this.sendingRequest = false;
@@ -362,6 +363,7 @@ export class EnrollmentComponent implements OnInit {
             }
           }
         }, async (err: HttpErrorResponse) => {
+          this.sendingRequest = false;
           this.clearLoginAndMailFormIntercepting();
           if (err.status === HttpStatus.BAD_REQUEST) {
             if (err.error.code === 'DUPLICATE_ENTRY') {
