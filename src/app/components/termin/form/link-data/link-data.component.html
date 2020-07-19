@@ -43,7 +43,7 @@
   </mat-form-field>
   <button
     (click)="saveFnc()"
-    [disabled]="sameValues"
+    [disabled]="sameValues && appointment !== undefined"
     mat-raised-button>
     {{button}}
   </button>

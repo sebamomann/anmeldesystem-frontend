@@ -13,7 +13,7 @@ export class LinkDataComponent implements OnInit {
   @Output()
   save = new EventEmitter<any>();
   @Input()
-  private appointment: IAppointmentModel;
+  public appointment: IAppointmentModel;
   @Input()
   public button = 'Speichern';
 

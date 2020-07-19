@@ -40,7 +40,7 @@
     Hinzufügen
   </button>
   <button (click)="saveFnc()"
-          [disabled]="sameValues"
+          [disabled]="sameValues && appointment !== undefined"
           mat-raised-button>
     {{ button === 'Speichern' ? button : (hasAdditions() ? button : 'Nein danke') }}
   </button>

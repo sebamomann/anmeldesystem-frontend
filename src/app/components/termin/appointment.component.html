@@ -19,7 +19,7 @@
   <!--            data-request-access="write"></script>-->
   <!--  </div>-->
 
-  <ng-container *ngIf="enrollments$ | async as enrollments; else emptyList">
+  <ng-container *ngIf="enrollments$ | async as enrollments">
     <app-enrollment-list [appointment]="appointment"
                          [enrollments]="enrollments$ | async"
                          [isMain]="true"
@@ -40,11 +40,11 @@
                          [subListTitle]="'Warteliste'"></app-enrollment-list>
   </ng-container>
 
-  <ng-template #emptyList>
+  <div *ngIf="!hasEnrollments">
     <div class="empty-list float">
       <span>Es hat sich noch niemand angemeldet.</span>
     </div>
-  </ng-template>
+  </div>
 
   <mat-icon [queryParams]="{a: link}"
             [routerLink]="['/enroll/add']"

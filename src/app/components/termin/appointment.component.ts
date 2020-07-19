@@ -55,6 +55,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public limitReachedBeforeEnrollmentDeadline: boolean;
 
   public loaded = false;
+  public hasEnrollments = false;
 
   constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
@@ -136,6 +137,8 @@ export class AppointmentComponent implements OnInit, OnDestroy {
         this.limitReachedBeforeEnrollmentDeadline = false;
       }
     }
+
+    this.hasEnrollments = enrollments_correct.length + enrollments_waiting.length + enrollments_late.length > 0;
 
     this.enrollments$.next(enrollments_correct);
     this.enrollmentsWaitingList$.next(enrollments_waiting);
