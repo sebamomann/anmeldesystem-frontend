@@ -180,8 +180,6 @@ export class AppointmentService {
   }
 
   async hasPermission(link: any) {
-    console.log('checkPermission');
-
     const req = new HttpRequest('GET',
       `${environment.API_URL}appointment/${link}/permission/`,
       {

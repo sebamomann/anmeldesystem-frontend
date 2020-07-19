@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AppointmentSettingsComponent} from './appointment-settings.component';
 import {RouterModule, Routes} from '@angular/router';
-import {MatCardModule, MatIconModule, MatProgressSpinnerModule, MatTabsModule} from '@angular/material';
+import {MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule, MatTabsModule} from '@angular/material';
 import {OverallDataModule} from '../form/overall-data/overall-data.module';
 import {AdditionsModule} from '../form/additions/additions.module';
 import {LinkDataModule} from '../form/link-data/link-data.module';
@@ -31,6 +31,7 @@ const routes: Routes = [
     MatIconModule,
     SavedModule,
     OtherModule,
+    MatButtonModule,
   ]
 })
 export class AppointmentSettingsModule {

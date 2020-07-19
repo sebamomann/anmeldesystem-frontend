@@ -41,19 +41,18 @@ export class AppointmentSettingsComponent implements OnInit {
 
   async ngOnInit() {
     (await this.appointmentService.hasPermission(this.link))
-      .subscribe(res => {
-        this.permission = true;
-        this.appointmentService
-          .getAppointment(this.link, false)
-          .subscribe(sAppointment => {
-            this.appointment = sAppointment;
-          });
+      .subscribe((res) => {
+        if (res.type === HttpEventType.Response) {
+          this.permission = true;
+          this.appointmentService
+            .getAppointment(this.link, false)
+            .subscribe(sAppointment => {
+              console.log('gotAppointment');
+              this.appointment = sAppointment;
+            });
+        }
       }, () => {
         this.permission = false;
-        const router = this.router;
-        setTimeout(() => {
-          router.navigate(['/enroll'], {queryParamsHandling: 'merge'});
-        }, 2000);
       });
   }
 
