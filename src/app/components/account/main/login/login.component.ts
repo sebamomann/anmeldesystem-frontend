@@ -59,12 +59,16 @@ export class LoginComponent implements OnInit {
               });
           },
           error => {
-            this.changeDate = new Date(error.error.error);
-            const d = this.changeDate;
-            if (d instanceof Date && !isNaN(d.getTime())) {
-              this.getPassword().setErrors({isOldPassword: true});
-            } else {
-              this.getPassword().setErrors({invalid: true});
+            try {
+              this.changeDate = new Date(error.error.data);
+              const d = this.changeDate;
+              if (d instanceof Date && !isNaN(d.getTime())) {
+                this.getPassword().setErrors({isOldPassword: true});
+              } else {
+                this.getPassword().setErrors({invalid: true});
+              }
+            } catch (e) {
+              this.getUsername().setErrors({activate: true});
             }
           });
     }
@@ -73,6 +77,9 @@ export class LoginComponent implements OnInit {
   getUsernameErrorMessage(): string {
     if (this.getUsername().hasError('required')) {
       return 'Bitte gebe deine E-Mail ein';
+    }
+    if (this.getUsername().hasError('activate')) {
+      return 'Ist dein Account bereits aktiviert?';
     }
   }
 
