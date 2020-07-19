@@ -5,6 +5,11 @@
   position: relative;
   background-color: transparent;
 
+  mat-icon {
+    margin-left: -2px;
+  }
+
+
   &.distance {
     margin-top: 50px;
   }
