@@ -40,6 +40,13 @@
                          [subListTitle]="'Warteliste'"></app-enrollment-list>
   </ng-container>
 
+  <div *ngIf="appointment.hidden"
+       [routerLink]="['/support']"
+       class="info spacing small link"
+       fragment="anonymous">
+    Warum sehe ich so wenig Anmeldungen?
+  </div>
+
   <div *ngIf="!hasEnrollments">
     <div class="empty-list float">
       <span>Es hat sich noch niemand angemeldet.</span>

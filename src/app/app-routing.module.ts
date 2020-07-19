@@ -8,6 +8,7 @@ const routes: Routes = [
   {path: 'release', loadChildren: './components/releasenotes/releasenotes.module#ReleasenotesModule'},
   {path: 'create', loadChildren: './components/termin/appointment-create/appointment-create.module#AppointmentCreateModule'},
   {path: 'appointment', loadChildren: './components/termin/appointment.module#AppointmentModule'},
+  {path: 'support', loadChildren: './components/support/support.module#SupportModule'},
   {path: 'enroll', loadChildren: './components/termin/enroll.module#EnrollModule'},
   {
     path: 'enrollment',
