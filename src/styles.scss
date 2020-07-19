@@ -124,7 +124,7 @@ mat-icon {
 
 .menu-wrapper {
   #menu {
-    z-index: 9999;
+    z-index: 9999998;
     position: fixed;
     width: 0;
     height: 0;
@@ -146,7 +146,7 @@ mat-icon {
 
   & > #menuIcon {
     position: fixed;
-    z-index: 999999;
+    z-index: 9999999;
     transition: 0.5s all;
 
     & > .line {
@@ -201,7 +201,7 @@ mat-icon {
     color: white;
     display: none;
     position: fixed;
-    z-index: 99999;
+    z-index: 9999998;
     width: 100%;
     text-align: center;
 
