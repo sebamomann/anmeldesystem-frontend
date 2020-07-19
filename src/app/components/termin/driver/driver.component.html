@@ -10,26 +10,27 @@
       </mat-card-title>
 
       <mat-card-content>
+        <ng-container *ngIf="data.gotTo === data.gotFrom then gotSame; else gotDifferent"></ng-container>
+        <div class="separator extra-extra-tall"></div>
         <div class="driver-wrapper">
           <ng-container *ngFor="let driver of drivers">
             <div class="driver-block">
-              <span>{{driver.name}}</span>
-              <span>{{driver.driver.seats}} freie Plätze</span>
+              <span class="name">{{driver.name}}</span>
+              <span class="space">{{driver.driver.seats}}<span>Plätze</span></span>
               <ng-container [ngSwitch]="driver.driver.service">
-              <span *ngSwitchCase="3" class='service'>
-                <mat-icon>compare_arrows</mat-icon>
-              </span>
+                <span *ngSwitchCase="3" class='service'>
+                  <mat-icon>compare_arrows</mat-icon>
+                </span>
                 <span *ngSwitchCase="2" class='service negative'>
-                <mat-icon>arrow_back</mat-icon>
-              </span>
+                  <mat-icon>arrow_back</mat-icon>
+                </span>
                 <span *ngSwitchCase="1" class='service negative'>
-                <mat-icon>arrow_forward</mat-icon>
-              </span>
+                  <mat-icon>arrow_forward</mat-icon>
+                </span>
               </ng-container>
             </div>
           </ng-container>
         </div>
-        <ng-container *ngIf="data.gotTo === data.gotFrom then gotSame; else gotDifferent"></ng-container>
       </mat-card-content>
       <mat-card-actions>
         <button (click)="goBack()" mat-raised-button>
@@ -51,13 +52,13 @@
 <ng-template #gotDifferent>
   <div class="analysis-block-wrapper">
     <div class="analysis-block">
-      <span class="title">Hinfahrt: <br/>{{data.gotTo}} Plätze</span>
+      <span class="title">Hinfahrt: <span>{{data.gotTo}}</span> Plätze</span>
       <ng-container [ngTemplateOutletContext]="{nr1:data.gotTo, nr2: data.neededTo}"
                     [ngTemplateOutlet]="calculation">
       </ng-container>
     </div>
     <div class="analysis-block">
-      <span class="title">Rückfahrt: <br/>{{data.gotFrom}} Plätze</span>
+      <span class="title">Rückfahrt: <span>{{data.gotFrom}} Plätze</span></span>
       <ng-container [ngTemplateOutletContext]="{nr1:data.gotFrom, nr2: data.neededFrom}"
                     [ngTemplateOutlet]="calculation">
       </ng-container>
@@ -92,14 +93,14 @@
 <ng-template #calculation let-nr1='nr1' let-nr2='nr2'>
   <ng-container [ngSwitch]="compare(nr1, nr2)">
       <span *ngSwitchCase="1" class='case'>
-        {{nr2}} {{nr2 > 1 ? "Plätze" : "Platz"}} belegt,
+        <span class="negative">{{nr2}} belegt</span>,
         <span class="positive"> {{nr1 - nr2}} frei. </span>
       </span>
     <span *ngSwitchCase="0" class='case'>
       <span class="positive"> Es geht genau auf </span>
     </span>
     <span *ngSwitchCase="-1" class='case'>
-        {{nr2}} {{nr2 > 1 ? "Plätze" : "Platz"}} belegt,
+        <span class="negative">{{nr2}} belegt</span>,
         <span class="negative"> {{nr2 - nr1}} benötigt. </span>
     </span>
   </ng-container>
