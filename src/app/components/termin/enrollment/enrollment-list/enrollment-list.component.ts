@@ -77,16 +77,17 @@ export class EnrollmentListComponent implements OnInit {
     });
   }
 
-  /**
-   * Remove enrollment from appointment list. Used for eliminating the need of re-fetching the entire appointment after enrollment deletion
-   *
-   * @param enrollment IEnrollmentModel Enrollment to delete from list
-   */
-  removeEnrollmentFromAppointment: (enrollment: IEnrollmentModel) => void
-    = (enrollment: IEnrollmentModel) => {
-    const index = this.enrollments.indexOf(enrollment);
-    this.enrollments.splice(index, 1);
-  };
+  // REMOVED DUE TO WS
+  // /**
+  //  * Remove enrollment from appointment list. Used for eliminating the need of re-fetching the entire appointment after enrollment deletion
+  //  *
+  //  * @param enrollment IEnrollmentModel Enrollment to delete from list
+  //  */
+  // removeEnrollmentFromAppointment: (enrollment: IEnrollmentModel) => void
+  //   = (enrollment: IEnrollmentModel) => {
+  //   const index = this.enrollments.indexOf(enrollment);
+  //   this.enrollments.splice(index, 1);
+  // };
 
   /**
    * Check if id of addition is checked by enrollment.
@@ -346,7 +347,7 @@ export class EnrollmentListComponent implements OnInit {
                 panelClass: 'snackbar-default'
               });
 
-              this.removeEnrollmentFromAppointment(enrollment);
+              // this.removeEnrollmentFromAppointment(enrollment); // Not used due to ws
             },
             error => {
               if (error.status === HttpStatus.FORBIDDEN) {
