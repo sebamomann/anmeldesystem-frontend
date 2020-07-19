@@ -36,7 +36,7 @@ export class AppointmentDataComponent implements OnInit {
 
   ngOnInit() {
     this.isPinned = this.appointment.reference.includes('PINNED')
-      || localStorage.getItem('appointment-pins').includes(this.appointment.link);
+      || (localStorage.getItem('appointment-pins') !== null && localStorage.getItem('appointment-pins').includes(this.appointment.link));
 
     // PIN TO LOCAL IN CASE IT WAS ONLY PINNED ON ACCOUNT
     if (this.isPinned) {
