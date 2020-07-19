@@ -94,14 +94,14 @@
   <ng-container [ngSwitch]="compare(nr1, nr2)">
       <span *ngSwitchCase="1" class='case'>
         <span class="negative">{{nr2}} belegt</span>,
-        <span class="positive"> {{nr1 - nr2}} frei. </span>
+        <span class="positive"> noch {{nr1 - nr2}} frei. </span>
       </span>
     <span *ngSwitchCase="0" class='case'>
       <span class="positive"> Es geht genau auf </span>
     </span>
     <span *ngSwitchCase="-1" class='case'>
         <span class="negative">{{nr2}} belegt</span>,
-        <span class="negative"> {{nr2 - nr1}} benötigt. </span>
+        <span class="negative"> noch {{nr2 - nr1}} benötigt. </span>
     </span>
   </ng-container>
 </ng-template>
