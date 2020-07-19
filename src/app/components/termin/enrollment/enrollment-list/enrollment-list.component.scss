@@ -47,6 +47,11 @@
         display: block;
         width: 95%;
 
+        mat-icon {
+          @include md-icon-size(1.1em);
+          vertical-align: text-top;
+        }
+
         &.comment-block {
           font-size: 0.9em;
           font-style: italic;
