@@ -1,0 +1,52 @@
+<mat-card class="support-block float high">
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="appointment.includes(value)">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Termin
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div>
+        <mat-accordion>
+          <mat-expansion-panel [expanded]="value === 'anonymous'" class="secondary">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Anonym
+              </mat-panel-title>
+              <mat-panel-description>
+                Privater Termin
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div>
+              <p>
+                Der Termin kann optional als <b>Anonym</b> eingestellt werden. Für den Ersteller und die Administratoren
+                ändert sich hierdurch nichts. Lediglich die Besucher des Termins haben die Einschränkung, dass sie nicht
+                jede Anmeldung sehen können. Sie können lediglich die anmeldungen sehen, welche mit ihrem Account (falls
+                eingeloggt) getätig wurden, oder die Anmeldungen die von dem aktuellen Endgerät erstellt wurden. Beim
+                Anmelden werden die Daten der Anmeldung zusammen mit einem privaten Token hinterlegt, mit welchem die
+                Anmeldung beim Abfragen des Termins mit abgefragt werdern kann.
+              </p>
+              <p>
+                Diese Einstellung ist im Einstellungs-Segment des Termins unter dem Tab <b>SONSTIGES</b> zu finden
+              </p>
+            </div>
+          </mat-expansion-panel>
+
+        </mat-accordion>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</mat-card>
+
+<!--<mat-accordion>-->
+<!--  <mat-expansion-panel>-->
+<!--    <mat-expansion-panel-header>-->
+<!--      <mat-panel-title>-->
+<!--        Termin-->
+<!--      </mat-panel-title>-->
+<!--    </mat-expansion-panel-header>-->
+<!--    <div>-->
+
+<!--    </div>-->
+<!--  </mat-expansion-panel>-->
+<!-- </mat-accordion>-->

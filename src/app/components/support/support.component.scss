@@ -1,0 +1,32 @@
+@import "src/variables";
+
+.support-block {
+
+  mat-expansion-panel-header {
+  }
+
+  ::ng-deep .mat-expansion-panel-body {
+    padding: 10px 0 10px 10px;
+  }
+
+  mat-expansion-panel {
+    &.secondary {
+      position: relative;
+      box-shadow: none;
+      border-radius: 0px;
+
+      &:before {
+        content: '';
+        position: absolute;
+        border-left: 1px solid $primary;
+        top: 5%;
+        height: 95%;
+      }
+
+      div {
+        text-align: justify;
+        padding: 0 10px;
+      }
+    }
+  }
+}
