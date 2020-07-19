@@ -28,7 +28,7 @@ import {LoadingModule} from '../html-template/loading/loading.module';
 
 
 const routes: Routes = [
-  {path: '', component: AccountComponent},
+  {path: '', component: AccountComponent, canActivate: [AuthGuard]},
   {path: 'profile', component: AccountProfileComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'logout', component: LogoutComponent},
