@@ -770,6 +770,15 @@ footer {
   margin: 5px auto 15px;
   font-size: 1em;
   color: #646464;
+
+  &.spacing {
+    margin-top: 25px;
+  }
+
+  &.small {
+    font-size: 0.85em;
+    max-width: 200px;
+  }
 }
 
 .progress-bar {

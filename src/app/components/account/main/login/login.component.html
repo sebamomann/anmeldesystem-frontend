@@ -43,6 +43,10 @@
         <button color="primary" mat-raised-button>
           Login
         </button>
+
+        <div *ngIf="returnUrl !== '/dashboard'"
+             class="info spacing small">Du wirst nach dem Login dahin weitergeleitet wo du herkommst
+        </div>
       </mat-card-actions>
     </form>
   </mat-card-content>

@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required]),
   });
 
-  private returnUrl: string;
+  public returnUrl = '';
   private changeDate: Date;
 
   constructor(private router: Router, private accountService: AccountService, private route: ActivatedRoute,
