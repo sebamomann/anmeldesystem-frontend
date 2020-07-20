@@ -96,14 +96,15 @@ export class AppComponent {
     const group1 = [];
     group1.push({name: 'dashboard', redirect: '/dashboard'});
 
-    if (this.userIsLoggedIn) {
+    if (this.authenticationService.userIsLoggedIn()) {
       group1.push({name: 'account', redirect: '/account'});
     } else {
-      group1.push({name: 'account', redirect: '/account/login'});
+      group1.push({name: 'login', redirect: '/account/login'}); //
     }
 
     const group2 = [];
     group2.push({name: 'releasenotes', redirect: '/release'});
+    group2.push({name: 'support', redirect: '/support'});
 
     const group3 = [];
     group3.push({name: 'kontakt'});
