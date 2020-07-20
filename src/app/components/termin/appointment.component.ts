@@ -54,7 +54,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   public limitReachedBeforeEnrollmentDeadline: boolean;
 
-  public loaded = false;
+  public loaded = true;
   public hasEnrollments = false;
 
   constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
@@ -73,15 +73,20 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    await this.appointmentSocketioService
+    if (!this.appointmentProvider.hasValue()) {
+      this.loaded = false;
+    }
+    this.appointmentSocketioService
       .setupSocketConnection()
       .then(() => {
+        this.loaded = false;
+
         this.appointmentSocketioService.subscribeAppointment(this.link);
+
+        this.appointment$ = this.appointmentProvider.appointment;
+
+        this.listenForChange();
       });
-
-    this.appointment$ = this.appointmentProvider.appointment;
-
-    this.listenForChange();
   }
 
   ngOnDestroy() {

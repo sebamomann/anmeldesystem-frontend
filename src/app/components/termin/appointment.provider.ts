@@ -23,4 +23,8 @@ export class AppointmentProvider {
   public reset() {
     this._currentAppointment = new BehaviorSubject<IAppointmentModel>(undefined);
   }
+
+  hasValue() {
+    return this._currentAppointment.value;
+  }
 }
