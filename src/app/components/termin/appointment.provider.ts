@@ -19,4 +19,8 @@ export class AppointmentProvider {
   public update(appointment: IAppointmentModel) {
     this._currentAppointment.next(appointment);
   }
+
+  public reset() {
+    this._currentAppointment = new BehaviorSubject<IAppointmentModel>(undefined);
+  }
 }

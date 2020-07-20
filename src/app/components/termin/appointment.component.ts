@@ -72,8 +72,8 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-    this.appointmentSocketioService
+  async ngOnInit() {
+    await this.appointmentSocketioService
       .setupSocketConnection()
       .then(() => {
         this.appointmentSocketioService.subscribeAppointment(this.link);
