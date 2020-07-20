@@ -1,0 +1,34 @@
+<mat-card class="support-block float high">
+  <mat-card-title class="headline">
+    Einstellungen
+  </mat-card-title>
+
+  <div>
+    <h4>Automatisches Update</h4>
+    <div class="settings-block">
+      <mat-slide-toggle (change)="toggleAutoLoadOnWsCall()"
+                        [(ngModel)]="autoLoadOnWsCall">
+        Erlauben
+      </mat-slide-toggle>
+      <br/>
+      <mat-slide-toggle (change)="toggleAutoLoadOnWsCallWifi()"
+                        *ngIf="autoLoadOnWsCall"
+                        [(ngModel)]="autoLoadOnWsCallWifi">
+        Nur über WLAN
+      </mat-slide-toggle>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Weitere Informationen
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div>
+          Bei jeder Änderung am Termin wird der Termin live neu geladen. Kein aktives neu laden der Seite ist mehr
+          notwendig. Dies hat zur Folge, dass vor allem bei Veröffentlichung des Termins sehr viele Anmeldungen
+          abgesendet werden und so der Termin binnen kurzer Zeit sehr häufig den Termin aktualisiert. Die Datenmenge ist
+          zwar recht überschuabar, jedoch möchte ich nicht dein Datenvolumen unnötig verbrauchen, wenn du wenig hast.
+        </div>
+      </mat-expansion-panel>
+    </div>
+  </div>
+</mat-card>

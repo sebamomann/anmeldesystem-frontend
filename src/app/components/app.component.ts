@@ -107,10 +107,14 @@ export class AppComponent {
     group2.push({name: 'support', redirect: '/support'});
 
     const group3 = [];
-    group3.push({name: 'kontakt'});
-    group3.push({name: 'impressum'});
+    group3.push({name: 'einstellungen', redirect: '/settings'});
 
-    this.items.push(group1, group2, group3);
+
+    const group4 = [];
+    group4.push({name: 'kontakt'});
+    group4.push({name: 'impressum'});
+
+    this.items.push(group1, group2, group3, group4);
   }
 
   navigate(redirect: any) {
