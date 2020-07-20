@@ -8,6 +8,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {SEOService} from '../../_helper/_seo.service';
 import {AppointmentSocketioService} from '../../services/appointment-socketio.service';
 import {AppointmentProvider} from './appointment.provider';
+import {SettingsService} from '../../services/settings.service';
 
 @Component({
   selector: 'app-appointment',
@@ -57,9 +58,12 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public loaded = true;
   public hasEnrollments = false;
 
+  public hasUpdate = false;
+  public updateOnWsCallDefined = false;
+
   constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
-              private appointmentProvider: AppointmentProvider) {
+              private appointmentProvider: AppointmentProvider, public settingsService: SettingsService) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
     });
@@ -70,12 +74,20 @@ export class AppointmentComponent implements OnInit, OnDestroy {
         this.router.navigate(['/enroll'], {queryParams: {a: this.link}}).then(() => '');
       }
     });
+
+    this.updateOnWsCallDefined = this.settingsService.autoLoadOnWsCallIsDefined;
+    if (!this.updateOnWsCallDefined) {
+      this.settingsService.autoLoadOnWsCall = true;
+    }
   }
 
   async ngOnInit() {
     if (!this.appointmentProvider.hasValue()) {
       this.loaded = false;
     }
+
+    this.appointmentSocketioService.hasUpdate$.subscribe((bool: boolean) => this.hasUpdate = bool);
+
     this.appointmentSocketioService
       .setupSocketConnection()
       .then(() => {
@@ -148,5 +160,9 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.enrollments$.next(enrollments_correct);
     this.enrollmentsWaitingList$.next(enrollments_waiting);
     this.enrollmentsLate$.next(enrollments_late);
+  }
+
+  public reload(link) {
+    this.appointmentSocketioService.reload(link);
   }
 }

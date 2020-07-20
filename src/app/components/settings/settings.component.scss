@@ -1,0 +1,30 @@
+.mat-expansion-panel {
+  box-shadow: none;
+}
+
+.settings-block {
+  padding-left: 24px;
+
+  mat-expansion-panel-header {
+    padding-left: 0;
+
+    .mat-expansion-panel-header-title {
+      color: lightgray;
+      font-size: 0.75em;
+      transition: 0.25s all;
+    }
+
+    &.mat-expanded {
+      .mat-expansion-panel-header-title {
+        color: initial;
+        font-size: 1em;
+        transition: 0.25s all;
+      }
+    }
+  }
+
+  ::ng-deep .mat-expansion-panel-body {
+    padding-left: 0;
+    text-align: justify;
+  }
+}

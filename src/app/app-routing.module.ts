@@ -9,6 +9,7 @@ const routes: Routes = [
   {path: 'create', loadChildren: './components/termin/appointment-create/appointment-create.module#AppointmentCreateModule'},
   {path: 'appointment', loadChildren: './components/termin/appointment.module#AppointmentModule'},
   {path: 'support', loadChildren: './components/support/support.module#SupportModule'},
+  {path: 'settings', loadChildren: './components/settings/settings.module#SettingsModule'},
   {path: 'enroll', loadChildren: './components/termin/enroll.module#EnrollModule'},
   {
     path: 'enrollment',
