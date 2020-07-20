@@ -96,7 +96,7 @@ export class AppComponent {
     const group1 = [];
     group1.push({name: 'dashboard', redirect: '/dashboard'});
 
-    if (this.userIsLoggedIn) {
+    if (this.authenticationService.userIsLoggedIn()) {
       group1.push({name: 'account', redirect: '/account'});
     } else {
       group1.push({name: 'account', redirect: '/account/login'});
