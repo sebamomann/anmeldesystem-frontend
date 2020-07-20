@@ -51,6 +51,7 @@ export class AppointmentSocketioService {
   subscribeAppointment(link: string) {
     if (link !== this.current_link) {
       this.socket.emit('subscribe-appointment', {appointment: {link}});
+      this.appointmentProvider.update(undefined);
 
       this.appointmentService
         .getAppointment(link, false)
