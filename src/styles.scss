@@ -386,12 +386,22 @@ a {
       width: 60%;
       display: inline-block;
       vertical-align: middle;
+
+      &.big {
+        width: 80%;
+      }
     }
 
     button {
       margin-left: 5%;
       width: 35%;
       display: inline-block;
+    }
+
+    mat-icon {
+      width: 20%;
+      text-align: center;
+      vertical-align: middle;
     }
   }
 

@@ -24,7 +24,7 @@ export class AppointmentProvider {
     this._currentAppointment = new BehaviorSubject<IAppointmentModel>(undefined);
   }
 
-  hasValue() {
+  public hasValue() {
     return this._currentAppointment.value;
   }
 }

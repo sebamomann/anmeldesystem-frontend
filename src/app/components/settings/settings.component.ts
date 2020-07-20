@@ -8,14 +8,14 @@ import {SettingsService} from '../../services/settings.service';
 })
 export class SettingsComponent implements OnInit {
   public autoLoadOnWsCall: any;
-  public autoLoadOnWsCallWifi: any;
+  public autoLoadOnWsCallWifiOnly: any;
 
   constructor(private settingsService: SettingsService) {
   }
 
   ngOnInit() {
     this.autoLoadOnWsCall = this.settingsService.autoLoadOnWsCall;
-    this.autoLoadOnWsCallWifi = this.settingsService.autoLoadOnWsCallWifi;
+    this.autoLoadOnWsCallWifiOnly = this.settingsService.autoLoadOnWsCallWifiOnly;
   }
 
   toggleAutoLoadOnWsCall() {
@@ -23,6 +23,6 @@ export class SettingsComponent implements OnInit {
   }
 
   toggleAutoLoadOnWsCallWifi() {
-    this.settingsService.autoLoadOnWsCallWifi = this.autoLoadOnWsCallWifi;
+    this.settingsService.autoLoadOnWsCallWifiOnly = this.autoLoadOnWsCallWifiOnly;
   }
 }

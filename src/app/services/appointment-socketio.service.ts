@@ -5,17 +5,46 @@ import {AppointmentProvider} from '../components/termin/appointment.provider';
 import {IAppointmentModel} from '../models/IAppointment.model';
 import {AuthenticationService} from './authentication.service';
 import {AppointmentService} from './appointment.service';
+import {SettingsService} from './settings.service';
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppointmentSocketioService {
 
+  constructor(private appointmentProvider: AppointmentProvider, private authenticationService: AuthenticationService,
+              private appointmentService: AppointmentService, private settingsService: SettingsService) {
+  }
+
   private socket;
   private current_link = '';
 
-  constructor(private appointmentProvider: AppointmentProvider, private authenticationService: AuthenticationService,
-              private appointmentService: AppointmentService) {
+  public _hasUpdate$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  public get hasUpdate$(): BehaviorSubject<boolean> {
+    return this._hasUpdate$;
+  }
+
+  subscribeAppointment(link: string) {
+    if (link !== this.current_link) {
+      this.appointmentProvider.reset();
+
+      this.socket.emit('subscribe-appointment', {appointment: {link}});
+
+      this.appointmentService
+        .getAppointment(link, false)
+        .subscribe(
+          (appointment: IAppointmentModel) => {
+            this.current_link = link;
+            this.appointmentProvider.update(appointment);
+          }
+        );
+    }
+  }
+
+  public set hasUpdate(value: boolean) {
+    this._hasUpdate$.next(value);
   }
 
   async setupSocketConnection() {
@@ -35,33 +64,31 @@ export class AppointmentSocketioService {
       }
 
       this.socket.on('update', (data: any) => {
-        console.log('Update available for Appointment', data);
-
-        this.appointmentService
-          .getAppointment(data, false)
-          .subscribe(
-            (appointment: IAppointmentModel) => {
-              this.appointmentProvider.update(appointment);
-            }
-          );
+        if (this.settingsService.autoLoadOnWsCall
+          && this.settingsService.isAllowedByWiFi()) {
+          this.appointmentService
+            .getAppointment(data, false)
+            .subscribe(
+              (appointment: IAppointmentModel) => {
+                this.appointmentProvider.update(appointment);
+              }
+            );
+        } else {
+          this.hasUpdate = true;
+        }
       });
     }
   }
 
-  subscribeAppointment(link: string) {
-    if (link !== this.current_link) {
-      this.appointmentProvider.reset();
-
-      this.socket.emit('subscribe-appointment', {appointment: {link}});
-
-      this.appointmentService
-        .getAppointment(link, false)
-        .subscribe(
-          (appointment: IAppointmentModel) => {
-            this.current_link = link;
-            this.appointmentProvider.update(appointment);
-          }
-        );
-    }
+  reload(link) {
+    this.appointmentService
+      .getAppointment(link, false)
+      .subscribe(
+        (appointment: IAppointmentModel) => {
+          this.current_link = link;
+          this.appointmentProvider.update(appointment);
+          this.hasUpdate = false;
+        }
+      );
   }
 }

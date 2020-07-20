@@ -19,6 +19,11 @@
   <!--            data-request-access="write"></script>-->
   <!--  </div>-->
 
+  <div *ngIf="hasUpdate" class="mat-card basic">
+    <span class="big">Es sind neue Anmeldungen vorhanden.</span>
+    <mat-icon (click)="reload(appointment.link)">cached</mat-icon>
+  </div>
+
   <ng-container *ngIf="enrollments$ | async as enrollments">
     <app-enrollment-list [appointment]="appointment"
                          [enrollments]="enrollments$ | async"

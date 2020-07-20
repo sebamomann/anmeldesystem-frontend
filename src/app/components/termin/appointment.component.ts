@@ -57,6 +57,8 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public loaded = true;
   public hasEnrollments = false;
 
+  public hasUpdate = false;
+
   constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
               private appointmentProvider: AppointmentProvider) {
@@ -76,6 +78,9 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     if (!this.appointmentProvider.hasValue()) {
       this.loaded = false;
     }
+
+    this.appointmentSocketioService.hasUpdate$.subscribe((bool: boolean) => this.hasUpdate = bool);
+
     this.appointmentSocketioService
       .setupSocketConnection()
       .then(() => {
@@ -148,5 +153,9 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.enrollments$.next(enrollments_correct);
     this.enrollmentsWaitingList$.next(enrollments_waiting);
     this.enrollmentsLate$.next(enrollments_late);
+  }
+
+  public reload(link) {
+    this.appointmentSocketioService.reload(link);
   }
 }
