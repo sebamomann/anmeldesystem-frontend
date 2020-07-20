@@ -99,7 +99,7 @@ export class AppComponent {
     if (this.authenticationService.userIsLoggedIn()) {
       group1.push({name: 'account', redirect: '/account'});
     } else {
-      group1.push({name: 'account', redirect: '/account/login'});
+      group1.push({name: 'login', redirect: '/account/login'}); //
     }
 
     const group2 = [];
