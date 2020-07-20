@@ -104,6 +104,7 @@ export class AppComponent {
 
     const group2 = [];
     group2.push({name: 'releasenotes', redirect: '/release'});
+    group2.push({name: 'support', redirect: '/support'});
 
     const group3 = [];
     group3.push({name: 'kontakt'});
