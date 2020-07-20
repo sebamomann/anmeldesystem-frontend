@@ -4,6 +4,7 @@ import {SettingsComponent} from './settings.component';
 import {MatCardModule, MatExpansionModule, MatSlideToggleModule} from '@angular/material';
 import {RouterModule, Routes} from '@angular/router';
 import {FormsModule} from '@angular/forms';
+import {AutoLoadOnWsCallModule} from './auto-load-on-ws-call/auto-load-on-ws-call.module';
 
 const routes: Routes = [
   {path: '', component: SettingsComponent},
@@ -18,7 +19,8 @@ const routes: Routes = [
     MatCardModule,
     MatSlideToggleModule,
     MatExpansionModule,
-    FormsModule
+    FormsModule,
+    AutoLoadOnWsCallModule
   ]
 })
 export class SettingsModule {

@@ -24,6 +24,17 @@
     <mat-icon (click)="reload(appointment.link)">cached</mat-icon>
   </div>
 
+  <ng-container *ngIf="!updateOnWsCallDefined">
+    <div class="mat-card basic">
+      <mat-icon (click)="updateOnWsCallDefined = true" class="close">close</mat-icon>
+      <span class="big">
+        Automatisch neuste Daten laden<br/>
+        <app-auto-load-on-ws-call></app-auto-load-on-ws-call>
+      </span>
+      <mat-icon [routerLink]="['/settings']">open_in_new</mat-icon>
+    </div>
+  </ng-container>
+
   <ng-container *ngIf="enrollments$ | async as enrollments">
     <app-enrollment-list [appointment]="appointment"
                          [enrollments]="enrollments$ | async"

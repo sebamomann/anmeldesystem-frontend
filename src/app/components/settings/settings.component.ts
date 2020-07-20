@@ -18,11 +18,11 @@ export class SettingsComponent implements OnInit {
     this.autoLoadOnWsCallWifiOnly = this.settingsService.autoLoadOnWsCallWifiOnly;
   }
 
-  toggleAutoLoadOnWsCall() {
-    this.settingsService.autoLoadOnWsCall = this.autoLoadOnWsCall;
-  }
-
   toggleAutoLoadOnWsCallWifi() {
     this.settingsService.autoLoadOnWsCallWifiOnly = this.autoLoadOnWsCallWifiOnly;
+  }
+
+  toggleAutoLoadOnWsCall(value: boolean) {
+    this.autoLoadOnWsCall = value;
   }
 }

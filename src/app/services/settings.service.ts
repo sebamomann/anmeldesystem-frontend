@@ -12,7 +12,7 @@ export class SettingsService {
     const settings = JSON.parse(localStorage.getItem('settings'));
 
     if (settings === null) {
-      return false;
+      return true;
     }
 
     return settings.autoLoadOnWsCall;
@@ -28,6 +28,13 @@ export class SettingsService {
     settings.autoLoadOnWsCall = value;
     localStorage.setItem('settings', JSON.stringify(settings));
   }
+
+
+  public get autoLoadOnWsCallIsDefined() {
+    const settings = JSON.parse(localStorage.getItem('settings'));
+    return settings !== null && settings.autoLoadOnWsCall !== null;
+  }
+
 
   public get autoLoadOnWsCallWifiOnly() {
     const settings = JSON.parse(localStorage.getItem('settings'));
@@ -48,11 +55,6 @@ export class SettingsService {
 
     settings.autoLoadOnWsCallWifiOnly = value;
     localStorage.setItem('settings', JSON.stringify(settings));
-  }
-
-  public autoLoadOnWsCallWifiOnlyIsDefined(value: boolean) {
-    const settings = JSON.parse(localStorage.getItem('settings'));
-    return settings !== null && settings.autoLoadOnWsCallWifiOnly !== null;
   }
 
   public isAllowedByWiFi() {

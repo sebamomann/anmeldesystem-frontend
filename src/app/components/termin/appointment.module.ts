@@ -8,6 +8,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../../_helper/auth.guard';
 import {FetchAppointmentModule} from './html-template/fetch-appointment/fetch-appointment.module';
 import {LoadingModule} from '../html-template/loading/loading.module';
+import {AutoLoadOnWsCallModule} from '../settings/auto-load-on-ws-call/auto-load-on-ws-call.module';
 
 const routes: Routes = [
   {path: '', component: AppointmentComponent},
@@ -34,6 +35,7 @@ const routes: Routes = [
     FetchAppointmentModule,
     LoadingModule,
     MatButtonModule,
+    AutoLoadOnWsCallModule,
   ],
   providers: []
 })

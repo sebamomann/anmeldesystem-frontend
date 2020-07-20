@@ -6,10 +6,7 @@
   <div>
     <h4>Automatisches Update</h4>
     <div class="settings-block">
-      <mat-slide-toggle (change)="toggleAutoLoadOnWsCall()"
-                        [(ngModel)]="autoLoadOnWsCall">
-        Erlauben
-      </mat-slide-toggle>
+      <app-auto-load-on-ws-call (toggle)="toggleAutoLoadOnWsCall($event)"></app-auto-load-on-ws-call>
       <br/>
       <mat-slide-toggle (change)="toggleAutoLoadOnWsCallWifi()"
                         *ngIf="autoLoadOnWsCall"
