@@ -11,7 +11,7 @@ export class SettingsService {
   public get autoLoadOnWsCall() {
     const settings = JSON.parse(localStorage.getItem('settings'));
 
-    if (settings === null) {
+    if (settings === null || settings.autoLoadOnWsCall === undefined) {
       return true;
     }
 
@@ -39,11 +39,11 @@ export class SettingsService {
   public get autoLoadOnWsCallWifiOnly() {
     const settings = JSON.parse(localStorage.getItem('settings'));
 
-    if (settings === null) {
+    if (settings === null || settings.autoLoadOnWsCallWifiOnly === undefined) {
       return false;
     }
 
-    return settings.autoLoadOnWsCallWifi;
+    return settings.autoLoadOnWsCallWifiOnly;
   }
 
   public set autoLoadOnWsCallWifiOnly(value: boolean) {
@@ -62,7 +62,7 @@ export class SettingsService {
       const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
       const type = connection.effectiveType;
 
-      return type === 'wifi' || 'ethernet';
+      return type === 'wifi' || type === 'ethernet';
     }
     return true;
   }
