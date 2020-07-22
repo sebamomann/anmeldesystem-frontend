@@ -62,6 +62,8 @@ export class SettingsService {
       const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
       const type = connection.effectiveType;
 
+      console.log('Connection-Type: ' + type);
+
       return type === 'wifi' || type === 'ethernet';
     }
     return true;
