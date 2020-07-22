@@ -145,15 +145,12 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
     if (appointment.maxEnrollments != null && appointment.maxEnrollments > 0) {
       if (enrollments_correct.length > appointment.maxEnrollments) {
-        console.log('correct  BIGGER limit');
         const _enrollments_correct = enrollments_correct
           .slice(0, appointment.maxEnrollments); // enrollments within the enrollment limit
         enrollments_waiting = enrollments_correct
           .slice(appointment.maxEnrollments, appointment.maxEnrollments + _enrollments_correct.length); // enrollments on waiting list
 
         enrollments_correct = _enrollments_correct;
-
-        console.log('waiting ' + enrollments_waiting.length);
 
         this.limitReachedBeforeEnrollmentDeadline = true;
       } else {
