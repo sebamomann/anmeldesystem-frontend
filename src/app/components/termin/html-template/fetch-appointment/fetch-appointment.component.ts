@@ -1,5 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
@@ -14,8 +13,8 @@ export class FetchAppointmentComponent implements OnInit {
   @Input()
   public percentDone: number;
 
-  @Input('done') set enrollments(enrollments: IEnrollmentModel[]) {
-    this.done$.next(enrollments);
+  @Input('done') set done(done: boolean) {
+    this.done$.next(done);
   };
 
   constructor() {

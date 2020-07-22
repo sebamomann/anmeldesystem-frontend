@@ -377,7 +377,7 @@ a {
 .mat-card {
   &.basic {
     width: 80%;
-    padding: 16px;
+    padding: 10px 16px;
     text-align: left;
     margin: 0 auto 30px;
     font-size: 0.9em;
@@ -386,9 +386,16 @@ a {
       width: 60%;
       display: inline-block;
       vertical-align: middle;
+      margin: 5px auto;
 
       &.big {
         width: 80%;
+      }
+
+      &.decent {
+        font-size: 0.8em;
+        color: lightgray;
+        font-style: italic;
       }
     }
 

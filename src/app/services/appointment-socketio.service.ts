@@ -12,6 +12,7 @@ import {BehaviorSubject} from 'rxjs';
   providedIn: 'root'
 })
 export class AppointmentSocketioService {
+  private retry = 0;
 
   constructor(private appointmentProvider: AppointmentProvider, private authenticationService: AuthenticationService,
               private appointmentService: AppointmentService, private settingsService: SettingsService) {
@@ -21,26 +22,20 @@ export class AppointmentSocketioService {
   private current_link = '';
 
   public _hasUpdate$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public _websocketSubscriptionValid$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  public get websocketSubscriptionValid$(): BehaviorSubject<boolean> {
+    return this._websocketSubscriptionValid$;
+  }
+
+  public _websocketSubscriptionRetryCount$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+
+  public get websocketSubscriptionRetryCount$(): BehaviorSubject<number> {
+    return this._websocketSubscriptionRetryCount$;
+  }
 
   public get hasUpdate$(): BehaviorSubject<boolean> {
     return this._hasUpdate$;
-  }
-
-  subscribeAppointment(link: string) {
-    if (link !== this.current_link) {
-      this.appointmentProvider.reset();
-
-      this.socket.emit('subscribe-appointment', {appointment: {link}});
-
-      this.appointmentService
-        .getAppointment(link, false)
-        .subscribe(
-          (appointment: IAppointmentModel) => {
-            this.current_link = link;
-            this.appointmentProvider.update(appointment);
-          }
-        );
-    }
   }
 
   public set hasUpdate(value: boolean) {
@@ -57,7 +52,8 @@ export class AppointmentSocketioService {
                 Authorization: 'Bearer ' + this.authenticationService.currentUserValue.token
               }
             }
-          }
+          },
+          'force new connection': true
         });
       } else {
         this.socket = await io(environment.API_URL + 'appointment');
@@ -77,18 +73,63 @@ export class AppointmentSocketioService {
           this.hasUpdate = true;
         }
       });
+
+      this.socket.on('subscribe-appointment', (data: any) => {
+        if (data === 'success') {
+          this.websocketSubscriptionValid$.next(true);
+          console.log('appointment subscription successful');
+          this.retry = 0;
+        }
+      });
+
+      this.socket.on('exception', () => {
+        if (this.retry < 5) {
+          setTimeout(() => {
+            const link_tmp = this.current_link;
+            this.current_link = '';
+            this.retry++;
+            this.websocketSubscriptionRetryCount$.next(this.retry);
+
+            this.reset();
+            this.setupSocketConnection().then(() => {
+              this.subscribeAppointment(link_tmp);
+            });
+          }, 2000);
+        }
+      });
+    }
+  }
+
+  subscribeAppointment(link: string) {
+    if (link !== this.current_link) {
+      this.appointmentProvider.reset();
+
+      this.socket.emit('subscribe-appointment', {appointment: {link}});
+
+      this.reload(link);
     }
   }
 
   reload(link) {
+    this.current_link = link;
+
     this.appointmentService
       .getAppointment(link, false)
       .subscribe(
         (appointment: IAppointmentModel) => {
-          this.current_link = link;
           this.appointmentProvider.update(appointment);
           this.hasUpdate = false;
         }
       );
+  }
+
+  private reset() {
+    this.socket = undefined;
+  }
+
+  public retrySubscription(link: string) {
+    this.current_link = '';
+    this.retry = 0;
+    this.subscribeAppointment(link);
   }
 }

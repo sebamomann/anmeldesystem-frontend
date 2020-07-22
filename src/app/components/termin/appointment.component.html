@@ -19,6 +19,22 @@
   <!--            data-request-access="write"></script>-->
   <!--  </div>-->
 
+  <div *ngIf="!websocketSubscriptionEstablished && !hideWebsocketSubscriptionInformation" class="mat-card basic">
+    <mat-icon (click)="hideWebsocketSubscriptionInformation = true" class="close">close</mat-icon>
+    <ng-container *ngIf="websocketSubscriptionRetryCount < 5 else subscriptionNotPossible;">
+       <span class="big">
+        Verbindung zum Server wird aufgebaut<br/>
+      </span>
+      <span class="big decent">
+        Versuch {{websocketSubscriptionRetryCount + 1}} von 5 ...
+      </span>
+    </ng-container>
+    <mat-icon (click)="retryWebsocketSubscription(appointment.link)"
+              *ngIf="websocketSubscriptionRetryCount === 5">
+      cached
+    </mat-icon>
+  </div>
+
   <div *ngIf="hasUpdate" class="mat-card basic">
     <span class="big">Es sind neue Anmeldungen vorhanden.</span>
     <mat-icon (click)="reload(appointment.link)">cached</mat-icon>
@@ -89,4 +105,10 @@
   <app-fetch-appointment
     [done]="loaded">
   </app-fetch-appointment>
+</ng-template>
+
+<ng-template #subscriptionNotPossible>
+  <span class="big">
+    Konnte keine Live-Verbindung aufbauen. Manuelles Neuladen notwendig!
+  </span>
 </ng-template>
