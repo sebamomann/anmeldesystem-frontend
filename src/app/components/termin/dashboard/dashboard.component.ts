@@ -41,6 +41,8 @@ export class DashboardComponent implements OnInit {
   public appointmentsArchive = undefined;
   public allowToShowEmpty: any;
 
+  public showLegend: any;
+
   constructor(public appointmentService: AppointmentService, public router: Router,
               public authenticationService: AuthenticationService) {
 

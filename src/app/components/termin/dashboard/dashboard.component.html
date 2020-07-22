@@ -6,7 +6,6 @@
 
 <!--<ng-container *ngIf="false; else appointmentdata">-->
 <ng-container *ngIf="appointments !== undefined; else appointmentdata">
-
   <div *ngIf="!authenticationService.userIsLoggedIn()" class="mat-card basic block">
     <span>
       Logge dich ein um mehr Termine zu sehen bei denen du dabei bist.
@@ -20,6 +19,60 @@
   </div>
 
   <ng-container *ngIf="appointments.length > 0; else empty">
+    <div [ngClass]="{'active': showLegend}"
+         class="dashboard-legend">
+      <div (click)="showLegend = !showLegend"
+           [ngClass]="{'hide': showLegend}"
+           class="handle">
+        <span>LEGENDE</span>
+        <mat-icon>chevron_left</mat-icon>
+      </div>
+      <div (click)="showLegend = !showLegend"
+           class="list">
+        <ul>
+          <li>
+            <div class="bookmark-wrapper">
+              <div class="bookmark-block">
+                <div [ngClass]="'creator'"
+                     class="bookmark">
+                </div>
+              </div>
+            </div>
+            <span>Ersteller</span>
+          </li>
+          <li>
+            <div class="bookmark-wrapper">
+              <div class="bookmark-block">
+                <div [ngClass]="'admin'"
+                     class="bookmark">
+                </div>
+              </div>
+            </div>
+            <span>Admin</span>
+          </li>
+          <li>
+            <div class="bookmark-wrapper">
+              <div class="bookmark-block">
+                <div [ngClass]="'enrolled'"
+                     class="bookmark">
+                </div>
+              </div>
+            </div>
+            <span>Angemeldet</span>
+          </li>
+          <li>
+            <div class="bookmark-wrapper">
+              <div class="bookmark-block">
+                <div [ngClass]="'pinned'"
+                     class="bookmark">
+                </div>
+              </div>
+            </div>
+            <span>Angepinnt</span>
+          </li>
+        </ul>
+      </div>
+    </div>
     <div [@listAnimation]="appointments.length" class="appointment-list-wrapper">
       <app-appointment-data *ngFor="let appointment of appointments"
                             [appointment]="appointment"

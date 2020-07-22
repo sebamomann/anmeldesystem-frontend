@@ -78,6 +78,85 @@
   color: $secondary;
 }
 
+$handleLength: 25px;
+.dashboard-legend {
+  position: fixed;
+  top: 25vh;
+  right: calc(-50% + #{$handleLength});
+  width: 50%;
+  z-index: 99;
+  transition: 0.5s 0s all;
+
+  &.active {
+    right: 0;
+    transition: 0.5s 0.25s all;
+  }
+
+  & > div {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .handle {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    width: $handleLength;
+    background-color: white;
+    z-index: 100;
+    box-shadow: -5px 5px 3px -3px rgba(0, 0, 0, 0.2);
+
+    &.hide {
+      width: 0;
+    }
+
+    span {
+      writing-mode: vertical-rl;
+      padding: 5px 0;
+    }
+  }
+
+  .list {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    width: calc(100% - #{$handleLength});
+    background-color: white;
+    box-shadow: -5px 5px 3px -3px rgba(0, 0, 0, 0.2);
+
+    ul {
+      list-style: none;
+
+      li {
+        position: relative;
+
+        .bookmark-wrapper {
+          width: 15px;
+          transform: scale(0);
+          transition: transform 0.5s;
+          left: -35px;
+        }
+      }
+    }
+  }
+
+  &.active {
+    right: 0;
+
+    .list {
+      width: 100%;
+
+      ul {
+        li {
+          .bookmark-wrapper {
+            transform: scale(0.8);
+            transition: transform 0.25s;
+            left: -35px;
+          }
+        }
+      }
+    }
+  }
+}
+
 @-webkit-keyframes AnimationName {
   0% {
     background-position: 0% 36%
