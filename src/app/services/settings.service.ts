@@ -68,4 +68,27 @@ export class SettingsService {
     }
     return true;
   }
+
+  // PINNING
+
+  public get autoPinAppointment() {
+    const settings = JSON.parse(localStorage.getItem('settings'));
+
+    if (settings === null || settings.autoPinAppointment === undefined) {
+      return true;
+    }
+
+    return settings.autoPinAppointment;
+  }
+
+  public set autoPinAppointment(value: boolean) {
+    let settings = JSON.parse(localStorage.getItem('settings'));
+
+    if (settings === null) {
+      settings = {};
+    }
+
+    settings.autoPinAppointment = value;
+    localStorage.setItem('settings', JSON.stringify(settings));
+  }
 }

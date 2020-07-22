@@ -10,7 +10,8 @@
       <br/>
       <mat-slide-toggle (change)="toggleAutoLoadOnWsCallWifi()"
                         *ngIf="autoLoadOnWsCall"
-                        [(ngModel)]="autoLoadOnWsCallWifiOnly">
+                        [(ngModel)]="autoLoadOnWsCallWifiOnly"
+                        [disabled]="true">
         Nur über WLAN
       </mat-slide-toggle>
       <mat-expansion-panel>
@@ -20,10 +21,41 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <div>
-          Bei jeder Änderung am Termin wird der Termin live neu geladen. Kein aktives neu laden der Seite ist mehr
-          notwendig. Dies hat zur Folge, dass vor allem bei Veröffentlichung des Termins sehr viele Anmeldungen
-          abgesendet werden und so der Termin binnen kurzer Zeit sehr häufig den Termin aktualisiert. Die Datenmenge ist
-          zwar recht überschuabar, jedoch möchte ich nicht dein Datenvolumen unnötig verbrauchen, wenn du wenig hast.
+          <p>
+            Bei jeder Änderung am Termin wird der Termin live neu geladen. Kein aktives neu laden der Seite ist mehr
+            notwendig. Dies hat zur Folge, dass vor allem bei Veröffentlichung des Termins sehr viele Anmeldungen
+            abgesendet werden und so der Termin binnen kurzer Zeit sehr häufig den Termin aktualisiert. Die Datenmenge
+            ist
+            zwar recht überschuabar, jedoch möchte ich nicht dein Datenvolumen unnötig verbrauchen, wenn du wenig hast.
+          </p>
+          <p>
+            Das Feature für "Nur über WLAN" ist in Arbeit.
+          </p>
+        </div>
+      </mat-expansion-panel>
+    </div>
+
+    <h4>Automatisches Anpinnen</h4>
+    <div class="settings-block">
+      <mat-slide-toggle (change)="toggleAutoPinAppointment()"
+                        [(ngModel)]="autoPinAppointment">
+        Erlauben
+      </mat-slide-toggle>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Weitere Informationen
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div>
+          <p>
+            Das automatische Anpinnen von Terminen erlaubt es den Termin im Nachhinein leichter zu finden. Ist diese
+            Einstellung ausgewählt, so ist der Termin direkt nach dem ersten Aufruf auf dem Dashboard vertreten. Kein
+            lästiges suchen in Chat-Verläufen mehr notwendig!
+          </p>
+          <p>
+            <b>HINWEIS:</b> beim Abstellen dieses Features werden bereits angepinnte Termine beibehalten.
+          </p>
         </div>
       </mat-expansion-panel>
     </div>
