@@ -22,6 +22,17 @@ export class AppointmentSocketioService {
   private current_link = '';
 
   public _hasUpdate$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public _websocketSubscriptionValid$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  public get websocketSubscriptionValid$(): BehaviorSubject<boolean> {
+    return this._websocketSubscriptionValid$;
+  }
+
+  public _websocketSubscriptionRetryCount$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+
+  public get websocketSubscriptionRetryCount$(): BehaviorSubject<number> {
+    return this._websocketSubscriptionRetryCount$;
+  }
 
   public get hasUpdate$(): BehaviorSubject<boolean> {
     return this._hasUpdate$;
@@ -65,23 +76,25 @@ export class AppointmentSocketioService {
 
       this.socket.on('subscribe-appointment', (data: any) => {
         if (data === 'success') {
+          this.websocketSubscriptionValid$.next(true);
           console.log('appointment subscription successful');
           this.retry = 0;
         }
       });
 
-      this.socket.on('exception', (data: any) => {
+      this.socket.on('exception', () => {
         if (this.retry < 5) {
           setTimeout(() => {
             const link_tmp = this.current_link;
             this.current_link = '';
             this.retry++;
+            this.websocketSubscriptionRetryCount$.next(this.retry);
 
             this.reset();
             this.setupSocketConnection().then(() => {
               this.subscribeAppointment(link_tmp);
             });
-          }, 1000);
+          }, 2000);
         }
       });
     }
@@ -112,5 +125,11 @@ export class AppointmentSocketioService {
 
   private reset() {
     this.socket = undefined;
+  }
+
+  public retrySubscription(link: string) {
+    this.current_link = '';
+    this.retry = 0;
+    this.subscribeAppointment(link);
   }
 }

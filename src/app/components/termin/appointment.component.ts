@@ -58,9 +58,16 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public loaded = true;
   public hasEnrollments = false;
 
+  // WEBSOCKET CONNECTION
+  public websocketSubscriptionEstablished = false;
+  public websocketSubscriptionRetryCount = 0;
+  public hideWebsocketSubscriptionInformation = false;
+
+
+  // WEBSOCKET AUTOLOAD
   public hasUpdate = false;
   public updateOnWsCallDefined = false;
-  private reloadCount = 0;
+  private manualAppointmentReloadCount = 0;
 
   constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
@@ -91,6 +98,18 @@ export class AppointmentComponent implements OnInit, OnDestroy {
       .hasUpdate$
       .subscribe((bool: boolean) => {
         this.hasUpdate = bool;
+      });
+
+    this.appointmentSocketioService
+      .websocketSubscriptionValid$
+      .subscribe((bool: boolean) => {
+        this.websocketSubscriptionEstablished = bool;
+      });
+
+    this.appointmentSocketioService
+      .websocketSubscriptionRetryCount$
+      .subscribe((val: number) => {
+        this.websocketSubscriptionRetryCount = val;
       });
 
     this.appointmentSocketioService
@@ -174,10 +193,15 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   }
 
   public reload(link) {
-    this.reloadCount++;
-    if (this.reloadCount >= 3) {
+    this.manualAppointmentReloadCount++;
+    if (this.manualAppointmentReloadCount >= 3) {
       this.updateOnWsCallDefined = false;
     }
     this.appointmentSocketioService.reload(link);
+  }
+
+  public retryWebsocketSubscription(link: string) {
+    this.websocketSubscriptionRetryCount = 0;  // directly set to 0 because behaviour subjects need some time ... -> instant feedback
+    this.appointmentSocketioService.retrySubscription(link);
   }
 }
