@@ -130,6 +130,10 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     let enrollments_waiting = [];
     let enrollments_late;
 
+    appointment.enrollments.sort((a, b) => {
+      return a.iat > b.iat ? 1 : -1;
+    });
+
     // fetch enrollments that were created after the enrollment deadline
     enrollments_late = appointment.enrollments.filter(fEnrollment => {
       if (fEnrollment.iat > appointment.deadline) {
@@ -141,19 +145,25 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
     if (appointment.maxEnrollments != null && appointment.maxEnrollments > 0) {
       if (enrollments_correct.length > appointment.maxEnrollments) {
-        enrollments_correct = enrollments_correct
+        console.log('correct  BIGGER limit');
+        const _enrollments_correct = enrollments_correct
           .slice(0, appointment.maxEnrollments); // enrollments within the enrollment limit
         enrollments_waiting = enrollments_correct
-          .slice(appointment.maxEnrollments, appointment.maxEnrollments + enrollments_correct.length); // enrollments on waiting list
+          .slice(appointment.maxEnrollments, appointment.maxEnrollments + _enrollments_correct.length); // enrollments on waiting list
 
+        enrollments_correct = _enrollments_correct;
+
+        console.log('waiting ' + enrollments_waiting.length);
 
         this.limitReachedBeforeEnrollmentDeadline = true;
       } else {
-        enrollments_late = enrollments_late
+        const _enrollments_late = enrollments_late
           .slice(0, appointment.maxEnrollments); // enrollments after deadline
         enrollments_waiting = enrollments_late
           // tslint:disable-next-line:max-line-length
-          .slice(appointment.maxEnrollments, appointment.maxEnrollments + enrollments_late.length); // enrollments after deadline on waiting list
+          .slice(appointment.maxEnrollments, appointment.maxEnrollments + _enrollments_late.length); // enrollments after deadline on waiting list
+
+        enrollments_late = _enrollments_late;
 
         this.limitReachedBeforeEnrollmentDeadline = false;
       }
