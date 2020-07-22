@@ -60,6 +60,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   public hasUpdate = false;
   public updateOnWsCallDefined = false;
+  private reloadCount = 0;
 
   constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
@@ -163,6 +164,10 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   }
 
   public reload(link) {
+    this.reloadCount++;
+    if (this.reloadCount >= 3) {
+      this.updateOnWsCallDefined = false;
+    }
     this.appointmentSocketioService.reload(link);
   }
 }
