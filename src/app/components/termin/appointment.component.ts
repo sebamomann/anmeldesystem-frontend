@@ -9,6 +9,9 @@ import {SEOService} from '../../_helper/_seo.service';
 import {AppointmentSocketioService} from '../../services/appointment-socketio.service';
 import {AppointmentProvider} from './appointment.provider';
 import {SettingsService} from '../../services/settings.service';
+import {AppointmentService} from '../../services/appointment.service';
+import {AppointmentUtil} from '../../_util/appointmentUtil.util';
+import {MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-appointment',
@@ -71,7 +74,8 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
-              private appointmentProvider: AppointmentProvider, public settingsService: SettingsService) {
+              private appointmentProvider: AppointmentProvider, public settingsService: SettingsService,
+              private appointmentService: AppointmentService, private snackBar: MatSnackBar) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
     });
@@ -134,6 +138,25 @@ export class AppointmentComponent implements OnInit, OnDestroy {
           if (sAppointment === null) {
             this.loaded = true;
           } else if (sAppointment !== undefined) {
+            if (sAppointment.reference.indexOf('PINNED') === -1
+              && this.settingsService.autoPinAppointment) {
+              AppointmentUtil.pin(sAppointment.link);
+              if (this.authenticationService.userIsLoggedIn()) {
+                this.appointmentService
+                  .pin(sAppointment.link)
+                  .toPromise()
+                  .then(() => {
+                  });
+              }
+
+              this.snackBar.open('Angepinnt',
+                '',
+                {
+                  duration: 2000,
+                  panelClass: 'snackbar-default'
+                });
+            }
+
             this._seoService.updateTitle(`${sAppointment.title} | GJM - Anmeldesystem`);
             this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
 
