@@ -87,7 +87,11 @@ export class AppointmentComponent implements OnInit, OnDestroy {
       this.loaded = false;
     }
 
-    this.appointmentSocketioService.hasUpdate$.subscribe((bool: boolean) => this.hasUpdate = bool);
+    this.appointmentSocketioService
+      .hasUpdate$
+      .subscribe((bool: boolean) => {
+        this.hasUpdate = bool;
+      });
 
     this.appointmentSocketioService
       .setupSocketConnection()
@@ -95,7 +99,6 @@ export class AppointmentComponent implements OnInit, OnDestroy {
         this.loaded = false;
 
         this.appointmentSocketioService.subscribeAppointment(this.link);
-
         this.appointment$ = this.appointmentProvider.appointment;
 
         this.listenForChange();

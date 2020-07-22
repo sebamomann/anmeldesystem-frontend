@@ -44,6 +44,7 @@ export class DriverComponent implements OnInit {
   public percentDone: number;
 
   appointment$: Observable<IAppointmentModel>;
+  public loaded = true;
 
   constructor(private appointmentService: AppointmentService, private location: Location, private route: ActivatedRoute,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
@@ -54,19 +55,28 @@ export class DriverComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.appointmentSocketioService.setupSocketConnection().then(() => {
-      this.appointmentSocketioService.subscribeAppointment(this.link);
-    });
+    if (!this.appointmentProvider.hasValue()) {
+      this.loaded = false;
+    }
 
-    this.appointment$ = this.appointmentProvider.appointment;
+    this.appointmentSocketioService
+      .setupSocketConnection()
+      .then(() => {
+        this.loaded = false;
 
-    this.successfulRequest();
+        this.appointmentSocketioService.subscribeAppointment(this.link);
+        this.appointment$ = this.appointmentProvider.appointment;
+
+        this.successfulRequest();
+      });
   }
 
   private successfulRequest() {
     this.appointment$
       .subscribe(sAppointment => {
-        if (sAppointment !== undefined) {
+        if (sAppointment === null) {
+          this.loaded = true;
+        } else if (sAppointment !== undefined) {
           this.drivers = sAppointment.enrollments.filter(fAppointment => fAppointment.driver !== null);
 
           this.data.neededTo = sAppointment.enrollments.filter(fAppointment => {
@@ -97,6 +107,8 @@ export class DriverComponent implements OnInit {
               this.data.gotFrom += fAppointment.driver.seats;
             }
           }).length;
+
+          this.loaded = true;
         }
       });
   }

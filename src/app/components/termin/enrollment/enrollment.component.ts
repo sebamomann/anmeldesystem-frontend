@@ -75,6 +75,8 @@ export class EnrollmentComponent implements OnInit {
   public empty = false;
   public sendingRequest = false;
 
+  public loaded = true;
+
   constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
               private location: Location,
               private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
@@ -118,10 +120,12 @@ export class EnrollmentComponent implements OnInit {
     this.appointmentSocketioService
       .setupSocketConnection()
       .then(() => {
+        this.loaded = false;
+
         this.appointmentSocketioService.subscribeAppointment(this.link);
+        this.appointment$ = this.appointmentProvider.appointment;
       });
 
-    this.appointment$ = this.appointmentProvider.appointment;
 
     await this.route
       .data
@@ -141,7 +145,9 @@ export class EnrollmentComponent implements OnInit {
   private successfulRequest(): void {
     this.appointment$
       .subscribe(sAppointment => {
-        if (sAppointment !== undefined) {
+        if (sAppointment === null) {
+          this.loaded = true;
+        } else if (sAppointment !== undefined) {
           this._seoService.updateTitle(`${sAppointment.title} - Anmelden`);
           this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
 
@@ -172,9 +178,9 @@ export class EnrollmentComponent implements OnInit {
           }
 
           this.buildFormCheckboxes();
+
+          this.loaded = true;
         }
-      }, () => {
-        this.appointment = undefined;
       });
   }
 

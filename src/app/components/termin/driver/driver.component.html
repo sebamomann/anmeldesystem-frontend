@@ -107,11 +107,10 @@
 </ng-template>
 
 <ng-template #loading>
-  <app-loading *ngIf="appointment !== undefined"
+  <app-loading *ngIf="!loaded"
                [@remove]>
   </app-loading>
   <app-fetch-appointment
-    [done]="appointment === undefined"
-    [percentDone]="percentDone">
+    [done]="loaded">
   </app-fetch-appointment>
 </ng-template>
