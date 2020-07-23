@@ -1,11 +1,11 @@
-import {FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 
 export function ValidatorUtil() {
 }
 
 
 ValidatorUtil.username = (): ValidatorFn => {
-  return (control: FormGroup): ValidationErrors => {
+  return (control: FormControl): ValidationErrors => {
     const val = control.value;
 
     // throw error if not in format and not at least 3 non-digit characters
@@ -18,7 +18,7 @@ ValidatorUtil.username = (): ValidatorFn => {
 
 
 ValidatorUtil.displayname = (): ValidatorFn => {
-  return (control: FormGroup): ValidationErrors => {
+  return (control: FormControl): ValidationErrors => {
     const val = control.value;
 
     // throw error if not in format and not at least 3 non-digit characters

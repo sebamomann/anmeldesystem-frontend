@@ -25,7 +25,15 @@ export class UserDataComponent implements OnInit {
 
   public userData: IUserModel;
 
-  public event: FormGroup;
+  public event: FormGroup = new FormGroup({
+    name: new FormControl('', [Validators.required, ValidatorUtil.displayname()]),
+    username: new FormControl('', [Validators.required, ValidatorUtil.username()]),
+    mail: new FormControl('', [Validators.email, Validators.required]),
+    passwords: new FormGroup({
+      password: new FormControl(''),
+      passwordVerify: new FormControl(''),
+    }, ValidatorUtil.password()),
+  });
   public hide = true;
 
   public button: string;
@@ -38,16 +46,6 @@ export class UserDataComponent implements OnInit {
   constructor(private route: ActivatedRoute, private accountService: AccountService) {
     this.route.queryParams.subscribe(params => {
       this.mailSuccess = params.mail;
-    });
-
-    this.event = new FormGroup({
-      name: new FormControl('', [Validators.required, ValidatorUtil.displayname]),
-      username: new FormControl('', [Validators.required, ValidatorUtil.username]),
-      mail: new FormControl('', [Validators.email, Validators.required]),
-      passwords: new FormGroup({
-        password: new FormControl(''),
-        passwordVerify: new FormControl(''),
-      }, ValidatorUtil.password),
     });
   }
 
