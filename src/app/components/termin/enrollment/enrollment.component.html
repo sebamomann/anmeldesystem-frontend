@@ -221,7 +221,7 @@
                [@remove]>
   </app-loading>
   <app-fetch-appointment
-    [done]="loaded"
+    [done]="loaded && !showLoginAndTokenForm"
     [percentDone]="percentDone">
   </app-fetch-appointment>
 </ng-template>
