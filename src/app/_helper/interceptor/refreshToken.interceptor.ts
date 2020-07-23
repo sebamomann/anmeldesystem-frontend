@@ -41,7 +41,7 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
               this.authService.logout();
             }
 
-            return Observable.throw(error);
+            return throwError(error);
           }
 
           // If error status is different than 401 we want to skip refresh token
