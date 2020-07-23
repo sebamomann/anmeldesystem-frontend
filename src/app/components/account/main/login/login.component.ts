@@ -7,7 +7,8 @@ import {first} from 'rxjs/operators';
 import {AlertService} from '../../../../services/alert.service';
 import {DatePipe} from '@angular/common';
 import {ValidatorService} from '../../../../_helper/validatorService';
-import {MatSnackBar} from '@angular/material';
+import {MatDialog, MatSnackBar} from '@angular/material';
+import {AccountActivationDialogComponent} from '../../../dialogs/account-activation/account-activation-dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +30,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private router: Router, private accountService: AccountService, private route: ActivatedRoute,
               private authenticationService: AuthenticationService, private alertService: AlertService,
-              private validatorService: ValidatorService, private snackBar: MatSnackBar) {
+              private validatorService: ValidatorService, private snackBar: MatSnackBar, public dialog: MatDialog) {
     this.route.queryParams.subscribe(params => {
       this.getUsername().setValue(validatorService.emailIsValid(params.mail) ? params.mail : '');
     });
@@ -60,17 +61,13 @@ export class LoginComponent implements OnInit {
               });
           },
           error => {
-            try {
+            if (error.error.code === 'INVALID_PASSWORD') {
               this.changeDate = new Date(error.error.data);
-              const d = this.changeDate;
-              if (d instanceof Date && !isNaN(d.getTime())) {
-                this.getPassword().setErrors({isOldPassword: true});
-              } else {
-                this.getPassword().setErrors({invalid: true});
+              this.getPassword().setErrors({isOldPassword: true});
+            } else if (error.error.code === 'ACCOUNT_LOCK') {
+              if (error.error.data === 'NOT_ACTIVATED') {
+                this.openLockedAccountDialog();
               }
-            } catch (e) {
-              this.getPassword().setErrors({invalid: true});
-              this.message = 'Ist dein Account neu? HGast du ihn vergessen mit der mail zu aktivieren?';
             }
           });
     }
@@ -105,4 +102,11 @@ export class LoginComponent implements OnInit {
     return this.event.get('password');
   }
 
+  private openLockedAccountDialog() {
+    const dialogRef = this.dialog.open(AccountActivationDialogComponent, {
+      width: '80%',
+      maxWidth: '500px',
+      height: 'auto',
+    });
+  }
 }
