@@ -149,6 +149,8 @@ export class AppointmentComponent implements OnInit, OnDestroy {
                   });
               }
 
+              sAppointment.reference.push('PINNED');
+
               this.snackBar.open('Angepinnt',
                 '',
                 {
