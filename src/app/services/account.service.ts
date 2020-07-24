@@ -26,7 +26,7 @@ export class AccountService {
     const url = `${environment.API_URL}users`;
     const body = {
       user: userData,
-      domain: `${this.window.location.hostname}/account/verify`
+      domain: `${this.window.location.hostname}/account/verify/{{0}}/{{1}}`
     };
 
     return this.httpClient
@@ -43,7 +43,7 @@ export class AccountService {
   }
 
   public updateValues(body: any): Observable<HttpEvent<IUserModel>> {
-    body.domain = this.window.location.hostname + '/account/mail/verify';
+    body.domain = this.window.location.hostname + '/account/mail/verify/{{0}}/{{1}}';
 
     const url = `${environment.API_URL}users`;
 
@@ -58,7 +58,7 @@ export class AccountService {
 
     const body = {
       mail,
-      domain: this.window.location.hostname + '/account/passwordreset'
+      domain: this.window.location.hostname + '/account/passwordreset/{{0}}/{{1}}'
     };
 
     return this.httpClient.post<void>(url, body, {observe: 'response', reportProgress: true});
@@ -88,7 +88,7 @@ export class AccountService {
 
   public resendMailChange() {
     const url = `${environment.API_URL}users/mail/change/resend`;
-    const domain = this.window.location.hostname + '/account/mail/verify';
+    const domain = this.window.location.hostname + '/account/mail/verify/{{0}}/{{1}}';
 
     const req = new HttpRequest('POST', url, {domain}, {
       reportProgress: true,
