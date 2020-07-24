@@ -17,7 +17,14 @@ export class AuthenticationService {
     this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
     this.snapshot = _router.routerState.snapshot;
+
+    this.currentUserSubject
+      .subscribe(() => {
+        this._loginStatus$.next(this.userIsLoggedIn());
+      });
   }
+
+  private _loginStatus$ = new BehaviorSubject(false);
 
   public get currentUserValue() {
     return this.currentUserSubject.value;
@@ -85,7 +92,11 @@ export class AuthenticationService {
     return '';
   }
 
-  refreshAccessToken() {
+  public get loginStatus$() {
+    return this._loginStatus$;
+  }
+
+  public refreshAccessToken() {
     return this._http
       .post<any>(`${environment.API_URL}auth/token`, {
         user: {
