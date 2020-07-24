@@ -58,7 +58,7 @@ export class AccountService {
 
     const body = {
       mail,
-      domain: this.window.location.hostname + '/account/passwordreset'
+      domain: this.window.location.hostname + '/account/passwordreset/{{0}}/{{1}}'
     };
 
     return this.httpClient.post<void>(url, body, {observe: 'response', reportProgress: true});
