@@ -76,6 +76,7 @@ export class EnrollmentComponent implements OnInit {
   public sendingRequest = false;
 
   public loaded = true;
+  private skipLoginForm = false;
 
   constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
               private location: Location,
@@ -124,6 +125,8 @@ export class EnrollmentComponent implements OnInit {
 
         this.appointmentSocketioService.subscribeAppointment(this.link);
         this.appointment$ = this.appointmentProvider.appointment;
+
+        this.successfulRequest();
       });
 
 
@@ -138,8 +141,6 @@ export class EnrollmentComponent implements OnInit {
       this.getName().markAsTouched();
       this.getName().setValue(this.authenticationService.currentUserValue.name);
     }
-
-    this.successfulRequest();
   }
 
   private successfulRequest(): void {
@@ -337,68 +338,11 @@ export class EnrollmentComponent implements OnInit {
     }
   }
 
-  private async sendEnrollmentRequest(functionName: string) {
-    this.output.token = TokenUtil.getTokenForEnrollment(this.enrollmentId, this.link);
-    this.enrollmentService[functionName](this.output, this.appointment)
-      .subscribe(
-        result => {
-          this.clearLoginAndMailFormIntercepting();
-          if (result.type === HttpEventType.Response) {
-            if (result.status === HttpStatus.CREATED
-              || result.status === HttpStatus.OK) {
-              if (functionName === 'create') {
-                if (result.body.token !== undefined) {
-                  this.storeEnrollmentAccessToken(this.link, result.body);
-                }
-              }
+  mailFormComplete() {
+    this.skipLoginForm = true;
+    this.showLoginAndTokenForm = false;
 
-              this.router.navigate([`enroll`], {
-                queryParams: {
-                  a: this.appointment.link
-                }
-              }).then((navigated: boolean) => {
-                if (navigated) {
-                  this.snackBar.open(`Erfolgreich ` + (this.edit ? 'bearbeitet' : 'angemeldet'),
-                    '',
-                    {
-                      duration: 2000,
-                      panelClass: 'snackbar-default'
-                    });
-                }
-              });
-            }
-          }
-        }, async (err: HttpErrorResponse) => {
-          this.sendingRequest = false;
-          this.clearLoginAndMailFormIntercepting();
-          if (err.status === HttpStatus.BAD_REQUEST) {
-            if (err.error.code === 'DUPLICATE_ENTRY') {
-              this.event.markAllAsTouched();
-              await err.error.data.forEach(fColumn => {
-                const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
-                const fnName: string = 'get' + uppercaseName;
-                this[fnName]().markAsTouched();
-                this[fnName]().setErrors({inUse: true});
-              });
-            }
-          } else if (err.status === HttpStatus.FORBIDDEN) {
-            this.router.navigate([`enroll`], {
-              queryParams: {
-                a: this.appointment.link
-              }
-            }).then((navigated: boolean) => {
-              if (navigated) {
-                this.snackBar.open(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu bearbeiten.`,
-                  '',
-                  {
-                    duration: 4000,
-                    panelClass: 'snackbar-error'
-                  });
-              }
-            });
-          }
-        }
-      );
+    this.sendEnrollment();
   }
 
   private getSeats() {
@@ -433,7 +377,7 @@ export class EnrollmentComponent implements OnInit {
     return this.selfEnrollment.get('selfEnrollment');
   }
 
-  // Utility
+
   private parseOutputIntoForm() {
     this.event.get('name').setValue(this.output.name);
     this.event.get('comment').setValue(this.output.comment);
@@ -464,22 +408,68 @@ export class EnrollmentComponent implements OnInit {
     return this.mailEvent.get('mail');
   }
 
-  /**
-   * Determine if data can be send to API directly. This is the case, if the user is already logged in.
-   * Otherwise, the user is asked to login with his account, or send the enrollment with his mail (for auth purposes). <br/>
-   * For the possible redirect to the login page, the data needs to be stored locally, to be fetched later.
-   */
-  private checkForAutomaticSubmit() {
-    // If user selected selfEnrollment
-    // Or if key is set
-    if (((this.getSelfEnrollment().value && this.userIsLoggedIn)
-      || this.output.editMail !== undefined) || this.edit) {
-      this.sendEnrollment().then(() => '');
-    } else {
-      // TempStore item for possible login redirect
-      localStorage.setItem(this.ENROLLMENT_OUTPUT_KEY, JSON.stringify(this.output));
-      this.showLoginAndTokenForm = true;
-    }
+  private async sendEnrollmentRequest(functionName: string) {
+    this.output.token = TokenUtil.getTokenForEnrollment(this.enrollmentId, this.link);
+    this.enrollmentService[functionName](this.output, this.appointment)
+      .subscribe(
+        result => {
+          this.clearLoginAndMailFormIntercepting();
+          if (result.type === HttpEventType.Response) {
+            if (result.status === HttpStatus.CREATED
+              || result.status === HttpStatus.OK) {
+              if (functionName === 'create') {
+                if (result.body.token !== undefined) {
+                  this.storeEnrollmentAccessToken(this.link, result.body);
+                }
+              }
+
+              this.router.navigate([`enroll`], {
+                queryParams: {
+                  a: this.appointment.link
+                }
+              }).then((navigated: boolean) => {
+                if (navigated) {
+                  this.snackBar.open(`Erfolgreich ` + (this.edit ? 'bearbeitet' : 'angemeldet'),
+                    '',
+                    {
+                      duration: 2000,
+                      panelClass: 'snackbar-default'
+                    });
+                }
+              });
+            }
+          }
+        }, (err: HttpErrorResponse) => {
+          this.clearLoginAndMailFormIntercepting();
+          this.sendingRequest = false;
+          if (err.status === HttpStatus.BAD_REQUEST) {
+            if (err.error.code === 'DUPLICATE_ENTRY') {
+              err.error.data.forEach(fColumn => {
+                const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
+                const fnName: string = 'get' + uppercaseName;
+
+                this[fnName]().setErrors({inUse: true});
+                this[fnName]().markAsTouched();
+              });
+            }
+          } else if (err.status === HttpStatus.FORBIDDEN) {
+            this.router.navigate([`enroll`], {
+              queryParams: {
+                a: this.appointment.link
+              }
+            }).then((navigated: boolean) => {
+              if (navigated) {
+                this.snackBar.open(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu bearbeiten.`,
+                  '',
+                  {
+                    duration: 4000,
+                    panelClass: 'snackbar-error'
+                  });
+              }
+            });
+          }
+        }
+      );
   }
 
   goBack() {
@@ -517,5 +507,23 @@ export class EnrollmentComponent implements OnInit {
     }
 
     localStorage.setItem('permissions', JSON.stringify(permissions));
+  }
+
+  /**
+   * Determine if data can be send to API directly. This is the case, if the user is already logged in.
+   * Otherwise, the user is asked to login with his account, or send the enrollment with his mail (for auth purposes). <br/>
+   * For the possible redirect to the login page, the data needs to be stored locally, to be fetched later.
+   */
+  private checkForAutomaticSubmit() {
+    // If user selected selfEnrollment
+    // Or if mail is set
+    if (((this.getSelfEnrollment().value && this.userIsLoggedIn)
+      || this.output.editMail !== undefined) || this.edit || this.skipLoginForm) {
+      this.sendEnrollment().then(() => '');
+    } else {
+      // TempStore item for possible login redirect
+      localStorage.setItem(this.ENROLLMENT_OUTPUT_KEY, JSON.stringify(this.output));
+      this.showLoginAndTokenForm = true;
+    }
   }
 }
