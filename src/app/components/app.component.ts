@@ -96,11 +96,21 @@ export class AppComponent {
     const group1 = [];
     group1.push({name: 'dashboard', redirect: '/dashboard'});
 
-    if (this.authenticationService.userIsLoggedIn()) {
-      group1.push({name: 'account', redirect: '/account'});
-    } else {
-      group1.push({name: 'login', redirect: '/account/login'}); //
-    }
+    this.authenticationService
+      .loginStatus$
+      .subscribe((val) => {
+        const toRemove = group1.find((fGroup) => fGroup.name === 'account' || fGroup.name === 'login');
+        const index = group1.indexOf(toRemove);
+        if (index !== -1) {
+          group1.splice(index, 1);
+        }
+
+        if (val) {
+          group1.push({name: 'account', redirect: '/account'});
+        } else {
+          group1.push({name: 'login', redirect: '/account/login'}); //
+        }
+      });
 
     const group2 = [];
     group2.push({name: 'releasenotes', redirect: '/release'});
