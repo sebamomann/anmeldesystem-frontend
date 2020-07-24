@@ -68,6 +68,8 @@ export class LoginComponent implements OnInit {
               if (error.error.data === 'NOT_ACTIVATED') {
                 this.openLockedAccountDialog();
               }
+            } else {
+              this.getPassword().setErrors({invalid: true});
             }
           });
     }
