@@ -26,7 +26,7 @@ export class AccountService {
     const url = `${environment.API_URL}users`;
     const body = {
       user: userData,
-      domain: `${this.window.location.hostname}/account/verify`
+      domain: `${this.window.location.hostname}/account/verify/{{0}}/{{1}}`
     };
 
     return this.httpClient
