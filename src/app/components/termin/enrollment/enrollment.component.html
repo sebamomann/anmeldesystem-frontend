@@ -38,7 +38,7 @@
                          placeholder="Name"
                          required>
                 </label>
-                <mat-error *ngIf="getName().invalid">
+                <mat-error>
                   {{ getNameErrorMessage() }}
                 </mat-error>
               </mat-form-field>
@@ -190,7 +190,7 @@
               {{ getMailErrorMessage() }}
             </mat-error>
           </mat-form-field>
-          <button (click)="sendEnrollment()"
+          <button (click)="mailFormComplete()"
                   mat-raised-button>
             Absenden
           </button>
