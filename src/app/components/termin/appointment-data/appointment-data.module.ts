@@ -12,6 +12,7 @@ import {
 } from '@angular/material';
 import {RouterModule} from '@angular/router';
 import {EnrollmentListModule} from '../enrollment/enrollment-list/enrollment-list.module';
+import {BookmarkModule} from '../../html-template/bookmark/bookmark.module';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import {EnrollmentListModule} from '../enrollment/enrollment-list/enrollment-lis
     MatButtonModule,
     EnrollmentListModule,
     MatMenuModule,
+    BookmarkModule,
   ]
 })
 export class AppointmentDataModule {

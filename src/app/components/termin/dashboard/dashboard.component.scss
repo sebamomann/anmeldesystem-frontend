@@ -92,7 +92,7 @@ $handleLength: 25px;
       li {
         position: relative;
 
-        .bookmark-wrapper {
+        ::ng-deep .bookmark-wrapper {
           width: 15px;
           transform: scale(0);
           transition: transform 0.5s;
@@ -110,7 +110,7 @@ $handleLength: 25px;
 
       ul {
         li {
-          .bookmark-wrapper {
+          ::ng-deep .bookmark-wrapper {
             transform: scale(0.8);
             transition: transform 0.25s;
             left: -35px;

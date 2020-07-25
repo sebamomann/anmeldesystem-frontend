@@ -30,43 +30,19 @@
            class="list">
         <ul>
           <li>
-            <div class="bookmark-wrapper">
-              <div class="bookmark-block">
-                <div [ngClass]="'creator'"
-                     class="bookmark">
-                </div>
-              </div>
-            </div>
+            <app-bookmark [classes]="['creator']"></app-bookmark>
             <span>Ersteller</span>
           </li>
           <li>
-            <div class="bookmark-wrapper">
-              <div class="bookmark-block">
-                <div [ngClass]="'admin'"
-                     class="bookmark">
-                </div>
-              </div>
-            </div>
+            <app-bookmark [classes]="['admin']"></app-bookmark>
             <span>Admin</span>
           </li>
           <li>
-            <div class="bookmark-wrapper">
-              <div class="bookmark-block">
-                <div [ngClass]="'enrolled'"
-                     class="bookmark">
-                </div>
-              </div>
-            </div>
+            <app-bookmark [classes]="['enrolled']"></app-bookmark>
             <span>Angemeldet</span>
           </li>
           <li>
-            <div class="bookmark-wrapper">
-              <div class="bookmark-block">
-                <div [ngClass]="'pinned'"
-                     class="bookmark">
-                </div>
-              </div>
-            </div>
+            <app-bookmark [classes]="['pinned']"></app-bookmark>
             <span>Angepinnt</span>
           </li>
         </ul>
@@ -77,19 +53,24 @@
       <app-appointment-data *ngFor="let appointment of _appointments"
                             [appointment]="appointment"
                             [preview]="true">
-
       </app-appointment-data>
     </div>
   </ng-container>
 
   <ng-container *ngIf="appointmentsArchive.length > 0">
     <h2 class="title">Archiv</h2>
-    <div [@listAnimation]="_appointments.length" class="appointment-list-wrapper">
+    <div [@listAnimation]
+         class="appointment-list-wrapper">
       <ng-container *ngFor="let appointment of appointmentsArchive">
-        <mat-card (click)="redirectToAppointment(appointment)" class="appointment-data archive">
+        <mat-card (click)="redirectToAppointment(appointment)"
+                  class="appointment-data archive">
           <mat-card-content>
-            <span> {{ appointment.title }}</span>
-            <span>{{ appointment.date | date: 'dd.MM.y, HH:mm'}}</span>
+            <span>
+              {{ appointment.title }}
+            </span>
+            <span>
+              {{ appointment.date | date: 'dd.MM.y, HH:mm'}}
+            </span>
           </mat-card-content>
         </mat-card>
       </ng-container>
