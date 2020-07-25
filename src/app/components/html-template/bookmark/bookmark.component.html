@@ -1,0 +1,7 @@
+<div class="bookmark-wrapper">
+  <div *ngFor="let _class of classes" class="bookmark-block">
+    <div [ngClass]="_class | lowercase"
+         class="bookmark">
+    </div>
+  </div>
+</div>

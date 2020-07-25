@@ -4,8 +4,7 @@
   <mat-icon>library_add</mat-icon>
 </a>
 
-<!--<ng-container *ngIf="false; else appointmentdata">-->
-<ng-container *ngIf="appointments !== undefined; else appointmentdata">
+<ng-container *ngIf="_appointments$ | async as appointment; else loading">
   <div *ngIf="!authenticationService.userIsLoggedIn()" class="mat-card basic block">
     <span>
       Logge dich ein um mehr Termine zu sehen bei denen du dabei bist.
@@ -18,7 +17,7 @@
     </button>
   </div>
 
-  <ng-container *ngIf="appointments.length > 0; else empty">
+  <ng-container *ngIf="_appointments.length > 0; else empty">
     <div [ngClass]="{'active': showLegend}"
          class="dashboard-legend">
       <div (click)="showLegend = !showLegend"
@@ -31,65 +30,47 @@
            class="list">
         <ul>
           <li>
-            <div class="bookmark-wrapper">
-              <div class="bookmark-block">
-                <div [ngClass]="'creator'"
-                     class="bookmark">
-                </div>
-              </div>
-            </div>
+            <app-bookmark [classes]="['creator']"></app-bookmark>
             <span>Ersteller</span>
           </li>
           <li>
-            <div class="bookmark-wrapper">
-              <div class="bookmark-block">
-                <div [ngClass]="'admin'"
-                     class="bookmark">
-                </div>
-              </div>
-            </div>
+            <app-bookmark [classes]="['admin']"></app-bookmark>
             <span>Admin</span>
           </li>
           <li>
-            <div class="bookmark-wrapper">
-              <div class="bookmark-block">
-                <div [ngClass]="'enrolled'"
-                     class="bookmark">
-                </div>
-              </div>
-            </div>
+            <app-bookmark [classes]="['enrolled']"></app-bookmark>
             <span>Angemeldet</span>
           </li>
           <li>
-            <div class="bookmark-wrapper">
-              <div class="bookmark-block">
-                <div [ngClass]="'pinned'"
-                     class="bookmark">
-                </div>
-              </div>
-            </div>
+            <app-bookmark [classes]="['pinned']"></app-bookmark>
             <span>Angepinnt</span>
           </li>
         </ul>
       </div>
     </div>
-    <div [@listAnimation]="appointments.length" class="appointment-list-wrapper">
-      <app-appointment-data *ngFor="let appointment of appointments"
+    <div [@listAnimation]
+         class="appointment-list-wrapper">
+      <app-appointment-data *ngFor="let appointment of _appointments"
                             [appointment]="appointment"
                             [preview]="true">
-
       </app-appointment-data>
     </div>
   </ng-container>
 
   <ng-container *ngIf="appointmentsArchive.length > 0">
     <h2 class="title">Archiv</h2>
-    <div [@listAnimation]="appointments.length" class="appointment-list-wrapper">
+    <div [@listAnimation]
+         class="appointment-list-wrapper">
       <ng-container *ngFor="let appointment of appointmentsArchive">
-        <mat-card (click)="redirectToAppointment(appointment)" class="appointment-data archive">
+        <mat-card (click)="redirectToAppointment(appointment)"
+                  class="appointment-data archive">
           <mat-card-content>
-            <span> {{ appointment.title }}</span>
-            <span>{{ appointment.date | date: 'dd.MM.y, HH:mm'}}</span>
+            <span>
+              {{ appointment.title }}
+            </span>
+            <span>
+              {{ appointment.date | date: 'dd.MM.y, HH:mm'}}
+            </span>
           </mat-card-content>
         </mat-card>
       </ng-container>
@@ -98,7 +79,7 @@
 </ng-container>
 
 <ng-template #empty>
-  <div *ngIf="allowToShowEmpty" class="empty-list standalone">
+  <div *ngIf="allowToShowEmptyHint" class="empty-list standalone">
     <img src="/assets/img/404.svg">
     <span>
       Du hast gerade mit keinen aktiven Terminen zu tun. Erstelle dir einen eigenen!
@@ -106,37 +87,7 @@
   </div>
 </ng-template>
 
-<ng-template #appointmentdata>
-  <mat-progress-bar [@fadeInOut]
-                    [value]="percentDone"
-                    class="progress-bar"
-                    mode="determinate">
-  </mat-progress-bar>
-  <div class="appointment-list-wrapper">
-    <mat-card *ngFor="let number of numbers"
-              [ngClass]="{'hide': hide}"
-              class="template">
-      <mat-card-title class="headline">
-      </mat-card-title>
-      <mat-card-content>
-      <span>
-        <mat-icon></mat-icon>
-        <span></span>
-      </span>
-        <span>
-        <mat-icon></mat-icon>
-        <span></span>
-      </span>
-        <span>
-        <mat-icon></mat-icon>
-        <span></span>
-      </span>
-        <span>
-        <mat-icon></mat-icon>
-        <span></span>
-      </span>
-        <p></p>
-      </mat-card-content>
-    </mat-card>
-  </div>
+<ng-template #loading>
+  <app-dashboard-template>
+  </app-dashboard-template>
 </ng-template>

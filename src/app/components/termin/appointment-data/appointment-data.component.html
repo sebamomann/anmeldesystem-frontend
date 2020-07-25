@@ -1,16 +1,11 @@
 <div class="appointment-data-wrapper">
   <mat-card (click)="preview ? redirectToAppointment(appointment) : ''" class="appointment-data">
-    <div class="bookmark-wrapper">
-      <div *ngFor="let ref of appointment.reference" class="bookmark-block">
-        <div *ngIf="preview"
-             [ngClass]="ref| lowercase"
-             class="bookmark">
-        </div>
-      </div>
-    </div>
+    <app-bookmark *ngIf="preview" [classes]="appointment.reference"></app-bookmark>
+
     <mat-card-title class="headline">
       {{appointment.title | uppercase}}
     </mat-card-title>
+
     <mat-card-content>
       <span class="separator colored middle high bolder center"></span>
       <span>

@@ -123,8 +123,8 @@ export class EnrollmentComponent implements OnInit {
       .then(() => {
         this.loaded = false;
 
-        this.appointmentSocketioService.subscribeAppointment(this.link);
-        this.appointment$ = this.appointmentProvider.appointment;
+        this.appointmentSocketioService.subscribeToAppointmentUpdates(this.link);
+        this.appointment$ = this.appointmentProvider.appointment$;
 
         this.successfulRequest();
       });

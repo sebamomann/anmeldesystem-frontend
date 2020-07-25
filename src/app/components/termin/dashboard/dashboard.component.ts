@@ -2,9 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {AppointmentService} from '../../../services/appointment.service';
 import {Router} from '@angular/router';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
-import {HttpEventType} from '@angular/common/http';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {AuthenticationService} from '../../../services/authentication.service';
+import {AppointmentProvider} from '../appointment.provider';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,41 +34,53 @@ import {AuthenticationService} from '../../../services/authentication.service';
 })
 export class DashboardComponent implements OnInit {
 
-  hide: any;
-  numbers = new Array(3);
-  public percentDone;
-  public appointments: IAppointmentModel[] = undefined;
+  public hideTemplates = false;
+
   public appointment = null;
   public appointmentsArchive = undefined;
-  public allowToShowEmpty: any;
+  public allowToShowEmptyHint: any;
+
+  public _appointments$: Observable<IAppointmentModel[]>;
+  public _appointments: IAppointmentModel[];
 
   public showLegend: any;
 
   constructor(public appointmentService: AppointmentService, public router: Router,
-              public authenticationService: AuthenticationService) {
+              public authenticationService: AuthenticationService, private appointmentProvider: AppointmentProvider) {
 
   }
 
   async ngOnInit() {
-    this.appointmentService.getAppointments(true).subscribe(result => {
-      if (result.type === HttpEventType.DownloadProgress) {
-        this.percentDone = Math.round(100 * result.loaded / result.total);
-      } else if (result.type === HttpEventType.Response) {
-        this.appointments = [];
-        this.appointmentsArchive = [];
-        this.hide = true;
-        setTimeout(() => {
-          this.appointments = result.body;
-          this.appointmentsArchive = this.appointments.filter(fAppointment => Date.parse(fAppointment.date) < Date.now());
-          this.appointments = this.appointments.filter(fAppointment => Date.parse(fAppointment.date) > Date.now());
-          this.allowToShowEmpty = true;
-        }, 500);
-      }
-    });
+    this.appointmentProvider.loadAppointments();
+
+    this._appointments$ = this.appointmentProvider.appointments$;
+
+    this._appointments$
+      .subscribe(result => {
+        if (result === null) {
+          this.hideTemplates = true;
+        } else if (result !== undefined) {
+          this._appointments = [];
+          this.appointmentsArchive = [];
+
+          this._appointments = result;
+
+          this.appointmentsArchive = this._appointments.filter(fAppointment => Date.parse(fAppointment.date) < Date.now());
+          this._appointments = this._appointments.filter(fAppointment => Date.parse(fAppointment.date) > Date.now());
+
+          this.allowToShowEmptyHint = true;
+
+          this.hideTemplates = true;
+        }
+      });
   }
 
   redirectToAppointment(appointment: IAppointmentModel) {
-    this.router.navigate(['/enroll'], {queryParams: {a: appointment.link}});
+    this.router
+      .navigate(['/enroll'], {
+        queryParams: {
+          a: appointment.link
+        }
+      });
   }
-
 }

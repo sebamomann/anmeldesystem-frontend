@@ -121,8 +121,8 @@ export class AppointmentComponent implements OnInit, OnDestroy {
       .then(() => {
         this.loaded = false;
 
-        this.appointmentSocketioService.subscribeAppointment(this.link);
-        this.appointment$ = this.appointmentProvider.appointment;
+        this.appointmentSocketioService.subscribeToAppointmentUpdates(this.link);
+        this.appointment$ = this.appointmentProvider.appointment$;
 
         this.listenForChange();
       });
