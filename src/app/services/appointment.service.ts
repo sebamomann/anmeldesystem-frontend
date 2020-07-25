@@ -67,7 +67,7 @@ export class AppointmentService {
     );
   }
 
-  getAppointments(slim: boolean = false): Observable<HttpEvent<IAppointmentModel[]>> {
+  getAppointments(slim: boolean = false): Observable<IAppointmentModel[]> {
     let url = `${environment.API_URL}appointment/`;
     if (slim) {
       url = url + '?slim=true';
@@ -84,12 +84,18 @@ export class AppointmentService {
     });
     url += pinnedQueryParam;
 
-    const req = new HttpRequest('GET', url, {
-      observe: 'response',
-      reportProgress: true,
-    });
+    const res = this.httpClient.get(url, {observe: 'response', reportProgress: true});
 
-    return this.httpClient.request(req);
+    return res.pipe(
+      map(response => {
+        this.etag.last = this.etag.current;
+        this.etag.current = response.headers.get('etag');
+        return response.body as IAppointmentModel[];
+      }),
+      catchError(() => {
+        return of(null);
+      })
+    );
   }
 
   updateValues(toChange: {}, {link}): Observable<HttpEvent<IAppointmentModel>> {

@@ -92,7 +92,7 @@ export class AppointmentSocketioService {
 
             this.reset();
             this.setupSocketConnection().then(() => {
-              this.subscribeAppointment(link_tmp);
+              this.subscribeToAppointmentUpdates(link_tmp);
             });
           }, 2000);
         }
@@ -100,7 +100,7 @@ export class AppointmentSocketioService {
     }
   }
 
-  subscribeAppointment(link: string) {
+  subscribeToAppointmentUpdates(link: string) {
     if (link !== this.current_link) {
       this.appointmentProvider.reset();
 
@@ -130,6 +130,6 @@ export class AppointmentSocketioService {
   public retrySubscription(link: string) {
     this.current_link = '';
     this.retry = 0;
-    this.subscribeAppointment(link);
+    this.subscribeToAppointmentUpdates(link);
   }
 }

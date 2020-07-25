@@ -5,7 +5,7 @@
 </a>
 
 <!--<ng-container *ngIf="false; else appointmentdata">-->
-<ng-container *ngIf="appointments !== undefined; else appointmentdata">
+<ng-container *ngIf="_appointments$ | async as appointment; else appointmentdata">
   <div *ngIf="!authenticationService.userIsLoggedIn()" class="mat-card basic block">
     <span>
       Logge dich ein um mehr Termine zu sehen bei denen du dabei bist.
@@ -18,7 +18,7 @@
     </button>
   </div>
 
-  <ng-container *ngIf="appointments.length > 0; else empty">
+  <ng-container *ngIf="_appointments.length > 0; else empty">
     <div [ngClass]="{'active': showLegend}"
          class="dashboard-legend">
       <div (click)="showLegend = !showLegend"
@@ -73,8 +73,8 @@
         </ul>
       </div>
     </div>
-    <div [@listAnimation]="appointments.length" class="appointment-list-wrapper">
-      <app-appointment-data *ngFor="let appointment of appointments"
+    <div [@listAnimation]="_appointments.length" class="appointment-list-wrapper">
+      <app-appointment-data *ngFor="let appointment of _appointments"
                             [appointment]="appointment"
                             [preview]="true">
 
@@ -84,7 +84,7 @@
 
   <ng-container *ngIf="appointmentsArchive.length > 0">
     <h2 class="title">Archiv</h2>
-    <div [@listAnimation]="appointments.length" class="appointment-list-wrapper">
+    <div [@listAnimation]="_appointments.length" class="appointment-list-wrapper">
       <ng-container *ngFor="let appointment of appointmentsArchive">
         <mat-card (click)="redirectToAppointment(appointment)" class="appointment-data archive">
           <mat-card-content>
@@ -98,7 +98,7 @@
 </ng-container>
 
 <ng-template #empty>
-  <div *ngIf="allowToShowEmpty" class="empty-list standalone">
+  <div *ngIf="allowToShowEmptyHint" class="empty-list standalone">
     <img src="/assets/img/404.svg">
     <span>
       Du hast gerade mit keinen aktiven Terminen zu tun. Erstelle dir einen eigenen!
@@ -107,14 +107,9 @@
 </ng-template>
 
 <ng-template #appointmentdata>
-  <mat-progress-bar [@fadeInOut]
-                    [value]="percentDone"
-                    class="progress-bar"
-                    mode="determinate">
-  </mat-progress-bar>
   <div class="appointment-list-wrapper">
-    <mat-card *ngFor="let number of numbers"
-              [ngClass]="{'hide': hide}"
+    <mat-card *ngFor="let number of numberOfTemplates"
+              [ngClass]="{'hide': hideTemplates}"
               class="template">
       <mat-card-title class="headline">
       </mat-card-title>

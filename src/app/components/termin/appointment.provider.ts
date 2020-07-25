@@ -1,30 +1,47 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {IAppointmentModel} from '../../models/IAppointment.model';
+import {AppointmentService} from '../../services/appointment.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppointmentProvider {
 
-  private _currentAppointment: BehaviorSubject<IAppointmentModel> = new BehaviorSubject<IAppointmentModel>(undefined);
-
-  constructor() {
+  constructor(private appointmentService: AppointmentService) {
   }
 
-  public get appointment(): BehaviorSubject<IAppointmentModel> {
-    return this._currentAppointment;
+  private _appointment$: BehaviorSubject<IAppointmentModel> = new BehaviorSubject<IAppointmentModel>(undefined);
+
+  public get appointment$(): BehaviorSubject<IAppointmentModel> {
+    return this._appointment$;
+  }
+
+  private _appointments$: BehaviorSubject<IAppointmentModel[]> = new BehaviorSubject<IAppointmentModel[]>(undefined);
+
+  public get appointments$(): BehaviorSubject<IAppointmentModel[]> {
+    return this._appointments$;
   }
 
   public update(appointment: IAppointmentModel) {
-    this._currentAppointment.next(appointment);
+    this._appointment$.next(appointment);
   }
 
   public reset() {
-    this._currentAppointment = new BehaviorSubject<IAppointmentModel>(undefined);
+    this._appointment$ = new BehaviorSubject<IAppointmentModel>(undefined);
   }
 
   public hasValue() {
-    return this._currentAppointment.value;
+    return this._appointment$.value;
+  }
+
+  public loadAppointments() {
+    this.appointmentService
+      .getAppointments(true)
+      .subscribe(
+        (result: IAppointmentModel[]) => {
+          this._appointments$.next(result);
+        }
+      );
   }
 }
