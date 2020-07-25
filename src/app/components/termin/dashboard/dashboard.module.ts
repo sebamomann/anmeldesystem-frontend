@@ -4,6 +4,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {DashboardComponent} from './dashboard.component';
 import {MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatProgressBarModule} from '@angular/material';
 import {AppointmentDataModule} from '../appointment-data/appointment-data.module';
+import {DashboardTemplateComponent} from './dashboard-template/dashboard-template.component';
 
 const routes: Routes = [
   {path: '', component: DashboardComponent}
@@ -23,6 +24,7 @@ const routes: Routes = [
   ],
   declarations: [
     DashboardComponent,
+    DashboardTemplateComponent,
   ],
   exports: [],
   providers: [],

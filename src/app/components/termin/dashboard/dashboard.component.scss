@@ -1,44 +1,8 @@
 @import "src/variables";
 
-.appointment-list-wrapper {
+.appointment-list-wrapper,
+::ng-deep .appointment-list-wrapper {
   text-align: center;
-}
-
-.template {
-  width: 80%;
-  display: inline-block;
-  text-align: center;
-  margin: 20px auto 10px;
-  background-size: 500% 250%;
-  background: linear-gradient(324deg, #ffffff, #c8c8c8);
-  background-size: 400% 400%;
-
-  -webkit-animation: AnimationName 3s ease infinite;
-  -moz-animation: AnimationName 3s ease infinite;
-  animation: AnimationName 3s ease infinite;
-
-  &.hide {
-    animation: hide 0.5s;
-  }
-
-  mat-card-title {
-    height: 37px;
-    width: 75%;
-    background-color: white;
-    margin: 0 auto 25px;
-    border-radius: 100px;
-  }
-
-  mat-card-content {
-    & > span {
-      height: 31px;
-      background-color: white;
-      margin: 4px 10px;
-      display: inline-block;
-      width: calc(50% - 20px);
-      border-radius: 100px;
-    }
-  }
 }
 
 :host ::ng-deep .appointment-data {
@@ -154,59 +118,6 @@ $handleLength: 25px;
         }
       }
     }
-  }
-}
-
-@-webkit-keyframes AnimationName {
-  0% {
-    background-position: 0% 36%
-  }
-  50% {
-    background-position: 100% 65%
-  }
-  100% {
-    background-position: 0% 36%
-  }
-}
-
-@-moz-keyframes AnimationName {
-  0% {
-    background-position: 0% 36%
-  }
-  50% {
-    background-position: 100% 65%
-  }
-  100% {
-    background-position: 0% 36%
-  }
-}
-
-@keyframes AnimationName {
-  0% {
-    background-position: 0% 36%
-  }
-  50% {
-    background-position: 100% 65%
-  }
-  100% {
-    background-position: 0% 36%
-  }
-}
-
-@keyframes hide {
-  0% {
-    transform: scale(1.0);
-  }
-  25% {
-    transform: scale(0.95);
-  }
-  60% {
-    transform: scale(1.05);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(0.75);
-    opacity: 0;
   }
 }
 

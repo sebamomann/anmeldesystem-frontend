@@ -36,8 +36,6 @@ export class DashboardComponent implements OnInit {
 
   public hideTemplates = false;
 
-  public numberOfTemplates = new Array(3);
-
   public appointment = null;
   public appointmentsArchive = undefined;
   public allowToShowEmptyHint: any;
@@ -65,16 +63,14 @@ export class DashboardComponent implements OnInit {
           this._appointments = [];
           this.appointmentsArchive = [];
 
+          this._appointments = result;
+
+          this.appointmentsArchive = this._appointments.filter(fAppointment => Date.parse(fAppointment.date) < Date.now());
+          this._appointments = this._appointments.filter(fAppointment => Date.parse(fAppointment.date) > Date.now());
+
+          this.allowToShowEmptyHint = true;
+
           this.hideTemplates = true;
-
-          setTimeout(() => {
-            this._appointments = result;
-
-            this.appointmentsArchive = this._appointments.filter(fAppointment => Date.parse(fAppointment.date) < Date.now());
-            this._appointments = this._appointments.filter(fAppointment => Date.parse(fAppointment.date) > Date.now());
-
-            this.allowToShowEmptyHint = true;
-          }, 250);
         }
       });
   }

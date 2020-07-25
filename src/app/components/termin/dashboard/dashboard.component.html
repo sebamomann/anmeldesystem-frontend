@@ -4,8 +4,7 @@
   <mat-icon>library_add</mat-icon>
 </a>
 
-<!--<ng-container *ngIf="false; else appointmentdata">-->
-<ng-container *ngIf="_appointments$ | async as appointment; else appointmentdata">
+<ng-container *ngIf="_appointments$ | async as appointment; else loading">
   <div *ngIf="!authenticationService.userIsLoggedIn()" class="mat-card basic block">
     <span>
       Logge dich ein um mehr Termine zu sehen bei denen du dabei bist.
@@ -73,7 +72,8 @@
         </ul>
       </div>
     </div>
-    <div [@listAnimation]="_appointments.length" class="appointment-list-wrapper">
+    <div [@listAnimation]
+         class="appointment-list-wrapper">
       <app-appointment-data *ngFor="let appointment of _appointments"
                             [appointment]="appointment"
                             [preview]="true">
@@ -106,32 +106,7 @@
   </div>
 </ng-template>
 
-<ng-template #appointmentdata>
-  <div class="appointment-list-wrapper">
-    <mat-card *ngFor="let number of numberOfTemplates"
-              [ngClass]="{'hide': hideTemplates}"
-              class="template">
-      <mat-card-title class="headline">
-      </mat-card-title>
-      <mat-card-content>
-      <span>
-        <mat-icon></mat-icon>
-        <span></span>
-      </span>
-        <span>
-        <mat-icon></mat-icon>
-        <span></span>
-      </span>
-        <span>
-        <mat-icon></mat-icon>
-        <span></span>
-      </span>
-        <span>
-        <mat-icon></mat-icon>
-        <span></span>
-      </span>
-        <p></p>
-      </mat-card-content>
-    </mat-card>
-  </div>
+<ng-template #loading>
+  <app-dashboard-template>
+  </app-dashboard-template>
 </ng-template>
