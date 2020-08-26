@@ -67,11 +67,10 @@ export class AppointmentService {
     );
   }
 
-  getAppointments(slim: boolean = false): Observable<IAppointmentModel[]> {
+  getAppointments(slim: boolean, before, limit): Observable<IAppointmentModel[]> {
     let url = `${environment.API_URL}appointment/`;
-    if (slim) {
-      url = url + '?slim=true';
-    }
+
+    url = `${url}?slim=${slim}&before=${before}&limit=${limit}`;
 
     const pinned = AppointmentUtil.getPinned();
     let pinnedQueryParam = '?';

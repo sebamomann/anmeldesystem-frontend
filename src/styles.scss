@@ -294,6 +294,12 @@ mat-icon {
   }
 }
 
+.bar {
+  background-color: $secondary;
+  color: white !important;
+  padding: 5px 10px;
+}
+
 a {
   color: $primary_dark;
 

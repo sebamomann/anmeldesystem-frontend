@@ -17,65 +17,81 @@
     </button>
   </div>
 
-  <ng-container *ngIf="_appointments.length > 0; else empty">
-    <div [ngClass]="{'active': showLegend}"
-         class="dashboard-legend">
-      <div (click)="showLegend = !showLegend"
-           [ngClass]="{'hide': showLegend}"
-           class="handle">
-        <span>LEGENDE</span>
-        <mat-icon>chevron_left</mat-icon>
+  <div (scrolled)="onScroll()"
+       [infiniteScrollDisabled]="!hideTemplates"
+       [infiniteScrollDistance]="2"
+       class="appointment-lists"
+       infiniteScroll>
+    <ng-container *ngIf="_appointments.length > 0; else empty">
+      <div [ngClass]="{'active': showLegend}"
+           class="dashboard-legend">
+        <div (click)="showLegend = !showLegend"
+             [ngClass]="{'hide': showLegend}"
+             class="handle">
+          <span>LEGENDE</span>
+          <mat-icon>chevron_left</mat-icon>
+        </div>
+        <div (click)="showLegend = !showLegend"
+             class="list">
+          <ul>
+            <li>
+              <app-bookmark [classes]="['creator']"></app-bookmark>
+              <span>Ersteller</span>
+            </li>
+            <li>
+              <app-bookmark [classes]="['admin']"></app-bookmark>
+              <span>Admin</span>
+            </li>
+            <li>
+              <app-bookmark [classes]="['enrolled']"></app-bookmark>
+              <span>Angemeldet</span>
+            </li>
+            <li>
+              <app-bookmark [classes]="['pinned']"></app-bookmark>
+              <span>Angepinnt</span>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div (click)="showLegend = !showLegend"
-           class="list">
-        <ul>
-          <li>
-            <app-bookmark [classes]="['creator']"></app-bookmark>
-            <span>Ersteller</span>
-          </li>
-          <li>
-            <app-bookmark [classes]="['admin']"></app-bookmark>
-            <span>Admin</span>
-          </li>
-          <li>
-            <app-bookmark [classes]="['enrolled']"></app-bookmark>
-            <span>Angemeldet</span>
-          </li>
-          <li>
-            <app-bookmark [classes]="['pinned']"></app-bookmark>
-            <span>Angepinnt</span>
-          </li>
-        </ul>
+      <div [@listAnimation]
+           class="appointment-list-wrapper">
+        <app-appointment-data *ngFor="let appointment of _appointments"
+                              [appointment]="appointment"
+                              [preview]="true">
+        </app-appointment-data>
       </div>
-    </div>
-    <div [@listAnimation]
-         class="appointment-list-wrapper">
-      <app-appointment-data *ngFor="let appointment of _appointments"
-                            [appointment]="appointment"
-                            [preview]="true">
-      </app-appointment-data>
-    </div>
-  </ng-container>
+    </ng-container>
 
-  <ng-container *ngIf="appointmentsArchive.length > 0">
-    <h2 class="title">Archiv</h2>
-    <div [@listAnimation]
-         class="appointment-list-wrapper">
-      <ng-container *ngFor="let appointment of appointmentsArchive">
-        <mat-card (click)="redirectToAppointment(appointment)"
-                  class="appointment-data archive">
-          <mat-card-content>
-            <span>
-              {{ appointment.title }}
-            </span>
-            <span>
-              {{ appointment.date | date: 'dd.MM.y, HH:mm'}}
-            </span>
-          </mat-card-content>
-        </mat-card>
-      </ng-container>
-    </div>
-  </ng-container>
+    <ng-container *ngIf="appointmentsArchive.length > 0">
+      <h2 class="title bar">Archiv</h2>
+      <div [@listAnimation]
+           class="appointment-list-wrapper">
+        <ng-container *ngFor="let monthYear of appointmentsArchive">
+          <div class="archive-block-wrapper">
+            <h3 class="bar">{{getMonthName(monthYear.month)}} - {{monthYear.year}}</h3>
+            <ng-container *ngFor="let appointment of monthYear.appointments">
+              <mat-card (click)="redirectToAppointment(appointment)"
+                        class="appointment-data archive">
+                <mat-card-content>
+              <span>
+                {{ appointment.title }}
+              </span>
+                  <span>
+                {{ appointment.date | date: 'dd.MM.y, HH:mm'}}
+              </span>
+                </mat-card-content>
+              </mat-card>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+  <div *ngIf="!totalAppointmentsLoaded" class="reload">
+    <button (click)="onScroll()" mat-raised-button>
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
 </ng-container>
 
 <ng-template #empty>
