@@ -37,21 +37,39 @@ export class DashboardComponent implements OnInit {
   public hideTemplates = false;
 
   public appointment = null;
-  public appointmentsArchive = undefined;
+  public appointmentsArchive: { year: number, month: number, appointments: IAppointmentModel[] }[] = [];
   public allowToShowEmptyHint: any;
 
   public _appointments$: Observable<IAppointmentModel[]>;
-  public _appointments: IAppointmentModel[];
+  public _appointments: IAppointmentModel[] = [];
+  public _appointmentsTotal: IAppointmentModel[] = [];
 
   public showLegend: any;
+  public appointmentsGroupedByMonthAndYear: { month: number; year: number }[];
+  private limit = 10;
+  private totalAppointmentsLoaded = false;
 
   constructor(public appointmentService: AppointmentService, public router: Router,
               public authenticationService: AuthenticationService, private appointmentProvider: AppointmentProvider) {
+  }
 
+  private static getDistinctMonthAndYearCombinations(tmpArchive: any[]) {
+    const distinctMonthAndYearCombinations = [];
+    const tmp_compareMap = new Map();
+    for (const item of tmpArchive) {
+      if (!tmp_compareMap.has((new Date(item.date)).getMonth())) {
+        tmp_compareMap.set((new Date(item.date)).getMonth(), true);
+        distinctMonthAndYearCombinations.push({
+          month: (new Date(item.date)).getMonth(),
+          year: (new Date(item.date)).getFullYear(),
+        });
+      }
+    }
+    return distinctMonthAndYearCombinations;
   }
 
   async ngOnInit() {
-    this.appointmentProvider.loadAppointments();
+    this.appointmentProvider.loadAppointments(null, this.limit);
 
     this._appointments$ = this.appointmentProvider.appointments$;
 
@@ -60,13 +78,37 @@ export class DashboardComponent implements OnInit {
         if (result === null) {
           this.hideTemplates = true;
         } else if (result !== undefined) {
+          this.totalAppointmentsLoaded = result.length !== this.limit;
+
           this._appointments = [];
           this.appointmentsArchive = [];
 
-          this._appointments = result;
+          let tmpArchive = [];
 
-          this.appointmentsArchive = this._appointments.filter(fAppointment => Date.parse(fAppointment.date) < Date.now());
-          this._appointments = this._appointments.filter(fAppointment => Date.parse(fAppointment.date) > Date.now());
+          // because a appointment is not returned twice in the sma result you can map before
+          const mapped = this._appointmentsTotal.map((e) => e.id);
+          result.forEach(fAppointment => {
+            if (mapped.indexOf(fAppointment.id) === -1) {
+              this._appointmentsTotal.push(fAppointment);
+            }
+          });
+
+          tmpArchive = this._appointmentsTotal.filter(fAppointment => Date.parse(fAppointment.date) < Date.now());
+          this._appointments = this._appointmentsTotal.filter(fAppointment => Date.parse(fAppointment.date) > Date.now());
+
+          this.appointmentsGroupedByMonthAndYear = DashboardComponent.getDistinctMonthAndYearCombinations(tmpArchive);
+
+          this.appointmentsGroupedByMonthAndYear.forEach((fMonthAndYear) => {
+            const __appointments: IAppointmentModel[] = tmpArchive
+              .filter(fAppointment => (new Date(fAppointment.date)).getMonth() === fMonthAndYear.month
+                && (new Date(fAppointment.date)).getFullYear() === fMonthAndYear.year);
+
+            this.appointmentsArchive.push({
+              month: fMonthAndYear.month,
+              year: fMonthAndYear.year,
+              appointments: __appointments,
+            });
+          });
 
           this.allowToShowEmptyHint = true;
 
@@ -82,5 +124,17 @@ export class DashboardComponent implements OnInit {
           a: appointment.link
         }
       });
+  }
+
+  onScroll() {
+    this.appointmentProvider.loadAppointments(this._appointmentsTotal[this._appointmentsTotal.length - 1].date, this.limit);
+  }
+
+  getMonthName(_month: number) {
+    const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
+      'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
+    ];
+
+    return monthNames[_month];
   }
 }

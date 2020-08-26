@@ -35,9 +35,9 @@ export class AppointmentProvider {
     return this._appointment$.value;
   }
 
-  public loadAppointments() {
+  public loadAppointments(before, limit) {
     this.appointmentService
-      .getAppointments(true)
+      .getAppointments(true, before, limit)
       .subscribe(
         (result: IAppointmentModel[]) => {
           this._appointments$.next(result);

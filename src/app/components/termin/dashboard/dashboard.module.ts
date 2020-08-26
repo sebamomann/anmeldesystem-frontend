@@ -6,6 +6,7 @@ import {MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatIn
 import {AppointmentDataModule} from '../appointment-data/appointment-data.module';
 import {DashboardTemplateComponent} from './dashboard-template/dashboard-template.component';
 import {BookmarkModule} from '../../html-template/bookmark/bookmark.module';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 
 const routes: Routes = [
   {path: '', component: DashboardComponent}
@@ -23,6 +24,7 @@ const routes: Routes = [
     MatProgressBarModule,
     AppointmentDataModule,
     BookmarkModule,
+    InfiniteScrollModule,
   ],
   declarations: [
     DashboardComponent,
