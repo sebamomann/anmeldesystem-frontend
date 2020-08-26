@@ -46,8 +46,8 @@ export class DashboardComponent implements OnInit {
 
   public showLegend: any;
   public appointmentsGroupedByMonthAndYear: { month: number; year: number }[];
-  private limit = 10;
-  private totalAppointmentsLoaded = false;
+  public totalAppointmentsLoaded = false;
+  private limit = 5;
 
   constructor(public appointmentService: AppointmentService, public router: Router,
               public authenticationService: AuthenticationService, private appointmentProvider: AppointmentProvider) {
