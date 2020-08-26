@@ -63,25 +63,26 @@
     </ng-container>
 
     <ng-container *ngIf="appointmentsArchive.length > 0">
-      <h2 class="title">Archiv</h2>
+      <h2 class="title bar">Archiv</h2>
       <div [@listAnimation]
            class="appointment-list-wrapper">
         <ng-container *ngFor="let monthYear of appointmentsArchive">
-          <h2>{{getMonthName(monthYear.month)}}</h2>
-          <h2>{{monthYear.year}}</h2>
-          <ng-container *ngFor="let appointment of monthYear.appointments">
-            <mat-card (click)="redirectToAppointment(appointment)"
-                      class="appointment-data archive">
-              <mat-card-content>
+          <div class="archive-block-wrapper">
+            <h3 class="bar">{{getMonthName(monthYear.month)}} - {{monthYear.year}}</h3>
+            <ng-container *ngFor="let appointment of monthYear.appointments">
+              <mat-card (click)="redirectToAppointment(appointment)"
+                        class="appointment-data archive">
+                <mat-card-content>
               <span>
                 {{ appointment.title }}
               </span>
-                <span>
+                  <span>
                 {{ appointment.date | date: 'dd.MM.y, HH:mm'}}
               </span>
-              </mat-card-content>
-            </mat-card>
-          </ng-container>
+                </mat-card-content>
+              </mat-card>
+            </ng-container>
+          </div>
         </ng-container>
       </div>
     </ng-container>
