@@ -68,7 +68,7 @@
            class="appointment-list-wrapper">
         <ng-container *ngFor="let monthYear of appointmentsArchive">
           <div class="archive-block-wrapper">
-            <h3 class="bar">{{getMonthName(monthYear.month)}}-{{monthYear.year}}</h3>
+            <h3 class="bar">{{getMonthName(monthYear.month)}} - {{monthYear.year}}</h3>
             <ng-container *ngFor="let appointment of monthYear.appointments">
               <mat-card (click)="redirectToAppointment(appointment)"
                         class="appointment-data archive">
