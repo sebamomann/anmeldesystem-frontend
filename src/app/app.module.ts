@@ -14,6 +14,7 @@ import {Globals} from './globals';
 import localeDe from '@angular/common/locales/de';
 import {AppRoutingModule} from './app-routing.module';
 import {RefreshTokenInterceptor} from './_helper/interceptor/refreshToken.interceptor';
+import {MonthnamePipe} from './pipes/monthname.pipe';
 
 registerLocaleData(localeDe);
 
@@ -32,7 +33,9 @@ registerLocaleData(localeDe);
     MatDialogModule,
     MatButtonModule,
   ],
-  providers: [WINDOW_PROVIDERS, PwaService, Globals,
+  providers: [WINDOW_PROVIDERS,
+    MonthnamePipe,
+    PwaService, Globals,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: RefreshTokenInterceptor, multi: true}],

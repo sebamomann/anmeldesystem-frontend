@@ -7,6 +7,7 @@ import {PwaService} from '../services/pwa-service.service';
 import {PwaDialogComponent} from './dialogs/pwa-dialog/pwa-dialog.component';
 import {MatDialog} from '@angular/material';
 import {animate, query, stagger, style, transition, trigger} from '@angular/animations';
+import {MonthnamePipe} from '../pipes/monthname.pipe';
 
 const version = require('../../../package.json').version;
 
@@ -38,7 +39,8 @@ export class AppComponent {
   public version: string = version;
 
   constructor(private router: Router, @Inject(WINDOW) private window: Window,
-              private authenticationService: AuthenticationService, public pwa: PwaService, public dialog: MatDialog) {
+              private authenticationService: AuthenticationService, public pwa: PwaService, public dialog: MatDialog,
+              private monthnamePipe: MonthnamePipe) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         (window as any).ga('set', 'page', event.urlAfterRedirects);
@@ -54,12 +56,8 @@ export class AppComponent {
 
     this.pwa.checkForUpdates();
 
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-
     const date = new Date();
-    this.now = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+    this.now = `${this.monthnamePipe.transform(date.getMonth())} ${date.getFullYear()}`;
 
     particlesJS.load('particles-js', './assets/particlesjs-config.json', null);
 

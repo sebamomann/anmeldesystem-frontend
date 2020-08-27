@@ -129,12 +129,4 @@ export class DashboardComponent implements OnInit {
   onScroll() {
     this.appointmentProvider.loadAppointments(this._appointmentsTotal[this._appointmentsTotal.length - 1].date, this.limit);
   }
-
-  getMonthName(_month: number) {
-    const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
-      'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
-    ];
-
-    return monthNames[_month];
-  }
 }

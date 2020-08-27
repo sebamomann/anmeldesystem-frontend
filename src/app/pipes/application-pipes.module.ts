@@ -1,17 +1,20 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {UrlEncodePipe} from './url-encode.pipe';
+import {MonthnamePipe} from './monthname.pipe';
 
 
 @NgModule({
   declarations: [
-    UrlEncodePipe
+    UrlEncodePipe,
+    MonthnamePipe
   ],
   imports: [
     CommonModule
   ],
   exports: [
-    UrlEncodePipe
+    UrlEncodePipe,
+    MonthnamePipe
   ]
 })
 export class ApplicationPipesModule {

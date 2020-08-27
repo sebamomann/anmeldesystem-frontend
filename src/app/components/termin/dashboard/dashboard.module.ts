@@ -7,6 +7,7 @@ import {AppointmentDataModule} from '../appointment-data/appointment-data.module
 import {DashboardTemplateComponent} from './dashboard-template/dashboard-template.component';
 import {BookmarkModule} from '../../html-template/bookmark/bookmark.module';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {ApplicationPipesModule} from '../../../pipes/application-pipes.module';
 
 const routes: Routes = [
   {path: '', component: DashboardComponent}
@@ -25,6 +26,7 @@ const routes: Routes = [
     AppointmentDataModule,
     BookmarkModule,
     InfiniteScrollModule,
+    ApplicationPipesModule,
   ],
   declarations: [
     DashboardComponent,
