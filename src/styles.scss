@@ -71,7 +71,7 @@ $anmeldesystem-theme: mat-light-theme($anmeldesystem-primary, $anmeldesystem-acc
   line-height: $size;
 }
 
-$primary: #366EA7;
+$primary: #3f51b5;
 $primary_dark: #141B41;
 $secondary: #2C2C2F;
 $accent: #56E39F;
@@ -774,7 +774,7 @@ footer {
   padding: 15px;
   border-radius: 50%;
   z-index: 100;
-  background-color: #366EA7;
+  background-color: $primary;
   color: white;
   outline: none;
   box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),

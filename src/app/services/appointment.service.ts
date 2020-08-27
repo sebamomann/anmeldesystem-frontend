@@ -202,4 +202,22 @@ export class AppointmentService {
 
     return this.httpClient.request(req);
   }
+
+  public hasCloseEnrollmentHint(link: string) {
+    const enrollmentHintCloses: any = JSON.parse(localStorage.getItem('enrollmentHintCloses'));
+
+    return enrollmentHintCloses && enrollmentHintCloses.indexOf(link) > -1;
+  }
+
+  public closeEnrollmentHint(link: string) {
+    let enrollmentHintCloses: any = JSON.parse(localStorage.getItem('enrollmentHintCloses'));
+
+    if (!enrollmentHintCloses) {
+      enrollmentHintCloses = [];
+    }
+
+    enrollmentHintCloses.push(link);
+
+    localStorage.setItem('enrollmentHintCloses', JSON.stringify(enrollmentHintCloses));
+  }
 }
