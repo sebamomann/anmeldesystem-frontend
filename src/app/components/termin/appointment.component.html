@@ -85,6 +85,17 @@
     </div>
   </div>
 
+  <div *ngIf="showEnrollmentHint"
+       [queryParams]="{a: link}"
+       [routerLink]="['/enroll/add']"
+       class="custom-tooltip right bottom show">
+    Jetzt anmelden
+    <span (click)="closeEnrollmentHint()"
+          class="close">
+      <mat-icon>close</mat-icon>
+    </span>
+  </div>
+
   <mat-icon [queryParams]="{a: link}"
             [routerLink]="['/enroll/add']"
             class="floating-button right">

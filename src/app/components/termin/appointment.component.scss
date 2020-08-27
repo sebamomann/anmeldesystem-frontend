@@ -1,3 +1,5 @@
+@import "src/variables";
+
 @mixin md-icon-size($size: 24px) {
   font-size: $size;
   height: $size;
@@ -69,6 +71,40 @@
   }
 }
 
+.custom-tooltip {
+  position: fixed;
+  background-color: $primary;
+  color: white;
+  width: 60%;
+  padding: 10px 15px;
+  border-radius: 5px;
+  z-index: 1100;
+  opacity: 1;
+  animation: wiggle 0.5s;
+
+  &.right {
+    left: 10px;
+
+    &:after {
+
+    }
+  }
+
+  &.bottom {
+    bottom: 21px;
+  }
+
+  .close {
+    position: absolute;
+    top: 0;
+    right: 3px;
+
+    mat-icon {
+      @include md-icon-size(17px);
+    }
+  }
+}
+
 @media all and (min-width: 1024px) {
   ::ng-deep .appointment-data-wrapper {
     vertical-align: top;
@@ -76,5 +112,25 @@
     display: inline-block;
 
     margin: 0px auto !important;
+  }
+}
+
+@keyframes wiggle {
+  0% {
+    opacity: 0;
+    transform: translateX(0px);
+  }
+  25% {
+    transform: translateX(15px);
+  }
+  50% {
+    transform: translateX(0px);
+  }
+  75% {
+    transform: translateX(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
   }
 }
