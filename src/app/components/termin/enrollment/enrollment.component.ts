@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
 import {AppointmentService} from '../../../services/appointment.service';
 import {Location} from '@angular/common';
@@ -73,10 +73,26 @@ export class EnrollmentComponent implements OnInit {
   public edit: any;
   public token: any;
   public empty = false;
-  public sendingRequest = false;
+  public sendingRequestEmit = new EventEmitter<boolean>();
 
   public loaded = true;
+  public percentDone: number;
+  public showLoginAndTokenForm = false;
+  public currentUrlSnapshotWithParameter: RouterStateSnapshot;
+  public localStorageKeys: string[];
+  // CACHE
+  appointment$: Observable<IAppointmentModel>;
   private skipLoginForm = false;
+  private enrollmentId: string;
+  // Preparation for login redirect fields
+  private ENROLLMENT_KEY_KEY = 'enrollmentKeys';
+  private outputRawFromStorage: string;
+  private output: IEnrollmentModel = new EnrollmentModel();
+  // Key fields
+  private ENROLLMENT_OUTPUT_KEY = 'enrollmentOutput';
+  // Sending options
+  private autoSend = false;
+  private autoSubmitBySetting = false;
 
   constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
               private location: Location,
@@ -99,24 +115,6 @@ export class EnrollmentComponent implements OnInit {
     });
   }
 
-  private enrollmentId: string;
-  public percentDone: number;
-  // Preparation for login redirect fields
-  private ENROLLMENT_KEY_KEY = 'enrollmentKeys';
-  private outputRawFromStorage: string;
-  private output: IEnrollmentModel = new EnrollmentModel();
-  public showLoginAndTokenForm = false;
-  public currentUrlSnapshotWithParameter: RouterStateSnapshot;
-  // Key fields
-  private ENROLLMENT_OUTPUT_KEY = 'enrollmentOutput';
-  public localStorageKeys: string[];
-  // Sending options
-  private autoSend = false;
-  private autoSubmitBySetting = false;
-
-  // CACHE
-  appointment$: Observable<IAppointmentModel>;
-
   async ngOnInit() {
     this.appointmentSocketioService
       .setupSocketConnection()
@@ -129,7 +127,6 @@ export class EnrollmentComponent implements OnInit {
         this.successfulRequest();
       });
 
-
     await this.route
       .data
       .subscribe(v => this.edit = v.edit);
@@ -141,48 +138,6 @@ export class EnrollmentComponent implements OnInit {
       this.getName().markAsTouched();
       this.getName().setValue(this.authenticationService.currentUserValue.name);
     }
-  }
-
-  private successfulRequest(): void {
-    this.appointment$
-      .subscribe(sAppointment => {
-        if (sAppointment === null) {
-          this.loaded = true;
-        } else if (sAppointment !== undefined) {
-          this._seoService.updateTitle(`${sAppointment.title} - Anmelden`);
-          this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
-
-          this.appointment = sAppointment;
-          this.storageDataToFields();
-          // When e.g. coming from login
-          if (this.showLoginAndTokenForm === true) {
-            // Re-fetch output from local storage
-            this.output = JSON.parse(this.outputRawFromStorage);
-            this.parseOutputIntoForm();
-
-            if (this.autoSend) {
-              this.sendEnrollment();
-            }
-          } else if (this.edit) {
-            const enrollment: IEnrollmentModel = sAppointment.enrollments.filter(fEnrollment => {
-              return fEnrollment.id === this.enrollmentId;
-            })[0];
-
-            if (enrollment !== undefined) {
-              this.output = enrollment;
-              this.parseOutputIntoForm();
-            } else if (this.enrollmentId !== null && this.token !== null) {
-              this.empty = true;
-            }
-          } else {
-            // DO NOTHING, BECAUSE FORM IS EMPTY FOR ADDING NEW ENROLLMENT
-          }
-
-          this.buildFormCheckboxes();
-
-          this.loaded = true;
-        }
-      });
   }
 
   /**
@@ -253,8 +208,6 @@ export class EnrollmentComponent implements OnInit {
       return;
     }
 
-    this.sendingRequest = true;
-
     // Set key, if logged in but not selfenroll
     // Set key if not logged in and token specified by after enroll screen
     if ((!this.userIsLoggedIn || (this.userIsLoggedIn && !this.getSelfEnrollment().value)) && !this.edit) {
@@ -270,29 +223,6 @@ export class EnrollmentComponent implements OnInit {
         await this.sendEnrollmentRequest('create');
       }
     }
-
-    this.sendingRequest = false;
-  };
-
-  private getAdditionIdList: () => IAdditionModel[] = () => {
-    const additionListRaw = this.event.value.additions
-      .map((v, i) => v ? this.appointment.additions[i].id : null)
-      .filter(v => v !== null);
-
-    const additionList = [];
-    additionListRaw.forEach(fAddition => {
-      const addition = {id: fAddition};
-      additionList.push(addition);
-    });
-
-    return additionList;
-  };
-
-  private buildFormCheckboxes: () => void = () => {
-    this.appointment.additions.forEach((o) => {
-      const control = new FormControl(this.output.additions.some(iAddition => iAddition.id === o.id));
-      (this.event.controls.additions as FormArray).push(control);
-    });
   };
 
   // Error handling
@@ -345,6 +275,90 @@ export class EnrollmentComponent implements OnInit {
     this.sendEnrollment();
   }
 
+  public getDriver() {
+    return this.driverPassengerEvent.get('driver');
+  }
+
+  public getName() {
+    return this.event.get('name');
+  }
+
+  public getAdditionsControls() {
+    return (this.event.get('additions') as FormArray).controls;
+  }
+
+  public getSelfEnrollment() {
+    return this.selfEnrollment.get('selfEnrollment');
+  }
+
+  goBack() {
+    this.location.back();
+  }
+
+  private successfulRequest(): void {
+    this.appointment$
+      .subscribe(sAppointment => {
+        if (sAppointment === null) {
+          this.loaded = true;
+        } else if (sAppointment !== undefined) {
+          this._seoService.updateTitle(`${sAppointment.title} - Anmelden`);
+          this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
+
+          this.appointment = sAppointment;
+          this.storageDataToFields();
+          // When e.g. coming from login
+          if (this.showLoginAndTokenForm === true) {
+            // Re-fetch output from local storage
+            this.output = JSON.parse(this.outputRawFromStorage);
+            this.parseOutputIntoForm();
+
+            if (this.autoSend) {
+              this.showLoginAndTokenForm = false;
+              this.sendEnrollment();
+            }
+          } else if (this.edit) {
+            const enrollment: IEnrollmentModel = sAppointment.enrollments.filter(fEnrollment => {
+              return fEnrollment.id === this.enrollmentId;
+            })[0];
+
+            if (enrollment !== undefined) {
+              this.output = enrollment;
+              this.parseOutputIntoForm();
+            } else if (this.enrollmentId !== null && this.token !== null) {
+              this.empty = true;
+            }
+          } else {
+            // DO NOTHING, BECAUSE FORM IS EMPTY FOR ADDING NEW ENROLLMENT
+          }
+
+          this.buildFormCheckboxes();
+
+          this.loaded = true;
+        }
+      });
+  }
+
+  private getAdditionIdList: () => IAdditionModel[] = () => {
+    const additionListRaw = this.event.value.additions
+      .map((v, i) => v ? this.appointment.additions[i].id : null)
+      .filter(v => v !== null);
+
+    const additionList = [];
+    additionListRaw.forEach(fAddition => {
+      const addition = {id: fAddition};
+      additionList.push(addition);
+    });
+
+    return additionList;
+  };
+
+  private buildFormCheckboxes: () => void = () => {
+    this.appointment.additions.forEach((o) => {
+      const control = new FormControl(this.output.additions.some(iAddition => iAddition.id === o.id));
+      (this.event.controls.additions as FormArray).push(control);
+    });
+  };
+
   private getSeats() {
     return this.driverPassengerEvent.get('seats');
   }
@@ -357,26 +371,9 @@ export class EnrollmentComponent implements OnInit {
     return this.driverPassengerEvent.get('service');
   }
 
-  public getDriver() {
-    return this.driverPassengerEvent.get('driver');
-  }
-
-  public getName() {
-    return this.event.get('name');
-  }
-
   private getComment() {
     return this.event.get('comment');
   }
-
-  public getAdditionsControls() {
-    return (this.event.get('additions') as FormArray).controls;
-  }
-
-  public getSelfEnrollment() {
-    return this.selfEnrollment.get('selfEnrollment');
-  }
-
 
   private parseOutputIntoForm() {
     this.event.get('name').setValue(this.output.name);
@@ -409,11 +406,17 @@ export class EnrollmentComponent implements OnInit {
   }
 
   private async sendEnrollmentRequest(functionName: string) {
+    setTimeout(() => { // needed so loading directive triggers again
+      this.sendingRequestEmit.emit(true);
+    });
+
     this.output.token = TokenUtil.getTokenForEnrollment(this.enrollmentId, this.link);
     this.enrollmentService[functionName](this.output, this.appointment)
       .subscribe(
         result => {
+          this.sendingRequestEmit.emit(false);
           this.clearLoginAndMailFormIntercepting();
+
           if (result.type === HttpEventType.Response) {
             if (result.status === HttpStatus.CREATED
               || result.status === HttpStatus.OK) {
@@ -441,7 +444,8 @@ export class EnrollmentComponent implements OnInit {
           }
         }, (err: HttpErrorResponse) => {
           this.clearLoginAndMailFormIntercepting();
-          this.sendingRequest = false;
+          this.sendingRequestEmit.emit(false);
+
           if (err.status === HttpStatus.BAD_REQUEST) {
             if (err.error.code === 'DUPLICATE_ENTRY') {
               err.error.data.forEach(fColumn => {
@@ -470,10 +474,6 @@ export class EnrollmentComponent implements OnInit {
           }
         }
       );
-  }
-
-  goBack() {
-    this.location.back();
   }
 
   private storeEnrollmentAccessToken(link: string, body: any) {

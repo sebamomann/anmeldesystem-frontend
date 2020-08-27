@@ -131,7 +131,12 @@
             </div>
 
             <mat-card-actions>
-              <button color="primary" id="submit" mat-raised-button>
+              <button [active]="sendingRequestEmit"
+                      [innerHtml]="edit ? 'Speichern' : 'Anmelden'"
+                      appLoadingDisable
+                      color="primary"
+                      id="submit"
+                      mat-raised-button>
                 {{ edit ? 'Speichern' : 'Anmelden' }}
               </button>
               <a (click)="goBack()" mat-raised-button>
@@ -225,8 +230,3 @@
     [percentDone]="percentDone">
   </app-fetch-appointment>
 </ng-template>
-
-<app-loading *ngIf="sendingRequest"
-             [@remove]
-             [customMessage]="'Speichere Anmeldung'">
-</app-loading>

@@ -11,12 +11,14 @@ import {
   MatIconModule,
   MatInputModule,
   MatProgressBarModule,
+  MatProgressSpinnerModule,
   MatSelectModule,
   MatTooltipModule
 } from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FetchAppointmentModule} from '../html-template/fetch-appointment/fetch-appointment.module';
 import {LoadingModule} from '../../html-template/loading/loading.module';
+import {LoadingDisableModule} from '../../../directives/loading-disable/loading-disable.module';
 
 const routes: Routes = [
   {path: '', component: EnrollmentComponent},
@@ -43,6 +45,8 @@ const routes: Routes = [
     MatButtonModule,
     FetchAppointmentModule,
     LoadingModule,
+    LoadingDisableModule,
+    MatProgressSpinnerModule,
   ]
 })
 export class EnrollmentModule {
