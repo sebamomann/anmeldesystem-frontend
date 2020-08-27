@@ -66,10 +66,11 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public websocketSubscriptionRetryCount = 0;
   public hideWebsocketSubscriptionInformation = false;
 
-
   // WEBSOCKET AUTOLOAD
   public hasUpdate = false;
   public updateOnWsCallDefined = false;
+  public showEnrollmentHint = false;
+  public showEnrollmentHintForceHide = false;
   private manualAppointmentReloadCount = 0;
 
   constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
@@ -138,6 +139,20 @@ export class AppointmentComponent implements OnInit, OnDestroy {
           if (sAppointment === null) {
             this.loaded = true;
           } else if (sAppointment !== undefined) {
+            this.link = sAppointment.link;
+
+            // TODO could be cleaner ...
+            if (sAppointment.reference.indexOf('ENROLLED') === -1
+              && sAppointment.reference.indexOf('CREATOR') === -1
+              && sAppointment.reference.indexOf('ADMIN') === -1
+              && !this.showEnrollmentHintForceHide
+              && !this.appointmentService.hasCloseEnrollmentHint(this.link)) {
+              setTimeout(() => {
+                this.showEnrollmentHint = true;
+              }, 2000);
+            }
+
+
             if (sAppointment.reference.indexOf('PINNED') === -1
               && this.settingsService.autoPinAppointment) {
               AppointmentUtil.pin(sAppointment.link);
@@ -162,14 +177,33 @@ export class AppointmentComponent implements OnInit, OnDestroy {
             this._seoService.updateTitle(`${sAppointment.title} | GJM - Anmeldesystem`);
             this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
 
-            this.splitIntoParts(sAppointment);
+            this.splitEnrollments(sAppointment);
 
             this.loaded = true;
           }
         });
   };
 
-  private splitIntoParts(appointment: IAppointmentModel) {
+  public reload(link) {
+    this.manualAppointmentReloadCount++;
+    if (this.manualAppointmentReloadCount >= 3) {
+      this.updateOnWsCallDefined = false;
+    }
+    this.appointmentSocketioService.reload(link);
+  }
+
+  public retryWebsocketSubscription(link: string) {
+    this.websocketSubscriptionRetryCount = 0;  // directly set to 0 because behaviour subjects need some time ... -> instant feedback
+    this.appointmentSocketioService.retrySubscription(link);
+  }
+
+  public closeEnrollmentHint() {
+    this.showEnrollmentHint = false;
+    this.showEnrollmentHintForceHide = true;
+    this.appointmentService.closeEnrollmentHint(this.link);
+  }
+
+  private splitEnrollments(appointment: IAppointmentModel) {
     let enrollments_correct = [];
     let enrollments_waiting = [];
     let enrollments_late;
@@ -215,18 +249,5 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.enrollments$.next(enrollments_correct);
     this.enrollmentsWaitingList$.next(enrollments_waiting);
     this.enrollmentsLate$.next(enrollments_late);
-  }
-
-  public reload(link) {
-    this.manualAppointmentReloadCount++;
-    if (this.manualAppointmentReloadCount >= 3) {
-      this.updateOnWsCallDefined = false;
-    }
-    this.appointmentSocketioService.reload(link);
-  }
-
-  public retryWebsocketSubscription(link: string) {
-    this.websocketSubscriptionRetryCount = 0;  // directly set to 0 because behaviour subjects need some time ... -> instant feedback
-    this.appointmentSocketioService.retrySubscription(link);
   }
 }
