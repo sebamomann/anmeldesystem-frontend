@@ -139,6 +139,9 @@
     <button (click)="saveFnc()"
             color="primary"
             id="submit"
+            [active]="sendingRequestEmit"
+            [innerValue]="button"
+            appLoadingDisable
             mat-raised-button>
       {{button}}
     </button>

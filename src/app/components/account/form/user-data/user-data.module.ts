@@ -12,6 +12,7 @@ import {
 } from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
+import {LoadingDisableModule} from '../../../../directives/loading-disable/loading-disable.module';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import {RouterModule} from '@angular/router';
     MatTooltipModule,
     RouterModule,
     MatCardModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    LoadingDisableModule
   ]
 })
 export class UserDataModule {
