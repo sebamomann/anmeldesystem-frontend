@@ -58,7 +58,7 @@ export class PasswordresetComponent implements OnInit {
   public validated = false;
   public sendingRequestEmit = new EventEmitter<boolean>();
   private date: any;
-  private mailPlain: string;
+  public mailPlain: string;
 
   constructor(private route: ActivatedRoute, private accountService: AccountService,
               private validatorService: ValidatorService) {
