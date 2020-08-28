@@ -68,6 +68,7 @@ export class RegisterComponent implements OnInit {
       .subscribe(
         () => {
           this.done = true;
+          this.userDataComponent.requestSent();
         },
         err => {
           if (err instanceof HttpErrorResponse) {
@@ -86,6 +87,8 @@ export class RegisterComponent implements OnInit {
               }
             }
           }
+
+          this.userDataComponent.requestSent();
         }
       );
   }

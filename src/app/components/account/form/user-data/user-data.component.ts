@@ -43,6 +43,8 @@ export class UserDataComponent implements OnInit {
   public mailPending = false;
   public isResend = false;
 
+  public sendingRequestEmit = new EventEmitter<boolean>();
+
   constructor(private route: ActivatedRoute, private accountService: AccountService) {
     this.route.queryParams.subscribe(params => {
       this.mailSuccess = params.mail;
@@ -83,6 +85,9 @@ export class UserDataComponent implements OnInit {
         data.mail = this.userData.mail;
       }
 
+      if (this.isRegister) {
+        this.sendingRequestEmit.emit(true);
+      }
       this.save.emit(data);
     } else {
       this.getPassword('passwordVerify').setErrors({});
@@ -107,6 +112,10 @@ export class UserDataComponent implements OnInit {
       .then(() => {
         this.updateParent.emit();
       });
+  }
+
+  public requestSent() {
+    this.sendingRequestEmit.emit(false);
   }
 
   public getErrorMessage(str: string) {

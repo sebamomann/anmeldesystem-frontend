@@ -40,7 +40,11 @@
       </span>
 
       <mat-card-actions>
-        <button color="primary" mat-raised-button>
+        <button [active]="sendingRequestEmit"
+                [innerValue]="'Login'"
+                appLoadingDisable
+                color="primary"
+                mat-raised-button>
           Login
         </button>
 

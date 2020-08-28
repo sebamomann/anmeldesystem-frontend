@@ -406,7 +406,7 @@ export class EnrollmentComponent implements OnInit {
   }
 
   private async sendEnrollmentRequest(functionName: string) {
-    setTimeout(() => { // needed so loading directive triggers again
+    setTimeout(() => { // needed so loading directive triggers again after login or sth
       this.sendingRequestEmit.emit(true);
     });
 

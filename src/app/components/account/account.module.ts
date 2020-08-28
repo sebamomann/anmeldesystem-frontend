@@ -26,6 +26,7 @@ import {LogoutComponent} from './main/logout/logout.component';
 import {AuthGuard} from '../../_helper/auth.guard';
 import {LoadingModule} from '../html-template/loading/loading.module';
 import {AccountActivationDialogModule} from '../dialogs/account-activation/account-activation-dialog.module';
+import {LoadingDisableModule} from '../../directives/loading-disable/loading-disable.module';
 
 
 const routes: Routes = [
@@ -66,7 +67,8 @@ const routes: Routes = [
     EmailChangeModule,
     MatListModule,
     LoadingModule,
-    AccountActivationDialogModule
+    AccountActivationDialogModule,
+    LoadingDisableModule
   ],
   providers: [
     ValidatorService
