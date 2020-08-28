@@ -59,17 +59,11 @@ export class AppointmentSocketioService {
         this.socket = await io(environment.API_URL + 'appointment');
       }
 
-      this.socket.on('update', (data: any) => {
+      this.socket.on('update', (link: any) => {
         // If automatic update is allowed
         if (this.settingsService.autoLoadOnWsCall
           && this.settingsService.isAllowedByWiFi()) {
-          this.appointmentService
-            .getAppointment(data, false)
-            .subscribe(
-              (appointment: IAppointmentModel) => {
-                this.appointmentProvider.update(appointment);
-              }
-            );
+          this.loadAppointment(link);
         } else {
           this.hasUpdate = true;
         }
@@ -115,19 +109,23 @@ export class AppointmentSocketioService {
     this.current_link = link;
     this.hasUpdate = false;
 
-    this.appointmentService
-      .getAppointment(link, false)
-      .subscribe(
-        (appointment: IAppointmentModel) => {
-          this.appointmentProvider.update(appointment);
-        }
-      );
+    this.loadAppointment(link);
   }
 
   public retrySubscription(link: string) {
     this.current_link = '';
     this.retry = 0;
     this.subscribeToAppointmentUpdates(link);
+  }
+
+  loadAppointment(data: any) {
+    this.appointmentService
+      .getAppointment(data, false)
+      .subscribe(
+        (appointment: IAppointmentModel) => {
+          this.appointmentProvider.update(appointment);
+        }
+      );
   }
 
   private reset() {

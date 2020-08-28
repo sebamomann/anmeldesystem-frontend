@@ -5,6 +5,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import {LinkDataComponent} from '../form/link-data/link-data.component';
+import {AppointmentSocketioService} from '../../../services/appointment-socketio.service';
+import {Observable} from 'rxjs';
+import {AppointmentProvider} from '../appointment.provider';
 
 const HttpStatus = require('http-status-codes');
 
@@ -17,16 +20,19 @@ export class AppointmentSettingsComponent implements OnInit {
   @ViewChild(LinkDataComponent, null)
   linkDataComponent: LinkDataComponent;
 
+  public appointment$: Observable<IAppointmentModel>;
+
   public link: any;
   public appointment: IAppointmentModel;
   public saveSuccess: boolean;
   public uploadingFile: any = [];
-  private error: any = [];
   public permission = null;
+  private error: any = [];
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog,
               private route: ActivatedRoute, private router: Router,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar, private appointmentSocketioService: AppointmentSocketioService,
+              private appointmentProvider: AppointmentProvider) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
     });
@@ -40,19 +46,32 @@ export class AppointmentSettingsComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.appointment$ = this.appointmentProvider.appointment$;
+
     (await this.appointmentService.hasPermission(this.link))
       .subscribe((res) => {
         if (res.type === HttpEventType.Response) {
           this.permission = true;
-          this.appointmentService
-            .getAppointment(this.link, false)
-            .subscribe(sAppointment => {
-              console.log('gotAppointment');
-              this.appointment = sAppointment;
-            });
+
+          this.appointment$ = this.appointmentProvider.appointment$;
+
+          if (!this.appointmentProvider.hasValue()) {
+            this.appointmentSocketioService.loadAppointment(this.link);
+          }
+
+          this.listenForChange();
         }
       }, () => {
         this.permission = false;
+      });
+  }
+
+  public listenForChange() {
+    this.appointment$
+      .subscribe((val) => {
+        if (!this.appointment) {
+          this.appointment = val;
+        }
       });
   }
 
@@ -65,57 +84,12 @@ export class AppointmentSettingsComponent implements OnInit {
     this._save(data);
   }
 
-
   saveLink(data: any) {
     this._save(data);
   }
 
   saveOther(data: any) {
     this._save(data);
-  }
-
-
-  private _save(data: any) {
-    const toChange = {};
-    for (const [key, value] of Object.entries(data)) {
-      if (data[key] !== this.appointment[key]) {
-        toChange[key] = value;
-      }
-    }
-
-    if (JSON.stringify(toChange) !== JSON.stringify({})) {
-      this.appointmentService
-        .updateValues(toChange, this.appointment)
-        .subscribe(
-          res => {
-            if (res.type === HttpEventType.Response) {
-              if (res.status <= 299) {
-                if (this.link !== res.body.link) {
-                  this.appointment.link = res.body.link;
-                  this.router.navigate(['/appointment/settings'], {
-                    queryParams: {a: res.body.link},
-                    queryParamsHandling: 'merge'
-                  });
-                }
-                this.saved();
-              }
-            }
-          },
-          error => {
-            if (error instanceof HttpErrorResponse) {
-              if (error.status === HttpStatus.BAD_REQUEST) {
-                if (error.error.code === 'ER_DUP_ENTRY') {
-                  error.error.error.columns.forEach(fColumn => {
-                      if (fColumn === 'link') {
-                        this.linkDataComponent.updateErrors({attr: 'link', error: 'inUse'});
-                      }
-                    }
-                  );
-                }
-              }
-            }
-          });
-    }
   }
 
   saveAdministrators(data: any) {
@@ -181,6 +155,49 @@ export class AppointmentSettingsComponent implements OnInit {
             }
           }
         });
+  }
+
+  private _save(data: any) {
+    const toChange = {};
+    for (const [key, value] of Object.entries(data)) {
+      if (data[key] !== this.appointment[key]) {
+        toChange[key] = value;
+      }
+    }
+
+    if (JSON.stringify(toChange) !== JSON.stringify({})) {
+      this.appointmentService
+        .updateValues(toChange, this.appointment)
+        .subscribe(
+          res => {
+            if (res.type === HttpEventType.Response) {
+              if (res.status <= 299) {
+                if (this.link !== res.body.link) {
+                  this.appointment.link = res.body.link;
+                  this.router.navigate(['/appointment/settings'], {
+                    queryParams: {a: res.body.link},
+                    queryParamsHandling: 'merge'
+                  });
+                }
+                this.saved();
+              }
+            }
+          },
+          error => {
+            if (error instanceof HttpErrorResponse) {
+              if (error.status === HttpStatus.BAD_REQUEST) {
+                if (error.error.code === 'ER_DUP_ENTRY') {
+                  error.error.error.columns.forEach(fColumn => {
+                      if (fColumn === 'link') {
+                        this.linkDataComponent.updateErrors({attr: 'link', error: 'inUse'});
+                      }
+                    }
+                  );
+                }
+              }
+            }
+          });
+    }
   }
 
   private saved() {
