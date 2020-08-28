@@ -999,8 +999,8 @@ footer {
   width: 1em;
   height: 1em;
   border-radius: 50%;
-  border: 0.2em solid $primary;
-  border-color: $primary transparent $primary transparent;
+  border: 0.2em solid $primary_dark;
+  border-color: $primary_dark transparent $primary_dark transparent;
   animation: lds-dual-ring 1.2s linear infinite;
 }
 
@@ -1010,6 +1010,14 @@ footer {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+.spinning {
+  animation: lds-dual-ring 1s linear infinite;
+
+  &.reverse {
+    animation-direction: reverse;
   }
 }
 

@@ -8,6 +8,7 @@ import {environment} from '../../environments/environment';
 import {Globals} from '../globals';
 import {catchError, map} from 'rxjs/operators';
 import {AppointmentUtil} from '../_util/appointmentUtil.util';
+import {AppointmentStatus} from '../components/termin/appointment.status';
 
 const REFRESH_INTERVAL = 30000;
 const CACHE_SIZE = 1;
@@ -23,11 +24,13 @@ export class AppointmentService {
   private etag = {current: '', last: ''};
 
 
-  constructor(private readonly httpClient: HttpClient, private glob: Globals) {
+  constructor(private readonly httpClient: HttpClient, private glob: Globals, private appointmentStatus: AppointmentStatus) {
     this.globals = glob;
   }
 
-  getAppointment(link: string, slim: boolean): Observable<IAppointmentModel> {
+  public getAppointment(link: string, slim: boolean): Observable<IAppointmentModel> {
+    this.appointmentStatus.updating = true;
+
     let url = `${environment.API_URL}appointment/${link}`;
 
     if (slim) {
@@ -54,6 +57,8 @@ export class AppointmentService {
     }
 
     const res = this.httpClient.get(url, {observe: 'response'});
+
+    this.appointmentStatus.updating = false;
 
     return res.pipe(
       map(response => {
