@@ -226,7 +226,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
         const _enrollments_correct = enrollments_correct
           .slice(0, appointment.maxEnrollments); // enrollments within the enrollment limit
         enrollments_waiting = enrollments_correct
-          .slice(appointment.maxEnrollments, appointment.maxEnrollments + _enrollments_correct.length); // enrollments on waiting list
+          .slice(appointment.maxEnrollments, appointment.maxEnrollments + enrollments_correct.length); // enrollments on waiting list
 
         enrollments_correct = _enrollments_correct;
 
@@ -236,7 +236,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
           .slice(0, appointment.maxEnrollments); // enrollments after deadline
         enrollments_waiting = enrollments_late
           // tslint:disable-next-line:max-line-length
-          .slice(appointment.maxEnrollments, appointment.maxEnrollments + _enrollments_late.length); // enrollments after deadline on waiting list
+          .slice(appointment.maxEnrollments, appointment.maxEnrollments + enrollments_late.length); // enrollments after deadline on waiting list
 
         enrollments_late = _enrollments_late;
 

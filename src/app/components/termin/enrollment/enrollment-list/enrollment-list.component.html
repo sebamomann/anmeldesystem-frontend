@@ -35,9 +35,9 @@
           <mat-expansion-panel-header [collapsedHeight]="'auto'"
                                       [expandedHeight]="'auto'"
                                       class="enrollment-info">
-            <span><mat-icon *ngIf="enrollment.driver !== null"> directions_car </mat-icon>
+            <span><mat-icon *ngIf="enrollment.driver"> directions_car </mat-icon>
               {{ enrollment.name }} </span>
-            <ng-container *ngIf="enrollment.comment !== null">
+            <ng-container *ngIf="enrollment.comment">
               <span class="separator small colored high"></span>
               <span class="comment-block"> {{ enrollment.comment }} </span>
             </ng-container>
