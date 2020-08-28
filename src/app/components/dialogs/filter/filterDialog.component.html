@@ -9,8 +9,10 @@
           {{filter.name}}
         </mat-checkbox>
       </div>
-      <div class="separator tall brighter center semi"></div>
     </ng-container>
+
+    <div *ngIf="dialogFilter.additions.length > 1"
+         class="separator tall brighter center semi"></div>
 
     <ng-container *ngIf="data.appointment.driverAddition">
       <mat-radio-group [(ngModel)]="dialogFilter.driverPassenger">
