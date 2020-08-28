@@ -359,7 +359,7 @@ a {
   width: calc(95% - 30px);
   border-radius: 10px;
   margin: 0 auto 0;
-  padding: 5px 15px 10px;
+  padding: 16px;
   text-align: justify;
   box-shadow: 0 5px 10px rgba(150, 150, 150, 0.5);
 
@@ -747,6 +747,35 @@ span.error {
   color: red
 }
 
+
+.error-block {
+  text-align: center;
+  font-weight: bold;
+
+  h1:first-child {
+    font-size: 1.75em;
+    display: block;
+    color: rgba(0, 0, 0, 0.87);
+    margin-bottom: 25px;
+  }
+
+  img {
+    margin: 0 auto 25px;
+    display: block;
+    height: 150px;
+  }
+
+  & > span {
+    margin: 25px auto;
+    color: rgba(0, 0, 0, 0.87);
+  }
+
+  button {
+    display: block;
+    margin: 25px auto;
+  }
+}
+
 footer {
   font-size: 0.9em;
   color: lightgray;
@@ -949,14 +978,6 @@ footer {
 
   mat-spinner {
     margin: 10px auto;
-  }
-
-  span {
-    display: block;
-    text-align: center;
-    width: 100%;
-    margin-top: 25px;
-    font-size: 1.15em;
   }
 }
 
