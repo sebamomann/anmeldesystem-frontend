@@ -1,5 +1,5 @@
-<mat-card class="float high">
-  <ng-container *ngIf="appointment != undefined; else loading">
+<ng-container *ngIf="appointment != undefined; else loading">
+  <mat-card class="float high">
     <mat-card-title class="headline">
       <span [queryParams]="{a: link}"
             [routerLink]="['/enroll']"
@@ -47,18 +47,33 @@
         </app-other>
       </mat-tab>
     </mat-tab-group>
-  </ng-container>
-</mat-card>
+  </mat-card>
+
+</ng-container>
 
 <app-saved *ngIf="saveSuccess"></app-saved>
 
 <ng-template #loading>
-  <div class="spinner-wrapper">
-    <mat-spinner
-      *ngIf="permission !== false">
-    </mat-spinner>
-    <span *ngIf="permission === null">Berechtigungen werden geprüft</span>
-    <span *ngIf="permission === true">Lade Einstellungen</span>
-    <span *ngIf="permission === false">Fehlende Berechtigungen</span>
-  </div>
+  <ng-container *ngIf="permission !== false">
+    <mat-card class="float error-block">
+      <div class="spinner-wrapper">
+        <mat-spinner
+          *ngIf="permission !== false">
+        </mat-spinner>
+        <span *ngIf="permission === null">Berechtigungen werden geprüft</span>
+        <span *ngIf="permission === true">Lade Einstellungen</span>
+      </div>
+    </mat-card>
+  </ng-container>
+  <ng-container *ngIf="permission === false">
+    <mat-card class="float error-block">
+      <img alt="anmeldesystem appointment not found robot icon" src="/assets/img/404.svg">
+      <span>Fehlende Berechtigungen</span>
+      <button [queryParams]="{a: link}"
+              [routerLink]="['/enroll']"
+              color="primary"
+              mat-raised-button>Oke, sorry!
+      </button>
+    </mat-card>
+  </ng-container>
 </ng-template>
