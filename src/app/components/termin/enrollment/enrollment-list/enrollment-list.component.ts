@@ -342,12 +342,14 @@ export class EnrollmentListComponent implements OnInit {
               () => {
                 const index = this.appointment.enrollments.indexOf(enrollment);
                 this.appointment.enrollments.splice(index, 1);
+
                 this.appointmentProvider.update(this.appointment);
 
                 this.snackBar.open(`"${enrollment.name}" gelöscht`, null, {
                   duration: 2000,
                   panelClass: 'snackbar-default'
                 });
+                this.sendingRequestEmitDelete.emit(false);
 
                 // this.removeEnrollmentFromAppointment(enrollment); // Not used due to ws
               },
@@ -358,11 +360,11 @@ export class EnrollmentListComponent implements OnInit {
                     panelClass: 'snackbar-error'
                   });
                 }
+
+                this.sendingRequestEmitDelete.emit(false);
               }
             );
         }
-
-        this.sendingRequestEmitDelete.emit(false);
       });
   };
 
