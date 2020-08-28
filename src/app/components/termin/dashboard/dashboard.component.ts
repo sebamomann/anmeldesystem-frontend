@@ -47,6 +47,7 @@ export class DashboardComponent implements OnInit {
   public showLegend: any;
   public appointmentsGroupedByMonthAndYear: { month: number; year: number }[];
   public totalAppointmentsLoaded = false;
+  public loading = false;
   private limit = 5;
 
   constructor(public appointmentService: AppointmentService, public router: Router,
@@ -79,6 +80,8 @@ export class DashboardComponent implements OnInit {
           this.hideTemplates = true;
         } else if (result !== undefined) {
           this.totalAppointmentsLoaded = result.length !== this.limit;
+
+          this.loading = false;
 
           this._appointments = [];
           this.appointmentsArchive = [];
@@ -127,6 +130,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onScroll() {
+    this.loading = true;
     this.appointmentProvider.loadAppointments(this._appointmentsTotal[this._appointmentsTotal.length - 1].date, this.limit);
   }
 }

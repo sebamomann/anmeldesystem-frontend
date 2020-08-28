@@ -88,7 +88,9 @@
     </ng-container>
   </div>
   <div *ngIf="!totalAppointmentsLoaded" class="reload">
-    <button (click)="onScroll()" mat-raised-button>
+    <button (click)="onScroll()"
+            [ngClass]="{'active': loading}"
+            mat-raised-button>
       <mat-icon>refresh</mat-icon>
     </button>
   </div>

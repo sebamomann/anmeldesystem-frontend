@@ -150,6 +150,12 @@ $handleLength: 25px;
 .reload {
   margin: 50px auto 0;
   width: fit-content;
+
+  & > .active {
+    mat-icon {
+      animation: spin 1s linear infinite;
+    }
+  }
 }
 
 .archive-block-wrapper {
@@ -162,6 +168,15 @@ $handleLength: 25px;
     border-bottom-left-radius: 15px;
     border-top-right-radius: 15px;
     white-space: nowrap;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 
