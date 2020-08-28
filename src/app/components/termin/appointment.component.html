@@ -35,9 +35,14 @@
     </mat-icon>
   </div>
 
+  <div *ngIf="updating" class="mat-card basic">
+    <span class="big">Anmeldungen werden geladen ...</span>
+    <mat-icon class="spinning reverse">cached</mat-icon>
+  </div>
+
   <div *ngIf="hasUpdate" class="mat-card basic">
     <span class="big">Es sind neue Anmeldungen vorhanden.</span>
-    <mat-icon (click)="reload(appointment.link)">cached</mat-icon>
+    <mat-icon (click)="manualReload()">cached</mat-icon>
   </div>
 
   <ng-container *ngIf="!updateOnWsCallDefined">

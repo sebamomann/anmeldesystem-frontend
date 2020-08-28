@@ -12,6 +12,7 @@ import {EnrollmentService} from '../../../../services/enrollment.service';
 import {ResendEnrollmentPermissionComponent} from '../../../dialogs/key-dialog/resend-enrollment-permission.component';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
 import {BehaviorSubject} from 'rxjs';
+import {AppointmentProvider} from '../../appointment.provider';
 
 const HttpStatus = require('http-status-codes');
 
@@ -47,25 +48,23 @@ export class EnrollmentListComponent implements OnInit {
   public appointment: IAppointmentModel;
   @Input()
   public isMain = false; // TODO change to is first
-  @Input('enrollments') set enrollments(enrollments: IEnrollmentModel[]) {
-    this.enrollments$.next(enrollments);
-  };
-
   public enrollments$: BehaviorSubject<IEnrollmentModel[]> = new BehaviorSubject<IEnrollmentModel[]>(undefined);
   public enrollments_filtered$: BehaviorSubject<IEnrollmentModel[]> = new BehaviorSubject<IEnrollmentModel[]>(undefined);
-
   public filter: any;
   public disableAnimation = true;
   public filterDialogApplied = true; // init true for behaviour subject appliance // DO NOT CHANGE
-
   private enrollments_unfiltered;
 
   constructor(public dialog: MatDialog, private router: Router,
               private authenticationService: AuthenticationService,
               private enrollmentService: EnrollmentService,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar, private appointmentProvider: AppointmentProvider) {
     setTimeout(() => this.disableAnimation = false);
   }
+
+  @Input('enrollments') set enrollments(enrollments: IEnrollmentModel[]) {
+    this.enrollments$.next(enrollments);
+  };
 
   ngOnInit() {
     this.filter = this.initializeFilterObject(this.appointment);
@@ -76,18 +75,6 @@ export class EnrollmentListComponent implements OnInit {
       this.applyFilter();
     });
   }
-
-  // REMOVED DUE TO WS
-  // /**
-  //  * Remove enrollment from appointment list. Used for eliminating the need of re-fetching the entire appointment after enrollment deletion
-  //  *
-  //  * @param enrollment IEnrollmentModel Enrollment to delete from list
-  //  */
-  // removeEnrollmentFromAppointment: (enrollment: IEnrollmentModel) => void
-  //   = (enrollment: IEnrollmentModel) => {
-  //   const index = this.enrollments.indexOf(enrollment);
-  //   this.enrollments.splice(index, 1);
-  // };
 
   /**
    * Check if id of addition is checked by enrollment.
@@ -283,12 +270,6 @@ export class EnrollmentListComponent implements OnInit {
     return i;
   };
 
-  private _isNewFilter(newFilter) {
-    return isObject(newFilter)
-      && newFilter !== this.filter
-      && newFilter != null;
-  }
-
   public preCheckOpenConfirmationDialog = async (enrollment: IEnrollmentModel, operation: string): Promise<void> => {
     this.enrollmentService
       .checkPermission(enrollment, this.appointment.link)
@@ -309,6 +290,12 @@ export class EnrollmentListComponent implements OnInit {
           }
         });
   };
+
+  private _isNewFilter(newFilter) {
+    return isObject(newFilter)
+      && newFilter !== this.filter
+      && newFilter != null;
+  }
 
   /**
    * Create filter object with to appointment corresponding addition list.
@@ -341,7 +328,11 @@ export class EnrollmentListComponent implements OnInit {
         this.enrollmentService
           .delete(enrollment, this.appointment.link)
           .subscribe(
-            deletionResult => {
+            () => {
+              const index = this.appointment.enrollments.indexOf(enrollment);
+              this.appointment.enrollments.splice(index, 1);
+              this.appointmentProvider.update(this.appointment);
+
               this.snackBar.open(`"${enrollment.name}" gelöscht`, null, {
                 duration: 2000,
                 panelClass: 'snackbar-default'

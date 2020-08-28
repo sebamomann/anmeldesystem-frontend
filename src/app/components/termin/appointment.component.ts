@@ -12,6 +12,7 @@ import {SettingsService} from '../../services/settings.service';
 import {AppointmentService} from '../../services/appointment.service';
 import {AppointmentUtil} from '../../_util/appointmentUtil.util';
 import {MatSnackBar} from '@angular/material';
+import {AppointmentStatus} from './appointment.status';
 
 @Component({
   selector: 'app-appointment',
@@ -71,12 +72,13 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public updateOnWsCallDefined = false;
   public showEnrollmentHint = false;
   public showEnrollmentHintForceHide = false;
+  public updating = false;
   private manualAppointmentReloadCount = 0;
 
   constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
               private appointmentProvider: AppointmentProvider, public settingsService: SettingsService,
-              private appointmentService: AppointmentService, private snackBar: MatSnackBar) {
+              private appointmentService: AppointmentService, private snackBar: MatSnackBar, private appointmentStatus: AppointmentStatus) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
     });
@@ -103,6 +105,12 @@ export class AppointmentComponent implements OnInit, OnDestroy {
       .hasUpdate$
       .subscribe((bool: boolean) => {
         this.hasUpdate = bool;
+      });
+
+    this.appointmentStatus
+      .updating$
+      .subscribe((bool: boolean) => {
+        this.updating = bool;
       });
 
     this.appointmentSocketioService
@@ -184,12 +192,17 @@ export class AppointmentComponent implements OnInit, OnDestroy {
         });
   };
 
-  public reload(link) {
+  /**
+   * Reload appointment (called by UI -> manual reload)
+   * If user clicked this button 3 times, prompt him to activate automatic reload.<br/>
+   * Also set has update to false, so the UI is not showing it.
+   */
+  public manualReload() {
     this.manualAppointmentReloadCount++;
     if (this.manualAppointmentReloadCount >= 3) {
       this.updateOnWsCallDefined = false;
     }
-    this.appointmentSocketioService.reload(link);
+    this.appointmentSocketioService.reload(this.link);
   }
 
   public retryWebsocketSubscription(link: string) {
@@ -226,7 +239,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
         const _enrollments_correct = enrollments_correct
           .slice(0, appointment.maxEnrollments); // enrollments within the enrollment limit
         enrollments_waiting = enrollments_correct
-          .slice(appointment.maxEnrollments, appointment.maxEnrollments + _enrollments_correct.length); // enrollments on waiting list
+          .slice(appointment.maxEnrollments, appointment.maxEnrollments + enrollments_correct.length); // enrollments on waiting list
 
         enrollments_correct = _enrollments_correct;
 
@@ -236,7 +249,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
           .slice(0, appointment.maxEnrollments); // enrollments after deadline
         enrollments_waiting = enrollments_late
           // tslint:disable-next-line:max-line-length
-          .slice(appointment.maxEnrollments, appointment.maxEnrollments + _enrollments_late.length); // enrollments after deadline on waiting list
+          .slice(appointment.maxEnrollments, appointment.maxEnrollments + enrollments_late.length); // enrollments after deadline on waiting list
 
         enrollments_late = _enrollments_late;
 

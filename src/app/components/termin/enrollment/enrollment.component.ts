@@ -421,10 +421,16 @@ export class EnrollmentComponent implements OnInit {
             if (result.status === HttpStatus.CREATED
               || result.status === HttpStatus.OK) {
               if (functionName === 'create') {
-                if (result.body.token !== undefined) {
+                this.appointment.enrollments.push(result.body);
+
+                if (result.body.token) {
                   this.storeEnrollmentAccessToken(this.link, result.body);
                 }
+              } else {
+                this.appointment.enrollments.map((mEnrollment) => mEnrollment.id === result.body.id ? result.body : mEnrollment);
               }
+
+              this.appointmentProvider.update(this.appointment);
 
               this.router.navigate([`enroll`], {
                 queryParams: {

@@ -13,15 +13,23 @@ import {BehaviorSubject} from 'rxjs';
 })
 export class AppointmentSocketioService {
   private retry = 0;
+  private socket;
+  private current_link = '';
 
   constructor(private appointmentProvider: AppointmentProvider, private authenticationService: AuthenticationService,
               private appointmentService: AppointmentService, private settingsService: SettingsService) {
   }
 
-  private socket;
-  private current_link = '';
-
   public _hasUpdate$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  public get hasUpdate$(): BehaviorSubject<boolean> {
+    return this._hasUpdate$;
+  }
+
+  public set hasUpdate(value: boolean) {
+    this._hasUpdate$.next(value);
+  }
+
   public _websocketSubscriptionValid$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   public get websocketSubscriptionValid$(): BehaviorSubject<boolean> {
@@ -32,14 +40,6 @@ export class AppointmentSocketioService {
 
   public get websocketSubscriptionRetryCount$(): BehaviorSubject<number> {
     return this._websocketSubscriptionRetryCount$;
-  }
-
-  public get hasUpdate$(): BehaviorSubject<boolean> {
-    return this._hasUpdate$;
-  }
-
-  public set hasUpdate(value: boolean) {
-    this._hasUpdate$.next(value);
   }
 
   async setupSocketConnection() {
@@ -60,6 +60,7 @@ export class AppointmentSocketioService {
       }
 
       this.socket.on('update', (data: any) => {
+        // If automatic update is allowed
         if (this.settingsService.autoLoadOnWsCall
           && this.settingsService.isAllowedByWiFi()) {
           this.appointmentService
@@ -110,26 +111,26 @@ export class AppointmentSocketioService {
     }
   }
 
-  reload(link) {
+  public reload(link) {
     this.current_link = link;
+    this.hasUpdate = false;
 
     this.appointmentService
       .getAppointment(link, false)
       .subscribe(
         (appointment: IAppointmentModel) => {
           this.appointmentProvider.update(appointment);
-          this.hasUpdate = false;
         }
       );
-  }
-
-  private reset() {
-    this.socket = undefined;
   }
 
   public retrySubscription(link: string) {
     this.current_link = '';
     this.retry = 0;
     this.subscribeToAppointmentUpdates(link);
+  }
+
+  private reset() {
+    this.socket = undefined;
   }
 }
