@@ -32,8 +32,6 @@ export class LoadingDisableDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.renderer.setProperty(this.el.nativeElement, 'innerHTML', this.innerValue);
-
     this.subscription = this.active.subscribe(value => {
       this.value = value;
       if (!value) {
@@ -43,6 +41,8 @@ export class LoadingDisableDirective implements OnInit, OnDestroy {
         this.setLoading();
       }
     });
+
+    // this.active.emit(true);
   }
 
   ngOnDestroy() {
@@ -51,9 +51,11 @@ export class LoadingDisableDirective implements OnInit, OnDestroy {
 
   private setLoading() {
     if (!this.hideValue) {
-      this.renderer.setProperty(this.el.nativeElement, 'innerHTML', `<span class="loading-circle"></span>${this.innerValue}`);
+      this.renderer.setProperty(this.el.nativeElement, 'innerHTML',
+        `<div class="loading-circle-wrapper"><span class="loading-circle"></span></div>${this.innerValue}`);
     } else {
-      this.renderer.setProperty(this.el.nativeElement, 'innerHTML', `<span class="loading-circle"></span>`);
+      this.renderer.setProperty(this.el.nativeElement, 'innerHTML',
+        `<div class="loading-circle-wrapper"><span class="loading-circle"></span></div>`);
     }
     this.renderer.setAttribute(this.el.nativeElement, 'disabled', 'true');
   }
