@@ -32,6 +32,8 @@ export class LoadingDisableDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.renderer.setProperty(this.el.nativeElement, 'innerHTML', this.innerValue);
+
     this.subscription = this.active.subscribe(value => {
       this.value = value;
       if (!value) {
