@@ -9,7 +9,8 @@ export class LoadingDisableDirective implements OnInit, OnDestroy {
   @Input() active: EventEmitter<boolean>;
   subscription: Subscription;
 
-  @Input() innerHtml: string;
+  @Input() innerValue: string;
+  @Input() hideValue: boolean;
 
   private value: any;
 
@@ -31,12 +32,12 @@ export class LoadingDisableDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.renderer.setProperty(this.el.nativeElement, 'innerHTML', this.innerHtml);
+    this.renderer.setProperty(this.el.nativeElement, 'innerHTML', this.innerValue);
 
     this.subscription = this.active.subscribe(value => {
       this.value = value;
       if (!value) {
-        this.renderer.setProperty(this.el.nativeElement, 'innerHTML', this.innerHtml);
+        this.renderer.setProperty(this.el.nativeElement, 'innerHTML', this.innerValue);
         this.renderer.removeAttribute(this.el.nativeElement, 'disabled');
       } else {
         this.setLoading();
@@ -49,7 +50,11 @@ export class LoadingDisableDirective implements OnInit, OnDestroy {
   }
 
   private setLoading() {
-    this.renderer.setProperty(this.el.nativeElement, 'innerHTML', `<span class="loading-circle"></span>${this.innerHtml}`);
+    if (!this.hideValue) {
+      this.renderer.setProperty(this.el.nativeElement, 'innerHTML', `<span class="loading-circle"></span>${this.innerValue}`);
+    } else {
+      this.renderer.setProperty(this.el.nativeElement, 'innerHTML', `<span class="loading-circle"></span>`);
+    }
     this.renderer.setAttribute(this.el.nativeElement, 'disabled', 'true');
   }
 }

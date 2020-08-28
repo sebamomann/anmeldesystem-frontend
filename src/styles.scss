@@ -1017,10 +1017,10 @@ footer {
 .loading-circle:after {
   content: " ";
   display: block;
-  width: 1em;
-  height: 1em;
+  width: calc(100% - 0.15em);
+  height: calc(100% - 0.15em);
   border-radius: 50%;
-  border: 0.2em solid $primary_dark;
+  border: 0.15em solid $primary_dark;
   border-color: $primary_dark transparent $primary_dark transparent;
   animation: lds-dual-ring 1.2s linear infinite;
 }

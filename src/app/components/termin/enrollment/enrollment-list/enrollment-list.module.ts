@@ -20,6 +20,7 @@ import {CommentDialogComponent} from '../../../dialogs/comment/commentDialog.com
 import {ConfirmationDialogComponent} from '../../../dialogs/confirmation-dialog/confirmation-dialog.component';
 import {ResendEnrollmentPermissionComponent} from '../../../dialogs/key-dialog/resend-enrollment-permission.component';
 import {RouterModule} from '@angular/router';
+import {LoadingDisableModule} from '../../../../directives/loading-disable/loading-disable.module';
 
 
 @NgModule({
@@ -53,6 +54,7 @@ import {RouterModule} from '@angular/router';
     ReactiveFormsModule,
     RouterModule,
     MatSelectModule,
+    LoadingDisableModule,
   ],
   entryComponents: [
     FilterDialogComponent,

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit} from '@angular/core';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
 import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
 import {FilterDialogComponent} from '../../../dialogs/filter/filterDialog.component';
@@ -53,6 +53,10 @@ export class EnrollmentListComponent implements OnInit {
   public filter: any;
   public disableAnimation = true;
   public filterDialogApplied = true; // init true for behaviour subject appliance // DO NOT CHANGE
+
+  public sendingRequestEmitEdit = new EventEmitter<boolean>();
+  public sendingRequestEmitDelete = new EventEmitter<boolean>();
+
   private enrollments_unfiltered;
 
   constructor(public dialog: MatDialog, private router: Router,
@@ -271,6 +275,12 @@ export class EnrollmentListComponent implements OnInit {
   };
 
   public preCheckOpenConfirmationDialog = async (enrollment: IEnrollmentModel, operation: string): Promise<void> => {
+    if (operation === 'delete') {
+      this.sendingRequestEmitDelete.emit(true);
+    } else {
+      this.sendingRequestEmitEdit.emit(true);
+    }
+
     this.enrollmentService
       .checkPermission(enrollment, this.appointment.link)
       .subscribe(() => {
@@ -323,34 +333,37 @@ export class EnrollmentListComponent implements OnInit {
       data: `Bist du sicher, dass du "${enrollment.name}" löschen möchtest?`
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.enrollmentService
-          .delete(enrollment, this.appointment.link)
-          .subscribe(
-            () => {
-              const index = this.appointment.enrollments.indexOf(enrollment);
-              this.appointment.enrollments.splice(index, 1);
-              this.appointmentProvider.update(this.appointment);
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if (result) {
+          this.enrollmentService
+            .delete(enrollment, this.appointment.link)
+            .subscribe(
+              () => {
+                const index = this.appointment.enrollments.indexOf(enrollment);
+                this.appointment.enrollments.splice(index, 1);
+                this.appointmentProvider.update(this.appointment);
 
-              this.snackBar.open(`"${enrollment.name}" gelöscht`, null, {
-                duration: 2000,
-                panelClass: 'snackbar-default'
-              });
-
-              // this.removeEnrollmentFromAppointment(enrollment); // Not used due to ws
-            },
-            error => {
-              if (error.status === HttpStatus.FORBIDDEN) {
-                this.snackBar.open(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu löschen`, null, {
-                  duration: 4000,
-                  panelClass: 'snackbar-error'
+                this.snackBar.open(`"${enrollment.name}" gelöscht`, null, {
+                  duration: 2000,
+                  panelClass: 'snackbar-default'
                 });
+
+                // this.removeEnrollmentFromAppointment(enrollment); // Not used due to ws
+              },
+              error => {
+                if (error.status === HttpStatus.FORBIDDEN) {
+                  this.snackBar.open(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu löschen`, null, {
+                    duration: 4000,
+                    panelClass: 'snackbar-error'
+                  });
+                }
               }
-            }
-          );
-      }
-    });
+            );
+        }
+
+        this.sendingRequestEmitDelete.emit(false);
+      });
   };
 
   private permissionGranted(operation: string, enrollment: IEnrollmentModel) {
@@ -366,6 +379,8 @@ export class EnrollmentListComponent implements OnInit {
             editOperation: null
           },
         queryParamsHandling: 'merge'
+      }).then(() => {
+        this.sendingRequestEmitEdit.emit(false);
       });
     }
   }
