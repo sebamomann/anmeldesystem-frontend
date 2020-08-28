@@ -19,7 +19,7 @@ export class EnrollmentService {
     const _enrollment: any = enrollment;
     _enrollment.domain = `${this.window.location.hostname}/enrollment?a=${appointment.link}&e={{0}}&t={{1}}`;
     _enrollment.appointment = {link: appointment.link};
-    const url = `${environment.API_URL}enrollment?asquery=true`;
+    const url = `${environment.API_URL}enrollment`;
     return this.httpClient.post<IEnrollmentModel>(url, _enrollment, {observe: 'response', reportProgress: true});
   }
 

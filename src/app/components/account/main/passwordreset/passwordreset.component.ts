@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {AccountService} from '../../../../services/account.service';
 import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
@@ -42,9 +42,11 @@ export class PasswordresetComponent implements OnInit {
   public mail: string;
   public token: string;
   public error = null;
+
   public mailEvent = new FormGroup({
     mail: new FormControl('', [Validators.required, Validators.email]),
   });
+
   public passwordResetEvent = new FormGroup({
     passwords: new FormGroup({
       password: new FormControl('', [Validators.required]),
@@ -53,13 +55,16 @@ export class PasswordresetComponent implements OnInit {
   });
 
   public doneMsg: string;
-  private date: any;
   public validated = false;
+  public sendingRequestEmit = new EventEmitter<boolean>();
+  private date: any;
+  private mailPlain: string;
 
   constructor(private route: ActivatedRoute, private accountService: AccountService,
               private validatorService: ValidatorService) {
     this.route.params.subscribe(params => {
       this.mail = params.mail;
+      this.mailPlain = atob(params.mail);
       this.token = params.token;
     });
 
@@ -69,6 +74,10 @@ export class PasswordresetComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.sendingRequestEmit.subscribe((value) => {
+      this.loading = value;
+    });
+
     if (this.mail != null && this.token != null) {
       await this.accountService
         .validatePasswordresetToken(this.mail, this.token)
@@ -112,31 +121,42 @@ export class PasswordresetComponent implements OnInit {
 
   initReset() {
     if (this.mailEvent.valid) {
-      this.loading = true;
-      this.accountService.initializePasswordReset(this.getMail().value).subscribe(value => {
-        if (value.status === 204) {
-          setTimeout(() => {
-            this.loading = false;
-            this.done = true;
-            this.doneMsg = 'Bitte folge den Anweisungen in der dir eben zugesandten Email.';
-          }, 1000);
-        }
-      });
+      this.sendingRequestEmit.emit(true);
+      this.accountService
+        .initializePasswordReset(this.getMail().value)
+        .subscribe(value => {
+            this.sendingRequestEmit.emit(false);
+
+            if (value.status === 204) {
+              this.done = true;
+              this.doneMsg = 'Bitte folge den Anweisungen in der dir eben zugesandten Email.';
+            }
+          },
+          err => {
+            this.sendingRequestEmit.emit(false);
+
+            this.mailEvent.get('mail').setErrors({notFound: true});
+          });
     }
   }
 
   setPassword() {
     if (this.passwordResetEvent.valid) {
+      this.sendingRequestEmit.emit(true);
+
       this.accountService
         .resetPassword(this.getPassword().value, this.mail, this.token)
         .subscribe(
           result => {
             if (result.type === HttpEventType.Response) {
+              this.sendingRequestEmit.emit(false);
               this.done = true;
               this.doneMsg = 'Top. Ich habe dein Passwort aktualisiert!';
             }
           },
           () => {
+            this.sendingRequestEmit.emit(false);
+
             this.error = 'Huch, da ist etwas schief gegangen. Ich kann dir leider nicht weiterhelfen. Versuche es später nochmal.';
           });
     } else {
@@ -149,6 +169,8 @@ export class PasswordresetComponent implements OnInit {
       return 'Bitte gebe eine Mail Adresse an';
     } else if (this.getMail().hasError('email')) {
       return 'Bitte gebe eine gültige E-Mail Adresse an';
+    } else if (this.getMail().hasError('notFound')) {
+      return 'Sorry, diese Mail ist nicht in meinem System hinterlegt';
     }
   }
 
