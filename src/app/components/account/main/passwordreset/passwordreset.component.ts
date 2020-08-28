@@ -58,11 +58,13 @@ export class PasswordresetComponent implements OnInit {
   public validated = false;
   public sendingRequestEmit = new EventEmitter<boolean>();
   private date: any;
+  private mailPlain: string;
 
   constructor(private route: ActivatedRoute, private accountService: AccountService,
               private validatorService: ValidatorService) {
     this.route.params.subscribe(params => {
       this.mail = params.mail;
+      this.mailPlain = atob(params.mail);
       this.token = params.token;
     });
 
@@ -140,16 +142,21 @@ export class PasswordresetComponent implements OnInit {
 
   setPassword() {
     if (this.passwordResetEvent.valid) {
+      this.sendingRequestEmit.emit(true);
+
       this.accountService
         .resetPassword(this.getPassword().value, this.mail, this.token)
         .subscribe(
           result => {
             if (result.type === HttpEventType.Response) {
+              this.sendingRequestEmit.emit(false);
               this.done = true;
               this.doneMsg = 'Top. Ich habe dein Passwort aktualisiert!';
             }
           },
           () => {
+            this.sendingRequestEmit.emit(false);
+
             this.error = 'Huch, da ist etwas schief gegangen. Ich kann dir leider nicht weiterhelfen. Versuche es später nochmal.';
           });
     } else {
