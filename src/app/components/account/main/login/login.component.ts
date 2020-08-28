@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AccountService} from '../../../../services/account.service';
@@ -25,8 +25,9 @@ export class LoginComponent implements OnInit {
   });
 
   public returnUrl = '';
-  private changeDate: Date;
   public message = '';
+  public sendingRequestEmit = new EventEmitter<boolean>();
+  private changeDate: Date;
 
   constructor(private router: Router, private accountService: AccountService, private route: ActivatedRoute,
               private authenticationService: AuthenticationService, private alertService: AlertService,
@@ -48,11 +49,16 @@ export class LoginComponent implements OnInit {
 
       const retUrl = decodeURIComponent(this.returnUrl);
 
-      await this.authenticationService.login(username, password).pipe(first())
+      this.sendingRequestEmit.emit(true);
+      this.authenticationService
+        .login(username, password)
+        .pipe(first())
         .subscribe(
           () => {
             this.router.navigateByUrl(retUrl)
               .then(() => {
+                this.sendingRequestEmit.emit(false);
+
                 this.snackBar.open('Erfolgreich eingeloggt',
                   'OK',
                   {
@@ -71,6 +77,8 @@ export class LoginComponent implements OnInit {
             } else {
               this.getPassword().setErrors({invalid: true});
             }
+
+            this.sendingRequestEmit.emit(false);
           });
     }
   }
