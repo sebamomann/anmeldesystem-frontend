@@ -28,6 +28,7 @@
     "@angular/material-moment-adapter": "latest",
     "@angular/platform-browser": "~8.2.12",
     "@angular/platform-browser-dynamic": "~8.2.12",
+    "@angular/pwa": "^0.1000.8",
     "@angular/router": "~8.2.12",
     "@angular/service-worker": "~8.2.12",
     "@babel/compat-data": "^7.9.0",

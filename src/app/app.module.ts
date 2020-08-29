@@ -28,7 +28,7 @@ registerLocaleData(localeDe);
     HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+    ServiceWorkerModule.register('ngsw-worker.json', {enabled: environment.production}),
     MatProgressSpinnerModule,
     MatDialogModule,
     MatButtonModule,
