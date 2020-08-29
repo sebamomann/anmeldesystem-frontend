@@ -229,7 +229,7 @@ export class EnrollmentListComponent implements OnInit {
   };
 
   public openPermissionResendDialog = (enrollment: IEnrollmentModel, operation: string) => {
-    this.dialog.open(ResendEnrollmentPermissionComponent, {
+    const dialogRef = this.dialog.open(ResendEnrollmentPermissionComponent, {
       width: '90%',
       maxWidth: 'initial',
       height: 'auto',
@@ -239,6 +239,11 @@ export class EnrollmentListComponent implements OnInit {
         operation
       }
     });
+
+    dialogRef.afterClosed()
+      .subscribe(() => {
+        this.sendingRequestEmitEdit.emit(false);
+      });
   };
 
   /**
