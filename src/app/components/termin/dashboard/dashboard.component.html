@@ -90,6 +90,7 @@
   <div *ngIf="!totalAppointmentsLoaded" class="reload">
     <button (click)="onScroll()"
             [ngClass]="{'active': loading}"
+            aria-label="weitere termine aus archiv laden"
             mat-raised-button>
       <mat-icon>refresh</mat-icon>
     </button>
