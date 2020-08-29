@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Directive, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Renderer2} from '@angular/core';
+import {Directive, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {Subscription} from 'rxjs';
 
 @Directive({
@@ -15,7 +15,6 @@ export class LoadingDisableDirective implements OnInit, OnDestroy {
   private value: any;
 
   constructor(
-    private ref: ChangeDetectorRef,
     private renderer: Renderer2,
     private el: ElementRef
   ) {

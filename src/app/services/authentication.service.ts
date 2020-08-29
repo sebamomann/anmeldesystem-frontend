@@ -11,12 +11,10 @@ import {Router, RouterStateSnapshot} from '@angular/router';
 export class AuthenticationService {
   public currentUser: Observable<any>;
   private currentUserSubject: BehaviorSubject<any>;
-  private snapshot: RouterStateSnapshot;
 
   constructor(private _http: HttpClient, private _router: Router) {
     this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
-    this.snapshot = _router.routerState.snapshot;
 
     this.currentUserSubject
       .subscribe(() => {

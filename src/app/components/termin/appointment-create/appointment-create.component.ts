@@ -1,8 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {MatAutocomplete, MatDialog, MatStepper} from '@angular/material';
-import {HttpClient, HttpErrorResponse, HttpEventType} from '@angular/common/http';
-import {DomSanitizer} from '@angular/platform-browser';
+import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import {AppointmentService} from '../../../services/appointment.service';
 import {Router} from '@angular/router';
 
@@ -27,7 +26,6 @@ export class AppointmentCreateComponent implements OnInit {
   public stepValid = [false, false, false];
 
   constructor(private formBuilder: FormBuilder,
-              private http: HttpClient, private sanitizer: DomSanitizer,
               public dialog: MatDialog, private appointmentService: AppointmentService,
               private router: Router) {
 

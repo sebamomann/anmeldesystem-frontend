@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
-import {AppointmentService} from '../../../services/appointment.service';
 import {Location} from '@angular/common';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {ActivatedRoute} from '@angular/router';
@@ -9,8 +8,6 @@ import {Observable} from 'rxjs';
 import {SEOService} from '../../../_helper/_seo.service';
 import {AppointmentSocketioService} from '../../../services/appointment-socketio.service';
 import {AppointmentProvider} from '../appointment.provider';
-
-const HttpStatus = require('http-status-codes');
 
 @Component({
   selector: 'app-driver',
@@ -46,8 +43,8 @@ export class DriverComponent implements OnInit {
   appointment$: Observable<IAppointmentModel>;
   public loaded = true;
 
-  constructor(private appointmentService: AppointmentService, private location: Location, private route: ActivatedRoute,
-              private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
+  constructor(private location: Location, private route: ActivatedRoute,
+              private appointmentSocketioService: AppointmentSocketioService,
               private appointmentProvider: AppointmentProvider) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
@@ -69,6 +66,24 @@ export class DriverComponent implements OnInit {
 
         this.successfulRequest();
       });
+  }
+
+  compare(nr1: number, nr2: number) {
+    if (nr1 > nr2) {
+      return 1;
+    }
+
+    if (nr1 === nr2) {
+      return 0;
+    }
+
+    if (nr1 < nr2) {
+      return -1;
+    }
+  }
+
+  goBack() {
+    this.location.back();
   }
 
   private successfulRequest() {
@@ -111,24 +126,6 @@ export class DriverComponent implements OnInit {
           this.loaded = true;
         }
       });
-  }
-
-  compare(nr1: number, nr2: number) {
-    if (nr1 > nr2) {
-      return 1;
-    }
-
-    if (nr1 === nr2) {
-      return 0;
-    }
-
-    if (nr1 < nr2) {
-      return -1;
-    }
-  }
-
-  goBack() {
-    this.location.back();
   }
 }
 

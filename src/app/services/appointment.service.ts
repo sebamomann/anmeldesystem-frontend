@@ -5,27 +5,19 @@ import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
 import {environment} from '../../environments/environment';
-import {Globals} from '../globals';
 import {catchError, map} from 'rxjs/operators';
 import {AppointmentUtil} from '../_util/appointmentUtil.util';
 import {AppointmentStatus} from '../components/termin/appointment.status';
-
-const REFRESH_INTERVAL = 30000;
-const CACHE_SIZE = 1;
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppointmentService {
-  private globals: Globals;
-
   // CACHING
-  private lastFetched: string;
   private etag = {current: '', last: ''};
 
 
-  constructor(private readonly httpClient: HttpClient, private glob: Globals, private appointmentStatus: AppointmentStatus) {
-    this.globals = glob;
+  constructor(private readonly httpClient: HttpClient, private appointmentStatus: AppointmentStatus) {
   }
 
   public getAppointment(link: string, slim: boolean): Observable<IAppointmentModel> {

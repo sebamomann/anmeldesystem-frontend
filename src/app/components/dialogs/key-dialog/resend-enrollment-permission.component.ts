@@ -1,6 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {AuthenticationService} from '../../../services/authentication.service';
-import {FormBuilder} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Router, RouterStateSnapshot} from '@angular/router';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
@@ -16,14 +15,12 @@ export class ResendEnrollmentPermissionComponent implements OnInit {
   public currentUrlSnapshotWithParameter: RouterStateSnapshot;
   public operation: string;
 
-  constructor(private formBuilder: FormBuilder,
-              private router: Router,
-              public authenticationService: AuthenticationService,
+  constructor(private router: Router, public authenticationService: AuthenticationService,
               public matDialogRef: MatDialogRef<ResendEnrollmentPermissionComponent>,
               @Inject(MAT_DIALOG_DATA) public data) {
     this.enrollment = data.enrollment;
     this.operation = data.operation;
-    this.currentUrlSnapshotWithParameter = router.routerState.snapshot;
+    this.currentUrlSnapshotWithParameter = this.router.routerState.snapshot;
   }
 
   ngOnInit() {

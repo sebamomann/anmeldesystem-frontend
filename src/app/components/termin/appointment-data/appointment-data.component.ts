@@ -21,7 +21,7 @@ export class AppointmentDataComponent implements OnInit {
   @Input() public preview = false;
   @Input() public type: string;
 
-  public userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
+  public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
   public isPinned = false;
 
   constructor(private snackBar: MatSnackBar, private router: Router, @Inject(WINDOW) public window: Window,

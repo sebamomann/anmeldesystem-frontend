@@ -35,7 +35,6 @@ export class AppComponent {
   public items: any[];
   public now: string;
   public currentUser: IUserModel;
-  private userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
   public version: string = version;
 
   constructor(private router: Router, @Inject(WINDOW) private window: Window,

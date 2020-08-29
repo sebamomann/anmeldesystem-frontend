@@ -4,8 +4,8 @@ import {AccountService} from '../../../../services/account.service';
 import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {DatePipe} from '@angular/common';
 import {HttpEventType} from '@angular/common/http';
-import {ValidatorService} from '../../../../_helper/validatorService';
 import {animate, query, style, transition, trigger} from '@angular/animations';
+import {ValidatorService} from '../../../../_helper/validatorService';
 
 const HttpStatus = require('http-status-codes');
 
@@ -57,8 +57,8 @@ export class PasswordresetComponent implements OnInit {
   public doneMsg: string;
   public validated = false;
   public sendingRequestEmit = new EventEmitter<boolean>();
-  private date: any;
   public mailPlain: string;
+  private date: any;
 
   constructor(private route: ActivatedRoute, private accountService: AccountService,
               private validatorService: ValidatorService) {
@@ -69,7 +69,7 @@ export class PasswordresetComponent implements OnInit {
     });
 
     this.route.queryParams.subscribe(params => {
-      this.getMail().setValue(validatorService.emailIsValid(params.mail) ? params.mail : '');
+      this.getMail().setValue(this.validatorService.emailIsValid(params.mail) ? params.mail : '');
     });
   }
 

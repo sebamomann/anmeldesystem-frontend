@@ -1,6 +1,5 @@
 import {Component, EventEmitter, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
-import {AppointmentService} from '../../../services/appointment.service';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router, RouterStateSnapshot} from '@angular/router';
 import {IAdditionModel} from '../../../models/IAddition.model';
@@ -92,10 +91,8 @@ export class EnrollmentComponent implements OnInit {
   private ENROLLMENT_OUTPUT_KEY = 'enrollmentOutput';
   // Sending options
   private autoSend = false;
-  private autoSubmitBySetting = false;
 
-  constructor(private appointmentService: AppointmentService, private enrollmentService: EnrollmentService,
-              private location: Location,
+  constructor(private enrollmentService: EnrollmentService, private location: Location,
               private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
               private authenticationService: AuthenticationService, private snackBar: MatSnackBar,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,

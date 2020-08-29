@@ -13,8 +13,6 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
     this.authService.getRefreshToken()
   );
 
-  private reqCopy;
-
   constructor(public authService: AuthenticationService) {
   }
 
@@ -64,9 +62,6 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
 
             // Set the refreshTokenSubject to null so that subsequent API calls will wait until the new token has been retrieved
             this.refreshTokenSubject.next(null);
-
-            // Call auth.refreshAccessToken(this is an Observable that will be returned)
-            this.reqCopy = request.clone();
 
             return this.authService
               .refreshAccessToken()

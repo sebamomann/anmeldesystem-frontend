@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {AccountService} from '../../../../services/account.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {UserDataComponent} from '../../form/user-data/user-data.component';
@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit {
   public error = null;
   public verified = false;
 
-  constructor(private router: Router, private accountService: AccountService,
+  constructor(private accountService: AccountService,
               private route: ActivatedRoute) {
     this.route.params.subscribe(params => {
       this.mail = window.atob(params.mail);

@@ -27,7 +27,6 @@ export class AppointmentSettingsComponent implements OnInit {
   public saveSuccess: boolean;
   public uploadingFile: any = [];
   public permission = null;
-  private error: any = [];
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog,
               private route: ActivatedRoute, private router: Router,

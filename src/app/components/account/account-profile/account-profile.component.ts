@@ -3,7 +3,6 @@ import {HttpErrorResponse, HttpEventType, HttpResponse} from '@angular/common/ht
 import {IUserModel} from '../../../models/IUserModel.model';
 import {UserDataComponent} from '../form/user-data/user-data.component';
 import {AuthenticationService} from '../../../services/authentication.service';
-import {UserService} from '../../../services/user.service';
 import {AccountService} from '../../../services/account.service';
 import {BehaviorSubject} from 'rxjs';
 
@@ -16,12 +15,12 @@ const HttpStatus = require('http-status-codes');
 })
 export class AccountProfileComponent implements OnInit {
   public userData$: BehaviorSubject<IUserModel>;
-  @ViewChild(UserDataComponent, null)
-  private userDataComponent: UserDataComponent;
   public userData: IUserModel;
   public saveSuccess: boolean;
+  @ViewChild(UserDataComponent, null)
+  private userDataComponent: UserDataComponent;
 
-  constructor(private authenticationService: AuthenticationService, private userService: UserService,
+  constructor(private authenticationService: AuthenticationService,
               private accountService: AccountService) {
     this.userData$ = new BehaviorSubject<IUserModel>(null);
   }

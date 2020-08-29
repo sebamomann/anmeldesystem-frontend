@@ -1,11 +1,10 @@
-import {Inject, Injectable} from '@angular/core';
-import {WINDOW} from '../provider/window.provider';
+import {Injectable} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SettingsService {
-  constructor(@Inject(WINDOW) private window: Window) {
+  constructor() {
   }
 
   public get autoLoadOnWsCall() {
@@ -57,20 +56,6 @@ export class SettingsService {
     localStorage.setItem('settings', JSON.stringify(settings));
   }
 
-  public isAllowedByWiFi() {
-    if (this.autoLoadOnWsCallWifiOnly) {
-      const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
-      const type = connection.effectiveType;
-
-      console.log('Connection-Type: ' + type);
-
-      return type === 'wifi' || type === 'ethernet';
-    }
-    return true;
-  }
-
-  // PINNING
-
   public get autoPinAppointment() {
     const settings = JSON.parse(localStorage.getItem('settings'));
 
@@ -81,6 +66,8 @@ export class SettingsService {
     return settings.autoPinAppointment;
   }
 
+  // PINNING
+
   public set autoPinAppointment(value: boolean) {
     let settings = JSON.parse(localStorage.getItem('settings'));
 
@@ -90,5 +77,17 @@ export class SettingsService {
 
     settings.autoPinAppointment = value;
     localStorage.setItem('settings', JSON.stringify(settings));
+  }
+
+  public isAllowedByWiFi() {
+    if (this.autoLoadOnWsCallWifiOnly) {
+      const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+      const type = connection.effectiveType;
+
+      console.log('Connection-Type: ' + type);
+
+      return type === 'wifi' || type === 'ethernet';
+    }
+    return true;
   }
 }

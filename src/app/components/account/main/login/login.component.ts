@@ -1,10 +1,8 @@
 import {Component, EventEmitter, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AccountService} from '../../../../services/account.service';
 import {AuthenticationService} from '../../../../services/authentication.service';
 import {first} from 'rxjs/operators';
-import {AlertService} from '../../../../services/alert.service';
 import {DatePipe} from '@angular/common';
 import {ValidatorService} from '../../../../_helper/validatorService';
 import {MatDialog, MatSnackBar} from '@angular/material';
@@ -29,11 +27,11 @@ export class LoginComponent implements OnInit {
   public sendingRequestEmit = new EventEmitter<boolean>();
   private changeDate: Date;
 
-  constructor(private router: Router, private accountService: AccountService, private route: ActivatedRoute,
-              private authenticationService: AuthenticationService, private alertService: AlertService,
-              private validatorService: ValidatorService, private snackBar: MatSnackBar, public dialog: MatDialog) {
+  constructor(private router: Router, private route: ActivatedRoute, private validatorService: ValidatorService,
+              private authenticationService: AuthenticationService,
+              private snackBar: MatSnackBar, public dialog: MatDialog) {
     this.route.queryParams.subscribe(params => {
-      this.getUsername().setValue(validatorService.emailIsValid(params.mail) ? params.mail : '');
+      this.getUsername().setValue(this.validatorService.emailIsValid(params.mail) ? params.mail : '');
     });
   }
 
@@ -113,7 +111,7 @@ export class LoginComponent implements OnInit {
   }
 
   private openLockedAccountDialog() {
-    const dialogRef = this.dialog.open(AccountActivationDialogComponent, {
+    this.dialog.open(AccountActivationDialogComponent, {
       width: '80%',
       maxWidth: '500px',
       height: 'auto',
