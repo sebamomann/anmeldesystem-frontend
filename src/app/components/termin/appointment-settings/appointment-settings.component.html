@@ -1,4 +1,8 @@
-<mat-card class="form float high">
+<mat-card [ngClass]="{
+            'error-card': (appointment == undefined),
+            'form':(appointment != undefined)
+          }"
+          class="float high">
   <mat-card-title class="headline">
       <span [queryParams]="{a: link}"
             [routerLink]="['/enroll']"
@@ -7,47 +11,49 @@
       </span>
     Bearbeiten
   </mat-card-title>
-  <ng-container *ngIf="appointment != undefined; else loading">
-    <mat-tab-group [selectedIndex]="0" dynamicHeight>
-      <mat-tab label="Allgemein">
-        <app-overall-data
-          (save)="saveOverall($event)"
-          [appointment]="appointment">
-        </app-overall-data>
-      </mat-tab>
-      <mat-tab label="Zusätze">
-        <app-additions
-          (save)="saveAdditions($event)"
-          [appointment]="appointment">
-        </app-additions>
-      </mat-tab>
-      <mat-tab label="Link">
-        <app-link-data
-          (save)="saveLink($event)"
-          [appointment]="appointment">
-        </app-link-data>
-      </mat-tab>
-      <mat-tab label="Adminsitration">
-        <app-administrator
-          (save)="saveAdministrators($event)"
-          [appointment]="appointment">
-        </app-administrator>
-      </mat-tab>
-      <mat-tab label="Anhänge">
-        <app-file
-          (save)="saveFile($event)"
-          [appointment]="appointment"
-          [uploading]="uploadingFile">
-        </app-file>
-      </mat-tab>
-      <mat-tab label="Sonstiges">
-        <app-other
-          (save)="saveOther($event)"
-          [appointment]="appointment">
-        </app-other>
-      </mat-tab>
-    </mat-tab-group>
-  </ng-container>
+  <mat-card-content>
+    <ng-container *ngIf="appointment != undefined; else loading">
+      <mat-tab-group [selectedIndex]="0" dynamicHeight>
+        <mat-tab label="Allgemein">
+          <app-overall-data
+            (save)="saveOverall($event)"
+            [appointment]="appointment">
+          </app-overall-data>
+        </mat-tab>
+        <mat-tab label="Zusätze">
+          <app-additions
+            (save)="saveAdditions($event)"
+            [appointment]="appointment">
+          </app-additions>
+        </mat-tab>
+        <mat-tab label="Link">
+          <app-link-data
+            (save)="saveLink($event)"
+            [appointment]="appointment">
+          </app-link-data>
+        </mat-tab>
+        <mat-tab label="Adminsitration">
+          <app-administrator
+            (save)="saveAdministrators($event)"
+            [appointment]="appointment">
+          </app-administrator>
+        </mat-tab>
+        <mat-tab label="Anhänge">
+          <app-file
+            (save)="saveFile($event)"
+            [appointment]="appointment"
+            [uploading]="uploadingFile">
+          </app-file>
+        </mat-tab>
+        <mat-tab label="Sonstiges">
+          <app-other
+            (save)="saveOther($event)"
+            [appointment]="appointment">
+          </app-other>
+        </mat-tab>
+      </mat-tab-group>
+    </ng-container>
+  </mat-card-content>
 </mat-card>
 
 <app-saved *ngIf="saveSuccess"></app-saved>

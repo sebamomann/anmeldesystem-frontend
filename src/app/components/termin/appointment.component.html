@@ -20,21 +20,25 @@
   <!--            data-request-access="write"></script>-->
   <!--  </div>-->
 
-  <div *ngIf="!websocketSubscriptionEstablished && !hideWebsocketSubscriptionInformation" class="mat-card basic">
+  <mat-card *ngIf="!websocketSubscriptionEstablished && !hideWebsocketSubscriptionInformation" class="closable">
     <mat-icon (click)="hideWebsocketSubscriptionInformation = true" class="close">close</mat-icon>
-    <ng-container *ngIf="websocketSubscriptionRetryCount < 5 else subscriptionNotPossible;">
-       <span class="big">
+    <ng-container *ngIf="websocketSubscriptionRetryCount < 5;">
+       <span>
         Verbindung zum Server wird aufgebaut<br/>
-      </span>
-      <span class="big decent">
+        </span>
+      <span class="decent">
         Versuch {{websocketSubscriptionRetryCount + 1}} von 5 ...
       </span>
     </ng-container>
-    <mat-icon (click)="retryWebsocketSubscription(appointment.link)"
-              *ngIf="websocketSubscriptionRetryCount === 5">
-      cached
-    </mat-icon>
-  </div>
+    <ng-container *ngIf="websocketSubscriptionRetryCount === 5">
+      <div class="split">
+        <span>Konnte keine Live-Verbindung aufbauen. Manuelles Neuladen notwendig!</span>
+        <mat-icon (click)="retryWebsocketSubscription(appointment.link)">
+          cached
+        </mat-icon>
+      </div>
+    </ng-container>
+  </mat-card>
 
   <mat-card *ngIf="updatingAppointmentInBackground" class="split slim">
     <span class="big">Anmeldungen werden geladen ...</span>
@@ -141,10 +145,4 @@
 <ng-template #loading>
   <app-loading *ngIf="!loaded" [@remove]></app-loading>
   <app-fetch-appointment [done]="loaded"></app-fetch-appointment>
-</ng-template>
-
-<ng-template #subscriptionNotPossible>
-  <mat-card>
-    Konnte keine Live-Verbindung aufbauen. Manuelles Neuladen notwendig!
-  </mat-card>
 </ng-template>

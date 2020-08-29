@@ -365,6 +365,8 @@ export class EnrollmentListComponent implements OnInit {
               }
             );
         }
+
+        this.sendingRequestEmitDelete.emit(false);
       });
   };
 

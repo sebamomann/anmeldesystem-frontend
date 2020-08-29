@@ -1,7 +1,9 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {EmailChangeComponent} from './email-change.component';
-import {MatCardModule, MatProgressSpinnerModule} from '@angular/material';
+import {MatButtonModule, MatCardModule, MatProgressSpinnerModule} from '@angular/material';
+import {HexagonLoaderModule} from '../../../html-template/hexagon-loader/hexagon-loader.module';
+import {RouterModule} from '@angular/router';
 
 
 @NgModule({
@@ -9,7 +11,10 @@ import {MatCardModule, MatProgressSpinnerModule} from '@angular/material';
   imports: [
     CommonModule,
     MatCardModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    HexagonLoaderModule,
+    RouterModule,
+    MatButtonModule
   ]
 })
 export class EmailChangeModule {

@@ -97,12 +97,19 @@
 </ng-container>
 
 <ng-template #empty>
-  <div *ngIf="allowToShowEmptyHint" class="empty-list standalone">
-    <img src="/assets/img/404.svg">
-    <span>
-      Du hast gerade mit keinen aktiven Terminen zu tun. Erstelle dir einen eigenen!
-    </span>
-  </div>
+  <mat-card *ngIf="allowToShowEmptyHint" class="error-card">
+    <mat-card-content>
+      <img src="/assets/img/404.svg">
+      <span>
+        Du hast gerade mit keinen aktiven Terminen zu tun. Erstelle dir einen eigenen!
+      </span>
+      <button [routerLink]="['/create']"
+              color="primary"
+              mat-raised-button>
+        Let's GO!
+      </button>
+    </mat-card-content>
+  </mat-card>
 </ng-template>
 
 <ng-template #loading>
