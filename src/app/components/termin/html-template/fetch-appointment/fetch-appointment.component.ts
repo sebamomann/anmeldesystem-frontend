@@ -8,17 +8,17 @@ import {BehaviorSubject} from 'rxjs';
 })
 export class FetchAppointmentComponent implements OnInit {
   public done$ = new BehaviorSubject(undefined);
-  public _done = false;
-
   @Input()
   public percentDone: number;
+
+  public _done = false;
+
+  constructor() {
+  }
 
   @Input('done') set done(done: boolean) {
     this.done$.next(done);
   };
-
-  constructor() {
-  }
 
   ngOnInit() {
     setTimeout(() => {

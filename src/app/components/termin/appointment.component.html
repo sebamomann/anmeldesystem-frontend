@@ -2,8 +2,9 @@
   <app-appointment-data [appointment]="appointment"></app-appointment-data>
 
   <mat-card *ngIf="!authenticationService.userIsLoggedIn()"
-            class="note slim">
+            class="split slim">
     <span>Dir fehlen möglicherweise Berechtigungen für diesen Termin</span>
+
     <button [routerLink]="['/account/login']"
             [queryParams]="{returnUrl: router.routerState.snapshot.url}"
             color="primary" mat-raised-button>
@@ -35,26 +36,27 @@
     </mat-icon>
   </div>
 
-  <div *ngIf="updating" class="mat-card basic">
+  <mat-card *ngIf="updatingAppointmentInBackground" class="split slim">
     <span class="big">Anmeldungen werden geladen ...</span>
     <mat-icon class="spinning reverse">cached</mat-icon>
-  </div>
+  </mat-card>
 
-  <div *ngIf="hasUpdate" class="mat-card basic">
+  <mat-card *ngIf="hasAppointmentUpdate" class="split slim">
     <span class="big">Es sind neue Anmeldungen vorhanden.</span>
     <mat-icon (click)="manualReload()">cached</mat-icon>
-  </div>
+  </mat-card>
 
-  <ng-container *ngIf="!updateOnWsCallDefined">
-    <div class="mat-card basic">
-      <mat-icon (click)="updateOnWsCallDefined = true" class="close">close</mat-icon>
-      <span class="big">
-        Automatisch neuste Daten laden<br/>
-        <app-auto-load-on-ws-call></app-auto-load-on-ws-call>
-      </span>
+  <mat-card *ngIf="!updateOnWsCallSettingDefined"
+            class="closable">
+    <mat-icon (click)="updateOnWsCallSettingDefined = true" class="close">close</mat-icon>
+    <div class="split">
+        <span class="big">
+          Automatisch neuste Daten laden<br/>
+          <app-auto-load-on-ws-call></app-auto-load-on-ws-call>
+        </span>
       <mat-icon [routerLink]="['/settings']">open_in_new</mat-icon>
     </div>
-  </ng-container>
+  </mat-card>
 
   <ng-container *ngIf="enrollments$ | async as enrollments">
     <app-enrollment-list [appointment]="appointment"
@@ -84,11 +86,9 @@
     Warum sehe ich so wenig Anmeldungen?
   </div>
 
-  <div *ngIf="!hasEnrollments">
-    <div class="empty-list float">
-      <span>Es hat sich noch niemand angemeldet.</span>
-    </div>
-  </div>
+  <mat-card *ngIf="!hasEnrollments">
+    <span>Es hat sich noch niemand angemeldet.</span>
+  </mat-card>
 
   <div *ngIf="showEnrollmentHint"
        [queryParams]="{a: link}"
@@ -139,16 +139,12 @@
 </ng-container>
 
 <ng-template #loading>
-  <app-loading *ngIf="!loaded"
-               [@remove]>
-  </app-loading>
-  <app-fetch-appointment
-    [done]="loaded">
-  </app-fetch-appointment>
+  <app-loading *ngIf="!loaded" [@remove]></app-loading>
+  <app-fetch-appointment [done]="loaded"></app-fetch-appointment>
 </ng-template>
 
 <ng-template #subscriptionNotPossible>
-  <span class="big">
+  <mat-card>
     Konnte keine Live-Verbindung aufbauen. Manuelles Neuladen notwendig!
-  </span>
+  </mat-card>
 </ng-template>

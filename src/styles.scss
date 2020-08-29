@@ -494,12 +494,17 @@ mat-card {
     padding: 10px 16px;
   }
 
-  &.note {
+  &.split,
+  .split {
     font-size: 13px;
     display: grid;
     grid-template-columns: 1fr max(30%);
     grid-gap: 5%;
     align-items: center;
+
+    &.low-margin {
+      margin: 0 auto 15px;
+    }
 
     & > span {
       &.decent {
@@ -512,6 +517,7 @@ mat-card {
     mat-icon {
       text-align: center;
       vertical-align: middle;
+      margin: 0 auto;
 
       &.close {
         width: 15px;
@@ -527,6 +533,14 @@ mat-card {
     }
   }
 
+  &.closable {
+    .close {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+  }
+
   &.card-small {
     text-align: center;
 
@@ -539,7 +553,6 @@ mat-card {
 
   &.main {
     margin: 25px auto;
-    max-width: calc(85% - 40px);
     padding: 20px;
 
     mat-card-title {
@@ -1060,16 +1073,6 @@ $ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
     padding: 0 12px;
   }
 }
-
-
-.spinner-wrapper {
-  padding: 25px;
-
-  mat-spinner {
-    margin: 10px auto;
-  }
-}
-
 
 @media all and (min-width: 1024px) {
   .svg-wrapper {

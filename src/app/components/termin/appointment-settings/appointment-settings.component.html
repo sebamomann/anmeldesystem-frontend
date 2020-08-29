@@ -56,13 +56,10 @@
 <ng-template #loading>
   <ng-container *ngIf="permission !== false">
     <mat-card class="float error-block">
-      <div class="spinner-wrapper">
-        <mat-spinner
-          *ngIf="permission !== false">
-        </mat-spinner>
-        <span *ngIf="permission === null">Berechtigungen werden geprüft</span>
-        <span *ngIf="permission === true">Lade Einstellungen</span>
-      </div>
+      <app-hexagon-loader
+        *ngIf="permission !== false"
+        [message]="(permission === null ? 'Berechtigungen werden geprüft' : (permission ? 'Lade Einstellungen' : ''))">
+      </app-hexagon-loader>
     </mat-card>
   </ng-container>
   <ng-container *ngIf="permission === false">

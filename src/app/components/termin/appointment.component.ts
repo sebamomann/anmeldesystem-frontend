@@ -57,11 +57,11 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public hideWebsocketSubscriptionInformation = false;
 
   // WEBSOCKET AUTOLOAD
-  public hasUpdate = false;
-  public updateOnWsCallDefined = false;
+  public hasAppointmentUpdate = false;
+  public updateOnWsCallSettingDefined = false;
   public showEnrollmentHint = false;
   public showEnrollmentHintForceHide = false;
-  public updating = false;
+  public updatingAppointmentInBackground = false;
   private manualAppointmentReloadCount = 0;
 
   constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
@@ -79,8 +79,8 @@ export class AppointmentComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.updateOnWsCallDefined = this.settingsService.autoLoadOnWsCallIsDefined;
-    if (!this.updateOnWsCallDefined) {
+    this.updateOnWsCallSettingDefined = this.settingsService.autoLoadOnWsCallIsDefined;
+    if (!this.updateOnWsCallSettingDefined) {
       this.settingsService.autoLoadOnWsCall = true;
     }
   }
@@ -93,13 +93,13 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.appointmentSocketioService
       .hasUpdate$
       .subscribe((bool: boolean) => {
-        this.hasUpdate = bool;
+        this.hasAppointmentUpdate = bool;
       });
 
     this.appointmentStatus
       .updating$
       .subscribe((bool: boolean) => {
-        this.updating = bool;
+        this.updatingAppointmentInBackground = bool;
       });
 
     this.appointmentSocketioService
@@ -189,7 +189,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public manualReload() {
     this.manualAppointmentReloadCount++;
     if (this.manualAppointmentReloadCount >= 3) {
-      this.updateOnWsCallDefined = false;
+      this.updateOnWsCallSettingDefined = false;
     }
     this.appointmentSocketioService.reload(this.link);
   }

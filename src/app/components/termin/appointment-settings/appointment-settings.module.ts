@@ -10,6 +10,7 @@ import {AdministratorModule} from '../administrator/administrator.module';
 import {FileModule} from '../file/file.module';
 import {SavedModule} from '../../html-template/saved/saved.module';
 import {OtherModule} from '../form/other/other.module';
+import {HexagonLoaderModule} from '../../html-template/hexagon-loader/hexagon-loader.module';
 
 const routes: Routes = [
   {path: '', component: AppointmentSettingsComponent}
@@ -32,6 +33,7 @@ const routes: Routes = [
     SavedModule,
     OtherModule,
     MatButtonModule,
+    HexagonLoaderModule,
   ]
 })
 export class AppointmentSettingsModule {

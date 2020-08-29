@@ -5,7 +5,7 @@
 </a>
 
 <ng-container *ngIf="_appointments$ | async as appointment; else loading">
-  <mat-card *ngIf="!authenticationService.userIsLoggedIn()" class="note slim">
+  <mat-card *ngIf="!authenticationService.userIsLoggedIn()" class="split slim">
     <span>
       Logge dich ein um mehr Termine zu sehen bei denen du dabei bist.
     </span>
