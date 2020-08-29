@@ -2,7 +2,7 @@ import {Component, NgModule, OnDestroy, OnInit} from '@angular/core';
 import {IEnrollmentModel} from '../../models/IEnrollment.model';
 import {IAppointmentModel} from '../../models/IAppointment.model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
+import {animate, query, state, style, transition, trigger} from '@angular/animations';
 import {AuthenticationService} from '../../services/authentication.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {SEOService} from '../../_helper/_seo.service';
@@ -35,17 +35,6 @@ import {AppointmentStatus} from './appointment.status';
         ]),
       ])
     ]),
-    trigger('listAnimation', [
-      transition('* => *', [
-        query('mat-expansion-panel', [
-          style({opacity: 0, transform: 'scale(0.9)'}),
-          stagger(75, [
-            animate('0.15s', style({opacity: 1, transform: 'scale(1.05)'})),
-            animate('0.075s', style({opacity: 1, transform: 'scale(1)'})),
-          ])
-        ])
-      ])
-    ])
   ],
 })
 @NgModule({})

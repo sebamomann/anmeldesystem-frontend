@@ -33,7 +33,7 @@ const HttpStatus = require('http-status-codes');
         query('mat-expansion-panel', [
           style({opacity: 0, transform: 'scale(0.9)'}),
           stagger(75, [
-            animate('0.15s', style({opacity: 1, transform: 'scale(1.05)'})),
+            animate('0.15s', style({opacity: 1, transform: 'scale(1.025)'})),
             animate('0.075s', style({opacity: 1, transform: 'scale(1)'})),
           ])
         ])
