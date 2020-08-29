@@ -1,13 +1,13 @@
-<ng-container *ngIf="appointment != undefined; else loading">
-  <mat-card class="form float high">
-    <mat-card-title class="headline">
+<mat-card class="form float high">
+  <mat-card-title class="headline">
       <span [queryParams]="{a: link}"
             [routerLink]="['/enroll']"
             class="redirect">
         <mat-icon>arrow_back_ios</mat-icon>
       </span>
-      {{appointment.title}}
-    </mat-card-title>
+    Bearbeiten
+  </mat-card-title>
+  <ng-container *ngIf="appointment != undefined; else loading">
     <mat-tab-group [selectedIndex]="0" dynamicHeight>
       <mat-tab label="Allgemein">
         <app-overall-data
@@ -47,30 +47,25 @@
         </app-other>
       </mat-tab>
     </mat-tab-group>
-  </mat-card>
-
-</ng-container>
+  </ng-container>
+</mat-card>
 
 <app-saved *ngIf="saveSuccess"></app-saved>
 
 <ng-template #loading>
   <ng-container *ngIf="permission !== false">
-    <mat-card class="float error-block">
-      <app-hexagon-loader
-        *ngIf="permission !== false"
-        [message]="(permission === null ? 'Berechtigungen werden geprüft' : (permission ? 'Lade Einstellungen' : ''))">
-      </app-hexagon-loader>
-    </mat-card>
+    <app-hexagon-loader
+      *ngIf="permission !== false"
+      [message]="(permission === null ? 'Berechtigungen werden geprüft' : (permission ? 'Lade Einstellungen' : ''))">
+    </app-hexagon-loader>
   </ng-container>
   <ng-container *ngIf="permission === false">
-    <mat-card class="float error-block">
-      <img alt="anmeldesystem appointment not found robot icon" src="/assets/img/404.svg">
-      <span>Fehlende Berechtigungen</span>
-      <button [queryParams]="{a: link}"
-              [routerLink]="['/enroll']"
-              color="primary"
-              mat-raised-button>Oke, sorry!
-      </button>
-    </mat-card>
+    <img alt="anmeldesystem appointment not found robot icon" src="/assets/img/404.svg">
+    <span>Fehlende Berechtigungen</span>
+    <button [queryParams]="{a: link}"
+            [routerLink]="['/enroll']"
+            color="primary"
+            mat-raised-button>Oke, sorry!
+    </button>
   </ng-container>
 </ng-template>

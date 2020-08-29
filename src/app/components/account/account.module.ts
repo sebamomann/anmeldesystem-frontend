@@ -27,6 +27,7 @@ import {AuthGuard} from '../../_helper/auth.guard';
 import {LoadingModule} from '../html-template/loading/loading.module';
 import {AccountActivationDialogModule} from '../dialogs/account-activation/account-activation-dialog.module';
 import {LoadingDisableModule} from '../../directives/loading-disable/loading-disable.module';
+import {HexagonLoaderModule} from '../html-template/hexagon-loader/hexagon-loader.module';
 
 
 const routes: Routes = [
@@ -68,7 +69,8 @@ const routes: Routes = [
     MatListModule,
     LoadingModule,
     AccountActivationDialogModule,
-    LoadingDisableModule
+    LoadingDisableModule,
+    HexagonLoaderModule
   ],
   providers: [
     ValidatorService

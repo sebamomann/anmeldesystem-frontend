@@ -1,6 +1,6 @@
 <mat-card class="form float high">
   <mat-card-title class="headline">
-    Bearbeiten
+    Account
   </mat-card-title>
 
   <mat-card-content>
@@ -17,9 +17,5 @@
 <app-saved *ngIf="saveSuccess"></app-saved>
 
 <ng-template #loading>
-  <div class="spinner-wrapper">
-    <mat-spinner>
-    </mat-spinner>
-    <span>Lade Einstellungen</span>
-  </div>
+  <app-hexagon-loader [message]="'Lade Einstellungen'"></app-hexagon-loader>
 </ng-template>

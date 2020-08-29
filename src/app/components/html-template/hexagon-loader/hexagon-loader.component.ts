@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-hexagon-loader',
@@ -9,7 +9,7 @@ export class HexagonLoaderComponent implements OnInit {
 
   @Input() message: string;
 
-  constructor(private el: ElementRef) {
+  constructor() {
   }
 
   ngOnInit() {
