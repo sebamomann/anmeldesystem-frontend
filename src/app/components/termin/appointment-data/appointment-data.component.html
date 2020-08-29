@@ -8,43 +8,50 @@
 
     <mat-card-content>
       <span class="separator colored middle high bolder center"></span>
-      <span>
-      <mat-icon>location_on</mat-icon>
-      <span>{{appointment.location}}</span>
-    </span>
-      <span>
-      <mat-icon>verified_user</mat-icon>
-      <span class="hasChild">
-        {{appointment.creator.name}}
-        <span>@{{appointment.creator.username}}</span>
-      </span>
-    </span>
-      <span>
-      <mat-icon>access_time</mat-icon>
-      <span> {{(appointment.date | date: 'dd.MM.y')}}<br/>
-        {{(appointment.date | date: 'HH:mm')}}Uhr</span>
-    </span>
-      <span *ngIf="appointment.date != appointment.deadline && appointment.deadline != null">
-      <mat-icon>alarm_on</mat-icon>
-      <span> {{(appointment.deadline | date: 'dd.MM.y')}}<br/>
-        {{(appointment.deadline | date: 'HH:mm')}}Uhr</span>
-    </span>
-      <p>{{appointment.description}}</p>
-
-      <div *ngIf="!preview && appointment.files.length > 0" class="files-wrapper">
-        <span class="separator small light tall center brighter"> </span>
-        <div *ngFor="let file of appointment.files" class="file">
-          <mat-icon>
-            attach_file
-          </mat-icon>
-          <!--suppress TypeScriptUnresolvedVariable -->
-          <a
-            [href]="apiUrl + 'file/' + file.id"
-            mat-button>
-            {{file.name}}
-          </a>
+      <div class="details">
+        <div>
+          <mat-icon>location_on</mat-icon>
+          <span>{{appointment.location}}</span>
+        </div>
+        <div>
+          <mat-icon>verified_user</mat-icon>
+          <span>
+            {{appointment.creator.name}}
+            <span>@{{appointment.creator.username}}</span>
+          </span>
+        </div>
+        <div>
+          <mat-icon>access_time</mat-icon>
+          <span> {{(appointment.date | date: 'dd.MM.y')}}<br/>
+            {{(appointment.date | date: 'HH:mm')}}Uhr
+            </span>
+        </div>
+        <div *ngIf="appointment.date != appointment.deadline && appointment.deadline != null">
+          <mat-icon>alarm_on</mat-icon>
+          <span> {{(appointment.deadline | date: 'dd.MM.y')}}<br/>
+            {{(appointment.deadline | date: 'HH:mm')}}Uhr</span>
         </div>
       </div>
+
+      <ng-container *ngIf="appointment.description">
+        <span class="separator small light tall center brighter"></span>
+        <p>{{appointment.description}}</p>
+      </ng-container>
+
+      <ng-container *ngIf="!preview && appointment.files.length > 0">
+        <span class="separator small light tall center brighter"> </span>
+        <div class="files-wrapper">
+          <div *ngFor="let file of appointment.files" class="file">
+            <mat-icon>
+              attach_file
+            </mat-icon>
+            <!--suppress TypeScriptUnresolvedVariable -->
+            <a [href]="apiUrl + 'file/' + file.id">
+              {{file.name}}
+            </a>
+          </div>
+        </div>
+      </ng-container>
     </mat-card-content>
 
     <button [matMenuTriggerFor]="menu"

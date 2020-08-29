@@ -150,7 +150,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
             }
 
 
-            if (sAppointment.reference.indexOf('PINNED') === -1
+            if ((sAppointment.reference.indexOf('PINNED') === -1 && !AppointmentUtil.isPinned(this.link))
               && this.settingsService.autoPinAppointment) {
               AppointmentUtil.pin(sAppointment.link);
               if (this.authenticationService.userIsLoggedIn()) {

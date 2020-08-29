@@ -1,11 +1,8 @@
 <ng-container *ngIf="appointment$ | async as appointment; else loading">
-  <div *ngIf="!showLoginAndTokenForm; else loading">
+  <div *ngIf="!showLoginAndTokenForm; else loading"
+       class="wrapper">
     <ng-container *ngIf="!empty; else emptyTmpl">
-      <h1 class="headline">
-        {{appointment.title}}
-      </h1>
-
-      <mat-card class="form">
+      <mat-card class="form float high">
         <mat-card-title class="headline">
           {{ edit ? 'Bearbeiten' : 'Anmelden' }}
         </mat-card-title>

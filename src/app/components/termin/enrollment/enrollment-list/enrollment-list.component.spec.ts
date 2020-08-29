@@ -28,7 +28,6 @@ function createEnrollment(id1: boolean, id2: boolean, id3: boolean, id4: boolean
     driver: (driver ? {seats: 3, service: 1} : null),
     passenger: (passenger ? {requirement: 1} : null),
     additions: [],
-    editKey: '',
     iat: '01-01-2019 00:00:00',
   };
   if (id1) {
@@ -106,6 +105,7 @@ describe('EnrollmentListComponent', () => {
     component = fixture.componentInstance;
     component.filterDialogApplied = true;
     component.appointment = {
+      hidden: false,
       title: 'Test Termin',
       description: 'This is a very very cool date because I created it lol',
       location: 'Hier lol',

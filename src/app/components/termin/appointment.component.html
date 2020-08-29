@@ -95,23 +95,47 @@
        [routerLink]="['/enroll/add']"
        class="custom-tooltip right bottom show">
     Jetzt anmelden
-    <span (click)="closeEnrollmentHint()"
-          class="close">
-      <mat-icon>close</mat-icon>
+    <span class="close">
+      <mat-icon (click)="closeEnrollmentHint()">close</mat-icon>
     </span>
   </div>
 
-  <mat-icon [queryParams]="{a: link}"
-            [routerLink]="['/enroll/add']"
-            class="floating-button right">
-    person_add
-  </mat-icon>
-  <mat-icon *ngIf="appointment.driverAddition"
-            [queryParams]="{a: link}"
-            [routerLink]="['/appointment/driver']"
-            class="floating-button left decent">
-    directions_car
-  </mat-icon>
+  <div [queryParams]="{a: link}"
+       [routerLink]="['/enroll/add']"
+       class="floating-button right hex-button">
+    <div class="hex">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div class="hex">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <mat-icon>
+      person_add
+    </mat-icon>
+  </div>
+
+  <div *ngIf="true"
+       [queryParams]="{a: link}"
+       [routerLink]="['/appointment/driver']"
+       class="floating-button left hex-button">
+    <div class="hex">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div class="hex">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <mat-icon>
+      directions_car
+    </mat-icon>
+  </div>
 </ng-container>
 
 <ng-template #loading>

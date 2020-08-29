@@ -6,8 +6,6 @@
 }
 
 :host ::ng-deep .appointment-data {
-  width: 80%;
-  text-align: center;
   margin: 15px auto 5px;
 
   &:first-child {
@@ -45,11 +43,11 @@
 $handleLength: 25px;
 .dashboard-legend {
   position: fixed;
-  top: 25vh;
   right: calc(-50% + #{$handleLength});
   width: 50%;
   z-index: 99;
   transition: 0.5s 0s all;
+  bottom: 10px;
 
   &.active {
     right: 0;

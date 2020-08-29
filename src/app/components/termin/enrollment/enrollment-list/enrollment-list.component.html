@@ -1,7 +1,7 @@
 <ng-container *ngIf="enrollments_filtered$ | async as _enrollments">
   <div *ngIf="this._enrollments.length > 0 || getNumberOfActiveFilter(true) > 0;"
        [ngClass]="isMain ? '' : 'distance'"
-       class="enrollment-list block decent">
+       class="enrollment-list">
     <div class="header">
       <h2 class="headline medium">
         {{subListTitle}}

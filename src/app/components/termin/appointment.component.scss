@@ -8,7 +8,7 @@
 }
 
 :host ::ng-deep .appointment-data {
-  margin: 30px auto 30px;
+
 }
 
 .notification-wrapper {
@@ -71,39 +71,6 @@
   }
 }
 
-.custom-tooltip {
-  position: fixed;
-  background-color: $primary;
-  color: white;
-  width: 60%;
-  padding: 10px 15px;
-  border-radius: 5px;
-  z-index: 1000;
-  opacity: 1;
-  animation: wiggle 0.5s;
-
-  &.right {
-    left: 15px;
-
-    &:after {
-
-    }
-  }
-
-  &.bottom {
-    bottom: 21px;
-  }
-
-  .close {
-    position: absolute;
-    top: 0;
-    right: 3px;
-
-    mat-icon {
-      @include md-icon-size(17px);
-    }
-  }
-}
 
 @media all and (min-width: 1024px) {
   ::ng-deep .appointment-data-wrapper {
@@ -112,25 +79,5 @@
     display: inline-block;
 
     margin: 0 auto !important;
-  }
-}
-
-@keyframes wiggle {
-  0% {
-    opacity: 0;
-    transform: translateX(0px);
-  }
-  25% {
-    transform: translateX(15px);
-  }
-  50% {
-    transform: translateX(0px);
-  }
-  75% {
-    transform: translateX(15px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0px);
   }
 }

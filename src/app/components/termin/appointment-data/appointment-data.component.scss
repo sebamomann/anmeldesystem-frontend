@@ -38,15 +38,46 @@
 
     mat-card-content {
       margin-bottom: 0;
+      text-align: left;
+
+      .details {
+        margin-top: 15px;
+        font-size: 13px;
+        display: grid;
+        grid-gap: 5px;
+        grid-template-columns: 1fr 1fr;
+
+        & > div {
+          display: grid;
+          grid-column-gap: 5%;
+          grid-template-columns: 20px 1fr;
+          align-items: center;
+
+          mat-icon {
+            @include md-icon-size(20px);
+          }
+
+          & > span {
+            & > span {
+              display: block;
+              font-size: 12px;
+              color: #707070;
+              font-style: italic;
+            }
+          }
+        }
+      }
 
       .files-wrapper {
-        .separator {
-          margin-bottom: initial;
-        }
+        display: grid;
+        grid-gap: 5px;
+        grid-template-columns: 1fr 1fr;
 
         .file {
-          display: inline-block;
-          vertical-align: top;
+          display: grid;
+          grid-column-gap: 5px;
+          grid-template-columns: 16px 1fr;
+          align-items: center;
           overflow: hidden;
 
           mat-icon {
@@ -54,80 +85,16 @@
           }
 
           a {
-            line-height: 2.25em;
+            font-size: 12px;
+            text-decoration: none;
             line-break: anywhere;
-            font-size: 0.8em;
-            padding: 5px 0;
-            margin: 0 15px 0 0;
-            min-width: 0;
-            max-width: 200px;
-          }
-        }
-      }
-
-      span {
-        font-size: 0.95em;
-        margin: 3px 10px;
-        display: inline-block;
-        width: calc(50% - 20px);
-        text-align: left;
-        vertical-align: middle;
-
-        &.separator:first-of-type {
-          width: calc(100% - 20px);
-          display: block;
-          margin-bottom: 7.5px;
-        }
-
-        mat-icon {
-          @include md-icon-size(18px);
-          vertical-align: middle;
-          left: 0;
-        }
-
-        span {
-          width: calc(100% - 40px);
-          vertical-align: middle;
-
-          &.hasChild {
-            line-height: 0.9em;
-          }
-
-          span {
-            font-size: 0.75em;
-            color: #717171;
-            margin: 0;
-            width: 100%;
           }
         }
       }
 
       p {
-        margin: 10px auto 0;
-        max-width: 93%;
-        text-align: left;
-      }
-    }
-
-    mat-card-actions {
-      font-size: 0.8em;
-
-      button {
-        font-size: 0.8em;
-        line-height: 30px;
-      }
-
-      mat-form-field {
-        margin-right: 15px;
-
-        /* NOT WORKING */
-        & > .mat-form-field-wrapper {
-          & > .mat-form-field-flex {
-            & > .mat-form-field-infix {
-              border: none !important;
-            }
-          }
-        }
+        margin: 10px auto;
+        text-align: center;
       }
     }
   }
