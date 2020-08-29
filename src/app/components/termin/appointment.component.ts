@@ -30,9 +30,9 @@ import {AppointmentStatus} from './appointment.status';
     trigger('remove', [
       transition('* => void', [
         query('.layer', [
-          style({opacity: '1'}),
-          animate(500, style({opacity: '0'}))
-        ])
+          style({opacity: '1', transform: 'scale(1.0)'}),
+          animate(500, style({opacity: '0', transform: 'scale(1.1)'}))
+        ]),
       ])
     ]),
     trigger('listAnimation', [

@@ -6,10 +6,9 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./loading.component.scss']
 })
 export class LoadingComponent implements OnInit {
+  public message: string;
   @Input()
   private customMessage = '';
-
-  public message: string;
   private messages = [
     'Lade Wetter',
     'Kaue Kaugummi',
@@ -30,7 +29,7 @@ export class LoadingComponent implements OnInit {
       while (true) {
         const rand = Math.random() * this.messages.length;
         this.message = this.messages[Math.ceil(rand) - 1];
-        await this.delay(400 + (Math.random() * 1500));
+        await this.delay(1800);
       }
     }
   }
