@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {AppointmentService} from '../../../services/appointment.service';
 import {Router} from '@angular/router';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
@@ -40,7 +39,6 @@ interface IAppointmentArchive {
   ]
 })
 export class DashboardComponent implements OnInit {
-
   public appointment = null;
   public allowToShowEmptyHint: any;
 
@@ -53,12 +51,13 @@ export class DashboardComponent implements OnInit {
   public appointmentsGroupedByMonthAndYear: { month: number; year: number }[];
   public isLoadingArchive = false;
   public hideLoadMoreArchiveAppointments = false;
+
   // ARCHIVE PAGINATION
   private limit = 5;
   private lastAppointmentDate: string = null;
 
-  constructor(public appointmentService: AppointmentService, public router: Router,
-              public authenticationService: AuthenticationService, private appointmentProvider: AppointmentProvider) {
+  constructor(public router: Router, public authenticationService: AuthenticationService,
+              private appointmentProvider: AppointmentProvider) {
   }
 
   /**
