@@ -76,6 +76,13 @@
         .catch(err => console.error('[SW ERROR]', err));
     }
   });
+
+  window.isUpdateAvailable
+    .then(isAvailable => {
+      if (isAvailable) {
+        this.openPwaDialog();
+      }
+    });
 </script>
 </body>
 </html>

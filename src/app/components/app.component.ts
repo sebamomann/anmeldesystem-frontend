@@ -62,13 +62,6 @@ export class AppComponent {
       this.openPwaDialog();
     });
 
-    window.isUpdateAvailable
-      .then(isAvailable => {
-        if (isAvailable) {
-          this.openPwaDialog();
-        }
-      });
-
     const date = new Date();
     this.now = `${this.monthnamePipe.transform(date.getMonth())} ${date.getFullYear()}`;
 
