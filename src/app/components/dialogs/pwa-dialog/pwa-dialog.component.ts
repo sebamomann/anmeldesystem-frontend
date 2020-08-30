@@ -27,14 +27,13 @@ export class PwaDialogComponent {
           duration: 2000,
           panelClass: 'snackbar-default'
         });
+        this.dialogRef.close();
       } else {
         this.snackBar.open('hm ._. schade', null, {
           duration: 2000,
           panelClass: 'snackbar-default'
         });
       }
-
-      window.location.reload();
       this.dialogRef.close();
     });
   }
