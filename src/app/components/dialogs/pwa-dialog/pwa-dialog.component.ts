@@ -8,6 +8,7 @@ import {PwaService} from '../../../services/pwa-service.service';
   styleUrls: ['./pwa-dialog.component.scss']
 })
 export class PwaDialogComponent {
+  public opened = false;
 
   constructor(
     public dialogRef: MatDialogRef<PwaDialogComponent>, public pwa: PwaService,
@@ -27,13 +28,13 @@ export class PwaDialogComponent {
           duration: 2000,
           panelClass: 'snackbar-default'
         });
-        this.dialogRef.close();
       } else {
         this.snackBar.open('hm ._. schade', null, {
           duration: 2000,
           panelClass: 'snackbar-default'
         });
       }
+      this.opened = true;
       this.dialogRef.close();
     });
   }

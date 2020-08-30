@@ -2,10 +2,14 @@
   Geil, mich gibt's auch als App!
 </div>
 
-<div mat-dialog-content>
+<div *ngIf="!opened" mat-dialog-content>
   Ob du's glaubst oder nicht, mich gibt's als App. Was das bringt? Easy! Teile der Anwendung sind auch
   offline verfügbar. Und noch besser? Ich bin auf allen Plattformen gleich. Ob Android, Windows, Linux, Macintosh
   oder das nicht so bekannte iOS.
+</div>
+
+<div *ngIf="opened" mat-dialog-content>
+  Nice. Die App ist auf deinem Startbildschirm. Einfach öffnen und gönnen.
 </div>
 
 <div mat-dialog-actions>
