@@ -37,6 +37,8 @@ export class AppComponent {
   public currentUser: IUserModel;
   public version: string = version;
 
+  private showPWADialog = true;
+
   constructor(private router: Router, @Inject(WINDOW) private window: Window,
               private authenticationService: AuthenticationService, public pwa: PwaService, public dialog: MatDialog,
               private monthnamePipe: MonthnamePipe) {
@@ -58,7 +60,11 @@ export class AppComponent {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.pwa.setDeferredPrompt(e);
-      this.openPwaDialog();
+      if (this.showPWADialog) {
+        this.openPwaDialog();
+      }
+
+      this.showPWADialog = false;
     });
 
     const date = new Date();
