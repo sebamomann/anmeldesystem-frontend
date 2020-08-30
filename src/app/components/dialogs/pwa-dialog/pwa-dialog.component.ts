@@ -10,7 +10,7 @@ import {PwaService} from '../../../services/pwa-service.service';
 export class PwaDialogComponent {
 
   constructor(
-    public dialogRef: MatDialogRef<PwaDialogComponent>, public Pwa: PwaService) {
+    public dialogRef: MatDialogRef<PwaDialogComponent>, public pwa: PwaService) {
   }
 
   onNoClick(): void {
@@ -18,7 +18,6 @@ export class PwaDialogComponent {
   }
 
   installPwa(): void {
-    this.Pwa.promptEvent.prompt();
+    this.pwa.getDeferredPrompt().prompt();
   }
-
 }

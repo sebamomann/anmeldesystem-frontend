@@ -56,9 +56,8 @@ export class AppComponent {
     this.pwa.checkForUpdates();
 
     window.addEventListener('beforeinstallprompt', (e) => {
-      // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
-
+      this.pwa.setDeferredPrompt(e);
       this.openPwaDialog();
     });
 
@@ -78,8 +77,8 @@ export class AppComponent {
 
   public openPwaDialog: () => void = () => {
     const dialogRef = this.dialog.open(PwaDialogComponent, {
-      width: '75%',
-      maxWidth: '400px'
+      width: '90%',
+      maxWidth: '500px'
     });
 
     dialogRef.afterClosed().subscribe(result => {
