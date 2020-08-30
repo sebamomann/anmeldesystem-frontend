@@ -33,6 +33,8 @@ export class PwaDialogComponent {
           panelClass: 'snackbar-default'
         });
       }
+
+      window.location.reload();
       this.dialogRef.close();
     });
   }
