@@ -350,8 +350,6 @@ export class EnrollmentComponent implements OnInit {
   };
 
   private buildFormCheckboxes: () => void = () => {
-    this.event.controls.additions = new FormArray([]);
-
     this.appointment.additions.forEach((o) => {
       const control = new FormControl(this.output.additions.some(iAddition => iAddition.id === o.id));
       (this.event.controls.additions as FormArray).push(control);
