@@ -41,8 +41,6 @@ interface IAppointmentArchive {
 })
 export class DashboardComponent implements OnInit {
 
-  public hideTemplates = false;
-
   public appointment = null;
   public allowToShowEmptyHint: any;
 
@@ -53,7 +51,6 @@ export class DashboardComponent implements OnInit {
 
   public showLegend: any;
   public appointmentsGroupedByMonthAndYear: { month: number; year: number }[];
-  public totalAppointmentsLoaded = false;
   public isLoadingArchive = false;
   public hideLoadMoreArchiveAppointments = false;
   // ARCHIVE PAGINATION

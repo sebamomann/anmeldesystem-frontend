@@ -68,8 +68,6 @@ export class AppointmentService {
     let url = `${environment.API_URL}appointment/`;
 
     if (archive) {
-      console.log('calling archive');
-      console.log(before);
       url = `${url}archive`;
     }
 
