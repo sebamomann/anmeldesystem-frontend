@@ -22,20 +22,26 @@ export class PwaDialogComponent {
   installPwa(): void {
     const prompt = this.pwa.getDeferredPrompt();
     prompt.prompt();
-    prompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        this.snackBar.open('*clicks* noice', null, {
-          duration: 2000,
-          panelClass: 'snackbar-default'
-        });
-      } else {
-        this.snackBar.open('hm ._. schade', null, {
-          duration: 2000,
-          panelClass: 'snackbar-default'
-        });
-      }
-      this.opened = true;
-      this.dialogRef.close();
-    });
+    prompt.userChoice
+      .then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          this.snackBar.open('*clicks* noice', null, {
+            duration: 2000,
+            panelClass: 'snackbar-default'
+          });
+        } else {
+          this.snackBar.open('hm ._. schade', null, {
+            duration: 2000,
+            panelClass: 'snackbar-default'
+          });
+        }
+        this.opened = true;
+        this.dialogRef.close();
+      }, () => {
+        this.dialogRef.close();
+      })
+      .catch(() => {
+        this.dialogRef.close();
+      });
   }
 }
