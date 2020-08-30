@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatDialogRef} from '@angular/material';
+import {MatDialogRef, MatSnackBar} from '@angular/material';
 import {PwaService} from '../../../services/pwa-service.service';
 
 @Component({
@@ -10,7 +10,8 @@ import {PwaService} from '../../../services/pwa-service.service';
 export class PwaDialogComponent {
 
   constructor(
-    public dialogRef: MatDialogRef<PwaDialogComponent>, public pwa: PwaService) {
+    public dialogRef: MatDialogRef<PwaDialogComponent>, public pwa: PwaService,
+    public snackBar: MatSnackBar) {
   }
 
   onNoClick(): void {
@@ -18,6 +19,21 @@ export class PwaDialogComponent {
   }
 
   installPwa(): void {
-    this.pwa.getDeferredPrompt().prompt();
+    const prompt = this.pwa.getDeferredPrompt();
+    prompt.prompt();
+    prompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        this.snackBar.open('*clicks* noice', null, {
+          duration: 2000,
+          panelClass: 'snackbar-default'
+        });
+      } else {
+        this.snackBar.open('hm ._. schade', null, {
+          duration: 2000,
+          panelClass: 'snackbar-default'
+        });
+      }
+      this.dialogRef.close();
+    });
   }
 }
