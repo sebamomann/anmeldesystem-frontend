@@ -9,18 +9,8 @@ export class PwaService {
   constructor(private swUpdate: SwUpdate) {
     if (swUpdate.isEnabled) {
       interval(6 * 60 * 60).subscribe(() => swUpdate.checkForUpdate()
-        .then(() => console.log('checking for updates')));
+        .then(() => console.log('checking for pwa updates')));
     }
-
-    window.addEventListener('beforeinstallprompt', event => {
-      this.promptEvent = event;
-    });
-
-    // swUpdate.available.subscribe(event => {
-    //   if (askUserToUpdate()) {
-    //     window.location.reload();
-    //   }
-    // });
   }
 
   public checkForUpdates(): void {
