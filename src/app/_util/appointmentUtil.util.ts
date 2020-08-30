@@ -23,6 +23,7 @@ AppointmentUtil.unpin = (link: string) => {
 
 AppointmentUtil.getPinned = () => {
   let pins: string[] = JSON.parse(localStorage.getItem('appointment-pins'));
+
   if (pins === null) {
     pins = [];
   }
@@ -32,6 +33,11 @@ AppointmentUtil.getPinned = () => {
 
 AppointmentUtil.isPinned = (link: string) => {
   const pins: string[] = JSON.parse(localStorage.getItem('appointment-pins'));
+
+  if (!pins) {
+    return false;
+  }
+
   return pins.includes(link);
 };
 
