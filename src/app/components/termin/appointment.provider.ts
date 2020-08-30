@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, ReplaySubject} from 'rxjs';
 import {IAppointmentModel} from '../../models/IAppointment.model';
 import {AppointmentService} from '../../services/appointment.service';
 
@@ -7,8 +7,15 @@ import {AppointmentService} from '../../services/appointment.service';
   providedIn: 'root'
 })
 export class AppointmentProvider {
+  private _archive: IAppointmentModel[] = [];
 
   constructor(private appointmentService: AppointmentService) {
+    this._appointmentsArchive$ = new ReplaySubject<IAppointmentModel[]>(1);
+
+    this._appointmentsArchive$
+      .subscribe((val) => {
+        this._archive = val;
+      });
   }
 
   private _appointment$: BehaviorSubject<IAppointmentModel> = new BehaviorSubject<IAppointmentModel>(undefined);
@@ -23,6 +30,12 @@ export class AppointmentProvider {
     return this._appointments$;
   }
 
+  private _appointmentsArchive$: ReplaySubject<IAppointmentModel[]>;
+
+  public get appointmentsArchive$(): ReplaySubject<IAppointmentModel[]> {
+    return this._appointmentsArchive$;
+  }
+
   public update(appointment: IAppointmentModel) {
     this._appointment$.next(appointment);
   }
@@ -35,12 +48,32 @@ export class AppointmentProvider {
     return this._appointment$.value;
   }
 
-  public loadAppointments(before, limit) {
+  public loadAppointments() {
     this.appointmentService
-      .getAppointments(true, before, limit)
+      .getAppointments(true, null, null)
       .subscribe(
         (result: IAppointmentModel[]) => {
           this._appointments$.next(result);
+        }
+      );
+  }
+
+  public loadAppointmentsArchive(before, limit) {
+    this.appointmentService
+      .getAppointments(true, before, limit, true)
+      .subscribe(
+        async (result: IAppointmentModel[]) => {
+          if (!this._archive) {
+            this._archive = [];
+          }
+
+          result.forEach((fResult => {
+            if (!this._archive.some(sAppointment => sAppointment.id === fResult.id)) {
+              this._archive.push(fResult);
+            }
+          }));
+
+          this._appointmentsArchive$.next(this._archive);
         }
       );
   }

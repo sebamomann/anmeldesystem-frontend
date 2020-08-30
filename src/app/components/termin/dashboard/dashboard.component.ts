@@ -5,7 +5,14 @@ import {animate, query, stagger, state, style, transition, trigger} from '@angul
 import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {AppointmentProvider} from '../appointment.provider';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {AppointmentUtil} from '../../../_util/appointmentUtil.util';
+
+interface IAppointmentArchive {
+  year: number;
+  month: number;
+  appointments: IAppointmentModel[];
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -37,27 +44,36 @@ export class DashboardComponent implements OnInit {
   public hideTemplates = false;
 
   public appointment = null;
-  public appointmentsArchive: { year: number, month: number, appointments: IAppointmentModel[] }[] = [];
   public allowToShowEmptyHint: any;
 
   public _appointments$: Observable<IAppointmentModel[]>;
-  public _appointments: IAppointmentModel[] = [];
-  public _appointmentsTotal: IAppointmentModel[] = [];
+  public _appointmentsArchive$: Observable<IAppointmentModel[]>;
+  public _appointmentsArchiveMapped$: BehaviorSubject<IAppointmentArchive[]>
+    = new BehaviorSubject<IAppointmentArchive[]>(null);
 
   public showLegend: any;
   public appointmentsGroupedByMonthAndYear: { month: number; year: number }[];
   public totalAppointmentsLoaded = false;
-  public loading = false;
+  public isLoadingArchive = false;
+  public hideLoadMoreArchiveAppointments = false;
+  // ARCHIVE PAGINATION
   private limit = 5;
+  private lastAppointmentDate: string = null;
 
   constructor(public appointmentService: AppointmentService, public router: Router,
               public authenticationService: AuthenticationService, private appointmentProvider: AppointmentProvider) {
   }
 
-  private static getDistinctMonthAndYearCombinations(tmpArchive: any[]) {
+  /**
+   * Filter out unique Month and Year combinations appearing in appointment array.<br/>
+   * Returns array with unique month/year combinations
+   *
+   * @param appointments Array of appointments to sreach distinct combinations for
+   */
+  private static getDistinctMonthAndYearCombinations(appointments: IAppointmentModel[]) {
     const distinctMonthAndYearCombinations = [];
     const tmp_compareMap = new Map();
-    for (const item of tmpArchive) {
+    for (const item of appointments) {
       if (!tmp_compareMap.has((new Date(item.date)).getMonth())) {
         tmp_compareMap.set((new Date(item.date)).getMonth(), true);
         distinctMonthAndYearCombinations.push({
@@ -70,57 +86,33 @@ export class DashboardComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.appointmentProvider.loadAppointments(null, this.limit);
+    this.appointmentProvider.loadAppointments();
+    this.appointmentProvider.loadAppointmentsArchive(null, this.limit);
+    this.isLoadingArchive = true;
 
     this._appointments$ = this.appointmentProvider.appointments$;
+    this._appointmentsArchive$ = this.appointmentProvider.appointmentsArchive$;
 
-    this._appointments$
-      .subscribe(result => {
-        if (result === null) {
-          this.hideTemplates = true;
-        } else if (result !== undefined) {
-          this.totalAppointmentsLoaded = result.length !== this.limit;
+    this._appointmentsArchive$
+      .subscribe(sAppointments => {
+        const _lastAppointmentDate = sAppointments.slice(-1)[0].date;
 
-          this.loading = false;
-
-          this._appointments = [];
-          this.appointmentsArchive = [];
-
-          let tmpArchive = [];
-
-          // because a appointment is not returned twice in the sma result you can map before
-          const mapped = this._appointmentsTotal.map((e) => e.id);
-          result.forEach(fAppointment => {
-            if (mapped.indexOf(fAppointment.id) === -1) {
-              this._appointmentsTotal.push(fAppointment);
-            }
-          });
-
-          tmpArchive = this._appointmentsTotal.filter(fAppointment => Date.parse(fAppointment.date) < Date.now());
-          this._appointments = this._appointmentsTotal.filter(fAppointment => Date.parse(fAppointment.date) > Date.now());
-
-          this.appointmentsGroupedByMonthAndYear = DashboardComponent.getDistinctMonthAndYearCombinations(tmpArchive);
-
-          this.appointmentsGroupedByMonthAndYear.forEach((fMonthAndYear) => {
-            const __appointments: IAppointmentModel[] = tmpArchive
-              .filter(fAppointment => (new Date(fAppointment.date)).getMonth() === fMonthAndYear.month
-                && (new Date(fAppointment.date)).getFullYear() === fMonthAndYear.year);
-
-            this.appointmentsArchive.push({
-              month: fMonthAndYear.month,
-              year: fMonthAndYear.year,
-              appointments: __appointments,
-            });
-          });
-
-          this.allowToShowEmptyHint = true;
-
-          this.hideTemplates = true;
+        if (_lastAppointmentDate === this.lastAppointmentDate) {
+          this.hideLoadMoreArchiveAppointments = true;
         }
+
+        this.lastAppointmentDate = _lastAppointmentDate;
+        this.isLoadingArchive = false;
+        const output = [];
+
+        this.appointmentsGroupedByMonthAndYear = DashboardComponent.getDistinctMonthAndYearCombinations(sAppointments);
+        this.sortAppointmentsByMonthAndYearCombination(sAppointments, output);
+
+        this._appointmentsArchiveMapped$.next(output);
       });
   }
 
-  redirectToAppointment(appointment: IAppointmentModel) {
+  public redirectToAppointment(appointment: IAppointmentModel) {
     this.router
       .navigate(['/enroll'], {
         queryParams: {
@@ -129,8 +121,24 @@ export class DashboardComponent implements OnInit {
       });
   }
 
-  onScroll() {
-    this.loading = true;
-    this.appointmentProvider.loadAppointments(this._appointmentsTotal[this._appointmentsTotal.length - 1].date, this.limit);
+  public onScroll() {
+    this.isLoadingArchive = true;
+    this.appointmentProvider.loadAppointmentsArchive(this.lastAppointmentDate, this.limit);
+  }
+
+  private sortAppointmentsByMonthAndYearCombination(sAppointments: IAppointmentModel[], output: any[]) {
+    this.appointmentsGroupedByMonthAndYear
+      .forEach((fMonthAndYear) => {
+        const __appointments: IAppointmentModel[] = sAppointments.filter(fAppointment => {
+          return AppointmentUtil.getMonth(fAppointment) === fMonthAndYear.month
+            && AppointmentUtil.getYear(fAppointment) === fMonthAndYear.year;
+        });
+
+        output.push({
+          month: fMonthAndYear.month,
+          year: fMonthAndYear.year,
+          appointments: __appointments,
+        });
+      });
   }
 }

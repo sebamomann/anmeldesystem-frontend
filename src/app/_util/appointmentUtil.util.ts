@@ -1,3 +1,5 @@
+import {IAppointmentModel} from '../models/IAppointment.model';
+
 export function AppointmentUtil() {
 }
 
@@ -32,5 +34,16 @@ AppointmentUtil.isPinned = (link: string) => {
   const pins: string[] = JSON.parse(localStorage.getItem('appointment-pins'));
   return pins.includes(link);
 };
+
+AppointmentUtil.getYear = (appointment: IAppointmentModel) => {
+  return (new Date(appointment.date)).getFullYear();
+};
+
+AppointmentUtil.getMonth = (appointment: IAppointmentModel) => {
+  return (new Date(appointment.date)).getMonth();
+};
+
+
+
 
 

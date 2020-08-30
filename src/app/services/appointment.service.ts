@@ -64,8 +64,14 @@ export class AppointmentService {
     );
   }
 
-  getAppointments(slim: boolean, before, limit): Observable<IAppointmentModel[]> {
+  public getAppointments(slim: boolean, before, limit, archive = false): Observable<IAppointmentModel[]> {
     let url = `${environment.API_URL}appointment/`;
+
+    if (archive) {
+      console.log('calling archive');
+      console.log(before);
+      url = `${url}archive`;
+    }
 
     url = `${url}?slim=${slim}&before=${before}&limit=${limit}`;
 
