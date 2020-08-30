@@ -120,6 +120,10 @@ export class DashboardComponent implements OnInit {
   public onScroll() {
     this.isLoadingArchive = true;
     this.appointmentProvider.loadAppointmentsArchive(this.lastAppointmentDate, this.limit);
+
+    setTimeout(() => {
+      this.isLoadingArchive = true;
+    }, 5000);
   }
 
   private sortAppointmentsByMonthAndYearCombination(sAppointments: IAppointmentModel[], output: any[]) {
