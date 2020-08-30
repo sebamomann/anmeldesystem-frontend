@@ -18,7 +18,6 @@ export class PwaService {
   }
 
   private promptUser(): void {
-    console.log('updating to new version');
     this.swUpdate.activateUpdate().then(() => document.location.reload());
   }
 }

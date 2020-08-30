@@ -55,16 +55,26 @@ export class AppComponent {
 
     this.pwa.checkForUpdates();
 
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+
+      this.openPwaDialog();
+    });
+
+    window.isUpdateAvailable
+      .then(isAvailable => {
+        if (isAvailable) {
+          this.openPwaDialog();
+        }
+      });
+
     const date = new Date();
     this.now = `${this.monthnamePipe.transform(date.getMonth())} ${date.getFullYear()}`;
 
     particlesJS.load('particles-js', './assets/particlesjs-config.json', null);
 
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
-
-    if (pwa.promptEvent) {
-      this.openPwaDialog();
-    }
 
     this.buildNav();
   }
