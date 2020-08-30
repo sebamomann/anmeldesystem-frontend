@@ -122,7 +122,7 @@ export class DashboardComponent implements OnInit {
     this.appointmentProvider.loadAppointmentsArchive(this.lastAppointmentDate, this.limit);
 
     setTimeout(() => {
-      this.isLoadingArchive = true;
+      this.isLoadingArchive = false;
     }, 5000);
   }
 
