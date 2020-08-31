@@ -1,6 +1,5 @@
 import {Component, EventEmitter, OnDestroy, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
-import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {IAdditionModel} from '../../../models/IAddition.model';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
@@ -76,7 +75,6 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     service: new FormControl('', [])
   });
 
-  private appointmentSubscription$$: Subscription;
   // Preparation for login redirect fields
   private finalEnrollment_raw: string;
   private finalEnrollment: IEnrollmentModel = new EnrollmentModel();
@@ -86,7 +84,10 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
   private permissionToken: any;
   private enrollmentId: string;
 
-  constructor(private enrollmentService: EnrollmentService, private location: Location,
+  private appointment$$: Subscription;
+  private appointmentService$$: Subscription;
+
+  constructor(private enrollmentService: EnrollmentService,
               private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
               private authenticationService: AuthenticationService, private snackBar: MatSnackBar,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
@@ -109,7 +110,7 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.appointment$ = this.appointmentProvider.appointment$;
-    this.appointmentSubscription$$ = this.appointment$
+    this.appointment$$ = this.appointment$
       .subscribe((sAppointment) => {
         if (sAppointment !== undefined && !this.loaded) { // CAN BE NULL !!!
           this.appointment = sAppointment;
@@ -203,13 +204,10 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     return this.form_selfEnrollment.get('selfEnrollment');
   }
 
-  public goBack() {
-    this.location.back();
-  }
 
   public ngOnDestroy() {
-    console.log('destroy');
-    this.appointmentSubscription$$.unsubscribe();
+    this.appointment$$.unsubscribe();
+    this.appointmentService$$.unsubscribe();
   }
 
   public mailFormSubmit($event: string) {
@@ -365,7 +363,7 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     // fetch permission token if existing
     this.finalEnrollment.token = TokenUtil.getTokenForEnrollment(this.enrollmentId, this.appointmentLink);
 
-    this.enrollmentService[functionName](this.finalEnrollment, this.appointment)
+    this.appointmentService$$ = this.enrollmentService[functionName](this.finalEnrollment, this.appointment)
       .subscribe(
         result => {
           if (result.type === HttpEventType.Response) {

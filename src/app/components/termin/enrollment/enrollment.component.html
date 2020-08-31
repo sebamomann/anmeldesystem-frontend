@@ -121,7 +121,8 @@
                       mat-raised-button>
                 {{ isEdit ? 'Speichern' : 'Anmelden' }}
               </button>
-              <button (click)="goBack()"
+              <button [queryParams]="{a: appointmentLink}"
+                      [routerLink]="['/enroll']"
                       mat-raised-button
                       type="button">
                 Zurück
