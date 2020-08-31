@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
 import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
 import {FilterDialogComponent} from '../../../dialogs/filter/filterDialog.component';
@@ -11,7 +11,7 @@ import {AuthenticationService} from '../../../../services/authentication.service
 import {EnrollmentService} from '../../../../services/enrollment.service';
 import {ResendEnrollmentPermissionComponent} from '../../../dialogs/key-dialog/resend-enrollment-permission.component';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {AppointmentProvider} from '../../appointment.provider';
 
 const HttpStatus = require('http-status-codes');
@@ -41,7 +41,7 @@ const HttpStatus = require('http-status-codes');
     ])
   ],
 })
-export class EnrollmentListComponent implements OnInit {
+export class EnrollmentListComponent implements OnInit, OnDestroy {
   @Input()
   public subListTitle: string;
   @Input()
@@ -58,6 +58,7 @@ export class EnrollmentListComponent implements OnInit {
   public sendingRequestEmitDelete = new EventEmitter<boolean>();
 
   private enrollments_unfiltered;
+  private enrollments$$: Subscription;
 
   constructor(public dialog: MatDialog, private router: Router,
               private authenticationService: AuthenticationService,
@@ -73,7 +74,7 @@ export class EnrollmentListComponent implements OnInit {
   ngOnInit() {
     this.filter = this.initializeFilterObject(this.appointment);
 
-    this.enrollments$.subscribe((enrollments) => {
+    this.enrollments$$ = this.enrollments$.subscribe((enrollments) => {
       this.enrollments_unfiltered = enrollments;
       this.filterDialogApplied = true; // force filter due to observable update
       this.applyFilter();
@@ -243,7 +244,8 @@ export class EnrollmentListComponent implements OnInit {
     dialogRef.afterClosed()
       .subscribe(() => {
         this.sendingRequestEmitEdit.emit(false);
-      });
+      })
+      .unsubscribe();
   };
 
   /**
@@ -303,8 +305,13 @@ export class EnrollmentListComponent implements OnInit {
           } else {
             this.openPermissionResendDialog(enrollment, operation);
           }
-        });
+        })
+      .unsubscribe();
   };
+
+  ngOnDestroy(): void {
+    this.enrollments$$.unsubscribe();
+  }
 
   private _isNewFilter(newFilter) {
     return isObject(newFilter)
@@ -372,7 +379,8 @@ export class EnrollmentListComponent implements OnInit {
         }
 
         this.sendingRequestEmitDelete.emit(false);
-      });
+      })
+      .unsubscribe();
   };
 
   private permissionGranted(operation: string, enrollment: IEnrollmentModel) {

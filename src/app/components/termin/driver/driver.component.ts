@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {Location} from '@angular/common';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {ActivatedRoute} from '@angular/router';
 import {animate, query, state, style, transition, trigger} from '@angular/animations';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {SEOService} from '../../../_helper/_seo.service';
 import {AppointmentSocketioService} from '../../../services/appointment-socketio.service';
 import {AppointmentProvider} from '../appointment.provider';
@@ -32,16 +32,17 @@ import {AppointmentProvider} from '../appointment.provider';
     ]),
   ]
 })
-export class DriverComponent implements OnInit {
+export class DriverComponent implements OnInit, OnDestroy {
 
   public appointment: IAppointmentModel = null;
   public data: MyType = {};
   public drivers: IEnrollmentModel[];
   public link;
-  public percentDone: number;
 
-  appointment$: Observable<IAppointmentModel>;
+  public appointment$: Observable<IAppointmentModel>;
   public loaded = true;
+
+  private appointment$$: Subscription;
 
   constructor(private location: Location, private route: ActivatedRoute,
               private appointmentSocketioService: AppointmentSocketioService,
@@ -86,8 +87,12 @@ export class DriverComponent implements OnInit {
     this.location.back();
   }
 
+  ngOnDestroy(): void {
+    this.appointment$$.unsubscribe();
+  }
+
   private successfulRequest() {
-    this.appointment$
+    this.appointment$$ = this.appointment$
       .subscribe(sAppointment => {
         if (sAppointment === null) {
           this.loaded = true;
