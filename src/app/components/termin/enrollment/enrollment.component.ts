@@ -207,7 +207,9 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     this.appointment$$.unsubscribe();
-    this.appointmentService$$.unsubscribe();
+    if (this.appointmentService$$) {
+      this.appointmentService$$.unsubscribe();
+    }
   }
 
   public mailFormSubmit($event: string) {

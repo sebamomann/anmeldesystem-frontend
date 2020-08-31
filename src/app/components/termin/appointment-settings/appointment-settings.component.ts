@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AppointmentService} from '../../../services/appointment.service';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -6,7 +6,7 @@ import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import {LinkDataComponent} from '../form/link-data/link-data.component';
 import {AppointmentSocketioService} from '../../../services/appointment-socketio.service';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {AppointmentProvider} from '../appointment.provider';
 
 const HttpStatus = require('http-status-codes');
@@ -16,7 +16,7 @@ const HttpStatus = require('http-status-codes');
   templateUrl: './appointment-settings.component.html',
   styleUrls: ['./appointment-settings.component.scss']
 })
-export class AppointmentSettingsComponent implements OnInit {
+export class AppointmentSettingsComponent implements OnInit, OnDestroy {
   @ViewChild(LinkDataComponent, null)
   linkDataComponent: LinkDataComponent;
 
@@ -27,6 +27,8 @@ export class AppointmentSettingsComponent implements OnInit {
   public saveSuccess: boolean;
   public uploadingFile: any = [];
   public permission = null;
+
+  private appointment$$: Subscription;
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog,
               private route: ActivatedRoute, private router: Router,
@@ -66,7 +68,7 @@ export class AppointmentSettingsComponent implements OnInit {
   }
 
   public listenForChange() {
-    this.appointment$
+    this.appointment$$ = this.appointment$
       .subscribe((val) => {
         if (!this.appointment) {
           this.appointment = val;
@@ -154,6 +156,10 @@ export class AppointmentSettingsComponent implements OnInit {
             }
           }
         });
+  }
+
+  ngOnDestroy(): void {
+    this.appointment$$.unsubscribe();
   }
 
   private _save(data: any) {
