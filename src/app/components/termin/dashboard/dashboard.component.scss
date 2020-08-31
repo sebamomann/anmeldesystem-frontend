@@ -19,6 +19,9 @@
     span {
       width: 50%;
       display: inline-block;
+      text-align: left;
+      text-align-last: initial;
+      margin: 0;
 
       &:first-of-type {
         text-align: left;
