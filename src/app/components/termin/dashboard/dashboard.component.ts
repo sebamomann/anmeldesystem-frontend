@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {AuthenticationService} from '../../../services/authentication.service';
 import {AppointmentProvider} from '../appointment.provider';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {AppointmentUtil} from '../../../_util/appointmentUtil.util';
 
 interface IAppointmentArchive {
@@ -38,7 +38,7 @@ interface IAppointmentArchive {
     ])
   ]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   public appointment = null;
   public allowToShowEmptyHint: any;
 
@@ -55,6 +55,8 @@ export class DashboardComponent implements OnInit {
   // ARCHIVE PAGINATION
   private limit = 5;
   private lastAppointmentDate: string = null;
+
+  private appointmentsArchive$$: Subscription;
 
   constructor(public router: Router, public authenticationService: AuthenticationService,
               private appointmentProvider: AppointmentProvider) {
@@ -89,7 +91,7 @@ export class DashboardComponent implements OnInit {
     this._appointments$ = this.appointmentProvider.appointments$;
     this._appointmentsArchive$ = this.appointmentProvider.appointmentsArchive$;
 
-    this._appointmentsArchive$
+    this.appointmentsArchive$$ = this._appointmentsArchive$
       .subscribe(sAppointments => {
         const lastAppointment = sAppointments.slice(-1)[0];
         let _lastAppointmentDate;
@@ -133,6 +135,10 @@ export class DashboardComponent implements OnInit {
     setTimeout(() => {
       this.isLoadingArchive = false;
     }, 5000);
+  }
+
+  ngOnDestroy(): void {
+    this.appointmentsArchive$$.unsubscribe();
   }
 
   private sortAppointmentsByMonthAndYearCombination(sAppointments: IAppointmentModel[], output: any[]) {
