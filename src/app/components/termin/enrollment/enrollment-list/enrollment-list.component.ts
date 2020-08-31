@@ -395,7 +395,7 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
             a: this.appointment.link,
             e: enrollment.id,
             editId: null,
-            editOperation: null
+            operation: null
           },
         queryParamsHandling: 'merge'
       }).then(() => {

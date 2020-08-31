@@ -1,4 +1,4 @@
-import {Component, NgModule, OnDestroy, OnInit} from '@angular/core';
+import {Component, NgModule, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {IEnrollmentModel} from '../../models/IEnrollment.model';
 import {IAppointmentModel} from '../../models/IAppointment.model';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -13,6 +13,8 @@ import {AppointmentService} from '../../services/appointment.service';
 import {AppointmentUtil} from '../../_util/appointmentUtil.util';
 import {MatSnackBar} from '@angular/material';
 import {AppointmentStatus} from './appointment.status';
+import {EnrollmentListComponent} from './enrollment/enrollment-list/enrollment-list.component';
+import {EnrollmentModel} from '../../models/EnrollmentModel.model';
 
 @Component({
   selector: 'app-appointment',
@@ -39,6 +41,10 @@ import {AppointmentStatus} from './appointment.status';
 })
 @NgModule({})
 export class AppointmentComponent implements OnInit, OnDestroy {
+  @ViewChild('enrollments_actual', {static: false}) enrollments_actualRef: EnrollmentListComponent;
+  @ViewChild('enrollments_waiting', {static: false}) enrollments_waitingRef: EnrollmentListComponent;
+  @ViewChild('enrollments_late', {static: false}) enrollments_lateRef: EnrollmentListComponent;
+
   public link: string;
 
   public appointment$: Observable<IAppointmentModel>;
@@ -70,18 +76,23 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   private websocketSubscriptionRetryCount$$: Subscription;
   private appointment$$: Subscription;
 
+  private editId: string;
+  private editOperation: string;
+
   constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
               private appointmentProvider: AppointmentProvider, public settingsService: SettingsService,
               private appointmentService: AppointmentService, private snackBar: MatSnackBar, private appointmentStatus: AppointmentStatus) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
+      this.editId = params.editId;
+      this.editOperation = params.operation;
     });
 
     this.route.params.subscribe(params => {
       if (params.link !== undefined) {
         this.link = params.link;
-        this.router.navigate(['/enroll'], {queryParams: {a: this.link}}).then(() => '');
+        this.router.navigate(['/enroll'], {queryParams: {a: this.link}}).then(() => ''); // convert link to query parameter
       }
     });
 
@@ -262,5 +273,37 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.enrollments$.next(enrollments_correct);
     this.enrollmentsWaitingList$.next(enrollments_waiting);
     this.enrollmentsLate$.next(enrollments_late);
+
+    setTimeout(() => {
+      if (this.editId && this.editOperation) {
+        let enr;
+        enr = enrollments_correct.find((sEnrollment) => sEnrollment.id === this.editId);
+        if (enr) {
+          const enrollment = new EnrollmentModel();
+          enrollment.id = this.editId;
+          enrollment.name = enr.name;
+          this.enrollments_actualRef.preCheckOpenConfirmationDialog(enrollment, this.editOperation);
+          return;
+        }
+
+        enr = enrollments_late.find((sEnrollment) => sEnrollment.id === this.editId);
+        if (enr) {
+          const enrollment = new EnrollmentModel();
+          enrollment.id = this.editId;
+          enrollment.name = enr.name;
+          this.enrollments_lateRef.preCheckOpenConfirmationDialog(enrollment, this.editOperation);
+          return;
+        }
+
+        enr = enrollments_waiting.find((sEnrollment) => sEnrollment.id === this.editId);
+        if (enr) {
+          const enrollment = new EnrollmentModel();
+          enrollment.id = this.editId;
+          enrollment.name = enr.name;
+          this.enrollments_waitingRef.preCheckOpenConfirmationDialog(enrollment, this.editOperation);
+          return;
+        }
+      }
+    });
   }
 }
