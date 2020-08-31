@@ -1,4 +1,4 @@
-<ng-container *ngIf="appointment$ | async as appointment; else loading">
+<ng-container *ngIf="appointment$ | async as appointment; else loadingTemplate">
   <app-appointment-data [appointment]="appointment"></app-appointment-data>
 
   <mat-card *ngIf="!authenticationService.userIsLoggedIn()"
@@ -117,7 +117,7 @@
       <div></div>
       <div></div>
     </div>
-    <mat-icon>
+    <mat-icon (click)="click()">
       person_add
     </mat-icon>
   </div>
@@ -142,7 +142,7 @@
   </div>
 </ng-container>
 
-<ng-template #loading>
+<ng-template #loadingTemplate>
   <app-loading *ngIf="!loaded" [@remove]></app-loading>
   <app-fetch-appointment [done]="loaded"></app-fetch-appointment>
 </ng-template>

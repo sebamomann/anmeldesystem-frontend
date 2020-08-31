@@ -205,6 +205,10 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.appointmentService.closeEnrollmentHint(this.link);
   }
 
+  click() {
+    console.log('clicked');
+  }
+
   private splitEnrollments(appointment: IAppointmentModel) {
     let enrollments_correct = [];
     let enrollments_waiting = [];

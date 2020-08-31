@@ -1,17 +1,18 @@
 <ng-container *ngIf="appointment$ | async as appointment; else loading">
-  <div *ngIf="!showLoginAndTokenForm; else loading"
+  <div *ngIf="!showLoginAndMailForm; else loginAndMailFormTempl"
        class="wrapper">
-    <ng-container *ngIf="!empty; else emptyTmpl">
+    <ng-container *ngIf="!enrollmentGone; else emptyTmpl">
       <mat-card class="form float high">
         <mat-card-title class="headline">
-          {{ edit ? 'Bearbeiten' : 'Anmelden' }}
+          {{ isEdit ? 'Bearbeiten' : 'Anmelden' }}
         </mat-card-title>
 
         <mat-card-content>
           <form (ngSubmit)="parseDataFromEnrollmentForm()"
+                [formGroup]="form_main"
                 class="register-form">
-            <div *ngIf="userIsLoggedIn && !this.edit"
-                 [formGroup]="selfEnrollment"
+            <div *ngIf="userIsLoggedIn && !this.isEdit"
+                 [formGroup]="form_selfEnrollment"
                  class="additions tooltip-container">
               <mat-checkbox formControlName="selfEnrollment">
                 Ich melde mich selber an
@@ -26,13 +27,13 @@
               </mat-icon>
             </div>
 
-            <div [formGroup]="event">
+            <div>
               <mat-form-field class="name">
                 <label for="name">
                   <input formControlName="name"
                          id="name"
-                         matInput
                          placeholder="Name"
+                         matInput
                          required>
                 </label>
                 <mat-error>
@@ -51,7 +52,7 @@
               </div>
             </div>
 
-            <div [formGroup]="driverPassengerEvent">
+            <div [formGroup]="form_driverPassenger">
               <div *ngIf="appointment.driverAddition" class="driverAddition">
                 <div>
                   <mat-checkbox
@@ -68,7 +69,7 @@
                     <mat-option [value]="2"> Nur Zurück</mat-option>
                     <mat-option [value]="3"> Hin und Zurück</mat-option>
                   </mat-select>
-                  <mat-error *ngIf="driverPassengerEvent.get('requirement').invalid">
+                  <mat-error *ngIf="form_driverPassenger.get('requirement').invalid">
                     {{ getSelectErrorMessage() }}
                   </mat-error>
                 </mat-form-field>
@@ -81,7 +82,7 @@
                       <mat-option [value]="2"> Nur Zurück</mat-option>
                       <mat-option [value]="3"> Hin und Zurück</mat-option>
                     </mat-select>
-                    <mat-error *ngIf="driverPassengerEvent.get('service').invalid">
+                    <mat-error *ngIf="form_driverPassenger.get('service').invalid">
                       {{ getSelectErrorMessage() }}
                     </mat-error>
                   </mat-form-field>
@@ -93,7 +94,7 @@
                            placeholder="FREIE Plätze"
                            required
                            type="number">
-                    <mat-error *ngIf="driverPassengerEvent.get('seats').invalid">
+                    <mat-error *ngIf="form_driverPassenger.get('seats').invalid">
                       {{ getSeatsErrorMessage() }}
                     </mat-error>
                   </mat-form-field>
@@ -101,45 +102,31 @@
               </div>
             </div>
 
-            <mat-form-field [formGroup]="event">
-          <textarea cdkAutosizeMaxRows="5"
-                    cdkAutosizeMinRows="1"
-                    cdkTextareaAutosize
-                    formControlName="comment"
-                    id="comment"
-                    matInput placeholder="Kommentar">
-          </textarea>
+            <mat-form-field [formGroup]="form_main">
+              <textarea cdkAutosizeMaxRows="5"
+                        cdkAutosizeMinRows="1"
+                        cdkTextareaAutosize
+                        formControlName="comment"
+                        id="comment"
+                        matInput placeholder="Kommentar">
+              </textarea>
             </mat-form-field>
 
-
-            <div *ngIf="!getSelfEnrollment().value"
-                 [formGroup]="mailEvent">
-              <div class="separator colored extra-extra-tall bolder middle center"></div>
-              <mat-form-field>
-                <label>
-                  <input formControlName="mail"
-                         matInput
-                         placeholder="Mail-Adresse">
-                </label>
-                <mat-error>
-                  {{ getMailErrorMessage() }}
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <mat-card-actions>
+            <div class="actions">
               <button [active]="sendingRequestEmit"
-                      [innerValue]="edit ? 'Speichern' : 'Anmelden'"
+                      [innerValue]="isEdit ? 'Speichern' : 'Anmelden'"
                       appLoadingDisable
                       color="primary"
                       id="submit"
                       mat-raised-button>
-                {{ edit ? 'Speichern' : 'Anmelden' }}
+                {{ isEdit ? 'Speichern' : 'Anmelden' }}
               </button>
-              <a (click)="goBack()" mat-raised-button>
+              <button (click)="goBack()"
+                      mat-raised-button
+                      type="button">
                 Zurück
-              </a>
-            </mat-card-actions>
+              </button>
+            </div>
           </form>
         </mat-card-content>
       </mat-card>
@@ -147,70 +134,11 @@
   </div>
 </ng-container>
 
-<ng-container *ngIf="showLoginAndTokenForm">
-  <mat-card class="float card-small">
-    <mat-card-content>
-        <span>
-          Logge dich ein um deine Anmeldung deinem Account zuzuordnen und sie später bearbeten/löschen zu können.
-        </span>
-      <button [queryParams]="{returnUrl: this.currentUrlSnapshotWithParameter.url + '&send=true'}"
-              [routerLink]="['/account/login']"
-              color="primary"
-              mat-raised-button>
-        Login
-      </button>
-    </mat-card-content>
-
-    <div class="separator middle center">
-      <div class="tooltip-wrapper center">
-        <!--suppress TypeScriptUnresolvedFunction -->
-        <mat-icon #tooltip="matTooltip"
-                  (click)="tooltip.toggle()"
-                  class="highlight-animation tooltip"
-                  matTooltip="{{'Wenn du keinen Account hast, dann gebe hier deine Mail-Adresse ein, um später deine ' +
-                  'Anmeldung ändern oder löschen zu können. Mit der Angabe der Mail-Adresse, kannst du die ' +
-                  'Berechtigung zum Bearbeiten auf verschiedenen Geräten erhalten.' }}">
-          help_outline
-        </mat-icon>
-      </div>
-    </div>
-
-    <mat-card-content>
-        <span>
-          Oder gebe deine Email-Adresse an
-        </span>
-
-      <div [formGroup]="mailEvent">
-        <div class="input-with-button-wrapper">
-          <mat-form-field>
-            <label>
-              <input formControlName="mail"
-                     matInput
-                     placeholder="Mail-Adresse">
-            </label>
-            <mat-error>
-              {{ getMailErrorMessage() }}
-            </mat-error>
-          </mat-form-field>
-          <button (click)="mailFormComplete()"
-                  mat-raised-button>
-            Absenden
-          </button>
-        </div>
-      </div>
-    </mat-card-content>
-    <button (click)="clearLoginAndMailFormIntercepting()"
-            mat-raised-button>
-      Zurück
-    </button>
-  </mat-card>
-</ng-container>
-
 <ng-template #emptyTmpl>
   <mat-card class="float error empty">
     <img src="/assets/img/404.svg">
     <span>Sorry, diese Anmeldung gibt es lieder nicht mehr.</span>
-    <button [queryParams]="{a: link}"
+    <button [queryParams]="{a: appointmentLink}"
             [routerLink]="['/enroll']"
             mat-raised-button>
       Okay
@@ -218,12 +146,18 @@
   </mat-card>
 </ng-template>
 
+<ng-template #loginAndMailFormTempl>
+  <app-enrollment-login-mail
+    (cancel)="mailFormCancel()"
+    (done)="mailFormSubmit($event)">
+  </app-enrollment-login-mail>
+</ng-template>
+
 <ng-template #loading>
-  <app-loading *ngIf="!loaded && !showLoginAndTokenForm"
+  <app-loading *ngIf="!loaded && !showLoginAndMailForm"
                [@remove]>
   </app-loading>
   <app-fetch-appointment
-    [done]="loaded && !showLoginAndTokenForm"
-    [percentDone]="percentDone">
+    [done]="loaded && !showLoginAndMailForm">
   </app-fetch-appointment>
 </ng-template>

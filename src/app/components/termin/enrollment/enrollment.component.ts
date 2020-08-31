@@ -1,7 +1,7 @@
-import {Component, EventEmitter, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
 import {Location} from '@angular/common';
-import {ActivatedRoute, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {IAdditionModel} from '../../../models/IAddition.model';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
@@ -11,11 +11,12 @@ import {MatSnackBar} from '@angular/material';
 import {IEnrollmentModel} from '../../../models/IEnrollment.model';
 import {EnrollmentService} from '../../../services/enrollment.service';
 import {EnrollmentModel} from '../../../models/EnrollmentModel.model';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {TokenUtil} from '../../../_util/tokenUtil.util';
 import {SEOService} from '../../../_helper/_seo.service';
 import {AppointmentSocketioService} from '../../../services/appointment-socketio.service';
 import {AppointmentProvider} from '../appointment.provider';
+import {AppointmentUtil} from '../../../_util/appointmentUtil.util';
 
 const HttpStatus = require('http-status-codes');
 
@@ -42,183 +43,118 @@ const HttpStatus = require('http-status-codes');
     ]),
   ]
 })
-export class EnrollmentComponent implements OnInit {
-  public link: string;
+export class EnrollmentComponent implements OnInit, OnDestroy {
+  private static LOCAL_STORAGE_ENROLLMENT_TMP_KEY = 'enrollmentOutput';
 
-  userIsLoggedIn: boolean = !this.authenticationService.isExpired() && this.authenticationService.currentUserValue !== null;
+  public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
 
-  selfEnrollment = this.formBuilder.group({
-    selfEnrollment: new FormControl('true', []),
-  });
+  public appointmentLink: string;
+  public appointment: IAppointmentModel;
+  public isEdit: any;
+  public enrollmentGone = false;
+  public sendingRequestEmit = new EventEmitter<boolean>();
 
-  event = this.formBuilder.group({
+  public loaded = false;
+  public showLoginAndMailForm = false;
+
+  public appointment$: Observable<IAppointmentModel>;
+
+  public form_main = this.formBuilder.group({
     name: new FormControl('', [Validators.required, Validators.min(2)]),
     comment: new FormControl('', [Validators.min(2)]),
     additions: new FormArray([]),
   });
 
-  driverPassengerEvent = this.formBuilder.group({
+  public form_selfEnrollment = this.formBuilder.group({
+    selfEnrollment: new FormControl('true', []),
+  });
+
+  public form_driverPassenger = this.formBuilder.group({
     driver: new FormControl(false),
     seats: new FormControl('', [Validators.min(1)]),
     requirement: new FormControl('', []),
     service: new FormControl('', [])
   });
 
-  mailEvent = this.formBuilder.group({
-    mail: new FormControl('', [Validators.required, Validators.email]),
-  });
-
-  public appointment: IAppointmentModel = null;
-  public edit: any;
-  public token: any;
-  public empty = false;
-  public sendingRequestEmit = new EventEmitter<boolean>();
-
-  public loaded = true;
-  public percentDone: number;
-  public showLoginAndTokenForm = false;
-  public currentUrlSnapshotWithParameter: RouterStateSnapshot;
-  public localStorageKeys: string[];
-  // CACHE
-  appointment$: Observable<IAppointmentModel>;
-  private skipLoginForm = false;
-  private enrollmentId: string;
+  private appointmentSubscription$$: Subscription;
   // Preparation for login redirect fields
-  private ENROLLMENT_KEY_KEY = 'enrollmentKeys';
-  private outputRawFromStorage: string;
-  private output: IEnrollmentModel = new EnrollmentModel();
-  // Key fields
-  private ENROLLMENT_OUTPUT_KEY = 'enrollmentOutput';
+  private finalEnrollment_raw: string;
+  private finalEnrollment: IEnrollmentModel = new EnrollmentModel();
   // Sending options
-  private autoSend = false;
+  private triggerDirectSend = false;
+  // permission via mail
+  private permissionToken: any;
+  private enrollmentId: string;
 
   constructor(private enrollmentService: EnrollmentService, private location: Location,
               private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
               private authenticationService: AuthenticationService, private snackBar: MatSnackBar,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
               private appointmentProvider: AppointmentProvider) {
-
-    this.currentUrlSnapshotWithParameter = router.routerState.snapshot;
-
     this.route.queryParams.subscribe(params => {
-      this.link = params.a;
+      this.appointmentLink = params.a;
       this.enrollmentId = params.e;
-      this.token = params.t;
-      this.autoSend = params.send === 'true';
+      this.permissionToken = params.t;
 
-      if (this.token !== null && this.token !== undefined) {
-        this.storeEnrollmentAccessToken(this.link, {id: this.enrollmentId, token: this.token});
+      this.triggerDirectSend = params.send === 'true';
+
+      if (this.permissionToken) {
+        AppointmentUtil.storeEnrollmentPermissions(this.appointmentLink, {
+          id: this.enrollmentId,
+          token: this.permissionToken
+        });
       }
     });
   }
 
   async ngOnInit() {
-    this.appointmentSocketioService
-      .setupSocketConnection()
-      .then(() => {
-        this.loaded = false;
-
-        this.appointmentSocketioService.subscribeToAppointmentUpdates(this.link);
-        this.appointment$ = this.appointmentProvider.appointment$;
-
-        this.successfulRequest();
+    this.appointment$ = this.appointmentProvider.appointment$;
+    this.appointmentSubscription$$ = this.appointment$
+      .subscribe((sAppointment) => {
+        if (sAppointment !== undefined && !this.loaded) { // CAN BE NULL !!!
+          this.appointment = sAppointment;
+          this.loaded = true;
+          this.__SEO();
+          this.main();
+        } else if (!this.loaded) {
+          this.appointmentSocketioService.loadAppointment(this.appointmentLink);
+        } else {
+          // IGNORE FURTHER UPDATES
+        }
       });
-
-    await this.route
-      .data
-      .subscribe(v => this.edit = v.edit);
-
-    this.edit = this.enrollmentId !== undefined;
-
-    // Needed due to error permanent trigger, if value is put in via form [value]
-    if (this.userIsLoggedIn && !this.edit) {
-      this.getName().markAsTouched();
-      this.getName().setValue(this.authenticationService.currentUserValue.name);
-    }
   }
 
   /**
-   * Main function on initializing sending of data to API
-   * Called by usual enroll form
+   * Initial function to send Enrollment
    */
-  parseDataFromEnrollmentForm: () => Promise<void> = async () => {
-    // TODO
-    // refactor
-    if (!this.event.valid) {
-      this.driverPassengerEvent.markAllAsTouched();
+  public parseDataFromEnrollmentForm: () => void = () => {
+    if (!this.formsValid()) {
       return;
-    }
-
-    if (this.getDriver().value) {
-      if ((this.getService().valid && this.getSeats().valid)) {
-      } else {
-        this.driverPassengerEvent.markAllAsTouched();
-        return;
-      }
-    } else if (!this.getRequirement().valid) {
-      this.driverPassengerEvent.markAllAsTouched();
-      return;
-    }
-
-    if (this.userIsLoggedIn &&
-      !this.getSelfEnrollment().value) {
-      if (this.mailEvent.valid) {
-        this.output.editMail = this.getMail().value;
-      } else {
-        this.mailEvent.markAllAsTouched();
-        this.getMail().setErrors({invalid: true});
-        return;
-      }
     }
 
     // Parse data from form into object
-    this.output.name = this.getName().value;
-    this.output.comment = this.getComment().value;
+    this.finalEnrollment.name = this.getName().value;
+    this.finalEnrollment.comment = this.getComment().value;
+    this.parseDriverAddition();
+    this.finalEnrollment.additions = this.getIdsOfSelectedAdditions();
 
-    if (this.appointment.driverAddition) {
-      if (this.getDriver().value) {
-        this.output.driver = {
-          service: this.getService().value,
-          seats: this.getSeats().value,
-        };
-        this.output.passenger = null;
-      } else {
-        this.output.passenger = {
-          requirement: this.getRequirement().value,
-        };
-        this.output.driver = null;
-      }
-    }
-
-    this.output.additions = this.getAdditionIdList();
-
-    this.checkForAutomaticSubmit();
+    this.enrollmentAssignmentDecision();
   };
 
   /**
-   * Eventually sending/updating Enrollment
+   * Initialize sending of enrollment.<br/>
+   * Information gathering and enrollment assigning (account or mail)
    */
-  sendEnrollment: () => Promise<void> = async () => {
-    if (this.mailEvent.invalid
-      && !this.userIsLoggedIn && !this.edit) {
-      this.mailEvent.markAllAsTouched();
+  public initializeEnrollmentSend: () => void = () => {
+    if (!this.finalEnrollment.editMail && this.userIsLoggedIn && !this.isSelfEnrolling() && !this.triggerDirectSend) {
+      this.showLoginAndMailForm = true;
       return;
     }
 
-    // Set key, if logged in but not selfenroll
-    // Set key if not logged in and token specified by after enroll screen
-    if ((!this.userIsLoggedIn || (this.userIsLoggedIn && !this.getSelfEnrollment().value)) && !this.edit) {
-      this.output.editMail = this.getMail().value;
-    }
-
-    if (this.userIsLoggedIn || this.mailEvent.valid || this.edit) {
-      this.event.markAllAsTouched();
-
-      if (this.edit) {
-        await this.sendEnrollmentRequest('update');
-      } else {
-        await this.sendEnrollmentRequest('create');
-      }
+    if (this.isEdit) {
+      this.sendEnrollmentRequest('update');
+    } else {
+      this.sendEnrollmentRequest('create');
     }
   };
 
@@ -239,24 +175,10 @@ export class EnrollmentComponent implements OnInit {
     }
   }
 
-  public getExistingKeyErrorMessage(): string {
-    if (this.getMail().hasError('required')) {
-      return 'Bitte auswählen';
-    }
-  }
-
-  public getMailErrorMessage() {
-    if (this.getMail().hasError('required')) {
-      return 'Bitte angeben';
-    }
-    if (this.getMail().hasError('email')) {
-      return 'Bitte eine gültige Email angeben';
-    }
-  }
-
   public clearLoginAndMailFormIntercepting() {
-    localStorage.removeItem(this.ENROLLMENT_OUTPUT_KEY);
-    this.showLoginAndTokenForm = false;
+    localStorage.removeItem(EnrollmentComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY);
+
+    this.showLoginAndMailForm = false;
   }
 
   public getSeatsErrorMessage() {
@@ -265,78 +187,107 @@ export class EnrollmentComponent implements OnInit {
     }
   }
 
-  mailFormComplete() {
-    this.skipLoginForm = true;
-    this.showLoginAndTokenForm = false;
-
-    this.sendEnrollment();
-  }
-
   public getDriver() {
-    return this.driverPassengerEvent.get('driver');
+    return this.form_driverPassenger.get('driver');
   }
 
   public getName() {
-    return this.event.get('name');
+    return this.form_main.get('name');
   }
 
   public getAdditionsControls() {
-    return (this.event.get('additions') as FormArray).controls;
+    return (this.form_main.get('additions') as FormArray).controls;
   }
 
   public getSelfEnrollment() {
-    return this.selfEnrollment.get('selfEnrollment');
+    return this.form_selfEnrollment.get('selfEnrollment');
   }
 
-  goBack() {
+  public goBack() {
     this.location.back();
   }
 
-  private successfulRequest(): void {
-    this.appointment$
-      .subscribe(sAppointment => {
-        if (sAppointment === null) {
-          this.loaded = true;
-        } else if (sAppointment !== undefined) {
-          this._seoService.updateTitle(`${sAppointment.title} - Anmelden`);
-          this._seoService.updateDescription(sAppointment.title + ' - ' + sAppointment.description);
-
-          this.appointment = sAppointment;
-          this.storageDataToFields();
-          // When e.g. coming from login
-          if (this.showLoginAndTokenForm === true) {
-            // Re-fetch output from local storage
-            this.output = JSON.parse(this.outputRawFromStorage);
-            this.parseOutputIntoForm();
-
-            if (this.autoSend) {
-              this.showLoginAndTokenForm = false;
-              this.sendEnrollment();
-            }
-          } else if (this.edit) {
-            const enrollment: IEnrollmentModel = sAppointment.enrollments.filter(fEnrollment => {
-              return fEnrollment.id === this.enrollmentId;
-            })[0];
-
-            if (enrollment !== undefined) {
-              this.output = enrollment;
-              this.parseOutputIntoForm();
-            } else if (this.enrollmentId !== null && this.token !== null) {
-              this.empty = true;
-            }
-          } else {
-            // DO NOTHING, BECAUSE FORM IS EMPTY FOR ADDING NEW ENROLLMENT
-          }
-
-          this.buildFormCheckboxes();
-
-          this.loaded = true;
-        }
-      });
+  public ngOnDestroy() {
+    console.log('destroy');
+    this.appointmentSubscription$$.unsubscribe();
   }
 
-  private getAdditionIdList: () => IAdditionModel[] = () => {
-    const additionListRaw = this.event.value.additions
+  public mailFormSubmit($event: string) {
+    this.finalEnrollment.editMail = $event;
+    this.enrollmentAssignmentDecision();
+  }
+
+  public mailFormCancel() {
+    this.showLoginAndMailForm = false;
+  }
+
+  private parseDriverAddition() {
+    if (this.appointment.driverAddition) {
+      if (this.getDriver().value) {
+        this.finalEnrollment.driver = {
+          service: this.getService().value,
+          seats: this.getSeats().value,
+        };
+        this.finalEnrollment.passenger = null;
+      } else {
+        this.finalEnrollment.passenger = {
+          requirement: this.getRequirement().value,
+        };
+        this.finalEnrollment.driver = null;
+      }
+    }
+  }
+
+  private isSelfEnrolling() {
+    return this.getSelfEnrollment().value && this.userIsLoggedIn;
+  }
+
+  private main(): void {
+    // appointment can be null if it's not found
+    if (this.appointment === null) {
+      return;
+    }
+
+    this.isEdit = this.enrollmentId !== undefined;
+
+    // Automatically insert username from current user
+    if (this.userIsLoggedIn && !this.isEdit) {
+      this.getName().setValue(this.authenticationService.currentUserValue.name);
+    }
+
+    if (this.isEdit) {
+      // get referenced enrollment
+      const enrollment: IEnrollmentModel = this.appointment.enrollments.filter(fEnrollment => {
+        return fEnrollment.id === this.enrollmentId;
+      })[0];
+
+      if (enrollment) {
+        this.finalEnrollment = enrollment;
+        this.parseOutputIntoForm();
+      } else if (this.enrollmentId !== null && this.permissionToken !== null) {
+        this.enrollmentGone = true;
+      }
+
+      this.buildFormCheckboxes();
+    } else {
+      this.storageDataToFields();
+
+      this.buildFormCheckboxes();
+
+      if (this.triggerDirectSend) {
+        this.initializeEnrollmentSend();
+        return;
+      }
+    }
+  }
+
+  private __SEO() {
+    this._seoService.updateTitle(`${this.appointment.title} - Anmelden`);
+    this._seoService.updateDescription(this.appointment.title + ' - ' + this.appointment.description);
+  }
+
+  private getIdsOfSelectedAdditions: () => IAdditionModel[] = () => {
+    const additionListRaw = this.form_main.value.additions
       .map((v, i) => v ? this.appointment.additions[i].id : null)
       .filter(v => v !== null);
 
@@ -351,98 +302,90 @@ export class EnrollmentComponent implements OnInit {
 
   private buildFormCheckboxes: () => void = () => {
     this.appointment.additions.forEach((o) => {
-      const control = new FormControl(this.output.additions.some(iAddition => iAddition.id === o.id));
-      (this.event.controls.additions as FormArray).push(control);
+      // if output has addition with this id then set to true
+      let selected = false;
+      if (this.finalEnrollment) {
+        selected = this.finalEnrollment.additions.some(iAddition => iAddition.id === o.id);
+      }
+      const control = new FormControl(selected);
+      (this.form_main.controls.additions as FormArray).push(control);
     });
   };
 
   private getSeats() {
-    return this.driverPassengerEvent.get('seats');
+    return this.form_driverPassenger.get('seats');
   }
 
   private getRequirement() {
-    return this.driverPassengerEvent.get('requirement');
+    return this.form_driverPassenger.get('requirement');
   }
 
   private getService() {
-    return this.driverPassengerEvent.get('service');
+    return this.form_driverPassenger.get('service');
   }
 
   private getComment() {
-    return this.event.get('comment');
+    return this.form_main.get('comment');
   }
 
   private parseOutputIntoForm() {
-    this.event.get('name').setValue(this.output.name);
-    this.event.get('comment').setValue(this.output.comment);
-    if (this.output.driver != null) {
-      this.driverPassengerEvent.get('driver').setValue(this.output.driver);
-      this.driverPassengerEvent.get('seats').setValue(this.output.driver.seats);
-      this.driverPassengerEvent.get('service').setValue(this.output.driver.service);
+    this.form_main.get('name').setValue(this.finalEnrollment.name);
+    this.form_main.get('comment').setValue(this.finalEnrollment.comment);
+    if (this.finalEnrollment.driver != null) {
+      this.form_driverPassenger.get('driver').setValue(this.finalEnrollment.driver);
+      this.form_driverPassenger.get('seats').setValue(this.finalEnrollment.driver.seats);
+      this.form_driverPassenger.get('service').setValue(this.finalEnrollment.driver.service);
     }
 
-    if (this.output.passenger != null) {
-      this.driverPassengerEvent.get('requirement').setValue(this.output.passenger.requirement);
+    if (this.finalEnrollment.passenger != null) {
+      this.form_driverPassenger.get('requirement').setValue(this.finalEnrollment.passenger.requirement);
     }
   }
 
   private storageDataToFields() {
     // Fetch output from localStorage
-    this.outputRawFromStorage = localStorage.getItem(this.ENROLLMENT_OUTPUT_KEY);
-    this.showLoginAndTokenForm = this.outputRawFromStorage !== null;
+    this.finalEnrollment_raw = localStorage.getItem(EnrollmentComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY);
+    this.finalEnrollment = JSON.parse(this.finalEnrollment_raw);
 
-    // Fetch key from LocalStorage
-    this.localStorageKeys = JSON.parse(localStorage.getItem(this.ENROLLMENT_KEY_KEY));
-    if (this.localStorageKeys === null) {
-      this.localStorageKeys = [];
+    if (this.finalEnrollment) {
+      this.parseOutputIntoForm();
+    } else {
+      this.finalEnrollment = new EnrollmentModel();
     }
   }
 
-  private getMail() {
-    return this.mailEvent.get('mail');
-  }
-
-  private async sendEnrollmentRequest(functionName: string) {
+  /**
+   * Eventually send enrollment request, depending on edit or no edit;
+   */
+  private sendEnrollmentRequest(functionName: 'update' | 'create') {
     setTimeout(() => { // needed so loading directive triggers again after login or sth
       this.sendingRequestEmit.emit(true);
     });
 
-    this.output.token = TokenUtil.getTokenForEnrollment(this.enrollmentId, this.link);
-    this.enrollmentService[functionName](this.output, this.appointment)
+    // fetch permission token if existing
+    this.finalEnrollment.token = TokenUtil.getTokenForEnrollment(this.enrollmentId, this.appointmentLink);
+
+    this.enrollmentService[functionName](this.finalEnrollment, this.appointment)
       .subscribe(
         result => {
-          this.sendingRequestEmit.emit(false);
-          this.clearLoginAndMailFormIntercepting();
-
           if (result.type === HttpEventType.Response) {
-            if (result.status === HttpStatus.CREATED
-              || result.status === HttpStatus.OK) {
+            if (result.status === HttpStatus.CREATED || result.status === HttpStatus.OK) {
               if (functionName === 'create') {
                 this.appointment.enrollments.push(result.body);
+                this.appointmentProvider.update(this.appointment);
 
+                // enrollment assigned to user by email (not account)
                 if (result.body.token) {
-                  this.storeEnrollmentAccessToken(this.link, result.body);
+                  AppointmentUtil.storeEnrollmentPermissions(this.appointmentLink, {
+                    id: result.body.id,
+                    token: result.body.token
+                  });
                 }
               } else {
                 this.appointment.enrollments.map((mEnrollment) => mEnrollment.id === result.body.id ? result.body : mEnrollment);
               }
 
-              this.appointmentProvider.update(this.appointment);
-
-              this.router.navigate([`enroll`], {
-                queryParams: {
-                  a: this.appointment.link
-                }
-              }).then((navigated: boolean) => {
-                if (navigated) {
-                  this.snackBar.open(`Erfolgreich ` + (this.edit ? 'bearbeitet' : 'angemeldet'),
-                    '',
-                    {
-                      duration: 2000,
-                      panelClass: 'snackbar-default'
-                    });
-                }
-              });
+              this.request_success_finalize();
             }
           }
         }, (err: HttpErrorResponse) => {
@@ -451,65 +394,66 @@ export class EnrollmentComponent implements OnInit {
 
           if (err.status === HttpStatus.BAD_REQUEST) {
             if (err.error.code === 'DUPLICATE_ENTRY') {
-              err.error.data.forEach(fColumn => {
-                const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
-                const fnName: string = 'get' + uppercaseName;
-
-                this[fnName]().setErrors({inUse: true});
-                this[fnName]().markAsTouched();
-              });
+              this.request_error_handleDuplicateValues(err);
             }
           } else if (err.status === HttpStatus.FORBIDDEN) {
-            this.router.navigate([`enroll`], {
-              queryParams: {
-                a: this.appointment.link
-              }
-            }).then((navigated: boolean) => {
-              if (navigated) {
-                this.snackBar.open(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu bearbeiten.`,
-                  '',
-                  {
-                    duration: 4000,
-                    panelClass: 'snackbar-error'
-                  });
-              }
-            });
+            this.request_error_forbidden();
           }
         }
       );
   }
 
-  private storeEnrollmentAccessToken(link: string, body: any) {
-    let permissions = JSON.parse(localStorage.getItem('permissions'));
-
-    if (permissions === null ||
-      permissions === undefined) {
-      permissions = [];
-    }
-
-    let linkElem = permissions.find(fElement => fElement.link === link);
-    let push = false;
-    if (linkElem === undefined) {
-      linkElem = {link, enrollments: []};
-      push = true;
-    }
-
-    if (!linkElem.enrollments.some(sPermission => sPermission.id === body.id)) {
-      linkElem.enrollments.push({id: body.id, token: body.token});
-    } else {
-      linkElem.enrollments.map(sPermission => {
-        if (sPermission.id === body.id) {
-          sPermission.token = body.token;
-          return;
+  private request_error_forbidden() {
+    this.router.navigate([`enroll`],
+      {
+        queryParams: {
+          a: this.appointment.link
         }
+      })
+      .then(() => {
+        this.snackBar
+          .open(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu bearbeiten.`,
+            '',
+            {
+              duration: 4000,
+              panelClass: 'snackbar-error'
+            }
+          );
       });
-    }
+  }
 
-    if (push) {
-      permissions.push(linkElem);
-    }
+  private request_error_handleDuplicateValues(err: HttpErrorResponse) {
+    err.error.data.forEach(fColumn => {
+      const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
+      const fnName: string = 'get' + uppercaseName;
 
-    localStorage.setItem('permissions', JSON.stringify(permissions));
+      this[fnName]().setErrors({inUse: true});
+      this[fnName]().markAsTouched();
+    });
+  }
+
+  private request_success_finalize() {
+    this.clearLoginAndMailFormIntercepting();
+
+    this.router
+      .navigate([`enroll`],
+        {
+          queryParams: {
+            a: this.appointment.link
+          }
+        })
+      .then(() => {
+        this.sendingRequestEmit.emit(false);
+
+        this.snackBar
+          .open(`Erfolgreich ` + (this.isEdit ? 'bearbeitet' : 'angemeldet'),
+            '',
+            {
+              duration: 2000,
+              panelClass: 'snackbar-default'
+            }
+          );
+      });
   }
 
   /**
@@ -517,16 +461,44 @@ export class EnrollmentComponent implements OnInit {
    * Otherwise, the user is asked to login with his account, or send the enrollment with his mail (for auth purposes). <br/>
    * For the possible redirect to the login page, the data needs to be stored locally, to be fetched later.
    */
-  private checkForAutomaticSubmit() {
+  private enrollmentAssignmentDecision() {
     // If user selected selfEnrollment
-    // Or if mail is set
-    if (((this.getSelfEnrollment().value && this.userIsLoggedIn)
-      || this.output.editMail !== undefined) || this.edit || this.skipLoginForm) {
-      this.sendEnrollment().then(() => '');
+    // Or if mail is set, then send enrollment
+
+    if (this.isSelfEnrolling()
+      || this.finalEnrollment.editMail
+      || this.isEdit) {
+      this.showLoginAndMailForm = false;
+      this.initializeEnrollmentSend();
     } else {
+      // not logged
       // TempStore item for possible login redirect
-      localStorage.setItem(this.ENROLLMENT_OUTPUT_KEY, JSON.stringify(this.output));
-      this.showLoginAndTokenForm = true;
+      localStorage.setItem(EnrollmentComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY, JSON.stringify(this.finalEnrollment));
+
+      this.showLoginAndMailForm = true;
     }
+  }
+
+  private formsValid() {
+    // mark as touched when main enrollment is invalid
+    if (!this.form_main.valid) {
+      this.form_driverPassenger.markAllAsTouched();
+      return false;
+    }
+
+    // Either check for driver or passenger form validity
+    // return if selected is invalid
+    if (this.getDriver().value) {
+      if ((this.getService().valid && this.getSeats().valid)) {
+      } else {
+        this.form_driverPassenger.markAllAsTouched();
+        return false;
+      }
+    } else if (!this.getRequirement().valid) {
+      this.form_driverPassenger.markAllAsTouched();
+      return false;
+    }
+
+    return true;
   }
 }

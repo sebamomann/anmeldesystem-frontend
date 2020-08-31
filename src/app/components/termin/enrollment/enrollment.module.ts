@@ -19,6 +19,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FetchAppointmentModule} from '../html-template/fetch-appointment/fetch-appointment.module';
 import {LoadingModule} from '../../html-template/loading/loading.module';
 import {LoadingDisableModule} from '../../../directives/loading-disable/loading-disable.module';
+import {EnrollmentLoginMailComponent} from './enrollment-login-mail/enrollment-login-mail.component';
 
 const routes: Routes = [
   {path: '', component: EnrollmentComponent},
@@ -27,6 +28,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     EnrollmentComponent,
+    EnrollmentLoginMailComponent,
   ],
   imports: [
     CommonModule,

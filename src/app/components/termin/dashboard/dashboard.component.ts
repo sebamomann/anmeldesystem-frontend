@@ -91,10 +91,19 @@ export class DashboardComponent implements OnInit {
 
     this._appointmentsArchive$
       .subscribe(sAppointments => {
-        const _lastAppointmentDate = sAppointments.slice(-1)[0].date;
+        const lastAppointment = sAppointments.slice(-1)[0];
+        let _lastAppointmentDate;
 
-        if (_lastAppointmentDate === this.lastAppointmentDate) {
-          this.hideLoadMoreArchiveAppointments = true;
+        if (lastAppointment) {
+          _lastAppointmentDate = lastAppointment.date;
+
+          if (_lastAppointmentDate === this.lastAppointmentDate) {
+            this.hideLoadMoreArchiveAppointments = true;
+          }
+        } else {
+          if (sAppointments.length === 0) {
+            this.hideLoadMoreArchiveAppointments = true;
+          }
         }
 
         this.lastAppointmentDate = _lastAppointmentDate;

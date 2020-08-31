@@ -451,7 +451,6 @@ a {
     margin: 5px 0;
   }
 
-
   &.tall:after {
     margin: 7px 0;
   }
@@ -462,6 +461,10 @@ a {
 
   &.extra-extra-tall:after {
     margin: 15px 0;
+  }
+
+  &.dividing:after {
+    margin: 30px 0;
   }
 
   &.center:after {
@@ -490,6 +493,38 @@ mat-card {
   margin: 0 auto 30px;
   background-color: white !important;
   padding: 16px;
+
+  mat-card-title {
+    color: $secondary;
+    margin-bottom: 15px !important;
+
+    &.headline {
+      color: $secondary;
+    }
+  }
+
+  mat-card-content {
+    & > span {
+      display: block;
+      text-align: justify;
+      text-align-last: center;
+      margin: 10px auto;
+    }
+
+    & > button:last-of-type {
+      margin: 20px auto;
+      display: block;
+    }
+  }
+
+  & > mat-card-actions {
+    text-align: center;
+
+    &:last-child {
+      margin-bottom: 0 !important;
+      padding-bottom: 0;
+    }
+  }
 
   &.slim {
     padding: 10px 16px;
@@ -540,16 +575,6 @@ mat-card {
     font-style: italic;
   }
 
-  &.card-small {
-    text-align: center;
-
-    & > span {
-      display: block;
-      font-size: 1em;
-      margin: 0 auto 25px auto;
-    }
-  }
-
   &.main {
     margin: 25px auto;
     padding: 20px;
@@ -596,26 +621,17 @@ mat-card {
         margin: 0 auto;
       }
     }
-
-    mat-card-actions {
-      margin-bottom: 8px;
-    }
   }
+}
 
-  mat-card-title {
-    color: $secondary;
+.actions {
+  padding-top: 8px;
+  display: grid;
+  grid-gap: 5%;
+  grid-template-columns: 1fr 1fr;
 
-    &.headline {
-      color: $secondary;
-    }
-  }
-
-  mat-card-content {
-    mat-card-actions {
-      & > button:last-of-type {
-        margin-top: 15px !important;
-      }
-    }
+  button {
+    margin: 0;
   }
 }
 
