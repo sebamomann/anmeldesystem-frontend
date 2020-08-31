@@ -59,6 +59,7 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
 
   private enrollments_unfiltered;
   private enrollments$$: Subscription;
+  private checkPermission$$: Subscription;
 
   constructor(public dialog: MatDialog, private router: Router,
               private authenticationService: AuthenticationService,
@@ -244,8 +245,7 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed()
       .subscribe(() => {
         this.sendingRequestEmitEdit.emit(false);
-      })
-      .unsubscribe();
+      });
   };
 
   /**
@@ -288,7 +288,7 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
       this.sendingRequestEmitEdit.emit(true);
     }
 
-    this.enrollmentService
+    this.checkPermission$$ = this.enrollmentService
       .checkPermission(enrollment, this.appointment.link)
       .subscribe(() => {
           this.permissionGranted(operation, enrollment);
@@ -305,12 +305,14 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
           } else {
             this.openPermissionResendDialog(enrollment, operation);
           }
-        })
-      .unsubscribe();
+        });
   };
 
   ngOnDestroy(): void {
     this.enrollments$$.unsubscribe();
+    if (this.checkPermission$$) {
+      this.checkPermission$$.unsubscribe();
+    }
   }
 
   private _isNewFilter(newFilter) {
@@ -361,6 +363,7 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
                   duration: 2000,
                   panelClass: 'snackbar-default'
                 });
+
                 this.sendingRequestEmitDelete.emit(false);
 
                 // this.removeEnrollmentFromAppointment(enrollment); // Not used due to ws
@@ -379,8 +382,7 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
         }
 
         this.sendingRequestEmitDelete.emit(false);
-      })
-      .unsubscribe();
+      });
   };
 
   private permissionGranted(operation: string, enrollment: IEnrollmentModel) {
