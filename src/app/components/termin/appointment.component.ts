@@ -4,7 +4,7 @@ import {IAppointmentModel} from '../../models/IAppointment.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {animate, query, state, style, transition, trigger} from '@angular/animations';
 import {AuthenticationService} from '../../services/authentication.service';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {SEOService} from '../../_helper/_seo.service';
 import {AppointmentSocketioService} from '../../services/appointment-socketio.service';
 import {AppointmentProvider} from './appointment.provider';
@@ -64,6 +64,12 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public updatingAppointmentInBackground = false;
   private manualAppointmentReloadCount = 0;
 
+  private hasUpdate$$: Subscription;
+  private updating$$: Subscription;
+  private websocketSubscriptionValid$$: Subscription;
+  private websocketSubscriptionRetryCount$$: Subscription;
+  private appointment$$: Subscription;
+
   constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
               private appointmentProvider: AppointmentProvider, public settingsService: SettingsService,
@@ -90,25 +96,25 @@ export class AppointmentComponent implements OnInit, OnDestroy {
       this.loaded = false;
     }
 
-    this.appointmentSocketioService
+    this.hasUpdate$$ = this.appointmentSocketioService
       .hasUpdate$
       .subscribe((bool: boolean) => {
         this.hasAppointmentUpdate = bool;
       });
 
-    this.appointmentStatus
+    this.updating$$ = this.appointmentStatus
       .updating$
       .subscribe((bool: boolean) => {
         this.updatingAppointmentInBackground = bool;
       });
 
-    this.appointmentSocketioService
+    this.websocketSubscriptionValid$$ = this.appointmentSocketioService
       .websocketSubscriptionValid$
       .subscribe((bool: boolean) => {
         this.websocketSubscriptionEstablished = bool;
       });
 
-    this.appointmentSocketioService
+    this.websocketSubscriptionRetryCount$$ = this.appointmentSocketioService
       .websocketSubscriptionRetryCount$
       .subscribe((val: number) => {
         this.websocketSubscriptionRetryCount = val;
@@ -127,10 +133,15 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.hasUpdate$$.unsubscribe();
+    this.updating$$.unsubscribe();
+    this.websocketSubscriptionValid$$.unsubscribe();
+    this.websocketSubscriptionRetryCount$$.unsubscribe();
+    this.appointment$$.unsubscribe();
   }
 
   public listenForChange() {
-    this.appointment$
+    this.appointment$$ = this.appointment$
       .subscribe(
         (sAppointment) => {
           if (sAppointment === null) {
