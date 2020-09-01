@@ -1,5 +1,7 @@
 # robots.txt
 
+Sitemap: https://go-join.me/sitemap.xml
+
 user-agent: *
 Allow: *
 Disallow: /impressum

@@ -45,6 +45,7 @@
     "npm-force-resolutions": "0.0.3",
     "particles.js": "^2.0.0",
     "rxjs": "~6.4.0",
+    "sitemap-generator": "^8.5.0",
     "source-map-explorer": "^2.2.2",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"

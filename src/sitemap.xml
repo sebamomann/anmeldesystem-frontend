@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>http://go-join.me</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>http://go-join.me/account</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>http://go-join.me/account/login</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>http://go-join.me/account/register</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>http://go-join.me/dashboard</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>http://go-join.me/create</loc>
+    <priority>0.5</priority>
+  </url>
+</urlset>

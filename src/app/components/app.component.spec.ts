@@ -11,7 +11,6 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 
 describe('AppComponent', () => {
-  let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
 
   beforeEach(async(() => {
@@ -35,7 +34,6 @@ describe('AppComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);
-    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
