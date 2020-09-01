@@ -1,107 +1,101 @@
-import {Injectable} from '@angular/core';
 import {HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {BehaviorSubject, Observable, throwError} from 'rxjs';
-import {catchError, filter, switchMap, take} from 'rxjs/operators';
+import {Observable, Subject, throwError} from 'rxjs';
+import {catchError, switchMap, tap} from 'rxjs/operators';
 import {AuthenticationService} from '../../services/authentication.service';
+import {Injectable} from '@angular/core';
 
 @Injectable()
-export class RefreshTokenInterceptor implements HttpInterceptor {
-  private refreshTokenInProgress = false;
-  // Refresh Token Subject tracks the current token, or is null if no token is currently
-  // available (e.g. refresh pending).
-  private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(
-    this.authService.getRefreshToken()
-  );
+export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(public authService: AuthenticationService) {
+  authService: AuthenticationService;
+  refreshTokenInProgress = false;
+
+  tokenRefreshedSource = new Subject();
+  tokenRefreshed$ = this.tokenRefreshedSource.asObservable();
+
+  constructor(authService: AuthenticationService) {
+    this.authService = authService;
   }
 
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<any> {
-    return next
+  addAuthHeader(request) {
+    const authHeader = 'Bearer ' + this.authService.accessToken;
+    if (authHeader) {
+      return request.clone({
+        setHeaders: {
+          Authorization: authHeader
+        }
+      });
+    }
+    return request;
+  }
 
-      .handle(request)
+  refreshToken(): Observable<any> {
+    if (this.refreshTokenInProgress) {
+      return new Observable(observer => {
+        this.tokenRefreshed$.subscribe(() => {
+          observer.next();
+          observer.complete();
+        });
+      });
+    } else {
+      this.refreshTokenInProgress = true;
 
-      .pipe(
-        catchError(error => {
-          // We don't want to refresh token for some requests like login or refresh token itself
-          // So we verify url and we throw an error if it's the case
-          if (
-            request.url.includes('auth/token') ||
-            request.url.includes('auth/login')
-          ) {
-            // We do another check to see if refresh token failed
-            // In this case we want to logout user and to redirect it to login page
+      return this.authService.refreshAccessToken().pipe(
+        tap(() => {
+          this.refreshTokenInProgress = false;
+          this.tokenRefreshedSource.next();
+        }),
+        catchError(() => {
+          this.refreshTokenInProgress = false;
+          this.logout();
 
-            if (request.url.includes('auth/token')) {
-              this.authService.logout();
-            }
+          return null;
+        }));
+    }
+  }
 
-            return throwError(error);
-          }
+  logout() {
+    this.authService.logout();
+  }
 
-          // If error status is different than 401 we want to skip refresh token
-          // So we check that and throw the error if it's the case
-          if (error.status !== 401) {
-            return throwError(error);
-          }
-
-          if (this.refreshTokenInProgress) {
-            // If refreshTokenInProgress is true, we will wait until refreshTokenSubject has a non-null value
-            // – which means the new token is ready and we can retry the request again
-            return this.refreshTokenSubject
-              .pipe(
-                filter(result => result !== null),
-                take(1),
-                switchMap(() => next.handle(this.addAuthenticationToken(request))),
-              );
+  handleResponseError(error, request?, next?) {
+    // Business error
+    if (error.status === 400) {
+      // Show message
+    } else if (error.status === 401) {
+      return this.refreshToken().pipe(
+        switchMap(() => {
+          request = this.addAuthHeader(request);
+          return next.handle(request);
+        }),
+        catchError(e => {
+          if (e.status !== 401) {
+            return this.handleResponseError(e);
           } else {
-            this.refreshTokenInProgress = true;
-
-            // Set the refreshTokenSubject to null so that subsequent API calls will wait until the new token has been retrieved
-            this.refreshTokenSubject.next(null);
-
-            return this.authService
-              .refreshAccessToken()
-              .pipe(
-                switchMap(() => {
-                  this.refreshTokenInProgress = false;
-
-                  request = this.addAuthenticationToken(request);
-
-                  request.headers.delete('If-None-Match');
-
-                  return next.handle(request);
-                }),
-                catchError(e => {
-                  this.refreshTokenInProgress = false;
-
-                  this.authService.logout();
-                  return throwError(error);
-                })
-              );
+            this.logout();
           }
-        })
-      );
-  }
-
-  addAuthenticationToken(request) {
-    // Get access token from Local Storage
-    const accessToken = this.authService.accessToken;
-
-    // If access token is null this means that user is not logged in
-    // And we return the original request
-    if (!accessToken) {
-      return request;
+        }));
+    } else if (error.status === 403) {
+      // Show message
+      // Logout
+      // this.logout();
+    } else if (error.status === 500) {
+      // Show message
+    } else if (error.status === 503) {
+      // Show message
+      // Redirect to the maintenance page
     }
 
-    // We clone the request, because the original request is immutable
-    return request.clone({
-      setHeaders: {
-        Authorization: 'Bearer ' + this.authService.accessToken
-      }
-    });
+    return throwError(error);
+  }
+
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
+    // Handle request
+    request = this.addAuthHeader(request);
+
+    // Handle response
+    return next.handle(request).pipe(catchError(error => {
+      return this.handleResponseError(error, request, next);
+    }));
   }
 }

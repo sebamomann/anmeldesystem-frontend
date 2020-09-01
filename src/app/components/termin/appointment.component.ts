@@ -132,11 +132,10 @@ export class AppointmentComponent implements OnInit, OnDestroy {
       });
 
     this.appointmentSocketioService
-      .setupSocketConnection()
+      .setupSocketConnection(this.link)
       .then(() => {
         this.loaded = false;
 
-        this.appointmentSocketioService.subscribeToAppointmentUpdates(this.link);
         this.appointment$ = this.appointmentProvider.appointment$;
 
         this.listenForChange();
@@ -148,6 +147,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.updating$$.unsubscribe();
     this.websocketSubscriptionValid$$.unsubscribe();
     this.websocketSubscriptionRetryCount$$.unsubscribe();
+
     this.appointment$$.unsubscribe();
   }
 

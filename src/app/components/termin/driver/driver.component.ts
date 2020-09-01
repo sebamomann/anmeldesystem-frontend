@@ -58,11 +58,10 @@ export class DriverComponent implements OnInit, OnDestroy {
     }
 
     this.appointmentSocketioService
-      .setupSocketConnection()
+      .setupSocketConnection(this.link)
       .then(() => {
         this.loaded = false;
 
-        this.appointmentSocketioService.subscribeToAppointmentUpdates(this.link);
         this.appointment$ = this.appointmentProvider.appointment$;
 
         this.successfulRequest();

@@ -27,6 +27,7 @@ describe('AppointmentDataComponent', () => {
     fixture = TestBed.createComponent(AppointmentDataComponent);
     component = fixture.componentInstance;
     component.appointment = {
+      hidden: false,
       title: '',
       description: '',
       location: '',

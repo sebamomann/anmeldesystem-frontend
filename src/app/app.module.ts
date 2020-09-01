@@ -13,8 +13,9 @@ import {PwaDialogComponent} from './components/dialogs/pwa-dialog/pwa-dialog.com
 import {Globals} from './globals';
 import localeDe from '@angular/common/locales/de';
 import {AppRoutingModule} from './app-routing.module';
-import {RefreshTokenInterceptor} from './_helper/interceptor/refreshToken.interceptor';
 import {MonthnamePipe} from './pipes/monthname.pipe';
+import {AuthenticationService} from './services/authentication.service';
+import {AuthInterceptor} from './_helper/interceptor/refreshToken.interceptor';
 
 registerLocaleData(localeDe);
 
@@ -34,11 +35,16 @@ registerLocaleData(localeDe);
     MatButtonModule,
   ],
   providers: [WINDOW_PROVIDERS,
+    AuthenticationService,
     MonthnamePipe,
     PwaService, Globals,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: RefreshTokenInterceptor, multi: true}],
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }],
   bootstrap: [AppComponent],
   exports: [
     DatePipe,

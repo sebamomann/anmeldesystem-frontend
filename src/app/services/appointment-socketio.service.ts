@@ -42,7 +42,12 @@ export class AppointmentSocketioService {
     return this._websocketSubscriptionRetryCount$;
   }
 
-  async setupSocketConnection() {
+  async setupSocketConnection(link: string) {
+    this.current_link = link;
+    if (this.retry === 0) {
+      this.reload(link);
+    }
+
     if (this.socket === undefined || !this.socket.connected) {
       if (this.authenticationService.userIsLoggedIn()) { // add headers if user is logged in
         this.socket = await io(environment.API_URL + 'appointment', {
@@ -59,11 +64,15 @@ export class AppointmentSocketioService {
         this.socket = await io(environment.API_URL + 'appointment');
       }
 
-      this.socket.on('update', (link: any) => {
+      this.socket.on('connect', () => {
+        this.subscribeToAppointmentUpdates(this.current_link);
+      });
+
+      this.socket.on('update', (_link: any) => {
         // If automatic update is allowed
         if (this.settingsService.autoLoadOnWsCall
           && this.settingsService.isAllowedByWiFi()) {
-          this.loadAppointment(link);
+          this.loadAppointment(_link);
         } else {
           this.hasUpdate = true;
         }
@@ -74,21 +83,19 @@ export class AppointmentSocketioService {
           this.websocketSubscriptionValid$.next(true);
           console.log('appointment subscription successful');
           this.retry = 0;
+          this.websocketSubscriptionRetryCount$.next(this.retry);
         }
       });
 
       this.socket.on('exception', () => {
         if (this.retry < 5) {
           setTimeout(() => {
-            const link_tmp = this.current_link;
-            this.current_link = '';
             this.retry++;
             this.websocketSubscriptionRetryCount$.next(this.retry);
 
-            this.reset();
-            this.setupSocketConnection().then(() => {
-              this.subscribeToAppointmentUpdates(link_tmp);
-            });
+            this.resetSocket();
+
+            this.setupSocketConnection(this.current_link);
           }, 2000);
         }
       });
@@ -96,16 +103,12 @@ export class AppointmentSocketioService {
   }
 
   subscribeToAppointmentUpdates(link: string) {
-    if (link !== this.current_link) {
-      this.appointmentProvider.reset();
-
-      this.socket.emit('subscribe-appointment', {appointment: {link}});
-
-      this.reload(link);
-    }
+    this.socket.emit('subscribe-appointment', {appointment: {link}});
   }
 
   public reload(link) {
+    this.appointmentProvider.reset();
+
     this.current_link = link;
     this.hasUpdate = false;
 
@@ -128,7 +131,7 @@ export class AppointmentSocketioService {
       );
   }
 
-  private reset() {
+  private resetSocket() {
     this.socket = undefined;
   }
 }
