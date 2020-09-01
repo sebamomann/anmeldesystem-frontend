@@ -26,7 +26,29 @@ const version = require('../../../package.json').version;
           ])
         ])
       ])
-    ])
+    ]),
+    trigger('remove', [
+      transition('* => void', [
+        query('.hexagon-wrapper', [
+          style({opacity: '1'}),
+          animate('0.05s 150ms', style({transform: 'scale(1.05) rotate(60deg)', opacity: 1})),
+          animate('0.2s', style({transform: 'scale(0.9)', opacity: '0'})),
+        ]),
+        query(':self', [
+          style({opacity: '1'}),
+          animate(500, style({opacity: '0'}))
+        ])
+      ])
+    ]),
+    trigger('appear', [
+      transition('void => *', [
+        query('.hexagon-wrapper', [
+          style({opacity: 0, transform: 'scale(0.9)'}),
+          animate('0.2s 150ms', style({opacity: 1, transform: 'scale(1.05)'})),
+          animate('0.05s', style({opacity: 1, transform: 'scale(1)'})),
+        ])
+      ])
+    ]),
   ]
 })
 
@@ -36,7 +58,9 @@ export class AppComponent {
   public now: string;
   public currentUser: IUserModel;
   public version: string = version;
-
+  // refresh token
+  public refreshingDone = true;
+  public refreshing = false;
   private showPWADialog = true;
 
   constructor(private router: Router, @Inject(WINDOW) private window: Window,
@@ -75,6 +99,20 @@ export class AppComponent {
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
 
     this.buildNav();
+
+    this.authenticationService
+      .refreshing$
+      .subscribe((val) => {
+        if (val) {
+          this.refreshing = true;
+          this.refreshingDone = false;
+        } else {
+          this.refreshing = false;
+          setTimeout(() => {
+            this.refreshingDone = true;
+          }, 500);
+        }
+      });
   }
 
   public toggleMenu() {
