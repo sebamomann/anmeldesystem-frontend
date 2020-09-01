@@ -5,7 +5,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {IAppointmentModel} from '../../../models/IAppointment.model';
 import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import {LinkDataComponent} from '../form/link-data/link-data.component';
-import {AppointmentSocketioService} from '../../../services/appointment-socketio.service';
 import {Observable, Subscription} from 'rxjs';
 import {AppointmentProvider} from '../appointment.provider';
 
@@ -32,7 +31,7 @@ export class AppointmentSettingsComponent implements OnInit, OnDestroy {
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog,
               private route: ActivatedRoute, private router: Router,
-              private snackBar: MatSnackBar, private appointmentSocketioService: AppointmentSocketioService,
+              private snackBar: MatSnackBar,
               private appointmentProvider: AppointmentProvider) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
@@ -57,7 +56,7 @@ export class AppointmentSettingsComponent implements OnInit, OnDestroy {
           this.appointment$ = this.appointmentProvider.appointment$;
 
           if (!this.appointmentProvider.hasValue()) {
-            this.appointmentSocketioService.loadAppointment(this.link);
+            this.appointmentProvider.loadAppointment(this.link);
           }
 
           this.listenForChange();

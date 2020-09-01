@@ -41,7 +41,7 @@ export class AppointmentProvider {
   }
 
   public reset() {
-    this._appointment$ = new BehaviorSubject<IAppointmentModel>(undefined);
+    this._appointment$.next(undefined);
   }
 
   public hasValue() {
@@ -63,17 +63,29 @@ export class AppointmentProvider {
       .getAppointments(true, before, limit, true)
       .subscribe(
         async (result: IAppointmentModel[]) => {
-          if (!this._archive) {
-            this._archive = [];
-          }
-
-          result.forEach((fResult => {
-            if (!this._archive.some(sAppointment => sAppointment.id === fResult.id)) {
-              this._archive.push(fResult);
+          if (result) {
+            if (!this._archive) {
+              this._archive = [];
             }
-          }));
 
-          this._appointmentsArchive$.next(this._archive);
+            result.forEach((fResult => {
+              if (!this._archive.some(sAppointment => sAppointment.id === fResult.id)) {
+                this._archive.push(fResult);
+              }
+            }));
+
+            this._appointmentsArchive$.next(this._archive);
+          }
+        }
+      );
+  }
+
+  loadAppointment(data: any) {
+    this.appointmentService
+      .getAppointment(data, false)
+      .subscribe(
+        (appointment: IAppointmentModel) => {
+          this.update(appointment);
         }
       );
   }

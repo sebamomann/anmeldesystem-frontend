@@ -53,19 +53,22 @@ export class DriverComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.appointmentProvider.loadAppointment(this.link);
+
     if (!this.appointmentProvider.hasValue()) {
       this.loaded = false;
     }
 
     this.appointmentSocketioService
-      .setupSocketConnection(this.link)
+      .setupSocketConnection()
       .then(() => {
-        this.loaded = false;
-
-        this.appointment$ = this.appointmentProvider.appointment$;
-
-        this.successfulRequest();
+        this.appointmentSocketioService.subscribeToAppointmentUpdates(this.link);
       });
+
+    this.loaded = false;
+    this.appointment$ = this.appointmentProvider.appointment$;
+
+    this.init();
   }
 
   compare(nr1: number, nr2: number) {
@@ -90,7 +93,7 @@ export class DriverComponent implements OnInit, OnDestroy {
     this.appointment$$.unsubscribe();
   }
 
-  private successfulRequest() {
+  private init() {
     this.appointment$$ = this.appointment$
       .subscribe(sAppointment => {
         if (sAppointment === null) {

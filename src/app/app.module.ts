@@ -5,7 +5,6 @@ import {MatButtonModule, MatDialogModule, MatProgressSpinnerModule, MatSnackBarM
 import {WINDOW_PROVIDERS} from './provider/window.provider';
 import {DatePipe, LocationStrategy, PathLocationStrategy, registerLocaleData} from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {JwtInterceptor} from './_helper/interceptor/jwt.interceptor';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
 import {PwaService} from './services/pwa-service.service';
@@ -39,7 +38,6 @@ registerLocaleData(localeDe);
     MonthnamePipe,
     PwaService, Globals,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
-    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

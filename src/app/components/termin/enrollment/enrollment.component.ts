@@ -13,7 +13,6 @@ import {EnrollmentModel} from '../../../models/EnrollmentModel.model';
 import {Observable, Subscription} from 'rxjs';
 import {TokenUtil} from '../../../_util/tokenUtil.util';
 import {SEOService} from '../../../_helper/_seo.service';
-import {AppointmentSocketioService} from '../../../services/appointment-socketio.service';
 import {AppointmentProvider} from '../appointment.provider';
 import {AppointmentUtil} from '../../../_util/appointmentUtil.util';
 
@@ -90,7 +89,7 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
   constructor(private enrollmentService: EnrollmentService,
               private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
               private authenticationService: AuthenticationService, private snackBar: MatSnackBar,
-              private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
+              private _seoService: SEOService,
               private appointmentProvider: AppointmentProvider) {
     this.route.queryParams.subscribe(params => {
       this.appointmentLink = params.a;
@@ -118,7 +117,7 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
           this.__SEO();
           this.main();
         } else if (!this.loaded) {
-          this.appointmentSocketioService.loadAppointment(this.appointmentLink);
+          this.appointmentProvider.loadAppointment(this.appointmentLink);
         } else {
           // IGNORE FURTHER UPDATES
         }

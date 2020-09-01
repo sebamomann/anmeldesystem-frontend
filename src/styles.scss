@@ -528,6 +528,7 @@ mat-card {
 
   &.slim {
     padding: 10px 16px;
+    font-size: 13px;
   }
 
   &.split,
@@ -537,6 +538,10 @@ mat-card {
     grid-template-columns: 1fr max(30%);
     grid-gap: 5%;
     align-items: center;
+
+    &.small {
+      grid-template-columns: 1fr max(20%);
+    }
 
     &.low-margin {
       margin: 0 auto 15px;

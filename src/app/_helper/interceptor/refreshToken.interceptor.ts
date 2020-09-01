@@ -18,11 +18,17 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   addAuthHeader(request) {
-    const authHeader = 'Bearer ' + this.authService.accessToken;
+    let authHeader;
+    try {
+      authHeader = this.authService.accessToken;
+    } catch (e) {
+      // no auth header available
+    }
+
     if (authHeader) {
       return request.clone({
         setHeaders: {
-          Authorization: authHeader
+          Authorization: 'Bearer ' + authHeader
         }
       });
     }
@@ -92,6 +98,7 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
     // Handle request
     request = this.addAuthHeader(request);
+
 
     // Handle response
     return next.handle(request).pipe(catchError(error => {

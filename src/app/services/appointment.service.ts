@@ -5,7 +5,7 @@ import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {CreateAppointmentModel} from '../models/createAppointment.model';
 import {environment} from '../../environments/environment';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, finalize, map} from 'rxjs/operators';
 import {AppointmentUtil} from '../_util/appointmentUtil.util';
 import {AppointmentStatus} from '../components/termin/appointment.status';
 
@@ -50,8 +50,6 @@ export class AppointmentService {
 
     const res = this.httpClient.get(url, {observe: 'response'});
 
-    this.appointmentStatus.updating = false;
-
     return res.pipe(
       map(response => {
         this.etag.last = this.etag.current;
@@ -60,6 +58,9 @@ export class AppointmentService {
       }),
       catchError(() => {
         return of(null);
+      }),
+      finalize(() => {
+        this.appointmentStatus.updating = false;
       })
     );
   }

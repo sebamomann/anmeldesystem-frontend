@@ -20,7 +20,7 @@
   <!--            data-request-access="write"></script>-->
   <!--  </div>-->
 
-  <mat-card *ngIf="!websocketSubscriptionEstablished && !hideWebsocketSubscriptionInformation" class="closable">
+  <mat-card *ngIf="!websocketSubscriptionEstablished && !hideWebsocketSubscriptionInformation" class="closable slim">
     <mat-icon (click)="hideWebsocketSubscriptionInformation = true" class="close">close</mat-icon>
     <ng-container *ngIf="websocketSubscriptionRetryCount < 5;">
        <span>
@@ -31,9 +31,9 @@
       </span>
     </ng-container>
     <ng-container *ngIf="websocketSubscriptionRetryCount === 5">
-      <div class="split">
+      <div class="split small">
         <span>Konnte keine Live-Verbindung aufbauen. Manuelles Neuladen notwendig!</span>
-        <mat-icon (click)="retryWebsocketSubscription(appointment.link)">
+        <mat-icon (click)="retryWebsocketSubscription()">
           cached
         </mat-icon>
       </div>
@@ -41,7 +41,7 @@
   </mat-card>
 
   <mat-card *ngIf="updatingAppointmentInBackground" class="split slim">
-    <span class="big">Anmeldungen werden geladen ...</span>
+    <span class="big">Termin wird aktualisiert ...</span>
     <mat-icon class="spinning reverse">cached</mat-icon>
   </mat-card>
 

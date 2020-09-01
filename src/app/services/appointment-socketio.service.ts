@@ -2,9 +2,6 @@ import {Injectable} from '@angular/core';
 import * as io from 'socket.io-client';
 import {environment} from '../../environments/environment';
 import {AppointmentProvider} from '../components/termin/appointment.provider';
-import {IAppointmentModel} from '../models/IAppointment.model';
-import {AuthenticationService} from './authentication.service';
-import {AppointmentService} from './appointment.service';
 import {SettingsService} from './settings.service';
 import {BehaviorSubject} from 'rxjs';
 
@@ -12,12 +9,11 @@ import {BehaviorSubject} from 'rxjs';
   providedIn: 'root'
 })
 export class AppointmentSocketioService {
-  private retry = 0;
   private socket;
-  private current_link = '';
+  private subscription = '';
 
-  constructor(private appointmentProvider: AppointmentProvider, private authenticationService: AuthenticationService,
-              private appointmentService: AppointmentService, private settingsService: SettingsService) {
+  constructor(private appointmentProvider: AppointmentProvider,
+              private settingsService: SettingsService) {
   }
 
   public _hasUpdate$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -42,96 +38,110 @@ export class AppointmentSocketioService {
     return this._websocketSubscriptionRetryCount$;
   }
 
-  async setupSocketConnection(link: string) {
-    this.current_link = link;
-    if (this.retry === 0) {
-      this.reload(link);
-    }
-
+  public async setupSocketConnection() {
     if (this.socket === undefined || !this.socket.connected) {
-      if (this.authenticationService.userIsLoggedIn()) { // add headers if user is logged in
-        this.socket = await io(environment.API_URL + 'appointment', {
-          transportOptions: {
-            polling: {
-              extraHeaders: {
-                Authorization: 'Bearer ' + this.authenticationService.currentUserValue.token
-              }
-            }
-          },
-          'force new connection': true
-        });
-      } else {
-        this.socket = await io(environment.API_URL + 'appointment');
+      if (this.socket) {
+        this.socket.close();
       }
 
+      // if (this.authenticationService.userIsLoggedIn()) { // add headers if user is logged in
+      //   this.socket = await io(environment.API_URL + 'appointment', {
+      //     transportOptions: {
+      //       polling: {
+      //         extraHeaders: {
+      //           Authorization: 'Bearer ' + this.authenticationService.currentUserValue.token // CURRENTLY USELESS
+      //         }
+      //       }
+      //     },
+      //
+      //     'force new connection': true
+      //   });
+      // } else {
+      this.socket = await io(environment.API_URL + 'appointment', {
+        'force new connection': true,
+        reconnectionAttempts: 5,
+      });
+      // }
+
+      this.socket.on('reconnect_attempt', (attempt) => {
+        this.websocketSubscriptionRetryCount$.next(attempt);
+        this.websocketSubscriptionValid$.next(false);
+      });
+
+      this.socket.on('reconnect', (attempt) => {
+        this.websocketSubscriptionRetryCount$.next(attempt);
+        this.websocketSubscriptionValid$.next(attempt);
+      });
+
       this.socket.on('connect', () => {
-        this.subscribeToAppointmentUpdates(this.current_link);
+        this.websocketSubscriptionValid$.next(true);
+        this.websocketSubscriptionRetryCount$.next(0);
+
+        this.socket.on('update', (_link: any) => {
+          if (this.subscription === _link) {
+            // If automatic update is allowed
+            if (this.settingsService.autoLoadOnWsCall
+              && this.settingsService.isAllowedByWiFi()) {
+              this.appointmentProvider.loadAppointment(_link);
+            } else {
+              this.hasUpdate = true;
+            }
+          }
+        });
+
+        this.socket.on('subscribe-appointment', (data: any) => {
+          if (data === 'success') {
+            console.log('websocket subscribed');
+          }
+        });
       });
 
-      this.socket.on('update', (_link: any) => {
-        // If automatic update is allowed
-        if (this.settingsService.autoLoadOnWsCall
-          && this.settingsService.isAllowedByWiFi()) {
-          this.loadAppointment(_link);
-        } else {
-          this.hasUpdate = true;
-        }
-      });
-
-      this.socket.on('subscribe-appointment', (data: any) => {
-        if (data === 'success') {
-          this.websocketSubscriptionValid$.next(true);
-          console.log('appointment subscription successful');
-          this.retry = 0;
-          this.websocketSubscriptionRetryCount$.next(this.retry);
-        }
+      this.socket.on('disconnect', () => {
+        console.log('websocket disconnected');
+        this.reactivateWebsocketConnection();
       });
 
       this.socket.on('exception', () => {
-        if (this.retry < 5) {
-          setTimeout(() => {
-            this.retry++;
-            this.websocketSubscriptionRetryCount$.next(this.retry);
-
-            this.resetSocket();
-
-            this.setupSocketConnection(this.current_link);
-          }, 2000);
-        }
+        this.reactivateWebsocketConnection();
       });
     }
   }
 
-  subscribeToAppointmentUpdates(link: string) {
+  public subscribeToAppointmentUpdates(link: string) {
+    console.log(this.subscription);
+    console.log(link);
+    console.log(this.subscription !== link);
+    if (this.subscription && this.subscription !== link) { // if not first
+      console.log('RESET');
+      this.appointmentProvider.reset();
+    }
+
+    this.subscription = link;
     this.socket.emit('subscribe-appointment', {appointment: {link}});
   }
 
-  public reload(link) {
+  public reload(_link: string) {
     this.appointmentProvider.reset();
 
-    this.current_link = link;
     this.hasUpdate = false;
 
-    this.loadAppointment(link);
+    this.appointmentProvider.loadAppointment(_link);
   }
 
-  public retrySubscription(link: string) {
-    this.current_link = '';
-    this.retry = 0;
-    this.subscribeToAppointmentUpdates(link);
-  }
+  // public retrySubscription(link: string) {
+  //   this.connectionRetry = 0;
+  //
+  //   this.subscribeToAppointmentUpdates(link);
+  // }
 
-  loadAppointment(data: any) {
-    this.appointmentService
-      .getAppointment(data, false)
-      .subscribe(
-        (appointment: IAppointmentModel) => {
-          this.appointmentProvider.update(appointment);
-        }
-      );
-  }
+  public reactivateWebsocketConnection = () => {
+    this.setupSocketConnection()
+      .then(() => {
+        this.subscribeToAppointmentUpdates(this.subscription);
+      });
+  };
 
-  private resetSocket() {
-    this.socket = undefined;
-  }
+  // private resetSocket() {
+  //   this.socket = undefined;
+  // }
 }

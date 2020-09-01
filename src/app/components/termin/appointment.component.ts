@@ -54,7 +54,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   public limitReachedBeforeEnrollmentDeadline: boolean;
 
-  public loaded = true;
+  public loaded = false;
   public hasEnrollments = false;
 
   // WEBSOCKET CONNECTION
@@ -103,9 +103,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    if (!this.appointmentProvider.hasValue()) {
-      this.loaded = false;
-    }
+    this.appointmentProvider.loadAppointment(this.link);
 
     this.hasUpdate$$ = this.appointmentSocketioService
       .hasUpdate$
@@ -132,14 +130,15 @@ export class AppointmentComponent implements OnInit, OnDestroy {
       });
 
     this.appointmentSocketioService
-      .setupSocketConnection(this.link)
+      .setupSocketConnection()
       .then(() => {
-        this.loaded = false;
-
-        this.appointment$ = this.appointmentProvider.appointment$;
-
-        this.listenForChange();
+        console.log('SUB TO ' + this.link);
+        this.appointmentSocketioService.subscribeToAppointmentUpdates('' + this.link);
       });
+
+    this.appointment$ = this.appointmentProvider.appointment$;
+
+    this.listenForChange();
   }
 
   ngOnDestroy() {
@@ -155,11 +154,11 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.appointment$$ = this.appointment$
       .subscribe(
         (sAppointment) => {
+          console.log(sAppointment);
+
           if (sAppointment === null) {
             this.loaded = true;
           } else if (sAppointment !== undefined) {
-            this.link = sAppointment.link;
-
             // TODO could be cleaner ...
             if (sAppointment.reference.indexOf('ENROLLED') === -1
               && sAppointment.reference.indexOf('CREATOR') === -1
@@ -199,6 +198,8 @@ export class AppointmentComponent implements OnInit, OnDestroy {
             this.splitEnrollments(sAppointment);
 
             this.loaded = true;
+          } else {
+            this.loaded = false;
           }
         });
   };
@@ -213,12 +214,13 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     if (this.manualAppointmentReloadCount >= 3) {
       this.updateOnWsCallSettingDefined = false;
     }
+
     this.appointmentSocketioService.reload(this.link);
   }
 
-  public retryWebsocketSubscription(link: string) {
+  public retryWebsocketSubscription() {
     this.websocketSubscriptionRetryCount = 0;  // directly set to 0 because behaviour subjects need some time ... -> instant feedback
-    this.appointmentSocketioService.retrySubscription(link);
+    this.appointmentSocketioService.reactivateWebsocketConnection();
   }
 
   public closeEnrollmentHint() {
