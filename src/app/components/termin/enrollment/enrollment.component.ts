@@ -239,7 +239,7 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
       this.creatorError = this.isEnrolledAsCreator;
       this.oldNameValue = this.form_main.get('name').value;
       delete this.finalEnrollment.editMail;
-      this.form_main.get('name').disable();
+      this.disableNameInput();
       this.form_main.get('name').setValue(this.authenticationService.currentUserValue.name);
     } else {
       if (this.oldNameValue) {
@@ -248,6 +248,10 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
       this.creatorError = false;
       this.form_main.get('name').enable();
     }
+  }
+
+  private disableNameInput() {
+    this.form_main.get('name').disable();
   }
 
   private parseDriverAddition() {
@@ -291,6 +295,9 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
 
       if (enrollment) {
         this.finalEnrollment = enrollment;
+        if (enrollment.creator) {
+          this.disableNameInput();
+        }
         this.parseOutputIntoForm();
       } else if (this.enrollmentId !== null && this.permissionToken !== null) {
         this.enrollmentGone = true;
@@ -357,7 +364,12 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
   }
 
   private parseOutputIntoForm() {
-    this.form_main.get('name').setValue(this.finalEnrollment.name);
+    if (this.finalEnrollment.creator) {
+      this.getName().setValue(this.authenticationService.currentUserValue.name);
+    } else {
+      this.form_main.get('name').setValue(this.finalEnrollment.name);
+    }
+
     this.form_main.get('comment').setValue(this.finalEnrollment.comment);
     if (this.finalEnrollment.driver != null) {
       this.form_driverPassenger.get('driver').setValue(this.finalEnrollment.driver);
