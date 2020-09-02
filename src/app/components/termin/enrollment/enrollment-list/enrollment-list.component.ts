@@ -342,9 +342,10 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
    * @param enrollment Enrollment to delete
    */
   private _openConfirmationDialog = (enrollment: IEnrollmentModel): void => {
+    const name = enrollment.name ? enrollment.name : enrollment.creator.name;
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '350px',
-      data: `Bist du sicher, dass du "${enrollment.name}" löschen möchtest?`
+      data: `Bist du sicher, dass du "${name}" löschen möchtest?`
     });
 
     dialogRef.afterClosed()
