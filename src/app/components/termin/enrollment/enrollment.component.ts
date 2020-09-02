@@ -452,11 +452,16 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
 
   private request_error_handleDuplicateValues(err: HttpErrorResponse) {
     err.error.data.forEach(fColumn => {
-      const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
-      const fnName: string = 'get' + uppercaseName;
+      if (fColumn === 'creator') {
+        this.creatorError = true;
+        this.isEnrolledAsCreator = true;
+      } else {
+        const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
+        const fnName: string = 'get' + uppercaseName;
 
-      this[fnName]().setErrors({inUse: true});
-      this[fnName]().markAsTouched();
+        this[fnName]().setErrors({inUse: true});
+        this[fnName]().markAsTouched();
+      }
     });
   }
 
