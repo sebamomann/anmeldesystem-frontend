@@ -14,7 +14,8 @@
             <div *ngIf="userIsLoggedIn && !this.isEdit"
                  [formGroup]="form_selfEnrollment"
                  class="additions tooltip-container">
-              <mat-checkbox formControlName="selfEnrollment">
+              <mat-checkbox (change)="changeSelfEnrollment()"
+                            formControlName="selfEnrollment">
                 Ich melde mich selber an
               </mat-checkbox>
               <!--suppress TypeScriptUnresolvedFunction -->
@@ -112,9 +113,17 @@
               </textarea>
             </mat-form-field>
 
+            <div *ngIf="creatorError"
+                 class="info">
+              <mat-error>
+                {{ getCreatorErrorMessage() }}
+              </mat-error>
+            </div>
+
             <div class="actions">
               <button [active]="sendingRequestEmit"
                       [innerValue]="isEdit ? 'Speichern' : 'Anmelden'"
+                      [disabled]="creatorError"
                       appLoadingDisable
                       color="primary"
                       id="submit"

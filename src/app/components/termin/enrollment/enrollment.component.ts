@@ -52,13 +52,15 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
   public enrollmentGone = false;
   public sendingRequestEmit = new EventEmitter<boolean>();
 
+  public isSelfEnrollment = this.userIsLoggedIn;
+
   public loaded = false;
   public showLoginAndMailForm = false;
 
   public appointment$: Observable<IAppointmentModel>;
 
   public form_main = this.formBuilder.group({
-    name: new FormControl('', [Validators.required, Validators.min(2)]),
+    name: new FormControl({value: '', disabled: this.isSelfEnrollment}, [Validators.required, Validators.min(2)]),
     comment: new FormControl('', [Validators.min(2)]),
     additions: new FormArray([]),
   });
@@ -73,7 +75,7 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     requirement: new FormControl('', []),
     service: new FormControl('', [])
   });
-
+  public creatorError = false;
   // Preparation for login redirect fields
   private finalEnrollment_raw: string;
   private finalEnrollment: IEnrollmentModel = new EnrollmentModel();
@@ -82,9 +84,10 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
   // permission via mail
   private permissionToken: any;
   private enrollmentId: string;
-
   private appointment$$: Subscription;
   private appointmentService$$: Subscription;
+  private oldNameValue: string = undefined;
+  private isEnrolledAsCreator;
 
   constructor(private enrollmentService: EnrollmentService,
               private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
@@ -169,6 +172,12 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     }
   }
 
+  public getCreatorErrorMessage(): string {
+    if (this.creatorError) {
+      return 'Du bist bereits angemeldet.';
+    }
+  }
+
   public getSelectErrorMessage(): string {
     if (this.getRequirement().hasError('required')) {
       return 'Bitte auswählen';
@@ -220,6 +229,27 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     this.showLoginAndMailForm = false;
   }
 
+  public isSelfEnrolling() {
+    return this.getSelfEnrollment().value && this.userIsLoggedIn;
+  }
+
+  public changeSelfEnrollment() {
+    this.isSelfEnrollment = !this.isSelfEnrollment;
+    if (this.isSelfEnrollment) {
+      this.creatorError = this.isEnrolledAsCreator;
+      this.oldNameValue = this.form_main.get('name').value;
+      delete this.finalEnrollment.editMail;
+      this.form_main.get('name').disable();
+      this.form_main.get('name').setValue(this.authenticationService.currentUserValue.name);
+    } else {
+      if (this.oldNameValue) {
+        this.form_main.get('name').setValue(this.oldNameValue);
+      }
+      this.creatorError = this.isEnrolledAsCreator;
+      this.form_main.get('name').enable();
+    }
+  }
+
   private parseDriverAddition() {
     if (this.appointment.driverAddition) {
       if (this.getDriver().value) {
@@ -237,10 +267,6 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     }
   }
 
-  private isSelfEnrolling() {
-    return this.getSelfEnrollment().value && this.userIsLoggedIn;
-  }
-
   private main(): void {
     // appointment can be null if it's not found
     if (this.appointment === null) {
@@ -251,6 +277,9 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
 
     // Automatically insert username from current user
     if (this.userIsLoggedIn && !this.isEdit) {
+      this.isEnrolledAsCreator = this.appointment.enrollments.some(sEnrollment =>
+        sEnrollment.creator && sEnrollment.creator.username === this.authenticationService.currentUserValue.username);
+      this.creatorError = this.isEnrolledAsCreator;
       this.getName().setValue(this.authenticationService.currentUserValue.name);
     }
 

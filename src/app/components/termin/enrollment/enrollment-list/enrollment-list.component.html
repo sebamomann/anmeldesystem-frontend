@@ -35,8 +35,17 @@
           <mat-expansion-panel-header [collapsedHeight]="'auto'"
                                       [expandedHeight]="'auto'"
                                       class="enrollment-info">
-            <span><mat-icon *ngIf="enrollment.driver"> directions_car </mat-icon>
-              {{ enrollment.name }} </span>
+            <span class="user-information">
+              <ng-container *ngIf="!enrollment.creator">
+                <mat-icon *ngIf="enrollment.driver"> directions_car </mat-icon>
+                {{enrollment.name}}
+              </ng-container>
+              <ng-container *ngIf="enrollment.creator">
+                <mat-icon *ngIf="enrollment.driver"> directions_car </mat-icon>
+                {{enrollment.creator.name}}
+                <span>@{{enrollment.creator.username}}</span>
+              </ng-container>
+            </span>
             <ng-container *ngIf="enrollment.comment">
               <span class="separator small colored high"></span>
               <span class="comment-block"> {{ enrollment.comment }} </span>
