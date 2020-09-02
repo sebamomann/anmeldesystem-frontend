@@ -245,7 +245,7 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
       if (this.oldNameValue) {
         this.form_main.get('name').setValue(this.oldNameValue);
       }
-      this.creatorError = this.isEnrolledAsCreator;
+      this.creatorError = false;
       this.form_main.get('name').enable();
     }
   }
