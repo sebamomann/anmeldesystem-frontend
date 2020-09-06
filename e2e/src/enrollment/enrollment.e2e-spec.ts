@@ -9,7 +9,7 @@ describe('Enrollment Page', () => {
     browser.ignoreSynchronization = true;
     await browser.get('/enroll?a=protractor'); // NEEDED TO REMOVE "PINNED" Snackbar
     page.spinnerGone();
-    page.navigateTo();
+    await page.navigateTo();
   });
 
   it('Should display form with title "Anmelden"', async () => {
