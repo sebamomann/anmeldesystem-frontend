@@ -21,6 +21,10 @@ export class EnrollmentPage {
     return element(by.id('name'));
   }
 
+  public getSubmit() {
+    return element(by.id('submit'));
+  }
+
   public setName(value: string) {
     const ref = this.getName();
     return ref.clear().then(async () => {
@@ -65,6 +69,11 @@ export class EnrollmentPage {
   public getNameError() {
     return element(by.id('name-error'));
   }
+
+  public getCreatorError() {
+    return element(by.id('creator-error'));
+  }
+
 
   public async login(val: string) {
     browser.get('/account/login');

@@ -174,7 +174,7 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
 
   public getCreatorErrorMessage(): string {
     if (this.creatorError) {
-      return 'Du bist bereits angemeldet.';
+      return 'Du bist bereits angemeldet';
     }
   }
 

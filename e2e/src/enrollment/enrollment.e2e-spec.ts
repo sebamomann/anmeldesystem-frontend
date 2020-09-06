@@ -96,20 +96,47 @@ describe('Enrollment Page', () => {
     });
 
     describe('logged in user', () => {
-      it('name field disabled', async () => {
-        browser.ignoreSynchronization = true;
-        await page.login('user_2');
+      describe('self enrollment', () => {
+        it('name field disabled', async () => {
+          browser.ignoreSynchronization = true;
+          await page.login('user_2');
 
-        page.navigateTo();
-        page.spinnerGone();
+          page.navigateTo();
+          page.spinnerGone();
 
-        await expect(page.getName().isEnabled()).toBe(false);
-        await expect(page.getSelfEnrollment().isSelected()).toBe(true);
-      });
+          await expect(page.getName().isEnabled()).toBe(false);
+          await expect(page.getSelfEnrollment().isSelected()).toBe(true);
+        });
 
-      describe('fill form - send', () => {
-        describe('valid', () => {
+        describe('fill form - send', () => {
+          it('valid', async () => {
+            browser.ignoreSynchronization = true;
+            await page.login('user_2');
 
+            page.navigateTo();
+            page.spinnerGone();
+
+            // enroll
+            await page.setComment('my cool comment');
+            // submit
+            page.submit();
+
+            expect(await page.getUrl()).toEqual('http://localhost:4200/enroll/add?a=protractor');
+            expect(await page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
+          });
+        });
+
+        it('invalid - already enrolled', async () => {
+          browser.ignoreSynchronization = true;
+          await page.login('user_2');
+
+          page.navigateTo();
+          page.spinnerGone();
+
+          await expect(page.getName().isEnabled()).toBe(false);
+          await expect(page.getSubmit().isEnabled()).toBe(false);
+          await expect(page.getCreatorError().getText()).toEqual('Du bist bereits angemeldet');
+          await expect(page.getSelfEnrollment().isSelected()).toBe(true);
         });
       });
     });
