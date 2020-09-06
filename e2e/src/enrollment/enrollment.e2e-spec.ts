@@ -94,6 +94,25 @@ describe('Enrollment Page', () => {
         });
       });
     });
+
+    describe('logged in user', () => {
+      it('name field disabled', async () => {
+        browser.ignoreSynchronization = true;
+        await page.login('user_2');
+
+        page.navigateTo();
+        page.spinnerGone();
+
+        await expect(page.getName().isEnabled()).toBe(false);
+        await expect(page.getSelfEnrollment().isSelected()).toBe(true);
+      });
+
+      describe('fill form - send', () => {
+        describe('valid', () => {
+
+        });
+      });
+    });
   });
 
   afterEach(async () => {

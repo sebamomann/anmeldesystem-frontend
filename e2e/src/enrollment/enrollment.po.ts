@@ -17,8 +17,19 @@ export class EnrollmentPage {
     return browser.wait(EC.invisibilityOf(loader), 10000);
   }
 
+  public getName() {
+    return element(by.id('name'));
+  }
+
   public setName(value: string) {
-    const ref = element(by.id('name'));
+    const ref = this.getName();
+    return ref.clear().then(async () => {
+      await ref.sendKeys(value);
+    });
+  }
+
+  public setEmail(value: string) {
+    const ref = element(by.id('mail'));
     return ref.clear().then(async () => {
       await ref.sendKeys(value);
     });
@@ -51,14 +62,27 @@ export class EnrollmentPage {
     return element(by.id('login-mail-form')).isPresent();
   }
 
-  public setEmail(value: string) {
-    const ref = element(by.id('mail'));
-    return ref.clear().then(async () => {
-      await ref.sendKeys(value);
-    });
-  }
-
   public getNameError() {
     return element(by.id('name-error'));
+  }
+
+  public async login(val: string) {
+    browser.get('/account/login');
+    const refName = element(by.id('username'));
+    await refName.clear().then(async () => {
+      await refName.sendKeys(val);
+    });
+    const refPass = element(by.id('password'));
+    await refPass.clear().then(async () => {
+      await refPass.sendKeys('123');
+    });
+
+    await this.submit();
+
+    return browser.driver.wait(() => browser.driver.getCurrentUrl().then(url => /dashboard/.test(url)), 10000);
+  }
+
+  public getSelfEnrollment() {
+    return element(by.id('selfEnrollment-input'));
   }
 }
