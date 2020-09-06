@@ -2,8 +2,13 @@ import {browser, by, element, protractor} from 'protractor';
 
 export class EnrollmentPage {
   public async navigateTo() {
-    await browser.get('/enroll?a=protractor'); // NEEDED TO REMOVE "PINNED" Snackbar
-    return browser.get('/enroll/add?a=protractor');
+    browser.get('/enroll/add?a=protractor')
+      .then(() => {
+        const EC = protractor.ExpectedConditions;
+        const e = this.getName();
+
+        return browser.wait(EC.presenceOf(e), 10000, 'Form could not be loaded');
+      });
   }
 
   public getMatCardTitle() {
@@ -41,13 +46,15 @@ export class EnrollmentPage {
 
   public setComment(value: string) {
     const ref = element(by.id('comment'));
-    return ref.clear().then(async () => {
-      await ref.sendKeys(value);
-    });
+    return ref.clear().then(() => ref.sendKeys(value));
   }
 
   public submit() {
-    return element(by.id('submit')).click();
+    const elm = element(by.id('submit'));
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
+
+    return elm.click();
   }
 
   public getUrl() {
@@ -66,27 +73,29 @@ export class EnrollmentPage {
     return element(by.id('login-mail-form')).isPresent();
   }
 
-  public getNameError() {
-    return element(by.id('name-error'));
+  public async getNameError() {
+    const elem = element(by.id('name-error'));
+    const until = protractor.ExpectedConditions;
+    await browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
+    return elem;
   }
 
-  public getCreatorError() {
-    return element(by.id('creator-error'));
+  public async getCreatorError() {
+    const elem = element(by.id('creator-error'));
+    const until = protractor.ExpectedConditions;
+    await browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
+    return elem;
   }
-
 
   public async login(val: string) {
     browser.get('/account/login');
-    const refName = element(by.id('username'));
-    await refName.clear().then(async () => {
-      await refName.sendKeys(val);
-    });
-    const refPass = element(by.id('password'));
-    await refPass.clear().then(async () => {
-      await refPass.sendKeys('123');
-    });
 
-    await this.submit();
+    const refName = element(by.id('username'));
+    refName.clear().then(() => refName.sendKeys(val));
+    const refPass = element(by.id('password'));
+    refPass.clear().then(() => refPass.sendKeys('123'));
+
+    this.submit();
 
     return browser.driver.wait(() => browser.driver.getCurrentUrl().then(url => /dashboard/.test(url)), 10000);
   }

@@ -4,15 +4,15 @@ import {EnrollmentPage} from './enrollment.po';
 describe('Enrollment Page', () => {
   let page: EnrollmentPage;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     page = new EnrollmentPage();
+    browser.ignoreSynchronization = true;
+    await browser.get('/enroll?a=protractor'); // NEEDED TO REMOVE "PINNED" Snackbar
+    page.spinnerGone();
+    page.navigateTo();
   });
 
   it('Should display form with title "Anmelden"', async () => {
-    browser.ignoreSynchronization = true;
-    page.navigateTo();
-    page.spinnerGone();
-
     expect(await page.getMatCardTitle()).toEqual('Anmelden');
   });
 
@@ -21,10 +21,6 @@ describe('Enrollment Page', () => {
       describe('fill form - send', () => {
         describe('valid', () => {
           it('should show loginAndMailForm', async () => {
-            browser.ignoreSynchronization = true;
-            page.navigateTo();
-            page.spinnerGone();
-
             // enroll
             await page.setName('unknown');
             await page.setComment('my cool comment');
@@ -36,10 +32,6 @@ describe('Enrollment Page', () => {
 
           describe('insert mail', () => {
             it('should complete enrollment', async () => {
-              browser.ignoreSynchronization = true;
-              page.navigateTo();
-              page.spinnerGone();
-
               // enroll
               await page.setName('unknown');
               await page.setComment('my cool comment');
@@ -59,25 +51,14 @@ describe('Enrollment Page', () => {
 
         describe('invalid', () => {
           it('name missing', async () => {
-            browser.ignoreSynchronization = true;
-            page.navigateTo();
-            page.spinnerGone();
-
-            // enroll
-            await page.setName('');
-            await page.setComment('');
             // submit
             page.submit();
 
-            expect(await page.getNameError().getText()).toEqual('Bitte gebe einen Namen an');
+            await expect((await page.getNameError()).getText()).toEqual('Bitte gebe einen Namen an');
           });
 
           describe('insert mail', () => {
             it('name already in use', async () => {
-              browser.ignoreSynchronization = true;
-              page.navigateTo();
-              page.spinnerGone();
-
               // enroll
               await page.setName('unknown');
               await page.setComment('my cool comment');
@@ -88,34 +69,26 @@ describe('Enrollment Page', () => {
               await page.setEmail('mail@example.com');
               page.submit();
 
-              expect(await page.getNameError().getText()).toEqual('Es besteht bereits eine Anmeldung mit diesem Namen');
+              await expect((await page.getNameError()).getText()).toEqual('Es besteht bereits eine Anmeldung mit diesem Namen');
             });
           });
         });
       });
     });
 
-    describe('logged in user', () => {
+    describe('logged in user', async () => {
+      beforeAll(async () => {
+        await page.login('user_2');
+      });
+
       describe('self enrollment', () => {
         it('name field disabled', async () => {
-          browser.ignoreSynchronization = true;
-          await page.login('user_2');
-
-          page.navigateTo();
-          page.spinnerGone();
-
           await expect(page.getName().isEnabled()).toBe(false);
           await expect(page.getSelfEnrollment().isSelected()).toBe(true);
         });
 
         describe('fill form - send', () => {
           it('valid', async () => {
-            browser.ignoreSynchronization = true;
-            await page.login('user_2');
-
-            page.navigateTo();
-            page.spinnerGone();
-
             // enroll
             await page.setComment('my cool comment');
             // submit
@@ -127,15 +100,9 @@ describe('Enrollment Page', () => {
         });
 
         it('invalid - already enrolled', async () => {
-          browser.ignoreSynchronization = true;
-          await page.login('user_2');
-
-          page.navigateTo();
-          page.spinnerGone();
-
           await expect(page.getName().isEnabled()).toBe(false);
           await expect(page.getSubmit().isEnabled()).toBe(false);
-          await expect(page.getCreatorError().getText()).toEqual('Du bist bereits angemeldet');
+          await expect((await page.getCreatorError()).getText()).toEqual('Du bist bereits angemeldet');
           await expect(page.getSelfEnrollment().isSelected()).toBe(true);
         });
       });

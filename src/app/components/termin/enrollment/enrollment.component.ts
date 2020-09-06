@@ -168,7 +168,7 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     }
 
     if (this.getName().hasError('inUse')) {
-      return 'Es besteht bereits eine Anmeldung mit diesem Namen.';
+      return 'Es besteht bereits eine Anmeldung mit diesem Namen';
     }
   }
 
