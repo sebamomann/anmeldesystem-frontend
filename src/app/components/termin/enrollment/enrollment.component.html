@@ -3,7 +3,7 @@
        class="wrapper">
     <ng-container *ngIf="!enrollmentGone; else emptyTmpl">
       <mat-card class="form float high">
-        <mat-card-title class="headline">
+        <mat-card-title class="headline" id="title">
           {{ isEdit ? 'Bearbeiten' : 'Anmelden' }}
         </mat-card-title>
 
@@ -37,7 +37,7 @@
                          matInput
                          required>
                 </label>
-                <mat-error>
+                <mat-error id="name-error">
                   {{ getNameErrorMessage() }}
                 </mat-error>
               </mat-form-field>
@@ -146,7 +146,7 @@
 
 <ng-template #emptyTmpl>
   <mat-card class="float error empty">
-    <img src="/assets/img/404.svg">
+    <img alt="error robot" src="/assets/img/404.svg">
     <span>Sorry, diese Anmeldung gibt es lieder nicht mehr.</span>
     <button [queryParams]="{a: appointmentLink}"
             [routerLink]="['/enroll']"

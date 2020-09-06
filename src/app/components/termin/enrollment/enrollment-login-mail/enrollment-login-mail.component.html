@@ -1,4 +1,4 @@
-<mat-card class="float high">
+<mat-card class="float high" id="login-mail-form">
   <mat-card-title class="headline">
     Anmelden
   </mat-card-title>
@@ -66,6 +66,7 @@
       <mat-form-field>
         <label>
           <input formControlName="mail"
+                 id="mail"
                  matInput
                  placeholder="Mail-Adresse">
         </label>
@@ -74,6 +75,7 @@
         </mat-error>
       </mat-form-field>
       <button (click)="_done()"
+              id="submit"
               mat-raised-button>
         Absenden
       </button>

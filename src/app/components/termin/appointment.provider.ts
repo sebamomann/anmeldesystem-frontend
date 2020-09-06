@@ -85,6 +85,7 @@ export class AppointmentProvider {
       .getAppointment(data, false)
       .subscribe(
         (appointment: IAppointmentModel) => {
+          console.log(appointment);
           this.update(appointment);
         }
       );

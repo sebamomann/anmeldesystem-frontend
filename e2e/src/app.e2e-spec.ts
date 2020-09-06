@@ -9,7 +9,7 @@ describe('workspace-project App', () => {
   });
 
   it('should display welcome message', () => {
-    page.navigateTo();
+    page.navigateTo('/dashboard');
     expect(page.getTitleText()).toEqual('anmeldesystem app is running!');
   });
 
