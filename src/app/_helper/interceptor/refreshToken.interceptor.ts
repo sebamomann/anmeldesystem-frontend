@@ -68,7 +68,7 @@ export class AuthInterceptor implements HttpInterceptor {
     // Business error
     if (error.status === 400) {
       // Show message
-    } else if (error.status === 401) {
+    } else if (error.status === 401 && !request.url.contains('/login')) {
       return this.refreshToken().pipe(
         switchMap(() => {
           request = this.addAuthHeader(request);

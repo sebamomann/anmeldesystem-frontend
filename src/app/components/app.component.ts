@@ -100,19 +100,19 @@ export class AppComponent {
 
     this.buildNav();
 
-    // this.authenticationService
-    //   .refreshing$
-    //   .subscribe((val) => {
-    //     if (val) {
-    //       this.refreshing = true;
-    //       this.refreshingDone = false;
-    //     } else {
-    //       this.refreshing = false;
-    //       setTimeout(() => {
-    //         this.refreshingDone = true;
-    //       }, 500);
-    //     }
-    //   });
+    this.authenticationService
+      .refreshing$
+      .subscribe((val) => {
+        if (val) {
+          this.refreshing = true;
+          this.refreshingDone = false;
+        } else {
+          this.refreshing = false;
+          setTimeout(() => {
+            this.refreshingDone = true;
+          }, 500);
+        }
+      });
   }
 
   public toggleMenu() {
