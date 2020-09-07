@@ -16,35 +16,66 @@ describe('Enrollment Page', () => {
     expect(await page.getMatCardTitle()).toEqual('Anmelden');
   });
 
+  // TODO
+  // ACTUALLY VALIDATE DATA TO BE THERE -> WAIT FOR CALL TO BE MADE !!! maybe at the end of all?
+  // - ADDITIONS
+  // - DRIVER ADDITION
+  // - BOTH?
+
   describe('enroll', () => {
     describe('unknown user', () => {
       describe('fill form - send', () => {
         describe('valid', () => {
-          it('should show loginAndMailForm', async () => {
-            // enroll
-            await page.setName('unknown');
-            await page.setComment('my cool comment');
-            // submit
-            page.submit();
-
-            expect(page.loginAndMailFormExists()).toBeTruthy();
-          });
-
-          describe('insert mail', () => {
-            it('should complete enrollment', async () => {
+          describe('loginAndMailForm', () => {
+            it('should show', async () => {
               // enroll
               await page.setName('unknown');
               await page.setComment('my cool comment');
               // submit
               page.submit();
 
-              // email and login form
               expect(page.loginAndMailFormExists()).toBeTruthy();
-              await page.setEmail('mail@example.com');
+            });
+
+            it('should show - go back to form data still inside', async () => {
+              // enroll
+              await page.setName('unknown');
+              await page.setComment('my cool comment');
+              // submit
               page.submit();
 
-              expect(await page.getUrl()).toEqual('http://localhost:4200/enroll/add?a=protractor');
-              expect(await page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
+              expect(page.loginAndMailFormExists()).toBeTruthy();
+
+              // page.
+            });
+
+            describe('insert mail', () => {
+              it('should complete enrollment', async () => {
+                // enroll
+                await page.setName('unknown');
+                await page.setComment('my cool comment');
+                // submit
+                page.submit();
+
+                // email and login form
+                expect(page.loginAndMailFormExists()).toBeTruthy();
+                await page.setEmail('mail@example.com');
+                page.submit();
+
+                expect(await page.getUrl()).toEqual('http://localhost:4200/enroll/add?a=protractor');
+                expect(await page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
+              });
+            });
+
+            describe('login - should autosend self enrollment', () => {
+              it('valid', async () => {
+
+                // LOGOUT AFTERWARDS
+              });
+
+              it('invalid - already enrolled', async () => {
+
+              });
             });
           });
         });
@@ -100,10 +131,35 @@ describe('Enrollment Page', () => {
         });
 
         it('invalid - already enrolled', async () => {
-          await expect(page.getName().isEnabled()).toBe(false);
           await expect(page.getSubmit().isEnabled()).toBe(false);
           await expect((await page.getCreatorError()).getText()).toEqual('Du bist bereits angemeldet');
-          await expect(page.getSelfEnrollment().isSelected()).toBe(true);
+        });
+      });
+
+      describe('foreign enrollment', () => {
+        describe('fill form - send', () => {
+          describe('valid', () => {
+            it('should show loginAndMailForm without login part', async () => {
+            });
+
+            it('should show loginAndMailForm without login part go back still having data (false self login)', async () => {
+            });
+
+            describe('insert mail', () => {
+              it('should complete enrollment', async () => {
+              });
+            });
+          });
+
+          describe('invalid', () => {
+            it('name missing', async () => {
+            });
+
+            describe('insert mail', () => {
+              it('name already in use', async () => {
+              });
+            });
+          });
         });
       });
     });
