@@ -44,7 +44,7 @@ describe('Enrollment Page - Logged in', () => {
 
         it('should complete enrollment', async () => {
           expect(
-            browser.wait(protractor.ExpectedConditions.urlContains('http://localhost:4200/enroll?a=protractor'), 5000)
+            browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=protractor'), 5000)
               .catch(() => {
                 return false;
               })
@@ -113,7 +113,7 @@ describe('Enrollment Page - Logged in', () => {
 
             it('should complete enrollment', async () => {
               expect(
-                browser.wait(protractor.ExpectedConditions.urlContains('http://localhost:4200/enroll?a=protractor'), 5000)
+                browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=protractor'), 5000)
                   .catch(() => {
                     return false;
                   })
