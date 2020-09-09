@@ -60,7 +60,8 @@ export class LoginComponent implements OnInit {
                 this.snackBar.open('Erfolgreich eingeloggt',
                   'OK',
                   {
-                    duration: 2000,
+                    panelClass: 'login-snackbar',
+                    duration: 2500,
                   });
               });
           },

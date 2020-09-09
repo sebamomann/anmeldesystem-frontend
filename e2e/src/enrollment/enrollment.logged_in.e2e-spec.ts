@@ -1,4 +1,4 @@
-import {browser} from 'protractor';
+import {browser, protractor} from 'protractor';
 import {EnrollmentPage} from './enrollment.po';
 
 describe('Enrollment Page - Logged in', () => {
@@ -20,8 +20,13 @@ describe('Enrollment Page - Logged in', () => {
     await page.navigateTo();
   });
 
+  it('Should display form with title "Anmelden"', async () => {
+    expect(await page.getMatCardTitle()).toEqual('Anmelden');
+  });
+
   describe('self enrollment', () => {
     const __comment = 'my cool comment';
+
     beforeEach(async () => {
       await expect(page.getName().isEnabled()).toBe(false);
       await expect(page.getSelfEnrollment().isSelected()).toBe(true);
@@ -33,12 +38,17 @@ describe('Enrollment Page - Logged in', () => {
       });
 
       describe('send', () => {
-        beforeEach(async () => {
+        beforeEach(() => {
           page.submit();
         });
 
         it('should complete enrollment', async () => {
-          expect(await page.getUrl()).toEqual('http://localhost:4200/enroll/add?a=protractor');
+          expect(
+            browser.wait(protractor.ExpectedConditions.urlContains('http://localhost:4200/enroll?a=protractor'), 5000)
+              .catch(() => {
+                return false;
+              })
+          ).toBeTruthy(`Url match could not succced`);
           expect(await page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
         });
       });
@@ -67,7 +77,6 @@ describe('Enrollment Page - Logged in', () => {
       it('name missing - send', async () => {
         await page.clearName();
 
-        // submit
         page.submit();
 
         await expect((await page.getNameError()).getText()).toEqual('Bitte gebe einen Namen an');
@@ -103,7 +112,12 @@ describe('Enrollment Page - Logged in', () => {
             });
 
             it('should complete enrollment', async () => {
-              expect(await page.getUrl()).toEqual('http://localhost:4200/enroll/add?a=protractor');
+              expect(
+                browser.wait(protractor.ExpectedConditions.urlContains('http://localhost:4200/enroll?a=protractor'), 5000)
+                  .catch(() => {
+                    return false;
+                  })
+              ).toBeTruthy(`Url match could not succced`);
               expect(await page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
             });
 

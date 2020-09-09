@@ -71,7 +71,7 @@
     "karma-jasmine-html-reporter": "^1.5.1",
     "npm-force-resolutions": "0.0.3",
     "particles.js": "^2.0.0",
-    "protractor": "~5.4.0",
+    "protractor": "^5.4.4",
     "puppeteer": "^2.0.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",

@@ -2,14 +2,11 @@ import {browser, by, element, protractor} from 'protractor';
 
 export class EnrollmentPage {
   public async navigateTo() {
-    console.log('02');
     return browser.get('/enroll/add?a=protractor')
       .then(() => {
-        console.log('03');
         return this.waitForFormBuild();
       })
       .catch(() => {
-        console.log('03 error');
       });
   }
 
@@ -165,5 +162,9 @@ export class EnrollmentPage {
     }
 
     return Promise.resolve();
+  }
+
+  async closeLoginSnackbar() {
+    await browser.executeScript('document.getElementsByClassName(\'login-snackbar\')[0].remove();');
   }
 }
