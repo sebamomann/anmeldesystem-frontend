@@ -2,9 +2,14 @@ import {browser, by, element, protractor} from 'protractor';
 
 export class EnrollmentPage {
   public async navigateTo() {
-    browser.get('/enroll/add?a=protractor')
+    console.log('02');
+    return browser.get('/enroll/add?a=protractor')
       .then(() => {
+        console.log('03');
         return this.waitForFormBuild();
+      })
+      .catch(() => {
+        console.log('03 error');
       });
   }
 
@@ -16,7 +21,7 @@ export class EnrollmentPage {
     const loader = element(by.css('#loading-overlay'));
     const EC = protractor.ExpectedConditions;
 
-    return browser.wait(EC.invisibilityOf(loader), 10000);
+    return browser.wait(EC.invisibilityOf(loader), 1000);
   }
 
   public getName() {
