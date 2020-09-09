@@ -226,7 +226,7 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
   }
 
   public mailFormCancel() {
-    this.showLoginAndMailForm = false;
+    this.clearLoginAndMailFormIntercepting();
   }
 
   public isSelfEnrolling() {
@@ -309,7 +309,7 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
 
       this.buildFormCheckboxes();
 
-      if (this.triggerDirectSend) {
+      if (this.triggerDirectSend && !this.creatorError) {
         this.initializeEnrollmentSend();
         return;
       }
@@ -367,7 +367,17 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     if (this.finalEnrollment.creator) {
       this.getName().setValue(this.authenticationService.currentUserValue.name);
     } else {
-      this.form_main.get('name').setValue(this.finalEnrollment.name);
+      if (this.isSelfEnrollment) {
+        if (this.finalEnrollment.name !== this.authenticationService.currentUserValue.name) {
+          this.isSelfEnrollment = false;
+          console.log(this.authenticationService.currentUserValue.name);
+          this.form_main.get('name').setValue(this.authenticationService.currentUserValue.name);
+        } else {
+          this.form_main.get('name').setValue(this.finalEnrollment.name);
+        }
+      } else {
+        this.form_main.get('name').setValue(this.finalEnrollment.name);
+      }
     }
 
     this.form_main.get('comment').setValue(this.finalEnrollment.comment);

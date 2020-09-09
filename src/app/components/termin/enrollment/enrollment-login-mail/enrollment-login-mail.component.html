@@ -4,13 +4,14 @@
   </mat-card-title>
 
   <ng-container *ngIf="!userIsLoggedIn; else userLoggedInMessageTempl">
-    <mat-card-content>
+    <mat-card-content id="login-content">
       <span>
         Logge dich ein um deine Anmeldung deinem Account zuzuordnen und sie später bearbeiten/löschen zu können.
       </span>
       <button [queryParams]="{returnUrl: currentURL + '&send=true'}"
               [routerLink]="['/account/login']"
               color="primary"
+              id="login"
               mat-raised-button>
         Login
       </button>
@@ -41,6 +42,7 @@
 
   <mat-card-actions>
     <button (click)="_cancel()"
+            id="back"
             mat-flat-button>
       Zurück
     </button>
@@ -48,7 +50,7 @@
 </mat-card>
 
 <ng-template #userLoggedInMessageTempl>
-  <mat-card-content>
+  <mat-card-content id="login-content-alt">
     <span>
       Du bist zwar eingeloggt, meldest aber jemand anderen an. Bitte gebe dessen E-Mail Adresse ein, damit er später dazu
       in der Lage ist, seine Anmeldung zu ändern. In dieser Mail befinden sich die Berechtigungen zum Editieren.

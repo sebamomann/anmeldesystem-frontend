@@ -37,7 +37,7 @@ export class LoadingDisableDirective implements OnInit, OnDestroy {
       this.value = value;
       if (!value) {
         this.renderer.setProperty(this.el.nativeElement, 'innerHTML', this.innerValue);
-        this.renderer.removeAttribute(this.el.nativeElement, 'disabled');
+        this.renderer.setProperty(this.el.nativeElement, 'disabled', false);
       } else {
         this.setLoading();
       }
