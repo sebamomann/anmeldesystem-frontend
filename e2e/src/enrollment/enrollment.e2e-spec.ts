@@ -93,7 +93,7 @@ describe('Enrollment Page - Unknown user', () => {
                     .catch(() => {
                       return false;
                     })
-                ).toBeTruthy(`Url match could not succced`);
+                ).toBeTruthy(`Url match could not succeed`);
                 expect(await page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
               });
 
@@ -119,7 +119,7 @@ describe('Enrollment Page - Unknown user', () => {
                 .catch(() => {
                   return false;
                 })
-            ).toBeTruthy(`Url match could not succced`);
+            ).toBeTruthy(`Url match could not succeed`);
             await expect(page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
           });
 
