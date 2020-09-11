@@ -1,8 +1,11 @@
 import {browser, by, element, protractor} from 'protractor';
 
 export class EnrollmentPage {
+  constructor(private appointmentLink: string) {
+  }
+
   public async navigateTo() {
-    return browser.get('/enroll/add?a=protractor')
+    return browser.get('/enroll/add?a=' + this.appointmentLink)
       .then(() => {
         return this.waitForFormBuild();
       })

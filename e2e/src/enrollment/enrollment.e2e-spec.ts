@@ -2,21 +2,26 @@ import {browser, protractor} from 'protractor';
 import {EnrollmentPage} from './enrollment.po';
 
 describe('Enrollment Page - Unknown user', () => {
-  let page = new EnrollmentPage();
+  const user = {
+    name: 'User Enroll Foreign',
+    username: 'user_enroll_foreign'
+  };
+  const appointmentLink = 'protractorEnroll';
+  let page = new EnrollmentPage(appointmentLink);
 
   beforeAll(() => {
     page.logout();
   });
 
   beforeEach(async () => {
-    page = new EnrollmentPage();
+    page = new EnrollmentPage(appointmentLink);
     browser.ignoreSynchronization = true;
 
     // USER MANAGEMENT
     // await page.logout();
 
     // APPOINTMENT PREPARATION
-    await browser.get('/enroll?a=protractor'); // NEEDED TO REMOVE "PINNED" Snackbar
+    await browser.get('/enroll?a=' + appointmentLink); // NEEDED TO REMOVE "PINNED" Snackbar
     page.spinnerGone();
 
     await page.navigateTo();
@@ -84,7 +89,7 @@ describe('Enrollment Page - Unknown user', () => {
 
               it('should complete enrollment', async () => {
                 expect(
-                  browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=protractor'), 5000)
+                  browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
                     .catch(() => {
                       return false;
                     })
@@ -102,15 +107,15 @@ describe('Enrollment Page - Unknown user', () => {
         describe('login', () => {
           beforeEach(async () => {
             page.clickLogin();
-            await page.fillLoginData('user_foreign');
+            await page.fillLoginData(user.username);
             browser.driver.wait(() =>
-              browser.driver.getCurrentUrl().then(url => /enroll\/add\?a=protractor/.test(url)), 10000);
+              browser.driver.getCurrentUrl().then(url => /enroll\/add\?a=url/.test(url.replace(appointmentLink, 'url'))), 10000);
             await page.closeLoginSnackbar();
           });
 
           it('should complete enrollment (autosend)', async () => {
             expect(
-              browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=protractor'), 5000)
+              browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
                 .catch(() => {
                   return false;
                 })
@@ -123,7 +128,7 @@ describe('Enrollment Page - Unknown user', () => {
             await expect(page.getName().isEnabled()).toBe(false);
             await expect(page.getSelfEnrollment().isSelected()).toBe(true);
             // expect name and old comment to be set correctly
-            await expect(page.getName().getAttribute('value')).toBe('User Foreign');
+            await expect(page.getName().getAttribute('value')).toBe(user.name);
             await expect(page.getComment().getAttribute('value')).toBe(__comment);
 
             await expect(page.getSubmit().isEnabled()).toBe(false);

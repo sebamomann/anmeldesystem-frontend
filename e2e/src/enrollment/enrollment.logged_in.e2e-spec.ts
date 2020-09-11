@@ -3,18 +3,23 @@ import {EnrollmentPage} from './enrollment.po';
 
 describe('Enrollment Page - Logged in', () => {
   let page: EnrollmentPage;
+  const user = {
+    name: 'User Enroll',
+    username: 'user_enroll'
+  };
+  const appointmentLink = 'protractorEnroll';
 
   // NEEDS TO BE DIFFERENT USER THAN USED BEFORE!!!!!
   beforeEach(async () => {
-    page = new EnrollmentPage();
+    page = new EnrollmentPage(appointmentLink);
     browser.ignoreSynchronization = true;
 
     // USER MANAGEMENT
     await page.logout();
-    await page.login('user_enroll');
+    await page.login(user.username);
 
     // APPOINTMENT PREPARATION
-    await browser.get('/enroll?a=protractor'); // removes **pinned** snackbar
+    await browser.get('/enroll?a=' + appointmentLink); // removes **pinned** snackbar
     page.spinnerGone();
 
     await page.navigateTo();
@@ -44,7 +49,7 @@ describe('Enrollment Page - Logged in', () => {
 
         it('should complete enrollment', async () => {
           expect(
-            browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=protractor'), 5000)
+            browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
               .catch(() => {
                 return false;
               })
@@ -92,6 +97,7 @@ describe('Enrollment Page - Logged in', () => {
           beforeEach(async () => {
             expect(page.loginAndMailFormExists()).toBeTruthy();
             expect(page.loginAndMailFormLoginContentExists()).toBeFalsy();
+            expect(page.loginAndMailFormLoginContentAltExists()).toBeTruthy();
             expect(page.loginAndMailFormExists()).toBeTruthy();
           });
 
@@ -113,7 +119,7 @@ describe('Enrollment Page - Logged in', () => {
 
             it('should complete enrollment', async () => {
               expect(
-                browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=protractor'), 5000)
+                browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
                   .catch(() => {
                     return false;
                   })
