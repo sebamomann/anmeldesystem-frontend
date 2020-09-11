@@ -1,5 +1,5 @@
 <mat-card class="form float">
-  <mat-card-title class="headline">
+  <mat-card-title class="headline" id="title">
     Login
   </mat-card-title>
 
@@ -23,7 +23,7 @@
         <button (click)="hide = !hide" aria-label="toggle password visibility" mat-icon-button matSuffix type="button">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
-        <mat-error>{{ getPasswordErrorMessage() }}</mat-error>
+        <mat-error id="login-error">{{ getPasswordErrorMessage() }}</mat-error>
       </mat-form-field>
 
       <span>
