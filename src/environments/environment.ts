@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  API_URL: window['env']['API_URL'] || 'http://localhost:3002/  ',
+  API_URL: window['env']['API_URL'] || 'http://localhost:3001/',
 };
 
 /*
