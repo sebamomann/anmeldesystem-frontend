@@ -7,6 +7,7 @@ COPY package*.json ./
 
 RUN npx npm-force-resolutions
 RUN npm install
+RUN npm run e2e
 
 COPY . .
 
