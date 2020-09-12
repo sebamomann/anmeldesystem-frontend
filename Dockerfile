@@ -29,7 +29,7 @@ RUN ./node_modules/.bin/webdriver-manager update --versions.chrome 85.0.4183.87
 
 COPY . .
 
-RUN sed -i "s|localhost:3000|$BACKEND_URL|g" /usr/src/app/src/assets/env.js
+RUN sed -i "s|localhost:3000|$BACKEND_URL|g" ./src/assets/env.js
 RUN npm run e2e
 RUN npm run-script build:prod
 
