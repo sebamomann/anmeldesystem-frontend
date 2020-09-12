@@ -14,11 +14,11 @@ RUN apt-get update && \
     libgconf-2-4 \
     openjdk-8-jre-headless \
     && rm -rf /var/lib/apt/lists/*
-RUN npm run pree2e
-RUN npm run e2e
 
 COPY . .
 
+RUN npm run pree2e
+RUN npm run e2e
 RUN npm run-script build:prod
 
 ## STAGE 2
