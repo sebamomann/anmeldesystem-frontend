@@ -11,7 +11,6 @@
     "test:watch": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "pree2e": "./node_modules/protractor/bin/webdriver-manager clean && node ./node_modules/protractor/bin/webdriver-manager update --versions.chrome=85.0.4183.87",
     "build:ci": "npm run build:prod",
     "stats": "webpack-bundle-analyzer dist/stats.json"
   },
