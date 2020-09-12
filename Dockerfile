@@ -5,6 +5,9 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
+RUN npm install
+RUN npm install protractor -g
+RUN webdriver-manager update --versions.chrome 85.0.4183.87
 # Install Chromium
 RUN apk add --update --no-cache\
     chromium-chromedriver\
