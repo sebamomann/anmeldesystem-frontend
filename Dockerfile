@@ -7,9 +7,12 @@ COPY package*.json ./
 
 RUN npx npm-force-resolutions
 RUN npm install
-RUN npm install protractor -g
-RUN webdriver-manager update --versions.chrome 85.0.4183.87
-RUN  apt-get install openjdk-8-jre-headless
+RUN apt-get update && \
+    DEBIAN_FRONTEND="nointeractive" \
+    apt-get install -y --no-install-recommends \
+    libgconf-2-4 \
+    openjdk-8-jre-headless \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY . .
 
