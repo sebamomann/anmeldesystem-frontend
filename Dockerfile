@@ -1,6 +1,6 @@
 FROM openjdk:8-jdk AS build
 
-ARG BACKEND_URL="http://localhost:3000/"
+ARG BACKEND_URL="http://localhost:3003/"
 ENV BACKEND_URL=$BACKEND_URL
 RUN echo $BACKEND_URL;
 

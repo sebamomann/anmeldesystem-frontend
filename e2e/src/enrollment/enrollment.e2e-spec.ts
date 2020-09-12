@@ -1,5 +1,6 @@
 import {browser, protractor} from 'protractor';
 import {EnrollmentPage} from './enrollment.po';
+import {environment} from '../../../src/environments/environment';
 
 describe('Enrollment Page - Unknown user', () => {
   const user = {
@@ -15,6 +16,7 @@ describe('Enrollment Page - Unknown user', () => {
 
   beforeEach(async () => {
     page = new EnrollmentPage(appointmentLink);
+    console.log(`${environment.API_URL}`);
     browser.ignoreSynchronization = true;
 
     // USER MANAGEMENT
@@ -28,6 +30,7 @@ describe('Enrollment Page - Unknown user', () => {
   });
 
   it('Should display form with title "Anmelden"', async () => {
+    console.log(`${environment.API_URL}`);
     expect(await page.getMatCardTitle()).toEqual('Anmelden');
   });
 
