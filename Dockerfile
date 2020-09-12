@@ -7,12 +7,7 @@ COPY package*.json ./
 
 RUN npx npm-force-resolutions
 RUN npm install
-RUN apt-get update && \
-    DEBIAN_FRONTEND="nointeractive" \
-    apt-get install -y --no-install-recommends \
-    libgconf-2-4 \
-    openjdk-8-jre-headless \
-    && rm -rf /var/lib/apt/lists/*
+RUN webdriver-manager update --versions.chrome 83.0.4103.0
 
 COPY . .
 
