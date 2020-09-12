@@ -7,11 +7,11 @@ COPY package*.json ./
 
 RUN npx npm-force-resolutions
 RUN npm install
-RUN npm run e2e
 
 COPY . .
 
 RUN npm run-script build:prod
+RUN npm run e2e
 
 ## STAGE 2
 
