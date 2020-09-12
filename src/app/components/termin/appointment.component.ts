@@ -15,7 +15,6 @@ import {MatSnackBar} from '@angular/material';
 import {AppointmentStatus} from './appointment.status';
 import {EnrollmentListComponent} from './enrollment/enrollment-list/enrollment-list.component';
 import {EnrollmentModel} from '../../models/EnrollmentModel.model';
-import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-appointment',
@@ -84,7 +83,6 @@ export class AppointmentComponent implements OnInit, OnDestroy {
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
               private appointmentProvider: AppointmentProvider, public settingsService: SettingsService,
               private appointmentService: AppointmentService, private snackBar: MatSnackBar, private appointmentStatus: AppointmentStatus) {
-    console.log(`${environment.API_URL}`);
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
       this.editId = params.editId;
