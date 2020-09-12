@@ -64,7 +64,7 @@ pipeline {
             '--network protractorNet_build_' + build_number + ' ' +
             '--health-cmd=\'curl localhost:3000/healthcheck || exit 1 \' ' +
             '--health-interval=2s ' +
-            'anmeldesystem/anmeldesystem-backend'
+            'anmeldesystem/anmeldesystem-backend:build_141'
 
           waitUntil {
             "healthy" == sh(returnStdout: true,
