@@ -14,8 +14,12 @@ exports.config = {
   ],
   capabilities: {
     chromeOptions: {
-      args: ["--headless", "--no-sandbox"],
-      binary: process.env.CHROME_BIN
+      args: [
+        '--headless',
+        '--no-sandbox',
+        '--disable-gpu',
+        '--disable-dev-shm-usage'
+      ]
     },
     browserName: "chrome",
   },
