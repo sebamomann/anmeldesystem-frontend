@@ -8,7 +8,7 @@ COPY package*.json ./
 RUN npx npm-force-resolutions
 RUN npm install
 RUN npm install protractor -g
-RUN webdriver-manager update --versions.chrome 83.0.4103.0
+RUN webdriver-manager update --versions.chrome 85.0.4183.87
 
 COPY . .
 
