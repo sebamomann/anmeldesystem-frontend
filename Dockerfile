@@ -7,6 +7,7 @@ COPY package*.json ./
 
 RUN npm install
 RUN npm install protractor -g
+RUN apk add --no-cache chromium-chromedriver
 RUN webdriver-manager update --versions.chrome=85.0.4183.87
 
 COPY . .
