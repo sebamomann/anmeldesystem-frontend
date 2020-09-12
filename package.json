@@ -11,6 +11,7 @@
     "test:watch": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "pree2e": "webdriver-manager update --versions.chrome=85.0.4183.83",
     "build:ci": "npm run build:prod",
     "stats": "webpack-bundle-analyzer dist/stats.json"
   },

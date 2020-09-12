@@ -1,5 +1,5 @@
 
-FROM node:12.7-alpine AS build
+FROM node:12 AS build
 
 WORKDIR /usr/src/app
 
@@ -14,6 +14,7 @@ RUN apt-get update && \
     libgconf-2-4 \
     openjdk-8-jre-headless \
     && rm -rf /var/lib/apt/lists/*
+RUN npm run pree2e
 RUN npm run e2e
 
 COPY . .
