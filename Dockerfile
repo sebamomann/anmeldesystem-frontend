@@ -9,7 +9,7 @@ RUN npx npm-force-resolutions
 RUN npm install
 RUN npm install protractor -g
 RUN webdriver-manager update --versions.chrome 85.0.4183.87
-RUN sudo apt-get install default-jre
+RUN  apt-get install openjdk-8-jre-headless
 
 COPY . .
 
