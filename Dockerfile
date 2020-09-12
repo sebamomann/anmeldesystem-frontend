@@ -10,7 +10,7 @@ RUN npm install
 RUN apt-get update && \
     DEBIAN_FRONTEND="nointeractive" \
     apt-get install -y --no-install-recommends \
-    chromium=85.0.4183.83~deb9u1 \
+    chromium=85.0.4183.83 \
     libgconf-2-4 \
     openjdk-8-jre-headless \
     && rm -rf /var/lib/apt/lists/*
