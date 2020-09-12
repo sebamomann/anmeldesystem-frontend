@@ -10,8 +10,8 @@ RUN npm install
 
 COPY . .
 
-RUN npm run-script build:prod
 RUN npm run e2e
+RUN npm run-script build:prod
 
 ## STAGE 2
 
