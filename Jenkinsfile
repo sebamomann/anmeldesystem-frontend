@@ -23,6 +23,14 @@ pipeline {
       }
     }
 
+    stage('Build Docker image') {
+      steps {
+        script {
+          image = docker.build("anmeldesystem/anmeldesystem-ui:build_" + build_number)
+        }
+      }
+    }
+
     stage('e2e prepare') {
       steps {
         script {
@@ -73,12 +81,13 @@ pipeline {
       }
     }
 
-    stage('Build Docker image') {
-      steps {
-        script {
-          image = docker.build("anmeldesystem/anmeldesystem-ui:build_" + build_number, "--build-arg BACKEND_URL=" + "anmeldesystem-backend-protractor_build_" + build_number + " -f Dockerfile .")
+    stage('e2e execute') {
+      docker.image("anmeldesystem/anmeldesystem-ui:build_" + build_number)
+        .withRun('-d=true -e API_URL="http://anmeldesystem-backend-protractor_build_' + build_number + ':3000/"') { c ->
+          docker.image("anmeldesystem/anmeldesystem-ui:build_" + build_number).inside {
+            sh "ng e2e"
+          }
         }
-      }
     }
 
     stage('Publish to registry') {
