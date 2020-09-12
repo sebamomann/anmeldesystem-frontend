@@ -76,7 +76,7 @@ pipeline {
     stage('Build Docker image') {
       steps {
         script {
-          image = docker.build("anmeldesystem/anmeldesystem-ui:build_" + build_number, "--build-arg BACKEND_URL " + "anmeldesystem-backend-protractor_build_" + build_number)
+          image = docker.build("anmeldesystem/anmeldesystem-ui:build_" + build_number, "--build-arg BACKEND_URL=" + "anmeldesystem-backend-protractor_build_" + build_number)
         }
       }
     }
@@ -126,7 +126,7 @@ pipeline {
         }
 
         try {
-          sh 'docker network rm protractorNet_build_' + build_number + ' -f'
+          sh 'docker network rm protractorNet_build_' + build_number
         } catch (err) {
           echo err.getMessage()
         }
