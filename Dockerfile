@@ -1,5 +1,8 @@
 FROM openjdk:8-jdk AS build
 
+ARG BACKEND_URL="http://localhost:3000/"
+ENV BACKEND_URL=${BACKEND_URL}
+
 WORKDIR /usr/src/app
 
 # Node.js
@@ -25,6 +28,7 @@ RUN ./node_modules/.bin/webdriver-manager update --versions.chrome 85.0.4183.87
 
 COPY . .
 
+RUN sed -i "s|http://localhost:3000/|${BACKEND_URL}|g" /etc/sysctl.conf
 RUN npm run e2e
 RUN npm run-script build:prod
 
