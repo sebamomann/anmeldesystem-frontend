@@ -48,7 +48,8 @@
     "sitemap-generator": "^8.5.0",
     "source-map-explorer": "^2.2.2",
     "tslib": "^1.10.0",
-    "zone.js": "~0.9.1"
+    "zone.js": "~0.9.1",
+    "protractor": "^5.4.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.803.23",
@@ -71,7 +72,6 @@
     "karma-jasmine-html-reporter": "^1.5.1",
     "npm-force-resolutions": "0.0.3",
     "particles.js": "^2.0.0",
-    "protractor": "^5.4.4",
     "puppeteer": "^2.0.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
