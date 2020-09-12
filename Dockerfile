@@ -6,6 +6,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm install
+RUN node webdriver-manager start
 RUN webdriver-manager update --versions.chrome=85.0.4183.87
 
 COPY . .
