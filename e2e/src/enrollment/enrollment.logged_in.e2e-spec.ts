@@ -129,7 +129,7 @@ describe('Enrollment Page - Logged in', () => {
 
             // send second time
             it('name already in use', async () => {
-              await expect(page.getNameError().getText()).toEqual('Es besteht bereits eine Anmeldung mit diesem Namen');
+              await expect((await page.getNameError()).getText()).toEqual('Es besteht bereits eine Anmeldung mit diesem Namen');
             });
           });
         });

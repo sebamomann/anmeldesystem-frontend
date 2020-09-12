@@ -91,10 +91,11 @@ export class EnrollmentPage {
     return element(by.id('login-content-alt')).isPresent();
   }
 
-  public getNameError() {
+  public async getNameError() {
     const elem = element(by.id('name-error'));
     const until = protractor.ExpectedConditions;
-    browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
+    await browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
+    await browser.wait(this.textNotToBePresentInElement(elem, ''), 5000, 'Element taking too long to appear in the DOM');
     return elem;
   }
 
@@ -102,6 +103,7 @@ export class EnrollmentPage {
     const elem = element(by.id('creator-error'));
     const until = protractor.ExpectedConditions;
     await browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
+    await browser.wait(this.textNotToBePresentInElement(elem, ''), 5000, 'Element taking too long to appear in the DOM');
     return elem;
   }
 
@@ -170,4 +172,12 @@ export class EnrollmentPage {
   async closeLoginSnackbar() {
     await browser.executeScript('document.getElementsByClassName(\'login-snackbar\')[0].remove();');
   }
+
+  public textNotToBePresentInElement(elem, text) {
+    return async () => {
+      const textreceived = await elem.getText();
+      const bool = textreceived === text;
+      return !(bool);
+    };
+  };
 }

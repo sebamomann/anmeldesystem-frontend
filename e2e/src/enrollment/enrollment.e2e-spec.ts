@@ -98,7 +98,7 @@ describe('Enrollment Page - Unknown user', () => {
               });
 
               it('name already in use', async () => {
-                await expect(page.getNameError().getText()).toEqual('Es besteht bereits eine Anmeldung mit diesem Namen');
+                await expect((await page.getNameError()).getText()).toEqual('Es besteht bereits eine Anmeldung mit diesem Namen');
               });
             });
           });

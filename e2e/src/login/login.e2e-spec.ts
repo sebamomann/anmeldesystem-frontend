@@ -67,7 +67,7 @@ describe('Login Page', () => {
 
         page.submit();
 
-        expect(await page.getLoginError().getText()).toEqual('Benutzername oder Passwort falsch');
+        await expect((await page.getLoginError()).getText()).toEqual('Benutzername oder Passwort falsch');
       });
 
       it('invalid password', async () => {
@@ -76,7 +76,7 @@ describe('Login Page', () => {
 
         page.submit();
 
-        expect(await page.getLoginError().getText()).toEqual('Benutzername oder Passwort falsch');
+        await expect((await page.getLoginError()).getText()).toEqual('Benutzername oder Passwort falsch');
       });
 
       it('password changed', async () => {
@@ -85,7 +85,7 @@ describe('Login Page', () => {
 
         page.submit();
 
-        expect(await page.getLoginError().getText()).toEqual('Du hast dieses Passwort am 18.11.2020, 12:23Uhr geändert');
+        await expect((await page.getLoginError()).getText()).toEqual('Du hast dieses Passwort am 18.11.2020, 12:23Uhr geändert');
       });
 
       it('not activated', async () => {

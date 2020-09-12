@@ -189,10 +189,11 @@ export class LoginPage {
     await browser.executeScript('document.getElementsByClassName(\'login-snackbar\')[0].remove();');
   }
 
-  getLoginError() {
+  async getLoginError() {
     const elem = element(by.id('login-error'));
     const until = protractor.ExpectedConditions;
-    browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
+    await browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
+    await browser.wait(this.textNotToBePresentInElement(elem, ''), 5000, 'Element taking too long to appear in the DOM');
     return elem;
   }
 
@@ -201,4 +202,12 @@ export class LoginPage {
     const until = protractor.ExpectedConditions;
     return browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
   }
+
+  public textNotToBePresentInElement(elem, text) {
+    return async () => {
+      const textreceived = await elem.getText();
+      const bool = textreceived === text;
+      return !(bool);
+    };
+  };
 }
