@@ -68,11 +68,11 @@ export class LoginComponent implements OnInit {
           error => {
             this.sendingRequestEmit.emit(false);
 
-            if (error.code === 'INVALID_PASSWORD') {
+            if (error.error.code === 'INVALID_PASSWORD') {
               this.changeDate = new Date(error.error.data);
               this.getPassword().setErrors({isOldPassword: true});
-            } else if (error.code === 'ACCOUNT_LOCK') {
-              if (error.data === 'NOT_ACTIVATED') {
+            } else if (error.error.code === 'ACCOUNT_LOCK') {
+              if (error.error.data === 'NOT_ACTIVATED') {
                 this.openLockedAccountDialog();
               }
             } else {
@@ -113,6 +113,7 @@ export class LoginComponent implements OnInit {
 
   private openLockedAccountDialog() {
     this.dialog.open(AccountActivationDialogComponent, {
+      id: 'account-activation-dialog',
       width: '80%',
       maxWidth: '500px',
       height: 'auto',

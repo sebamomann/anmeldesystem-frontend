@@ -7,6 +7,11 @@ describe('Login Page', () => {
     mail: 'user_login@example.com',
     password: '123',
   };
+  const user_lock = {
+    username: 'user_login_lock',
+    mail: 'user_login_lock@example.com',
+    password: '123',
+  };
   let page = new LoginPage();
 
   beforeEach(async () => {
@@ -23,34 +28,36 @@ describe('Login Page', () => {
   });
 
   describe('Login', () => {
-    it('with username - success', async () => {
-      await page.setUsername(user.username);
-      await page.setPassword(user.password);
+    describe('success', () => {
+      it('with username', async () => {
+        await page.setUsername(user.username);
+        await page.setPassword(user.password);
 
-      page.submit();
+        page.submit();
 
-      expect(
-        browser.wait(protractor.ExpectedConditions.urlContains('/dashboard'), 5000)
-          .catch(() => {
-            return false;
-          })
-      ).toBeTruthy(`Url match could not succeed`);
-      expect(await page.getSnackbar().getText()).toEqual('Erfolgreich eingeloggt\nOK');
-    });
+        expect(
+          browser.wait(protractor.ExpectedConditions.urlContains('/dashboard'), 5000)
+            .catch(() => {
+              return false;
+            })
+        ).toBeTruthy(`Url match could not succeed`);
+        expect(await page.getSnackbar().getText()).toEqual('Erfolgreich eingeloggt\nOK');
+      });
 
-    it('with mail - success', async () => {
-      await page.setUsername(user.mail);
-      await page.setPassword(user.password);
+      it('with mail', async () => {
+        await page.setUsername(user.mail);
+        await page.setPassword(user.password);
 
-      page.submit();
+        page.submit();
 
-      expect(
-        browser.wait(protractor.ExpectedConditions.urlContains('/dashboard'), 5000)
-          .catch(() => {
-            return false;
-          })
-      ).toBeTruthy(`Url match could not succeed`);
-      expect(await page.getSnackbar().getText()).toEqual('Erfolgreich eingeloggt\nOK');
+        expect(
+          browser.wait(protractor.ExpectedConditions.urlContains('/dashboard'), 5000)
+            .catch(() => {
+              return false;
+            })
+        ).toBeTruthy(`Url match could not succeed`);
+        expect(await page.getSnackbar().getText()).toEqual('Erfolgreich eingeloggt\nOK');
+      });
     });
 
     describe('invalid', () => {
@@ -70,6 +77,24 @@ describe('Login Page', () => {
         page.submit();
 
         expect(await page.getLoginError().getText()).toEqual('Benutzername oder Passwort falsch');
+      });
+
+      it('password changed', async () => {
+        await page.setUsername(user.username);
+        await page.setPassword('oldPassword');
+
+        page.submit();
+
+        expect(await page.getLoginError().getText()).toEqual('Du hast dieses Passwort am 18.11.2020, 12:23Uhr geändert');
+      });
+
+      it('not activated', async () => {
+        await page.setUsername(user_lock.username);
+        await page.setPassword(user_lock.password);
+
+        page.submit();
+
+        expect(await page.accountActivationDialogExists()).toBeTruthy();
       });
     });
   });
