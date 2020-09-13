@@ -37,6 +37,7 @@ pipeline {
             '-p 34252:33060 ' +
             '--name protractor_db_build_' + build_number + ' ' +
             '--env MYSQL_ROOT_PASSWORD=password ' +
+            '--env MYSQL_ROOT_HOST=% ' +
             '--env MYSQL_DATABASE=anmeldesystem-api-protractor ' +
             '--env MYSQL_USER=user ' +
             '--env MYSQL_PASSWORD=password ' +
