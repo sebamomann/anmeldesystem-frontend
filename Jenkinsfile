@@ -33,13 +33,14 @@ pipeline {
           }
 
           sh 'docker run -d ' +
-            '-p 0.0.0.0:34251:3306 ' + // 0.0.0.0
-            '-p 0.0.0.0:34252:33060 ' +
+            '-p 34251:3306 ' + // 0.0.0.0
+            '-p 34252:33060 ' +
             '--name protractor_db_build_' + build_number + ' ' +
             '--env MYSQL_ROOT_PASSWORD=password ' +
             '--env MYSQL_DATABASE=anmeldesystem-api-protractor ' +
             '--env MYSQL_USER=user ' +
             '--env MYSQL_PASSWORD=password ' +
+            '--host 127.0.0.1 ' +
             '--network host ' +
             '--health-cmd=\'mysqladmin ping --silent\' ' +
             'mysql ' +
