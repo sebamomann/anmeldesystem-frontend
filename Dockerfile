@@ -30,7 +30,7 @@ RUN ./node_modules/.bin/webdriver-manager update --versions.chrome 85.0.4183.87
 COPY . .
 
 RUN npm run-script build:prod
-RUN ECHO $BACKEND_URL
+RUN echo $BACKEND_URL
 RUN cat ./src/assets/env.js
 RUN sed -i "s|http://localhost:3000|$BACKEND_URL|g" ./src/assets/env.js
 RUN cat ./src/assets/env.js
