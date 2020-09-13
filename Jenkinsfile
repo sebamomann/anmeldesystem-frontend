@@ -40,11 +40,10 @@ pipeline {
             '--env MYSQL_DATABASE=anmeldesystem-api-protractor ' +
             '--env MYSQL_USER=user ' +
             '--env MYSQL_PASSWORD=password ' +
-            '--host 127.0.0.1 ' +
             '--network host ' +
             '--health-cmd=\'mysqladmin ping --silent\' ' +
             'mysql ' +
-            'mysqld --default-authentication-plugin=mysql_native_password'
+            'mysqld --default-authentication-plugin=mysql_native_password && mysql -uroot -ppassword -P 34251 -h 127.0.0.1'
 
           waitUntil {
             "healthy" == sh(returnStdout: true,
