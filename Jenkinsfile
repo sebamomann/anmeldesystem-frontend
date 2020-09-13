@@ -55,7 +55,7 @@ pipeline {
             '--name anmeldesystem-backend-protractor_build_' + build_number + ' ' +
             '--env DB_USERNAME=root ' +
             '--env DB_PASSWORD=password ' +
-            '--env DB_HOST=protractor_db_build_' + build_number + ' ' +
+            '--env DB_HOST=localhost ' +
             '--env DB_PORT=34251 ' +
             '--env DB_DATABASE=anmeldesystem-api-protractor ' +
             '--env SALT_JWT=salt ' +
