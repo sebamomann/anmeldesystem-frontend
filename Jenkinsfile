@@ -27,21 +27,18 @@ pipeline {
       steps {
         script {
           try {
-            sh 'docker network create protractorNet_build_' + build_number
+            sh 'docker network create protractorNet'
           } catch (err) {
             echo err.getMessage()
           }
 
           sh 'docker run -d ' +
-            '-p 34251:3306 ' + // 0.0.0.0
-            '-p 34252:33060 ' +
             '--name protractor_db_build_' + build_number + ' ' +
             '--env MYSQL_ROOT_PASSWORD=password ' +
-            '--env MYSQL_ROOT_HOST=% ' +
             '--env MYSQL_DATABASE=anmeldesystem-api-protractor ' +
             '--env MYSQL_USER=user ' +
             '--env MYSQL_PASSWORD=password ' +
-            '--network bridge ' +
+            '--network protractorNet ' +
             '--health-cmd=\'mysqladmin ping --silent\' ' +
             'mysql ' +
             'mysqld --default-authentication-plugin=mysql_native_password'
@@ -56,7 +53,7 @@ pipeline {
             '--name anmeldesystem-backend-protractor_build_' + build_number + ' ' +
             '--env DB_USERNAME=root ' +
             '--env DB_PASSWORD=password ' +
-            '--env DB_HOST=localhost ' +
+            '--env DB_HOST=protractor_db_build_' + build_number + ' ' +
             '--env DB_PORT=3306 ' +
             '--env DB_DATABASE=anmeldesystem-api-protractor ' +
             '--env SALT_JWT=salt ' +
@@ -64,7 +61,7 @@ pipeline {
             '--env SALT_ENROLLMENT=salt ' +
             '--env DOMAIN=go-join.me ' +
             '--env NODE_ENV=protractor ' +
-            '--network bridge ' +
+            '--network protractorNet ' +
             '--health-cmd=\'curl localhost:3000/healthcheck || exit 1 \' ' +
             '--health-interval=2s ' +
             'anmeldesystem/anmeldesystem-backend:latest' // TODO pull first from server
@@ -80,7 +77,7 @@ pipeline {
     stage('Build Docker image') {
       steps {
         script {
-          image = docker.build("anmeldesystem/anmeldesystem-ui:build_" + build_number, "--build-arg BACKEND_URL=localhost:3000 -f Dockerfile .")
+          image = docker.build("anmeldesystem/anmeldesystem-ui:build_" + build_number, "--build-arg BACKEND_URL=anmeldesystem-backend-protractor_build_" + build_number + ":3000 -f Dockerfile .")
         }
       }
     }
