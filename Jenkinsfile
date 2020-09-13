@@ -33,7 +33,7 @@ pipeline {
           }
 
           sh 'docker run -d ' +
-            '-p 34251:3000 ' + // 0.0.0.0
+            '-p 34251:3306 ' + // 0.0.0.0
             '--name protractor_db_build_' + build_number + ' ' +
             '--env MYSQL_ROOT_PASSWORD=password ' +
             '--env MYSQL_DATABASE=anmeldesystem-api-protractor ' +
