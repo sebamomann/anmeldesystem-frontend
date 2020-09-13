@@ -38,7 +38,7 @@ pipeline {
             '--env MYSQL_DATABASE=anmeldesystem-api-protractor ' +
             '--env MYSQL_USER=user ' +
             '--env MYSQL_PASSWORD=password ' +
-            '--network protractorNet_build_' + build_number + ' ' +
+            '--network bridge ' +
             '--health-cmd=\'mysqladmin ping --silent\' ' +
             'mysql ' +
             'mysqld --default-authentication-plugin=mysql_native_password'
@@ -61,10 +61,10 @@ pipeline {
             '--env SALT_ENROLLMENT=salt ' +
             '--env DOMAIN=go-join.me ' +
             '--env NODE_ENV=protractor ' +
-            '--network protractorNet_build_' + build_number + ' ' +
+            '--network bridge ' +
             '--health-cmd=\'curl localhost:3000/healthcheck || exit 1 \' ' +
             '--health-interval=2s ' +
-            'anmeldesystem/anmeldesystem-backend:latest'
+            'anmeldesystem/anmeldesystem-backend:latest' // TODO pull first from server
 
           waitUntil {
             "healthy" == sh(returnStdout: true,
