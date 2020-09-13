@@ -43,7 +43,7 @@ pipeline {
             '--network host ' +
             '--health-cmd=\'mysqladmin ping --silent\' ' +
             'mysql ' +
-            'mysqld --default-authentication-plugin=mysql_native_password -u root -p password -P 34251 -h 127.0.0.1'
+            '/bin/bash -c "mysqld --default-authentication-plugin=mysql_native_password; mysql -u root -p password -P 34251 -h 127.0.0.1"'
 
           waitUntil {
             "healthy" == sh(returnStdout: true,
