@@ -21,7 +21,7 @@ export class EnrollmentPage {
     const loader = element(by.css('#loading-overlay'));
     const EC = protractor.ExpectedConditions;
 
-    return browser.wait(EC.invisibilityOf(loader), 1000);
+    return browser.wait(EC.invisibilityOf(loader), 10000);
   }
 
   public getName() {
@@ -77,6 +77,14 @@ export class EnrollmentPage {
     browser.wait(EC.visibilityOf(snackBar), 10000);
 
     return element(by.tagName('simple-snack-bar'));
+  }
+
+  public appointmentNotFoundCardExists() {
+    const until = protractor.ExpectedConditions;
+    const elm = element(by.id('appointment-not-found'));
+    browser.wait(until.presenceOf(elm), 10000);
+
+    return element(by.id('appointment-not-found')).isPresent();
   }
 
   public loginAndMailFormExists() {

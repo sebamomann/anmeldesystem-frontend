@@ -1,5 +1,5 @@
 <ng-container *ngIf="_done; else loadingBar">
-  <mat-card class="float error-card">
+  <mat-card class="float error-card" id="appointment-not-found">
     <img alt="anmeldesystem appointment not found robot icon" src="/assets/img/404.svg">
     <span> Ich konnte diesen Termin nicht finden!</span>
     <button [routerLink]="['/dashboard']"

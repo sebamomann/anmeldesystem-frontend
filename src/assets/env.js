@@ -3,5 +3,5 @@
 
   // Environment variables
   window["env"]["production"] = true;
-  window["env"]["API_URL"] = "http://localhost:34250/";
+  window["env"]["API_URL"] = "http://localhost:3000/";
 })(this);
