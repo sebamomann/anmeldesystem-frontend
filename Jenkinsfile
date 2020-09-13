@@ -33,6 +33,7 @@ pipeline {
           }
 
           sh 'docker run -d ' +
+            '-p 34251:3000 ' + // 0.0.0.0
             '--name protractor_db_build_' + build_number + ' ' +
             '--env MYSQL_ROOT_PASSWORD=password ' +
             '--env MYSQL_DATABASE=anmeldesystem-api-protractor ' +
@@ -54,7 +55,7 @@ pipeline {
             '--env DB_USERNAME=root ' +
             '--env DB_PASSWORD=password ' +
             '--env DB_HOST=protractor_db_build_' + build_number + ' ' +
-            '--env DB_PORT=3306 ' +
+            '--env DB_PORT=34251 ' +
             '--env DB_DATABASE=anmeldesystem-api-protractor ' +
             '--env SALT_JWT=salt ' +
             '--env SALT_MAIL=salt ' +
