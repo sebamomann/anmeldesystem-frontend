@@ -38,7 +38,7 @@ pipeline {
           }
 
           sh 'docker run -d ' +
-            '--name ' dbName ' ' +
+            '--name ' + dbName + ' ' +
             '--env MYSQL_ROOT_PASSWORD=password ' +
             '--env MYSQL_DATABASE=anmeldesystem-api-protractor ' +
             '--env MYSQL_USER=user ' +
