@@ -3,6 +3,11 @@ def branch_name = "${env.BRANCH_NAME}"
 def github_token = "${env.GITHUB_STATUS_ACCESS_TOKEN}"
 def build_number = "${env.BUILD_NUMBER}"
 
+def dbName = 'protractor_db_jb' + build_number
+def netName = 'protractor_net_jb' + build_number
+def apiName = 'protractor_backend_jb' + build_number
+
+
 pipeline {
   agent any
 
@@ -27,13 +32,13 @@ pipeline {
       steps {
         script {
           try {
-            sh 'docker network create protractorNet'
+            sh 'docker network create ' + netName
           } catch (err) {
             echo err.getMessage()
           }
 
           sh 'docker run -d ' +
-            '--name protractor_db_build_' + build_number + ' ' +
+            '--name ' dbName ' ' +
             '--env MYSQL_ROOT_PASSWORD=password ' +
             '--env MYSQL_DATABASE=anmeldesystem-api-protractor ' +
             '--env MYSQL_USER=user ' +
@@ -45,16 +50,14 @@ pipeline {
 
           waitUntil {
             "healthy" == sh(returnStdout: true,
-              script: "docker inspect protractor_db_build_" + build_number + " --format=\"{{ .State.Health.Status }}\"").trim()
+              script: "docker inspect " + dbName + " --format=\"{{ .State.Health.Status }}\"").trim()
           }
 
           sh 'docker run -d ' +
-            '-p 34250:3000 ' + // 0.0.0.0
-            '--name anmeldesystem-backend-protractor_build_' + build_number + ' ' +
-            '--hostname protractorbackend ' +
+            '--name ' + apiName + ' ' +
             '--env DB_USERNAME=root ' +
             '--env DB_PASSWORD=password ' +
-            '--env DB_HOST=protractor_db_build_' + build_number + ' ' +
+            '--env DB_HOST=' + dbName + ' ' +
             '--env DB_PORT=3306 ' +
             '--env DB_DATABASE=anmeldesystem-api-protractor ' +
             '--env SALT_JWT=salt ' +
@@ -69,7 +72,7 @@ pipeline {
 
           waitUntil {
             "healthy" == sh(returnStdout: true,
-              script: "docker inspect anmeldesystem-backend-protractor_build_" + build_number + " --format=\"{{ .State.Health.Status }}\"").trim()
+              script: "docker inspect " + apiName + " --format=\"{{ .State.Health.Status }}\"").trim()
           }
         }
       }
@@ -78,7 +81,10 @@ pipeline {
     stage('Build Docker image') {
       steps {
         script {
-          image = docker.build("anmeldesystem/anmeldesystem-ui:build_" + build_number, "--build-arg BACKEND_URL=http://anmeldesystem-backend-protractor_build_" + build_number + ":3000 --network protractorNet -f Dockerfile .")
+          image = docker.build("anmeldesystem/anmeldesystem-ui:jb" + build_number,
+            "--build-arg BACKEND_URL=http://" + apiName + ":3000 " +
+              "--network " + netName + " " +
+              "-f Dockerfile .")
         }
       }
     }
@@ -116,19 +122,19 @@ pipeline {
     always {
       script {
         try {
-          sh 'docker container rm anmeldesystem-backend-protractor_build_' + build_number + ' -f'
+          sh 'docker container rm protractor_backend_jb' + build_number + ' -f'
         } catch (err) {
           echo err.getMessage()
         }
 
         try {
-          sh 'docker container rm protractor_db_build_' + build_number + ' -f'
+          sh 'docker container rm protractor_db_jb' + build_number + ' -f'
         } catch (err) {
           echo err.getMessage()
         }
 
         try {
-          sh 'docker network rm protractorNet_build_' + build_number
+          sh 'docker network rm protractor_net_jb' + build_number
         } catch (err) {
           echo err.getMessage()
         }
