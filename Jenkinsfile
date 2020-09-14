@@ -138,6 +138,12 @@ pipeline {
         } catch (err) {
           echo err.getMessage()
         }
+
+        try {
+          sh 'docker image rm anmeldesystem/anmeldesystem-ui:jb' + build_number + ' -f'
+        } catch (err) {
+          echo err.getMessage()
+        }
       }
     }
     success {
