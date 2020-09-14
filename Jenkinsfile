@@ -31,9 +31,11 @@ pipeline {
 
     stage('pull required images') {
       steps {
-        docker.withRegistry('http://localhost:34015') {
-          backendImageLatest = docker.image('anmeldesystem/anmeldesystem-backend:latest')
-          backendImageLatest.pull()
+        script {
+          docker.withRegistry('http://localhost:34015') {
+            backendImageLatest = docker.image('anmeldesystem/anmeldesystem-backend:latest')
+            backendImageLatest.pull()
+          }
         }
       }
     }
