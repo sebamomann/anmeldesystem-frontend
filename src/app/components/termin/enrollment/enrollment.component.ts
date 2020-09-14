@@ -369,7 +369,7 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
   private parseOutputIntoForm() {
     if (this.finalEnrollment.creator) {
       if (this.isEdit) {
-        this.getName().setValue(this.finalEnrollment.creator.name);
+        this.getName().setValue(this.finalEnrollment.creator.name); // TODO TESTS FOR #130
       } else {
         this.getName().setValue(this.authenticationService.currentUserValue.name);
       }
