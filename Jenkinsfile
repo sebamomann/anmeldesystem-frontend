@@ -80,7 +80,7 @@ pipeline {
             '--network ' + netName + ' ' +
             '--health-cmd=\'curl localhost:3000/healthcheck || exit 1 \' ' +
             '--health-interval=2s ' +
-            'anmeldesystem/anmeldesystem-backend:latest'
+            'localhost:34015/anmeldesystem/anmeldesystem-backend:latest'
 
           waitUntil {
             "healthy" == sh(returnStdout: true,
