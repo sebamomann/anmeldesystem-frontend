@@ -155,6 +155,9 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     }
 
     if (this.isEdit) {
+      if (this.finalEnrollment.creator) {
+        delete this.finalEnrollment.name;
+      }
       this.sendEnrollmentRequest('update');
     } else {
       this.sendEnrollmentRequest('create');
@@ -365,17 +368,23 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
 
   private parseOutputIntoForm() {
     if (this.finalEnrollment.creator) {
-      this.getName().setValue(this.authenticationService.currentUserValue.name);
+      if (this.isEdit) {
+        this.getName().setValue(this.finalEnrollment.creator.name);
+      } else {
+        this.getName().setValue(this.authenticationService.currentUserValue.name);
+      }
     } else {
-      if (this.isSelfEnrollment) {
+      if (this.isSelfEnrollment && !this.isEdit) {
         if (this.finalEnrollment.name !== this.authenticationService.currentUserValue.name) {
           this.isSelfEnrollment = false;
-          console.log(this.authenticationService.currentUserValue.name);
           this.form_main.get('name').setValue(this.authenticationService.currentUserValue.name);
         } else {
           this.form_main.get('name').setValue(this.finalEnrollment.name);
         }
       } else {
+        if (this.isEdit && this.isSelfEnrollment) {
+          this.changeSelfEnrollment();
+        }
         this.form_main.get('name').setValue(this.finalEnrollment.name);
       }
     }
