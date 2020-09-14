@@ -7,6 +7,7 @@ def dbName = 'protractor_db_jb' + build_number
 def netName = 'protractor_net_jb' + build_number
 def apiName = 'protractor_backend_jb' + build_number
 
+def backendImageLatest
 
 pipeline {
   agent any
@@ -24,6 +25,15 @@ pipeline {
       steps {
         script {
           updateStatus("pending")
+        }
+      }
+    }
+
+    stage('pull required images') {
+      steps {
+        docker.withRegistry('http://localhost:34015') {
+          backendImageLatest = docker.image('anmeldesystem/anmeldesystem-backend:latest')
+          backendImageLatest.pull()
         }
       }
     }
@@ -68,7 +78,7 @@ pipeline {
             '--network ' + netName + ' ' +
             '--health-cmd=\'curl localhost:3000/healthcheck || exit 1 \' ' +
             '--health-interval=2s ' +
-            'anmeldesystem/anmeldesystem-backend:latest' // TODO pull first from server
+            'anmeldesystem/anmeldesystem-backend:latest'
 
           waitUntil {
             "healthy" == sh(returnStdout: true,
