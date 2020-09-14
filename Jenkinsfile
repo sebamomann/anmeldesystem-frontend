@@ -51,7 +51,7 @@ pipeline {
           sh 'docker run -d ' +
             '-p 34250:3000 ' + // 0.0.0.0
             '--name anmeldesystem-backend-protractor_build_' + build_number + ' ' +
-            '--hostname anmeldesystem-backend-protractor_build_' + build_number + ' ' +
+            '--hostname protractorbackend ' +
             '--env DB_USERNAME=root ' +
             '--env DB_PASSWORD=password ' +
             '--env DB_HOST=protractor_db_build_' + build_number + ' ' +
@@ -78,7 +78,7 @@ pipeline {
     stage('Build Docker image') {
       steps {
         script {
-          image = docker.build("anmeldesystem/anmeldesystem-ui:build_" + build_number, "--build-arg BACKEND_URL=http://anmeldesystem-backend-protractor_build_" + build_number +  ":3000 -f Dockerfile .")
+          image = docker.build("anmeldesystem/anmeldesystem-ui:build_" + build_number, "--build-arg BACKEND_URL=http://protractorbackend:3000 -f Dockerfile .")
         }
       }
     }
