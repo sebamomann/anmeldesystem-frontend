@@ -12,6 +12,8 @@ describe('Enrollment Page - Unknown user', () => {
       });
     page.spinnerGone();
 
+    // TODO PRINT ERROR LOGS
+
     expect(await page.appointmentNotFoundCardExists()).toBeTruthy();
   });
 
@@ -159,10 +161,14 @@ describe('Enrollment Page - Unknown user', () => {
   });
 
   afterEach(async () => {
-    // Assert that there are no errors emitted from the browser
-    // const logs = await browser.manage().logs().get(logging.Type.BROWSER);
-    // expect(logs).not.toContain(jasmine.objectContaining({
-    //   level: logging.Level.SEVERE,
-    // } as logging.Entry));
+    browser.manage().logs().get('browser').then(browserLogs => {
+      // browserLogs is an array of objects with level and message fields
+      browserLogs.forEach(log => {
+        if (log.level.value > 900) { // it's an error log
+          console.log('Browser console error!');
+          console.log(log.message);
+        }
+      });
+    });
   });
 });
