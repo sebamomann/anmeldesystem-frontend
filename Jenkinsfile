@@ -77,7 +77,7 @@ pipeline {
     stage('Build Docker image') {
       steps {
         script {
-          image = docker.build("anmeldesystem/anmeldesystem-ui:build_" + build_number, "--build-arg BACKEND_URL=http://127.0.0.1:34250 -f Dockerfile .")
+          image = docker.build("anmeldesystem/anmeldesystem-ui:build_" + build_number, "--build-arg BACKEND_URL=http://127.0.0.1:3000 -f Dockerfile .")
         }
       }
     }
