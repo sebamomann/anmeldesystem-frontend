@@ -2,7 +2,7 @@ import {Component, NgModule, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {IEnrollmentModel} from '../../models/IEnrollment.model';
 import {IAppointmentModel} from '../../models/IAppointment.model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {animate, query, state, style, transition, trigger} from '@angular/animations';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import {AuthenticationService} from '../../services/authentication.service';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {SEOService} from '../../_helper/_seo.service';
@@ -28,14 +28,6 @@ import {LoadingService} from '../../services/loading.service';
       transition('* => void', [
         animate(1000, style({opacity: 1})),
         animate(500, style({opacity: 0}))
-      ])
-    ]),
-    trigger('remove', [
-      transition('* => void', [
-        query('.layer', [
-          style({opacity: '1', transform: 'scale(1.0)'}),
-          animate(500, style({opacity: '0', transform: 'scale(1.1)'}))
-        ]),
       ])
     ]),
   ],
