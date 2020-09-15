@@ -73,9 +73,9 @@ pipeline {
             '--env DB_HOST=' + dbName + ' ' +
             '--env DB_PORT=3306 ' +
             '--env DB_DATABASE=anmeldesystem-api-protractor ' +
-            '--env SALT_JWT=salt ' +
-            '--env SALT_MAIL=salt ' +
-            '--env SALT_ENROLLMENT=salt ' +
+            '--env SALT_JWT=mysalt ' +
+            '--env SALT_MAIL=mysalt ' +
+            '--env SALT_ENROLLMENT=mysalt ' +
             '--env DOMAIN=go-join.me ' +
             '--env NODE_ENV=protractor ' +
             '--network ' + netName + ' ' +
