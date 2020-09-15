@@ -69,6 +69,11 @@ export class AuthInterceptor implements HttpInterceptor {
     if (error.status === 400) {
       // Show message
     } else if (error.status === 401 && !request.url.includes('/login')) {
+      if (request.url.includes('/auth/token')) {
+        this.logout();
+        window.location.href = '/dashboard';
+      }
+
       return this.refreshToken().pipe(
         switchMap(() => {
           request = this.addAuthHeader(request);
