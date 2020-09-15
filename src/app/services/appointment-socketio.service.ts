@@ -108,11 +108,7 @@ export class AppointmentSocketioService {
   }
 
   public subscribeToAppointmentUpdates(link: string) {
-    console.log(this.subscription);
-    console.log(link);
-    console.log(this.subscription !== link);
     if (this.subscription && this.subscription !== link) { // if not first
-      console.log('RESET');
       this.appointmentProvider.reset();
     }
 

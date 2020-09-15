@@ -201,6 +201,5 @@
 </ng-container>
 
 <ng-template #loadingTemplate>
-  <app-loading *ngIf="!loaded" [@remove]></app-loading>
   <app-fetch-appointment [done]="loaded"></app-fetch-appointment>
 </ng-template>

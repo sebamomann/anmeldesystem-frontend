@@ -21,22 +21,6 @@
   </div>
 </div>
 
-<div *ngIf="!refreshingDone"
-     [@appear]
-     [@remove] class="refresh-token-overlay">
-  <div class="hexagon-wrapper" id="hex1">
-    <div class="hexagon" id="color1">
-      <div class="span-wrapper">
-        <span>
-<!--          NEEDED BECAUSE OF CSS NOT APPLYING OTHERWISE-->
-          <ng-container *ngIf="refreshing">Deine Authentifizierung wird automatisch erneuert. Das kann einen Moment dauern.</ng-container>
-          <ng-container *ngIf="!refreshing">Erledigt</ng-container>
-        </span>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="svg-wrapper">
   <svg preserveAspectRatio="xMidYMid meet" version="1.0"
        viewBox="0 0 100.000000 100.000000"
@@ -74,3 +58,6 @@
   <span>&copy; 2018 - {{ now }} Seba Momann</span>
   <span>Version {{version}}</span>
 </footer>
+
+<app-loading>
+</app-loading>

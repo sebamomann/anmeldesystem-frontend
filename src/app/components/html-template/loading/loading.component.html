@@ -1,4 +1,4 @@
-<div class="layer" id="loading-overlay">
+<div *ngIf="show" class="layer" id="loading-overlay">
   <app-hexagon-loader [message]="message">
   </app-hexagon-loader>
 </div>

@@ -8,6 +8,7 @@ import {PwaDialogComponent} from './dialogs/pwa-dialog/pwa-dialog.component';
 import {MatDialog} from '@angular/material';
 import {animate, query, stagger, style, transition, trigger} from '@angular/animations';
 import {MonthnamePipe} from '../pipes/monthname.pipe';
+import {LoadingService} from '../services/loading.service';
 
 const version = require('../../../package.json').version;
 
@@ -65,7 +66,7 @@ export class AppComponent {
 
   constructor(private router: Router, @Inject(WINDOW) private window: Window,
               private authenticationService: AuthenticationService, public pwa: PwaService, public dialog: MatDialog,
-              private monthnamePipe: MonthnamePipe) {
+              private monthnamePipe: MonthnamePipe, private loadingService: LoadingService) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         (window as any).ga('set', 'page', event.urlAfterRedirects);
@@ -104,13 +105,9 @@ export class AppComponent {
       .refreshing$
       .subscribe((val) => {
         if (val) {
-          this.refreshing = true;
-          this.refreshingDone = false;
+          this.loadingService.messageSec = 'Deine Authentifizierung wird automatisch erneuert. Das kann einen Moment dauern.';
         } else {
-          this.refreshing = false;
-          setTimeout(() => {
-            this.refreshingDone = true;
-          }, 500);
+          this.loadingService.messageSec = undefined;
         }
       });
   }

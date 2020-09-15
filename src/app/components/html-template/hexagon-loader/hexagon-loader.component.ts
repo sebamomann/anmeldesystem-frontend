@@ -8,6 +8,7 @@ import {Component, Input, OnInit} from '@angular/core';
 export class HexagonLoaderComponent implements OnInit {
 
   @Input() message: string;
+  @Input() reverse: boolean;
 
   constructor() {
   }

@@ -15,6 +15,7 @@ import {MatSnackBar} from '@angular/material';
 import {AppointmentStatus} from './appointment.status';
 import {EnrollmentListComponent} from './enrollment/enrollment-list/enrollment-list.component';
 import {EnrollmentModel} from '../../models/EnrollmentModel.model';
+import {LoadingService} from '../../services/loading.service';
 
 @Component({
   selector: 'app-appointment',
@@ -83,7 +84,10 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
               private appointmentProvider: AppointmentProvider, public settingsService: SettingsService,
-              private appointmentService: AppointmentService, private snackBar: MatSnackBar, private appointmentStatus: AppointmentStatus) {
+              private appointmentService: AppointmentService, private snackBar: MatSnackBar, private appointmentStatus: AppointmentStatus,
+              private loadingService: LoadingService) {
+    this.loadingService.message = '';
+
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
       this.editId = params.editId;
@@ -133,7 +137,6 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.appointmentSocketioService
       .setupSocketConnection()
       .then(() => {
-        console.log('SUB TO ' + this.link);
         this.appointmentSocketioService.subscribeToAppointmentUpdates('' + this.link);
       });
 
@@ -159,10 +162,9 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.appointment$$ = this.appointment$
       .subscribe(
         (sAppointment) => {
-          console.log(sAppointment);
-
           if (sAppointment === null) {
             this.loaded = true;
+            this.loadingService.message = undefined;
           } else if (sAppointment !== undefined) {
             // TODO could be cleaner ...
             if (sAppointment.reference.indexOf('ENROLLED') === -1
@@ -203,7 +205,9 @@ export class AppointmentComponent implements OnInit, OnDestroy {
             this.splitEnrollments(sAppointment);
 
             this.loaded = true;
+            this.loadingService.message = undefined;
           } else {
+            this.loadingService.message = '';
             this.loaded = false;
           }
         });

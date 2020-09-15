@@ -15,6 +15,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {MonthnamePipe} from './pipes/monthname.pipe';
 import {AuthenticationService} from './services/authentication.service';
 import {AuthInterceptor} from './_helper/interceptor/refreshToken.interceptor';
+import {LoadingModule} from './components/html-template/loading/loading.module';
 
 registerLocaleData(localeDe);
 
@@ -32,6 +33,7 @@ registerLocaleData(localeDe);
     MatProgressSpinnerModule,
     MatDialogModule,
     MatButtonModule,
+    LoadingModule,
   ],
   providers: [WINDOW_PROVIDERS,
     AuthenticationService,
