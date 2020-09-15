@@ -3,9 +3,10 @@ def branch_name = "${env.BRANCH_NAME}"
 def github_token = "${env.GITHUB_STATUS_ACCESS_TOKEN}"
 def build_number = "${env.BUILD_NUMBER}"
 
-def dbName = 'protractor_db_jb' + build_number
-def netName = 'protractor_net_jb' + build_number
-def apiName = 'protractor_backend_jb' + build_number
+def tagName = 'jb_' + branch_name + "_" + build_number
+def dbName = 'protractor_db_' + tagName
+def netName = 'protractor_net_' + tagName
+def apiName = 'protractor_backend_' + tagName
 
 def backendImageLatest
 
@@ -93,7 +94,7 @@ pipeline {
     stage('Build Docker image') {
       steps {
         script {
-          image = docker.build("anmeldesystem/anmeldesystem-ui:jb" + build_number,
+          image = docker.build("anmeldesystem/anmeldesystem-ui:" + tagName,
             "--build-arg BACKEND_URL=http://" + apiName + ":3000 " +
               "--network " + netName + " " +
               "-f Dockerfile .")
@@ -134,25 +135,25 @@ pipeline {
     always {
       script {
         try {
-          sh 'docker container rm protractor_backend_jb' + build_number + ' -f'
+          sh 'docker container rm protractor_backend_' + tagName + ' -f'
         } catch (err) {
           echo err.getMessage()
         }
 
         try {
-          sh 'docker container rm protractor_db_jb' + build_number + ' -f'
+          sh 'docker container rm protractor_db_' + tagName + ' -f'
         } catch (err) {
           echo err.getMessage()
         }
 
         try {
-          sh 'docker network rm protractor_net_jb' + build_number
+          sh 'docker network rm protractor_net_' + tagName
         } catch (err) {
           echo err.getMessage()
         }
 
         try {
-          sh 'docker image rm anmeldesystem/anmeldesystem-ui:jb' + build_number + ' -f'
+          sh 'docker image rm anmeldesystem/anmeldesystem-ui:' + tagName + ' -f'
         } catch (err) {
           echo err.getMessage()
         }
