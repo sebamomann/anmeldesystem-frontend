@@ -71,7 +71,6 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public updatingAppointmentInBackground = false;
 
   public showAdditions = true;
-  public update = false;
   private manualAppointmentReloadCount = 0;
   private hasUpdate$$: Subscription;
   private updating$$: Subscription;
@@ -143,10 +142,6 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.appointment$ = this.appointmentProvider.appointment$;
 
     this.listenForChange();
-
-    setTimeout(() => {
-      this.update = true;
-    }, 2000);
   }
 
   ngOnDestroy() {
