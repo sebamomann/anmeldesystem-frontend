@@ -47,6 +47,8 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
   @Input()
   public appointment: IAppointmentModel;
   @Input()
+  public showAdditions = true;
+  @Input()
   public isMain = false; // TODO change to is first
   public enrollments$: BehaviorSubject<IEnrollmentModel[]> = new BehaviorSubject<IEnrollmentModel[]>(undefined);
   public enrollments_filtered$: BehaviorSubject<IEnrollmentModel[]> = new BehaviorSubject<IEnrollmentModel[]>(undefined);

@@ -2,31 +2,33 @@
   <div *ngIf="this._enrollments.length > 0 || getNumberOfActiveFilter(true) > 0;"
        [ngClass]="isMain ? '' : 'distance'"
        class="enrollment-list">
-    <div class="header">
-      <h2 class="headline medium">
+    <div class="managing-bar">
+      <mat-card class="title-bar semi-slim">
         {{subListTitle}}
         <ng-container *ngIf="!appointment.hidden">
-          [{{ this._enrollments.length }}{{ appointment.maxEnrollments !== null
+          [{{ this.enrollments$.getValue().length }}{{ appointment.maxEnrollments !== null
         && isMain ? '/' + appointment.maxEnrollments : '' }}]
         </ng-container>
         <span *ngIf="getNumberOfActiveFilter(true) > 0">
-        [<mat-icon>filter_list</mat-icon>:{{ this._enrollments.length }}]
-      </span>
-      </h2>
-    </div>
+          [<mat-icon>filter_list</mat-icon>:{{ this._enrollments.length }}]
+        </span>
+      </mat-card>
 
-    <!--    <div class="list-style">-->
-    <!--      <mat-icon (click)="list = true">list</mat-icon>-->
-    <!--      <mat-icon (click)="list = false">view_module</mat-icon>-->
-    <!--    </div>-->
+      <!--    <div class="list-style">-->
+      <!--      <mat-icon (click)="list = true">list</mat-icon>-->
+      <!--      <mat-icon (click)="list = false">view_module</mat-icon>-->
+      <!--    </div>-->
 
-    <mat-icon (click)="_openFilterDialog()"
-              class="filter-open"
+      <button (click)="_openFilterDialog()"
               matBadge="{{getNumberOfActiveFilter(true) > 0 ? getNumberOfActiveFilter(true) : ''}}"
               matBadgeColor="info"
-              matBadgeSize="small">
-      filter_list
-    </mat-icon>
+              mat-raised-button
+              matBadgeSize="medium">
+        <mat-icon>
+          filter_list
+        </mat-icon>
+      </button>
+    </div>
 
     <mat-accordion *ngIf="this._enrollments.length > 0" [@listAnimation]>
       <ng-container *ngFor="let enrollment of _enrollments">
@@ -50,7 +52,7 @@
               <span class="separator small colored high"></span>
               <span class="comment-block"> {{ enrollment.comment }} </span>
             </ng-container>
-            <div *ngIf="appointment.additions.length > 0"
+            <div *ngIf="appointment.additions.length > 0 && showAdditions"
                  class="addition-list">
               <span class="separator light small high">
               </span>

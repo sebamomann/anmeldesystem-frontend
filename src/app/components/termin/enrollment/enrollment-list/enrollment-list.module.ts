@@ -4,6 +4,7 @@ import {EnrollmentListComponent} from './enrollment-list.component';
 import {
   MatBadgeModule,
   MatButtonModule,
+  MatCardModule,
   MatCheckboxModule,
   MatDialogModule,
   MatExpansionModule,
@@ -55,6 +56,7 @@ import {LoadingDisableModule} from '../../../../directives/loading-disable/loadi
     RouterModule,
     MatSelectModule,
     LoadingDisableModule,
+    MatCardModule,
   ],
   entryComponents: [
     FilterDialogComponent,

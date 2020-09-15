@@ -68,14 +68,15 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public showEnrollmentHint = false;
   public showEnrollmentHintForceHide = false;
   public updatingAppointmentInBackground = false;
-  private manualAppointmentReloadCount = 0;
 
+  public showAdditions = true;
+  public update = false;
+  private manualAppointmentReloadCount = 0;
   private hasUpdate$$: Subscription;
   private updating$$: Subscription;
   private websocketSubscriptionValid$$: Subscription;
   private websocketSubscriptionRetryCount$$: Subscription;
   private appointment$$: Subscription;
-
   private editId: string;
   private editOperation: string;
 
@@ -139,6 +140,10 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.appointment$ = this.appointmentProvider.appointment$;
 
     this.listenForChange();
+
+    setTimeout(() => {
+      this.update = true;
+    }, 2000);
   }
 
   ngOnDestroy() {
@@ -227,6 +232,15 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.showEnrollmentHint = false;
     this.showEnrollmentHintForceHide = true;
     this.appointmentService.closeEnrollmentHint(this.link);
+  }
+
+  public toggleShowAdditions() {
+    this.showAdditions = !this.showAdditions;
+  }
+
+  scroll(val: string) {
+    const el = document.getElementById(val);
+    el.scrollIntoView({behavior: 'smooth'});
   }
 
   private splitEnrollments(appointment: IAppointmentModel) {

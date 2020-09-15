@@ -489,10 +489,16 @@ a {
 }
 
 mat-card {
-  max-width: $max-width;
-  margin: 0 auto 30px;
+  max-width: calc(#{$max-width} - 32px);
+  margin: 0 auto 20px;
   background-color: white !important;
   padding: 16px;
+
+  &.title-bar {
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.25em !important;
+  }
 
   mat-card-title {
     color: $secondary;
@@ -527,8 +533,12 @@ mat-card {
   }
 
   &.slim {
-    padding: 10px 16px;
+    padding: 8px 16px;
     font-size: 13px;
+  }
+
+  &.semi-slim {
+    padding: 12px 16px;
   }
 
   &.split,

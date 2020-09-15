@@ -8,7 +8,6 @@
 }
 
 :host ::ng-deep .appointment-data {
-
 }
 
 .notification-wrapper {
@@ -39,6 +38,11 @@
   }
 }
 
+.additional-information {
+  display: block;
+  width: 100%;
+}
+
 @keyframes comeUp {
   0% {
     transform: scale(0.25);
@@ -53,9 +57,15 @@
   }
 }
 
+.head-wrapper {
+}
+
+.information-wrapper {
+}
+
 
 /* GLOBAL */
-.enrollment-list {
+::ng-deep .enrollment-list {
   padding: 0;
   position: relative;
   background-color: transparent;
@@ -71,13 +81,61 @@
   }
 }
 
+.managing-bar {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-gap: 10px;
+  align-items: center;
+  margin: 0 auto 20px;
+
+  button {
+    height: 100%;
+    min-width: unset;
+  }
+
+  .enrollment-counter {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 7.5%;
+
+    div {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      vertical-align: middle;
+      align-items: center;
+
+      &:not(:last-of-type) {
+        font-size: 13px;
+        color: #707070;
+
+        mat-icon {
+          @include md-icon-size(1.5em);
+        }
+      }
+
+      &:last-of-type {
+        font-weight: bolder;
+      }
+    }
+  }
+
+  & > mat-card {
+    margin: 0;
+  }
+}
+
 
 @media all and (min-width: 1024px) {
-  ::ng-deep .appointment-data-wrapper {
-    vertical-align: top;
-    width: 50% !important;
-    display: inline-block;
+  .wrapper {
+    display: flex;
+    flex-wrap: wrap;
 
-    margin: 0 auto !important;
+    .masonry-item {
+      width: calc(50% - 25px);
+      margin: 0 auto;
+    }
+  }
+
+  ::ng-deep .appointment-data-wrapper {
   }
 }
