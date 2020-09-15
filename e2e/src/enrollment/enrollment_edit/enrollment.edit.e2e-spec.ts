@@ -1,11 +1,18 @@
 import {browser, protractor} from 'protractor';
 import {EnrollmentEditPage} from './enrollment.edit.po';
-import {EnrollmentPage} from '../enrollment.po';
+
+const crypto = require('crypto');
+
+const salt = 'mysalt';
 
 describe('Enrollment Edit Page', () => {
+  const appointmentLink = 'protractorEnrollEdit';
+
+  let page: EnrollmentEditPage;
+
   describe('Faulty navigation', () => {
     it('appointment not found', async () => {
-      const page = new EnrollmentEditPage('unknownAppointment', 'any');
+      page = new EnrollmentEditPage('unknownAppointment', 'any');
       browser.ignoreSynchronization = true;
       await browser.get('/enrollment?a=unknownAppointment').then(() => {
       }).catch(() => {
@@ -16,7 +23,7 @@ describe('Enrollment Edit Page', () => {
     });
 
     it('enrolment not found', async () => {
-      const page = new EnrollmentEditPage('protractorEnrollEdit', 'any');
+      page = new EnrollmentEditPage('protractorEnrollEdit', 'any');
       browser.ignoreSynchronization = true;
       await browser.get('/enrollment?a=protractorEnrollEdit&e=any').then(() => {
       }).catch(() => {
@@ -27,156 +34,274 @@ describe('Enrollment Edit Page', () => {
     });
   });
 
-  describe('Main - User Enrollment', () => {
-    const appointmentLink = 'protractorEnrollEdit';
+  describe('Main', () => {
+    describe('user Enrollment', () => {
+      describe('as enrollment creator', () => {
+        const enrollmentIdUser = 'bfd95241-8b2e-4b43-b3b4-bd1e39f925c1';
 
-    let page: EnrollmentEditPage;
+        const user_enroll_edit = {
+          name: 'User Enroll Edit',
+          username: 'user_enroll_edit'
+        };
 
-    describe('As enrollment creator', () => {
-      const enrollmentIdUser = 'bfd95241-8b2e-4b43-b3b4-bd1e39f925c1';
+        const userEnrollmentValues = {
+          name: user_enroll_edit.name,
+          comment: 'my comment',
+        };
 
-      const user_enroll_edit = {
-        name: 'User Enroll Edit',
-        username: 'user_enroll_edit'
-      };
-
-      beforeEach(async () => {
-        page = new EnrollmentEditPage(appointmentLink, enrollmentIdUser);
-        browser.ignoreSynchronization = true;
-
-        // USER MANAGEMENT
-        await page.logout();
-        await page.login(user_enroll_edit.username);
-
-        // APPOINTMENT PREPARATION
-        await browser.get('/enroll?a=' + appointmentLink); // NEEDED TO REMOVE "PINNED" Snackbar
-        page.spinnerGone();
-
-        await page.navigateTo();
-      });
-
-      describe('valid form attributes', () => {
         beforeEach(async () => {
-          await expect(page.getName().isEnabled()).toBe(false);
-          await expect(page.getSubmit().isEnabled()).toBe(true);
-          await expect((await page.creatorErrorExists())).toBeFalsy();
+          page = new EnrollmentEditPage(appointmentLink, enrollmentIdUser);
+          browser.ignoreSynchronization = true;
+
+          // USER MANAGEMENT
+          await page.logout();
+          await page.login(user_enroll_edit.username);
+
+          // APPOINTMENT PREPARATION
+          await browser.get('/enroll?a=' + appointmentLink); // NEEDED TO REMOVE "PINNED" Snackbar
+          page.spinnerGone();
+
+          await page.navigateTo();
         });
 
-        it('valid form values', async () => {
-          expect(await page.getName().getAttribute('value')).toEqual(user_enroll_edit.name);
-          expect(await page.getComment().getAttribute('value')).toEqual('my comment');
-        });
-
-        describe('edit comment - send', () => {
+        describe('valid form attributes', () => {
           beforeEach(async () => {
-            await page.setComment('edited comment by enrollment creator');
-            page.submit();
+            await expect(page.getName().isEnabled()).toBe(false);
+            await expect(page.getSubmit().isEnabled()).toBe(true);
+            await expect((await page.creatorErrorExists())).toBeFalsy();
           });
 
-          it('should complete edit', async () => {
-            expect(
-              browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
-                .catch(() => {
-                  return false;
-                })
-            ).toBeTruthy(`Url match could not succeed`);
-            expect(await page.getSnackbar().getText()).toEqual('Erfolgreich bearbeitet');
+          it('valid form values', async () => {
+            expect(await page.getName().getAttribute('value')).toEqual(userEnrollmentValues.name);
+            expect(await page.getComment().getAttribute('value')).toEqual(userEnrollmentValues.comment);
+          });
+
+          describe('edit comment - send', () => {
+            beforeEach(async () => {
+              await page.setComment(userEnrollmentValues.comment + ' edited by enrollment creator');
+              page.submit();
+            });
+
+            it('should complete edit', async () => {
+              expect(
+                browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
+                  .catch(() => {
+                    return false;
+                  })
+              ).toBeTruthy(`Url match could not succeed`);
+              expect(await page.getSnackbar().getText()).toEqual('Erfolgreich bearbeitet');
+            });
           });
         });
       });
-    });
 
-    describe('As different user', () => {
-      const enrollmentIdUser2 = '3554e58f-5a31-47b7-aa52-378ccdc68537';
+      describe('as different user', () => {
+        const enrollmentIdUser2 = '3554e58f-5a31-47b7-aa52-378ccdc68537';
 
-      const user_enroll_edit_2 = {
-        name: 'User Enroll Edit 2',
-        username: 'user_enroll_edit2'
-      };
+        const user_enroll_edit_2 = {
+          name: 'User Enroll Edit 2',
+          username: 'user_enroll_edit2'
+        };
 
-      const creator_enroll_edit = {
-        name: 'Creator Enroll Edit',
-        username: 'creator_enroll_edit'
-      };
+        const user2EnrollmentValues = {
+          name: user_enroll_edit_2.name,
+          comment: 'my comment',
+        };
 
-      beforeEach(async () => {
-        page = new EnrollmentEditPage(appointmentLink, enrollmentIdUser2);
-        browser.ignoreSynchronization = true;
+        const creator_enroll_edit = {
+          name: 'Creator Enroll Edit',
+          username: 'creator_enroll_edit'
+        };
 
-        // USER MANAGEMENT
-        await page.logout();
-        await page.login(creator_enroll_edit.username);
-
-        // APPOINTMENT PREPARATION
-        await browser.get('/enroll?a=' + appointmentLink); // NEEDED TO REMOVE "PINNED" Snackbar
-        page.spinnerGone();
-
-        await page.navigateTo();
-      });
-
-      describe('valid form attributes', () => {
         beforeEach(async () => {
-          await expect(page.getName().isEnabled()).toBe(false);
-          await expect(page.getSubmit().isEnabled()).toBe(true);
-          await expect((await page.creatorErrorExists())).toBeFalsy();
+          page = new EnrollmentEditPage(appointmentLink, enrollmentIdUser2);
+          browser.ignoreSynchronization = true;
+
+          // USER MANAGEMENT
+          await page.logout();
+          await page.login(creator_enroll_edit.username);
+
+          // APPOINTMENT PREPARATION
+          await browser.get('/enroll?a=' + appointmentLink); // NEEDED TO REMOVE "PINNED" Snackbar
+          page.spinnerGone();
+
+          await page.navigateTo();
         });
 
-        it('valid form values', async () => {
-          expect(await page.getName().getAttribute('value')).toEqual(user_enroll_edit_2.name);
-          expect(await page.getComment().getAttribute('value')).toEqual('my comment');
-        });
-
-        describe('edit comment - send', () => {
+        describe('valid form attributes', () => {
           beforeEach(async () => {
-            await page.setComment('edited comment by appointment creator');
-            page.submit();
+            await expect(page.getName().isEnabled()).toBe(false);
+            await expect(page.getSubmit().isEnabled()).toBe(true);
+            await expect((await page.creatorErrorExists())).toBeFalsy();
           });
 
-          it('should complete edit', async () => {
-            expect(
-              browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
-                .catch(() => {
-                  return false;
-                })
-            ).toBeTruthy(`Url match could not succeed`);
-            expect(await page.getSnackbar().getText()).toEqual('Erfolgreich bearbeitet');
+          it('valid form values', async () => {
+            expect(await page.getName().getAttribute('value')).toEqual(user2EnrollmentValues.name);
+            expect(await page.getComment().getAttribute('value')).toEqual(user2EnrollmentValues.comment);
+          });
+
+          describe('edit comment - send', () => {
+            beforeEach(async () => {
+              await page.setComment(user2EnrollmentValues.comment + ' edited by different user');
+              page.submit();
+            });
+
+            it('should complete edit', async () => {
+              expect(
+                browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
+                  .catch(() => {
+                    return false;
+                  })
+              ).toBeTruthy(`Url match could not succeed`);
+              expect(await page.getSnackbar().getText()).toEqual('Erfolgreich bearbeitet');
+            });
           });
         });
       });
     });
-  });
 
-  describe('Main - Unknown Enrollment', () => {
-    // const user = {
-    //   name: 'User Enroll Edit',
-    //   username: 'user_enroll_edit'
-    // };
-    const appointmentLink = 'protractorEnrollEdit';
-    // const enrollmentIdUser = 'bfd95241-8b2e-4b43-b3b4-bd1e39f925c1';
-    // const enrollmentIdUnknown = '4099f68b-4b0e-4682-8295-d78373cc0669';
+    describe('unknown enrollment', () => {
+      describe('As enrollment creator', () => {
+        const enrollmentIdUnknown = '4099f68b-4b0e-4682-8295-d78373cc0669';
 
-    let page = new EnrollmentPage(appointmentLink);
+        const unknownEnrollmentValues = {
+          name: 'Unknown Enroll Edit',
+          comment: 'my comment',
+        };
 
-    beforeAll(() => {
-      page.logout();
-    });
+        beforeEach(async () => {
+          page = new EnrollmentEditPage(appointmentLink, enrollmentIdUnknown);
+          browser.ignoreSynchronization = true;
 
-    beforeEach(async () => {
-      page = new EnrollmentPage(appointmentLink);
-      browser.ignoreSynchronization = true;
+          // USER MANAGEMENT
+          await page.logout();
 
-      // USER MANAGEMENT
-      // await page.logout();
+          // APPOINTMENT PREPARATION
+          await browser.get('/enroll?a=' + appointmentLink); // NEEDED TO REMOVE "PINNED" Snackbar
+          page.spinnerGone();
 
-      // APPOINTMENT PREPARATION
-      await browser.get('/enroll?a=' + appointmentLink); // NEEDED TO REMOVE "PINNED" Snackbar
-      page.spinnerGone();
+          await page.navigateTo();
 
-      await page.navigateTo();
-    });
+          // store enrollment permission in local storage
+          const token = crypto.createHash('sha256').update(enrollmentIdUnknown + salt).digest('hex');
+          const permissions = [{link: 'protractorEnrollEdit', enrollments: [{id: enrollmentIdUnknown, token}]}];
+          browser.executeScript('return window.localStorage.setItem(\'permissions\', \'' + JSON.stringify(permissions) + '\');');
+        });
 
-    it('Should display form with title "Anmelden"', async () => {
-      expect(await page.getMatCardTitle()).toEqual('Anmelden');
+        describe('valid form attributes', () => {
+          beforeEach(async () => {
+            await expect(page.getName().isEnabled()).toBe(true);
+            await expect(page.getSubmit().isEnabled()).toBe(true);
+            await expect((await page.creatorErrorExists())).toBeFalsy();
+          });
+
+          it('valid form values', async () => {
+            expect(await page.getName().getAttribute('value')).toEqual(unknownEnrollmentValues.name);
+            expect(await page.getComment().getAttribute('value')).toEqual(unknownEnrollmentValues.comment);
+          });
+
+          describe('edit comment and name', () => {
+            beforeEach(async () => {
+              await page.setName(unknownEnrollmentValues.name + ' edited');
+              await page.setComment(unknownEnrollmentValues.comment + ' edited by enrollment creator');
+            });
+
+            describe('send', () => {
+              beforeEach(async () => {
+                page.submit();
+              });
+
+              it('should complete edit', async () => {
+                expect(
+                  browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
+                    .catch(() => {
+                      return false;
+                    })
+                ).toBeTruthy(`Url match could not succeed`);
+                expect(await page.getSnackbar().getText()).toEqual('Erfolgreich bearbeitet');
+              });
+            });
+
+            describe('clear permissions  - send', () => {
+              beforeEach(async () => {
+                browser.executeScript('window.localStorage.removeItem(\'permissions\');');
+
+                page.submit();
+              });
+
+              it('invalid permissions', async () => {
+                expect(
+                  browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
+                    .catch(() => {
+                      return false;
+                    })
+                ).toBeTruthy(`Url match could not succeed`);
+                expect(await page.getSnackbar().getText()).toEqual('Sorry, du hast keine Berechtigung diesen Teilnehmer zu bearbeiten.');
+              });
+            });
+          });
+        });
+      });
+
+      describe('as logged in user', () => {
+        const enrollmentIdUnknown = 'eda3f874-1a1f-4e12-9abf-70493778dade';
+
+        const creator_enroll_edit = {
+          name: 'Creator Enroll Edit',
+          username: 'creator_enroll_edit'
+        };
+
+        const unknownEnrollment2Values = {
+          name: 'Unknown Enroll Edit 2',
+          comment: 'my comment',
+        };
+
+        beforeEach(async () => {
+          page = new EnrollmentEditPage(appointmentLink, enrollmentIdUnknown);
+          browser.ignoreSynchronization = true;
+
+          // USER MANAGEMENT
+          await page.logout();
+          await page.login(creator_enroll_edit.username);
+
+          // APPOINTMENT PREPARATION
+          await browser.get('/enroll?a=' + appointmentLink); // NEEDED TO REMOVE "PINNED" Snackbar
+          page.spinnerGone();
+
+          await page.navigateTo();
+        });
+
+        describe('valid form attributes', () => {
+          beforeEach(async () => {
+            await expect(page.getName().isEnabled()).toBe(true);
+            await expect(page.getSubmit().isEnabled()).toBe(true);
+            await expect((await page.creatorErrorExists())).toBeFalsy();
+          });
+
+          it('valid form values', async () => {
+            expect(await page.getName().getAttribute('value')).toEqual(unknownEnrollment2Values.name);
+            expect(await page.getComment().getAttribute('value')).toEqual(unknownEnrollment2Values.comment);
+          });
+
+          describe('edit comment and name - send', () => {
+            beforeEach(async () => {
+              await page.setName(unknownEnrollment2Values.name + ' edited');
+              await page.setComment(unknownEnrollment2Values.comment + ' edited by different user');
+              page.submit();
+            });
+
+            it('should complete edit', async () => {
+              expect(
+                browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
+                  .catch(() => {
+                    return false;
+                  })
+              ).toBeTruthy(`Url match could not succeed`);
+              expect(await page.getSnackbar().getText()).toEqual('Erfolgreich bearbeitet');
+            });
+          });
+        });
+      });
     });
   });
 
