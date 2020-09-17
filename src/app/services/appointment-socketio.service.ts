@@ -70,7 +70,7 @@ export class AppointmentSocketioService {
 
       this.socket.on('reconnect', (attempt) => {
         this.websocketSubscriptionRetryCount$.next(attempt);
-        this.websocketSubscriptionValid$.next(attempt);
+        this.websocketSubscriptionValid$.next(false);
       });
 
       this.socket.on('connect', () => {
