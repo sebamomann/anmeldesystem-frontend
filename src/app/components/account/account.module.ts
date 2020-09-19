@@ -10,6 +10,7 @@ import {
   MatInputModule,
   MatListModule,
   MatProgressSpinnerModule,
+  MatStepperModule,
   MatTooltipModule
 } from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -70,7 +71,8 @@ const routes: Routes = [
     LoadingModule,
     AccountActivationDialogModule,
     LoadingDisableModule,
-    HexagonLoaderModule
+    HexagonLoaderModule,
+    MatStepperModule
   ],
   providers: [
     ValidatorService

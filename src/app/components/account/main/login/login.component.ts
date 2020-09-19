@@ -1,11 +1,11 @@
-import {Component, EventEmitter, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthenticationService} from '../../../../services/authentication.service';
 import {first} from 'rxjs/operators';
 import {DatePipe} from '@angular/common';
 import {ValidatorService} from '../../../../_helper/validatorService';
-import {MatDialog, MatSnackBar} from '@angular/material';
+import {MatDialog, MatSnackBar, MatStepper} from '@angular/material';
 import {AccountActivationDialogComponent} from '../../../dialogs/account-activation/account-activation-dialog.component';
 
 @Component({
@@ -14,16 +14,18 @@ import {AccountActivationDialogComponent} from '../../../dialogs/account-activat
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-
-  hide = true;
-
-  event = new FormGroup({
+  public hidePassword = true;
+  public eventUsername = new FormGroup({
     username: new FormControl('', [Validators.required]),
+  });
+  public eventPassword = new FormGroup({
     password: new FormControl('', [Validators.required]),
   });
-
   public returnUrl = '';
   public sendingRequestEmit = new EventEmitter<boolean>();
+
+  @ViewChild('stepper', {static: true}) private stepper: MatStepper;
+
   private changeDate: Date;
 
   constructor(private router: Router, private route: ActivatedRoute, private validatorService: ValidatorService,
@@ -39,7 +41,7 @@ export class LoginComponent implements OnInit {
   }
 
   async login(): Promise<void> {
-    if (this.event.valid) {
+    if (this.eventPassword.valid) {
 
       const username = this.getUsername().value;
       const password = this.getPassword().value;
@@ -83,7 +85,7 @@ export class LoginComponent implements OnInit {
 
   getUsernameErrorMessage(): string {
     if (this.getUsername().hasError('required')) {
-      return 'Bitte gebe deine E-Mail ein';
+      return 'Bitte gebe deine E-Mail/Benutzername ein';
     }
   }
 
@@ -103,11 +105,17 @@ export class LoginComponent implements OnInit {
   }
 
   public getUsername() {
-    return this.event.get('username');
+    return this.eventUsername.get('username');
   }
 
   public getPassword() {
-    return this.event.get('password');
+    return this.eventPassword.get('password');
+  }
+
+  public validateUsername() {
+    if (this.eventUsername.valid) {
+      this.stepper.next();
+    }
   }
 
   private openLockedAccountDialog() {
