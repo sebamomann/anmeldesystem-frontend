@@ -3,9 +3,9 @@
     Login
   </mat-card-title>
 
-  <mat-card-content>
-    <form (ngSubmit)="login()"
-          [formGroup]="event" id="login-form">
+  <form (ngSubmit)="login()" [formGroup]="event"
+        id="login-form">
+    <mat-card-content>
       <mat-form-field class="username">
         <input matInput
                formControlName="username"
@@ -25,39 +25,38 @@
         </button>
         <mat-error id="login-error">{{ getPasswordErrorMessage() }}</mat-error>
       </mat-form-field>
-
-      <span>
-      Noch keinen Account?
-        <a [routerLink]="['/account/register']">
-          Registrieren!
-        </a>
-        <br/>
+      <div class="additional-information">
         <a [queryParams]="{mail: getUsername().value}"
            [routerLink]="['/account/passwordreset']"
            queryParamsHandling="merge">
           Passwort vergessen?
         </a>
-      </span>
+      </div>
+    </mat-card-content>
 
-      <mat-card-actions>
-        <button [active]="sendingRequestEmit"
-                [innerValue]="'Login'"
-                appLoadingDisable
+
+    <div class="info">
+      Du wirst nach dem Login dahin weitergeleitet wo du herkommst
+    </div>
+
+    <mat-card-actions class="double">
+      <div>
+        <button [routerLink]="['/account/register']"
+                class="left"
                 color="primary"
-                id="submit"
-                mat-raised-button>
-          Login
+                mat-button>
+          Neues Konto
         </button>
-
-        <div *ngIf="returnUrl !== '/dashboard'"
-             class="info spacing small">Du wirst nach dem Login dahin weitergeleitet wo du herkommst
-        </div>
-
-        <div *ngIf="message !== ''"
-             class="info spacing small">Du wirst nach dem Login dahin weitergeleitet wo du herkommst
-        </div>
-      </mat-card-actions>
-    </form>
-  </mat-card-content>
+      </div>
+      <button [active]="sendingRequestEmit"
+              [innerValue]="'Login'"
+              appLoadingDisable
+              color="primary"
+              id="submit"
+              mat-raised-button>
+        Login
+      </button>
+    </mat-card-actions>
+  </form>
 </mat-card>
 

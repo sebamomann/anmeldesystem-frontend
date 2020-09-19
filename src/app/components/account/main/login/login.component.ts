@@ -23,7 +23,6 @@ export class LoginComponent implements OnInit {
   });
 
   public returnUrl = '';
-  public message = '';
   public sendingRequestEmit = new EventEmitter<boolean>();
   private changeDate: Date;
 
