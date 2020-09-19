@@ -156,6 +156,7 @@ export class EnrollmentEditPage {
 
     const refName = element(by.id('username'));
     refName.clear().then(() => refName.sendKeys(val));
+    this.next();
     const refPass = element(by.id('password'));
     refPass.clear().then(() => refPass.sendKeys('123'));
 
@@ -200,4 +201,12 @@ export class EnrollmentEditPage {
       return !(bool);
     };
   };
+
+  public next() {
+    const elm = element(by.id('next'));
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
+
+    return elm.click();
+  }
 }
