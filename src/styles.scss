@@ -648,6 +648,10 @@ mat-card {
       font-size: 14px;
       width: 75%;
       max-width: 350px;
+
+      &.after-input {
+        margin: calc(26px - 1.25em) 0 0;
+      }
     }
 
     mat-card-actions {
@@ -658,6 +662,10 @@ mat-card {
       &.double {
         display: grid;
         grid-template-columns: minmax(auto, 1fr) auto;
+
+        &.fill {
+          grid-template-columns: 1fr 1fr;
+        }
 
         & > div {
           & > button {

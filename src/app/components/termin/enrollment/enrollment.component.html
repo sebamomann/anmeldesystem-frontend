@@ -1,16 +1,13 @@
 <ng-container *ngIf="appointment$ | async as appointment; else loading">
-  <div *ngIf="!showLoginAndMailForm; else loginAndMailFormTempl"
-       class="wrapper">
+  <ng-container *ngIf="!showLoginAndMailForm; else loginAndMailFormTempl">
     <ng-container *ngIf="!enrollmentGone; else emptyTmpl">
       <mat-card class="form float high">
         <mat-card-title class="headline" id="title">
           {{ isEdit ? 'Bearbeiten' : 'Anmelden' }}
         </mat-card-title>
-
-        <mat-card-content>
-          <form (ngSubmit)="parseDataFromEnrollmentForm()"
-                [formGroup]="form_main"
-                class="register-form">
+        <form (ngSubmit)="parseDataFromEnrollmentForm()"
+              [formGroup]="form_main">
+          <mat-card-content>
             <div *ngIf="userIsLoggedIn && !this.isEdit"
                  [formGroup]="form_selfEnrollment"
                  class="additions tooltip-container">
@@ -115,34 +112,34 @@
             </mat-form-field>
 
             <div *ngIf="creatorError"
-                 class="info">
+                 class="info after-input">
               <mat-error id="creator-error">
                 {{ getCreatorErrorMessage() }}
               </mat-error>
             </div>
+          </mat-card-content>
 
-            <div class="actions">
-              <button [active]="sendingRequestEmit"
-                      [innerValue]="isEdit ? 'Speichern' : 'Anmelden'"
-                      [disabled]="creatorError"
-                      appLoadingDisable
-                      color="primary"
-                      id="submit"
-                      mat-raised-button>
-                {{ isEdit ? 'Speichern' : 'Anmelden' }}
-              </button>
-              <button [queryParams]="{a: appointmentLink}"
-                      [routerLink]="['/enroll']"
-                      mat-raised-button
-                      type="button">
-                Zurück
-              </button>
-            </div>
-          </form>
-        </mat-card-content>
+          <mat-card-actions class="double fill">
+            <button [queryParams]="{a: appointmentLink}"
+                    [routerLink]="['/enroll']"
+                    mat-raised-button
+                    type="button">
+              Zurück
+            </button>
+            <button [active]="sendingRequestEmit"
+                    [disabled]="creatorError"
+                    [innerValue]="isEdit ? 'Speichern' : 'Anmelden'"
+                    appLoadingDisable
+                    color="primary"
+                    id="submit"
+                    mat-raised-button>
+              {{ isEdit ? 'Speichern' : 'Anmelden' }}
+            </button>
+          </mat-card-actions>
+        </form>
       </mat-card>
     </ng-container>
-  </div>
+  </ng-container>
 </ng-container>
 
 <ng-template #emptyTmpl>
@@ -165,8 +162,7 @@
 </ng-template>
 
 <ng-template #loading>
-  <app-loading *ngIf="!loaded && !showLoginAndMailForm"
-               [@remove]>
+  <app-loading *ngIf="!loaded && !showLoginAndMailForm">
   </app-loading>
   <app-fetch-appointment
     [done]="loaded && !showLoginAndMailForm">
