@@ -1,6 +1,8 @@
 <h1 class="headline">Terminübersicht</h1>
 
-<a [routerLink]="['/create']" class="title standalone">Termin hinzufügen
+<a [routerLink]="['/create']"
+   class="title standalone">
+  Termin hinzufügen
   <mat-icon>library_add</mat-icon>
 </a>
 
@@ -72,12 +74,10 @@
 </ng-container>
 
 <ng-template #empty>
-  <mat-card *ngIf="allowToShowEmptyHint" class="error-card">
+  <mat-card class="float error-card">
     <mat-card-content>
-      <img src="/assets/img/404.svg">
-      <span>
-        Du hast gerade mit keinen aktiven Terminen zu tun. Erstelle dir einen eigenen!
-      </span>
+      <img alt="anmeldesystem appointment not found robot icon" src="/assets/img/404.svg">
+      <span> Du hast gerade mit keinen aktiven Terminen zu tun. Erstelle dir einen eigenen! </span>
       <button [routerLink]="['/create']"
               color="primary"
               mat-raised-button>

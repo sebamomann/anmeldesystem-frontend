@@ -40,7 +40,6 @@ interface IAppointmentArchive {
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   public appointment = null;
-  public allowToShowEmptyHint: any;
 
   public _appointments$: Observable<IAppointmentModel[]>;
   public _appointmentsArchive$: Observable<IAppointmentModel[]>;
