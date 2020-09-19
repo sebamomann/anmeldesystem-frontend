@@ -127,15 +127,19 @@
     </button>
     <mat-error>{{ getErrorMessage('') }} </mat-error>
   </mat-form-field>
-  <span *ngIf="isRegister">
-    Du hast bereits einen Account?
-    <br/>
-    <a [routerLink]="['/account/login']">
-      Mit Account einloggen!
-    </a>
-  </span>
 
-  <mat-card-actions>
+  <mat-card-actions class="double">
+    <div>
+      <button (click)="saveFnc()"
+              *ngIf="isRegister"
+              [routerLink]="['/account/login']"
+              class="left"
+              color="primary"
+              mat-button>
+        Einloggen
+      </button>
+    </div>
+
     <button (click)="saveFnc()"
             color="primary"
             id="submit"
