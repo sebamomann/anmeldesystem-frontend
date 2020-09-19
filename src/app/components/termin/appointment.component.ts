@@ -16,6 +16,7 @@ import {AppointmentStatus} from './appointment.status';
 import {EnrollmentListComponent} from './enrollment/enrollment-list/enrollment-list.component';
 import {EnrollmentModel} from '../../models/EnrollmentModel.model';
 import {LoadingService} from '../../services/loading.service';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-appointment',
@@ -41,9 +42,14 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   public link: string;
 
   public appointment$: Observable<IAppointmentModel>;
+  // splitted enrollments
   public enrollments$: BehaviorSubject<IEnrollmentModel[]> = new BehaviorSubject<IEnrollmentModel[]>(undefined);
   public enrollmentsWaitingList$: BehaviorSubject<IEnrollmentModel[]> = new BehaviorSubject<IEnrollmentModel[]>(undefined);
   public enrollmentsLate$: BehaviorSubject<IEnrollmentModel[]> = new BehaviorSubject<IEnrollmentModel[]>(undefined);
+  // calculated enrollment numbers
+  public enrollmentNr: number;
+  public enrollmentNrWaiting: number;
+  public enrollmentNrLate: number;
 
   public limitReachedBeforeEnrollmentDeadline: boolean;
 
@@ -76,7 +82,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
               private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
               private appointmentProvider: AppointmentProvider, public settingsService: SettingsService,
               private appointmentService: AppointmentService, private snackBar: MatSnackBar, private appointmentStatus: AppointmentStatus,
-              private loadingService: LoadingService) {
+              private loadingService: LoadingService, public sanitizer: DomSanitizer) {
     this.loadingService.message = '';
 
     this.route.queryParams.subscribe(params => {
@@ -234,6 +240,16 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     el.scrollIntoView({behavior: 'smooth'});
   }
 
+  tableCount() {
+    let count = 0;
+    [this.enrollmentNr, this.enrollmentNrLate, this.enrollmentNrWaiting].forEach((item) => {
+      if (item > 0) {
+        count++;
+      }
+    });
+    return count;
+  }
+
   private splitEnrollments(appointment: IAppointmentModel) {
     let enrollments_correct = [];
     let enrollments_waiting = [];
@@ -278,8 +294,11 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.hasEnrollments = enrollments_correct.length + enrollments_waiting.length + enrollments_late.length > 0;
 
     this.enrollments$.next(enrollments_correct);
+    this.enrollmentNr = enrollments_correct.length;
     this.enrollmentsWaitingList$.next(enrollments_waiting);
+    this.enrollmentNrWaiting = enrollments_waiting.length;
     this.enrollmentsLate$.next(enrollments_late);
+    this.enrollmentNrLate = enrollments_late.length;
 
     setTimeout(() => {
       if (this.editId && this.editOperation) {

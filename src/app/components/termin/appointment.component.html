@@ -59,29 +59,41 @@
         </div>
       </mat-card>
 
-      <div class="managing-bar">
+      <div *ngIf="tableCount() && appointment.additions.length > 0"
+           class="managing-bar">
         <button (click)="toggleShowAdditions()"
+                *ngIf="appointment.additions.length > 0"
                 mat-raised-button>
           <mat-icon *ngIf="showAdditions">view_headline</mat-icon>
           <mat-icon *ngIf="!showAdditions">view_day</mat-icon>
         </button>
 
-        <mat-card class="enrollment-counter slim">
-          <div (click)="scroll('enrollments_actual')">
+        <mat-card *ngIf="tableCount() > 1"
+                  [attr.style]="sanitizer.bypassSecurityTrustStyle('--items: ' + (tableCount() + 1))"
+                  class="enrollment-counter tiny">
+          <div (click)="scroll('enrollments_actual')"
+               *ngIf="enrollmentNr > 0">
             <mat-icon>check_circle_outline</mat-icon>
-            <span>{{enrollments$.getValue().length}}</span>
+            <span>{{enrollmentNr}}</span>
           </div>
-          <div (click)="scroll('enrollments_waiting')">
+          <div (click)="scroll('enrollments_waiting')"
+               *ngIf="enrollmentNrWaiting > 0 && limitReachedBeforeEnrollmentDeadline">
             <mat-icon>hourglass_empty</mat-icon>
-            <span>{{enrollmentsWaitingList$.getValue().length}}</span>
+            <span>{{enrollmentNrWaiting}}</span>
           </div>
-          <div (click)="scroll('enrollments_late')">
+          <div (click)="scroll('enrollments_late')"
+               *ngIf="enrollmentNrLate > 0">
             <mat-icon>alarm</mat-icon>
-            <span>{{enrollmentsLate$.getValue().length}}</span>
+            <span>{{enrollmentNrLate}}</span>
+          </div>
+          <div (click)="scroll('enrollments_waiting')"
+               *ngIf="enrollmentNrWaiting > 0 && !limitReachedBeforeEnrollmentDeadline">
+            <mat-icon>hourglass_empty</mat-icon>
+            <span>{{enrollmentNrWaiting}}</span>
           </div>
           <div>
             <mat-icon>group</mat-icon>
-            <span>{{enrollments$.getValue().length + enrollmentsWaitingList$.getValue().length + enrollmentsLate$.getValue().length}}</span>
+            <span>{{enrollmentNr + enrollmentNrWaiting + enrollmentNrLate}}</span>
           </div>
         </mat-card>
       </div>

@@ -3,7 +3,7 @@
        [ngClass]="isMain ? '' : 'distance'"
        class="enrollment-list">
     <div class="managing-bar">
-      <mat-card class="title-bar semi-slim">
+      <mat-card class="title-bar slim">
         {{subListTitle}}
         <ng-container *ngIf="!appointment.hidden">
           [{{ this.enrollments$.getValue().length }}{{ appointment.maxEnrollments !== null
