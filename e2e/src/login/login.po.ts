@@ -60,6 +60,7 @@ export class LoginPage {
 
   public setPassword(value: string) {
     const ref = this.getPassword();
+
     return ref.clear().then(async () => {
       await ref.sendKeys(value);
     });
@@ -210,4 +211,12 @@ export class LoginPage {
       return !(bool);
     };
   };
+
+  public next() {
+    const elm = element(by.id('next'));
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
+
+    return elm.click();
+  }
 }

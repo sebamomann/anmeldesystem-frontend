@@ -31,6 +31,8 @@ describe('Login Page', () => {
     describe('success', () => {
       it('with username', async () => {
         await page.setUsername(user.username);
+        page.next();
+
         await page.setPassword(user.password);
 
         page.submit();
@@ -46,6 +48,9 @@ describe('Login Page', () => {
 
       it('with mail', async () => {
         await page.setUsername(user.mail);
+
+        page.next();
+
         await page.setPassword(user.password);
 
         page.submit();
@@ -63,6 +68,9 @@ describe('Login Page', () => {
     describe('invalid', () => {
       it('invalid username', async () => {
         await page.setUsername('invalid_username');
+
+        page.next();
+
         await page.setPassword(user.password);
 
         page.submit();
@@ -72,6 +80,9 @@ describe('Login Page', () => {
 
       it('invalid password', async () => {
         await page.setUsername(user.username);
+
+        page.next();
+
         await page.setPassword('invalid password');
 
         page.submit();
@@ -81,6 +92,9 @@ describe('Login Page', () => {
 
       it('password changed', async () => {
         await page.setUsername(user.username);
+
+        page.next();
+
         await page.setPassword('oldPassword');
 
         page.submit();
@@ -90,6 +104,9 @@ describe('Login Page', () => {
 
       it('not activated', async () => {
         await page.setUsername(user_lock.username);
+
+        page.next();
+
         await page.setPassword(user_lock.password);
 
         page.submit();
