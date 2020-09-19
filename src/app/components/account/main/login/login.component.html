@@ -20,7 +20,12 @@
                formControlName="password"
                id="password"
                placeholder="Passwort" required>
-        <button (click)="hide = !hide" aria-label="toggle password visibility" mat-icon-button matSuffix type="button">
+        <button (click)="hide = !hide"
+                aria-label="toggle password visibility"
+                mat-icon-button
+                matSuffix
+                tabindex="-1"
+                type="button">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
         <mat-error id="login-error">{{ getPasswordErrorMessage() }}</mat-error>
@@ -44,6 +49,7 @@
         <button [routerLink]="['/account/register']"
                 class="left"
                 color="primary"
+                type="button"
                 mat-button>
           Neues Konto
         </button>
@@ -53,6 +59,7 @@
               appLoadingDisable
               color="primary"
               id="submit"
+              type="submit"
               mat-raised-button>
         Login
       </button>
