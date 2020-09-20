@@ -157,8 +157,11 @@ export class EnrollmentEditPage {
     const refName = element(by.id('username'));
     refName.clear().then(() => refName.sendKeys(val));
     this.next();
-    const refPass = element(by.id('password'));
-    refPass.clear().then(() => refPass.sendKeys('123'));
+
+    const elm = element(by.id('password'));
+    const EC2 = protractor.ExpectedConditions;
+    browser.wait(EC2.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
+    elm.clear().then(() => elm.sendKeys('123'));
 
     await this.submit();
   }

@@ -95,12 +95,12 @@ describe('Enrollment Edit Page', () => {
         });
       });
 
-      describe('as different user', () => {
+      describe('as different user (appointment creator)', () => {
         const enrollmentIdUser2 = '3554e58f-5a31-47b7-aa52-378ccdc68537';
 
         const user_enroll_edit_2 = {
           name: 'User Enroll Edit 2',
-          username: 'user_enroll_edit2'
+          username: 'user_enroll_edit_2'
         };
 
         const user2EnrollmentValues = {

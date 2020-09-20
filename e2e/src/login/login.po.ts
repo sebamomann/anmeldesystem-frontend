@@ -59,10 +59,13 @@ export class LoginPage {
   }
 
   public setPassword(value: string) {
-    const ref = this.getPassword();
+    const elm = this.getPassword();
+    const EC2 = protractor.ExpectedConditions;
+    browser.wait(EC2.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
+    elm.clear().then(() => elm.sendKeys('123'));
 
-    return ref.clear().then(async () => {
-      await ref.sendKeys(value);
+    return elm.clear().then(async () => {
+      await elm.sendKeys(value);
     });
   }
 

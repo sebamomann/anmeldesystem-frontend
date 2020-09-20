@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {IAdditionModel} from '../../../models/IAddition.model';
@@ -15,6 +15,8 @@ import {TokenUtil} from '../../../_util/tokenUtil.util';
 import {SEOService} from '../../../_helper/_seo.service';
 import {AppointmentProvider} from '../appointment.provider';
 import {AppointmentUtil} from '../../../_util/appointmentUtil.util';
+import {EnrollmentCreateComponent} from './enrollment-create/enrollment-create.component';
+import {EnrollmentEditComponent} from './enrollment-edit/enrollment-edit.component';
 
 const HttpStatus = require('http-status-codes');
 
@@ -34,33 +36,26 @@ const HttpStatus = require('http-status-codes');
   ]
 })
 export class EnrollmentComponent implements OnInit, OnDestroy {
-  private static LOCAL_STORAGE_ENROLLMENT_TMP_KEY = 'enrollmentOutput';
 
+  static LOCAL_STORAGE_ENROLLMENT_TMP_KEY = 'enrollmentOutput';
   public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
-
   public appointmentLink: string;
   public appointment: IAppointmentModel;
   public isEdit: any;
   public enrollmentGone = false;
   public sendingRequestEmit = new EventEmitter<boolean>();
-
   public isSelfEnrollment = this.userIsLoggedIn;
-
   public loaded = false;
   public showLoginAndMailForm = false;
-
   public appointment$: Observable<IAppointmentModel>;
-
   public form_main = this.formBuilder.group({
     name: new FormControl({value: '', disabled: this.isSelfEnrollment}, [Validators.required, Validators.min(2)]),
     comment: new FormControl('', [Validators.min(2)]),
     additions: new FormArray([]),
   });
-
   public form_selfEnrollment = this.formBuilder.group({
     selfEnrollment: new FormControl('true', []),
   });
-
   public form_driverPassenger = this.formBuilder.group({
     driver: new FormControl(false),
     seats: new FormControl('', [Validators.min(1)]),
@@ -68,14 +63,17 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     service: new FormControl('', [])
   });
   public creatorError = false;
-  // Preparation for login redirect fields
-  private finalEnrollment_raw: string;
-  private finalEnrollment: IEnrollmentModel = new EnrollmentModel();
   // Sending options
-  private triggerDirectSend = false;
+  public triggerDirectSend = false;
   // permission via mail
-  private permissionToken: any;
-  private enrollmentId: string;
+  public permissionToken: any;
+  public enrollmentId: string;
+
+  @ViewChild('enrollmentCreateRef', {static: false}) private enrollmentCreate: EnrollmentCreateComponent;
+  @ViewChild('enrollmentEditRef', {static: false}) private enrollmentEdit: EnrollmentEditComponent;
+
+  // Preparation for login redirect fields
+  private finalEnrollment: IEnrollmentModel = new EnrollmentModel();
   private appointment$$: Subscription;
   private appointmentService$$: Subscription;
   private oldNameValue: string = undefined;
@@ -150,9 +148,9 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
       if (this.finalEnrollment.creator) {
         delete this.finalEnrollment.name;
       }
-      this.sendEnrollmentRequest('update');
+      this.sendEnrollmentRequest__('update');
     } else {
-      this.sendEnrollmentRequest('create');
+      this.sendEnrollmentRequest__('create');
     }
   };
 
@@ -245,6 +243,57 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Eventually send enrollment request, depending on edit or no edit;
+   */
+  sendEnrollmentRequest($event: { operation: string; enrollment: IEnrollmentModel }) {
+    const functionName = $event.operation;
+    const enrollment = $event.enrollment;
+
+    setTimeout(() => { // needed so loading directive triggers again after login or sth
+      this.sendingRequestEmit.emit(true);
+    });
+
+    // fetch permission token if existing
+    enrollment.token = TokenUtil.getTokenForEnrollment(this.enrollmentId, this.appointmentLink);
+
+    this.appointmentService$$ = this.enrollmentService[functionName](enrollment, this.appointment)
+      .subscribe(
+        result => {
+          if (result.type === HttpEventType.Response) {
+            if (result.status === HttpStatus.CREATED || result.status === HttpStatus.OK) {
+              if (functionName === 'create') {
+                this.appointment.enrollments.push(result.body);
+                this.appointmentProvider.update(this.appointment);
+
+                // enrollment assigned to user by email (not account)
+                if (result.body.token) {
+                  AppointmentUtil.storeEnrollmentPermissions(this.appointmentLink, {
+                    id: result.body.id,
+                    token: result.body.token
+                  });
+                }
+              } else {
+                this.appointment.enrollments.map((mEnrollment) => mEnrollment.id === result.body.id ? result.body : mEnrollment);
+              }
+
+              this.request_success_finalize();
+            }
+          }
+        }, (err: HttpErrorResponse) => {
+          this.sendingRequestEmit.emit(false);
+
+          if (err.status === HttpStatus.BAD_REQUEST) {
+            if (err.error.code === 'DUPLICATE_ENTRY') {
+              this.request_error_handleDuplicateValues(err);
+            }
+          } else if (err.status === HttpStatus.FORBIDDEN) {
+            this.request_error_forbidden();
+          }
+        }
+      );
+  }
+
   private disableNameInput() {
     this.form_main.get('name').disable();
   }
@@ -273,42 +322,6 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     }
 
     this.isEdit = this.enrollmentId !== undefined;
-
-    // Automatically insert username from current user
-    if (this.userIsLoggedIn && !this.isEdit) {
-      this.isEnrolledAsCreator = this.appointment.enrollments.some(sEnrollment =>
-        sEnrollment.creator && sEnrollment.creator.username === this.authenticationService.currentUserValue.username);
-      this.creatorError = this.isEnrolledAsCreator;
-      this.getName().setValue(this.authenticationService.currentUserValue.name);
-    }
-
-    if (this.isEdit) {
-      // get referenced enrollment
-      const enrollment: IEnrollmentModel = this.appointment.enrollments.filter(fEnrollment => {
-        return fEnrollment.id === this.enrollmentId;
-      })[0];
-
-      if (enrollment) {
-        this.finalEnrollment = enrollment;
-        if (enrollment.creator) {
-          this.disableNameInput();
-        }
-        this.parseOutputIntoForm();
-      } else if (this.enrollmentId !== null && this.permissionToken !== null) {
-        this.enrollmentGone = true;
-      }
-
-      this.buildFormCheckboxes();
-    } else {
-      this.storageDataToFields();
-
-      this.buildFormCheckboxes();
-
-      if (this.triggerDirectSend && !this.creatorError) {
-        this.initializeEnrollmentSend();
-        return;
-      }
-    }
   }
 
   private __SEO() {
@@ -330,85 +343,10 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     return additionList;
   };
 
-  private buildFormCheckboxes: () => void = () => {
-    this.appointment.additions.forEach((o) => {
-      // if output has addition with this id then set to true
-      let selected = false;
-      if (this.finalEnrollment) {
-        selected = this.finalEnrollment.additions.some(iAddition => iAddition.id === o.id);
-      }
-      const control = new FormControl(selected);
-      (this.form_main.controls.additions as FormArray).push(control);
-    });
-  };
-
-  private getSeats() {
-    return this.form_driverPassenger.get('seats');
-  }
-
-  private getRequirement() {
-    return this.form_driverPassenger.get('requirement');
-  }
-
-  private getService() {
-    return this.form_driverPassenger.get('service');
-  }
-
-  private getComment() {
-    return this.form_main.get('comment');
-  }
-
-  private parseOutputIntoForm() {
-    if (this.finalEnrollment.creator) {
-      if (this.isEdit) {
-        this.getName().setValue(this.finalEnrollment.creator.name);
-      } else {
-        this.getName().setValue(this.authenticationService.currentUserValue.name);
-      }
-    } else {
-      if (this.isSelfEnrollment && !this.isEdit) {
-        if (this.finalEnrollment.name !== this.authenticationService.currentUserValue.name) {
-          this.isSelfEnrollment = false;
-          this.form_main.get('name').setValue(this.authenticationService.currentUserValue.name);
-        } else {
-          this.form_main.get('name').setValue(this.finalEnrollment.name);
-        }
-      } else {
-        if (this.isEdit && this.isSelfEnrollment) {
-          this.changeSelfEnrollment();
-        }
-        this.form_main.get('name').setValue(this.finalEnrollment.name);
-      }
-    }
-
-    this.form_main.get('comment').setValue(this.finalEnrollment.comment);
-    if (this.finalEnrollment.driver != null) {
-      this.form_driverPassenger.get('driver').setValue(this.finalEnrollment.driver);
-      this.form_driverPassenger.get('seats').setValue(this.finalEnrollment.driver.seats);
-      this.form_driverPassenger.get('service').setValue(this.finalEnrollment.driver.service);
-    }
-
-    if (this.finalEnrollment.passenger != null) {
-      this.form_driverPassenger.get('requirement').setValue(this.finalEnrollment.passenger.requirement);
-    }
-  }
-
-  private storageDataToFields() {
-    // Fetch output from localStorage
-    this.finalEnrollment_raw = localStorage.getItem(EnrollmentComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY);
-    this.finalEnrollment = JSON.parse(this.finalEnrollment_raw);
-
-    if (this.finalEnrollment) {
-      this.parseOutputIntoForm();
-    } else {
-      this.finalEnrollment = new EnrollmentModel();
-    }
-  }
-
   /**
    * Eventually send enrollment request, depending on edit or no edit;
    */
-  private sendEnrollmentRequest(functionName: 'update' | 'create') {
+  private sendEnrollmentRequest__(functionName: 'update' | 'create') {
     setTimeout(() => { // needed so loading directive triggers again after login or sth
       this.sendingRequestEmit.emit(true);
     });
@@ -479,11 +417,11 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
         this.creatorError = true;
         this.isEnrolledAsCreator = true;
       } else {
-        const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
-        const fnName: string = 'get' + uppercaseName;
-
-        this[fnName]().setErrors({inUse: true});
-        this[fnName]().markAsTouched();
+        if (this.isEdit) {
+          this.enrollmentEdit.inUseError(fColumn);
+        } else {
+          this.enrollmentCreate.inUseError(fColumn);
+        }
       }
     });
   }
@@ -556,5 +494,21 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     }
 
     return true;
+  }
+
+  private getSeats() {
+    return this.form_driverPassenger.get('seats');
+  }
+
+  private getRequirement() {
+    return this.form_driverPassenger.get('requirement');
+  }
+
+  private getService() {
+    return this.form_driverPassenger.get('service');
+  }
+
+  private getComment() {
+    return this.form_main.get('comment');
   }
 }

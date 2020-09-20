@@ -19,7 +19,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FetchAppointmentModule} from '../html-template/fetch-appointment/fetch-appointment.module';
 import {LoadingModule} from '../../html-template/loading/loading.module';
 import {LoadingDisableModule} from '../../../directives/loading-disable/loading-disable.module';
-import {EnrollmentLoginMailComponent} from './enrollment-login-mail/enrollment-login-mail.component';
+import {EnrollmentCreateModule} from './enrollment-create/enrollment-create.module';
+import {EnrollmentEditModule} from './enrollment-edit/enrollment-edit.module';
 
 const routes: Routes = [
   {path: '', component: EnrollmentComponent},
@@ -28,7 +29,6 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     EnrollmentComponent,
-    EnrollmentLoginMailComponent,
   ],
   imports: [
     CommonModule,
@@ -49,6 +49,8 @@ const routes: Routes = [
     LoadingModule,
     LoadingDisableModule,
     MatProgressSpinnerModule,
+    EnrollmentCreateModule,
+    EnrollmentEditModule,
   ]
 })
 export class EnrollmentModule {
