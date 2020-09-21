@@ -9,6 +9,7 @@ import {
   MatIconModule,
   MatInputModule,
   MatSelectModule,
+  MatStepperModule,
   MatTooltipModule
 } from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -36,6 +37,7 @@ import {EnrollmentLoginMailModule} from '../enrollment-login-mail/enrollment-log
     MatButtonModule,
     LoadingDisableModule,
     EnrollmentLoginMailModule,
+    MatStepperModule,
   ]
 })
 export class EnrollmentCreateModule {

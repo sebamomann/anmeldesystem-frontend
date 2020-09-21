@@ -98,10 +98,6 @@ export class EnrollmentEditComponent implements OnInit {
     this.initializeEnrollmentSend();
   };
 
-  public isSelfEnrolling() {
-    return this.getSelfEnrollment().value && this.userIsLoggedIn;
-  }
-
   public getAdditionsControls() {
     return (this.form_main.get('additions') as FormArray).controls;
   }
@@ -259,10 +255,6 @@ export class EnrollmentEditComponent implements OnInit {
 
   private getName() {
     return this.form_main.get('name');
-  }
-
-  private getSelfEnrollment() {
-    return this.form_selfEnrollment.get('selfEnrollment');
   }
 }
 

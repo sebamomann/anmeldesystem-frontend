@@ -1,30 +1,31 @@
-<ng-container *ngIf="!showLoginAndMailForm; else loginAndMailFormTempl">
-  <mat-card class="form float high">
-    <mat-card-title class="headline" id="title">
-      Anmelden
-    </mat-card-title>
-    <form (ngSubmit)="parseDataFromEnrollmentForm()"
-          [formGroup]="form_main">
-      <mat-card-content>
-        <div *ngIf="userIsLoggedIn"
-             [formGroup]="form_selfEnrollment"
-             class="additions tooltip-container">
-          <mat-checkbox (change)="changeSelfEnrollment()"
-                        formControlName="selfEnrollment"
-                        id="selfEnrollment">
-            Ich melde mich selber an
-          </mat-checkbox>
-          <!--suppress TypeScriptUnresolvedFunction -->
-          <mat-icon #tooltip="matTooltip"
-                    (click)="tooltip.toggle()"
-                    class="tooltip"
-                    matTooltip="{{'Diese Anmeldung wird mit deinem Account verbunden. ' +
-                     'Somit kannst du von überall deine Anmeldung bearbeiten oder löschen.'}}">
-            info
-          </mat-icon>
-        </div>
+<mat-card class="form float high">
+  <mat-card-title class="headline" id="title">
+    Anmelden
+  </mat-card-title>
 
-        <div>
+  <mat-horizontal-stepper #stepper linear>
+    <mat-step [stepControl]="form_main">
+      <form (ngSubmit)="saveMainForm()"
+            [formGroup]="form_main">
+        <mat-card-content>
+          <div *ngIf="userIsLoggedIn"
+               [formGroup]="form_selfEnrollment"
+               class="additions tooltip-container self-enrollment">
+            <mat-checkbox (change)="changeSelfEnrollment()"
+                          formControlName="selfEnrollment"
+                          id="selfEnrollment">
+              Ich melde mich selber an
+            </mat-checkbox>
+            <!--suppress TypeScriptUnresolvedFunction -->
+            <mat-icon #tooltip="matTooltip"
+                      (click)="tooltip.toggle()"
+                      class="tooltip"
+                      matTooltip="{{'Diese Anmeldung wird mit deinem Account verbunden. ' +
+                     'Somit kannst du von überall deine Anmeldung bearbeiten oder löschen.'}}">
+              info
+            </mat-icon>
+          </div>
+
           <mat-form-field class="name">
             <label for="name">
               <input formControlName="name"
@@ -38,6 +39,53 @@
             </mat-error>
           </mat-form-field>
 
+          <mat-form-field [formGroup]="form_main">
+              <textarea cdkAutosizeMaxRows="5"
+                        cdkAutosizeMinRows="1"
+                        cdkTextareaAutosize
+                        formControlName="comment"
+                        id="comment"
+                        matInput placeholder="Kommentar">
+              </textarea>
+          </mat-form-field>
+        </mat-card-content>
+
+        <div *ngIf="creatorError"
+             class="info after-input">
+          <mat-error id="creator-error">
+            {{ getCreatorErrorMessage() }}
+          </mat-error>
+        </div>
+
+        <mat-card-actions class="double">
+          <div>
+            <button [queryParams]="{a: appointment.link}"
+                    [routerLink]="['/enroll']"
+                    class="left"
+                    color="primary"
+                    id="back_main"
+                    mat-button
+                    matStepperPrevious
+                    type="button">
+              Abbrechen
+            </button>
+          </div>
+          <button [disabled]="creatorError"
+                  color="primary"
+                  id="next_main"
+                  mat-raised-button
+                  matStepperNext
+                  type="submit">
+            Weiter
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-step>
+
+    <mat-step *ngIf="getAdditionsControls().length > 0">
+      <form (ngSubmit)="saveAdditionsForm()"
+            [formGroup]="form_additions">
+        <mat-card-content>
           <div class="additions">
             <div *ngFor="let addition of getAdditionsControls(); let i = index;"
                  formArrayName="additions">
@@ -47,10 +95,36 @@
               </mat-checkbox>
             </div>
           </div>
-        </div>
+        </mat-card-content>
 
-        <div [formGroup]="form_driverPassenger">
-          <div *ngIf="appointment.driverAddition" class="driverAddition">
+        <mat-card-actions class="double">
+          <div>
+            <button class="left"
+                    color="primary"
+                    id="back_additions"
+                    mat-button
+                    matStepperPrevious
+                    type="button">
+              Zurück
+            </button>
+          </div>
+          <button color="primary"
+                  id="next_additions"
+                  mat-raised-button
+                  matStepperNext
+                  type="submit">
+            Weiter
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-step>
+
+    <mat-step *ngIf="appointment.driverAddition"
+              [stepControl]="form_driverPassenger">
+      <form (ngSubmit)="saveDriverForm()"
+            [formGroup]="form_driverPassenger">
+        <mat-card-content>
+          <div class="driverAddition">
             <div>
               <mat-checkbox
                 formControlName="driver">
@@ -97,50 +171,98 @@
               </mat-form-field>
             </ng-template>
           </div>
-        </div>
+        </mat-card-content>
 
-        <mat-form-field [formGroup]="form_main">
-              <textarea cdkAutosizeMaxRows="5"
-                        cdkAutosizeMinRows="1"
-                        cdkTextareaAutosize
-                        formControlName="comment"
-                        id="comment"
-                        matInput placeholder="Kommentar">
-              </textarea>
-        </mat-form-field>
-
-        <div *ngIf="creatorError"
-             class="info after-input">
-          <mat-error id="creator-error">
-            {{ getCreatorErrorMessage() }}
-          </mat-error>
+        <mat-card-actions class="double">
+          <div>
+            <button class="left"
+                    color="primary"
+                    id="back_driver"
+                    mat-button
+                    matStepperPrevious
+                    type="button">
+              Zurück
+            </button>
+          </div>
+          <button color="primary"
+                  id="next_driver"
+                  mat-raised-button
+                  matStepperNext
+                  type="submit">
+            Weiter
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-step>
+    <mat-step>
+      <mat-card-title>
+        Sind alle Daten korrekt?
+      </mat-card-title>
+      <mat-card-content>
+        <div class="enrollment">
+        <span class="user-information">
+          <ng-container *ngIf="!isSelfEnrolling()">
+            <mat-icon *ngIf="finalEnrollment.driver"> directions_car </mat-icon>
+            {{finalEnrollment.name}}
+          </ng-container>
+          <ng-container *ngIf="isSelfEnrolling()">
+            <mat-icon *ngIf="finalEnrollment.driver"> directions_car </mat-icon>
+            {{this.authenticationService.currentUserValue.name}}
+            <span>@{{this.authenticationService.currentUserValue.username}}</span>
+          </ng-container>
+        </span>
+          <ng-container *ngIf="finalEnrollment.comment">
+            <span class="separator small colored high"></span>
+            <span class="comment-block"> {{ finalEnrollment.comment }} </span>
+          </ng-container>
+          <div *ngIf="appointment.additions.length > 0"
+               class="addition-list">
+            <span class="separator light small high"></span>
+            <ng-container *ngFor="let addition of appointment.additions">
+              <div>
+                <mat-icon *ngIf="enrollmentCheckedAddition(finalEnrollment, addition.id); else blank">
+                  check_box
+                </mat-icon>
+                <ng-template #blank>
+                  <mat-icon>check_box_outline_blank</mat-icon>
+                </ng-template>
+                <span> {{ addition.name }} </span>
+              </div>
+            </ng-container>
+          </div>
         </div>
       </mat-card-content>
 
-      <mat-card-actions class="double fill">
-        <button [queryParams]="{a: appointment.link}"
-                [routerLink]="['/enroll']"
-                mat-raised-button
-                type="button">
-          Zurück
-        </button>
-        <button [active]="sendingRequestEmit"
-                [disabled]="creatorError"
+      <mat-card-actions class="double">
+        <div>
+          <button class="left"
+                  color="primary"
+                  id="back_check"
+                  mat-button
+                  matStepperPrevious
+                  type="button">
+            Zurück
+          </button>
+        </div>
+        <button (click)="this.enrollmentAssignmentDecision()"
+                [active]="sendingRequestEmit"
                 [innerValue]="'Anmelden'"
                 appLoadingDisable
                 color="primary"
-                id="submit"
+                id="next_check"
+                matStepperNext
+                type="submit"
                 mat-raised-button>
           Anmelden
         </button>
       </mat-card-actions>
-    </form>
-  </mat-card>
-</ng-container>
+    </mat-step>
 
-<ng-template #loginAndMailFormTempl>
-  <app-enrollment-login-mail
-    (cancel)="mailFormCancel()"
-    (done)="mailFormSubmit($event)">
-  </app-enrollment-login-mail>
-</ng-template>
+    <mat-step>
+      <app-enrollment-login-mail
+        (cancel)="mailFormCancel()"
+        (done)="mailFormSubmit($event)">
+      </app-enrollment-login-mail>
+    </mat-step>
+  </mat-horizontal-stepper>
+</mat-card>

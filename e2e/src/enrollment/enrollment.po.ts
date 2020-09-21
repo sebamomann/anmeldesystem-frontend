@@ -40,6 +40,10 @@ export class EnrollmentPage {
     return element(by.id('submit'));
   }
 
+  public getNextMain() {
+    return element(by.id('next_main'));
+  }
+
   public setName(value: string) {
     const ref = this.getName();
     return ref.clear().then(async () => {
@@ -128,11 +132,27 @@ export class EnrollmentPage {
   }
 
   public goBack() {
-    return element(by.id('back')).click();
+    const elm = element(by.id('back'));
+    const EC2 = protractor.ExpectedConditions;
+    browser.wait(EC2.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
+
+    return elm.click();
+  }
+
+  public goBackCheck() {
+    const elm = element(by.id('back_check'));
+    const EC2 = protractor.ExpectedConditions;
+    browser.wait(EC2.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
+
+    return elm.click();
   }
 
   public clickLogin() {
-    return element(by.id('login')).click();
+    const elm = element(by.id('login'));
+    const EC2 = protractor.ExpectedConditions;
+    browser.wait(EC2.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
+
+    return elm.click();
   }
 
   public async fillLoginData(val: string) {
@@ -200,5 +220,25 @@ export class EnrollmentPage {
     browser.wait(EC.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
 
     return elm.click();
+  }
+
+  public nextMain() {
+    const elm = element(by.id('next_main'));
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
+
+    return elm.click();
+  }
+
+  public nextCheck() {
+    const elm = element(by.id('next_check'));
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
+
+    return elm.click();
+  }
+
+  public disableAnimation() {
+    element(by.css('body')).allowAnimations(false);
   }
 }

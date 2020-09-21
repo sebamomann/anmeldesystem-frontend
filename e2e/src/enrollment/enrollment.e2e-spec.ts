@@ -1,6 +1,9 @@
 import {browser, protractor} from 'protractor';
 import {EnrollmentPage} from './enrollment.po';
 
+// TODO
+// validate check overview
+
 describe('Enrollment Page - Unknown user', () => {
   it('Should display message on appointment not found', async () => {
     const page = new EnrollmentPage('unknownAppointment');
@@ -32,6 +35,7 @@ describe('Enrollment Page - Unknown user', () => {
     beforeEach(async () => {
       page = new EnrollmentPage(appointmentLink);
       browser.ignoreSynchronization = true;
+      // page.disableAnimation();
 
       // USER MANAGEMENT
       // await page.logout();
@@ -66,14 +70,15 @@ describe('Enrollment Page - Unknown user', () => {
         it('missing name - send', async () => {
           await page.clearName();
 
-          page.submit();
+          page.nextMain();
 
           await expect((await page.getNameError()).getText()).toEqual('Bitte gebe einen Namen an');
         });
 
         describe('send', () => {
           beforeEach(() => {
-            page.submit();
+            page.nextMain();
+            page.nextCheck();
           });
 
           describe('loginAndMailForm', () => {
@@ -82,7 +87,8 @@ describe('Enrollment Page - Unknown user', () => {
             });
 
             it('go back to form data still inside', async () => {
-              page.goBack();
+              page.goBack(); // back from mail and login
+              page.goBackCheck(); // back from check
 
               const name = await page.getName().getAttribute('value');
               const comment = await page.getComment().getAttribute('value');
@@ -122,7 +128,7 @@ describe('Enrollment Page - Unknown user', () => {
 
           describe('login', () => {
             beforeEach(async () => {
-              page.clickLogin();
+              await page.clickLogin();
               await page.fillLoginData(user.username);
               browser.driver.wait(() =>
                 browser.driver.getCurrentUrl().then(url => /enroll\/add\?a=url/.test(url.replace(appointmentLink, 'url'))), 10000);
@@ -147,7 +153,7 @@ describe('Enrollment Page - Unknown user', () => {
               await expect(page.getName().getAttribute('value')).toBe(user.name);
               await expect(page.getComment().getAttribute('value')).toBe(__comment);
 
-              await expect(page.getSubmit().isEnabled()).toBe(false);
+              await expect(page.getNextMain().isEnabled()).toBe(false);
               await expect((await page.getCreatorError()).getText()).toEqual('Du bist bereits angemeldet');
             });
 

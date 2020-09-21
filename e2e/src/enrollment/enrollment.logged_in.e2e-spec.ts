@@ -44,7 +44,8 @@ describe('Enrollment Page - Logged in', () => {
 
       describe('send', () => {
         beforeEach(() => {
-          page.submit();
+          page.nextMain();
+          page.nextCheck();
         });
 
         it('should complete enrollment', async () => {
@@ -59,7 +60,7 @@ describe('Enrollment Page - Logged in', () => {
       });
 
       it('user already enrolled', async () => {
-        await expect(page.getSubmit().isEnabled()).toBe(false);
+        await expect(page.getNextMain().isEnabled()).toBe(false);
         await expect((await page.getCreatorError()).getText()).toEqual('Du bist bereits angemeldet');
       });
     });
@@ -72,7 +73,7 @@ describe('Enrollment Page - Logged in', () => {
     describe('fill form', () => {
       beforeEach(async () => {
         await page.deselectSelfEnrollment();
-        await expect(page.getSubmit().isEnabled()).toBe(true);
+        await expect(page.getNextMain().isEnabled()).toBe(true);
 
         // enroll
         await page.setName(__name);
@@ -82,15 +83,15 @@ describe('Enrollment Page - Logged in', () => {
       it('name missing - send', async () => {
         await page.clearName();
 
-        page.submit();
+        page.nextMain();
 
         await expect((await page.getNameError()).getText()).toEqual('Bitte gebe einen Namen an');
       });
 
       describe('send', () => {
         beforeEach(async () => {
-          // submit
-          page.submit();
+          page.nextMain();
+          page.nextCheck();
         });
 
         describe('valid - login and mail form without login part', () => {

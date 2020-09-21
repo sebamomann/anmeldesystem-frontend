@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
                   'OK',
                   {
                     panelClass: 'login-snackbar',
-                    duration: 2500,
+                    duration: 3500,
                   });
               });
           },

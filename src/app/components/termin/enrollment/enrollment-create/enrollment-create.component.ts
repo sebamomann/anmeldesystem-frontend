@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
 import {AuthenticationService} from '../../../../services/authentication.service';
 import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
@@ -6,6 +6,7 @@ import {EnrollmentModel} from '../../../../models/EnrollmentModel.model';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
 import {IAdditionModel} from '../../../../models/IAddition.model';
 import {EnrollmentComponent} from '../enrollment.component';
+import {MatStepper} from '@angular/material';
 
 @Component({
   selector: 'app-enrollment-create',
@@ -18,21 +19,25 @@ export class EnrollmentCreateComponent implements OnInit {
   @Input() triggerDirectSend: boolean;
   @Output() execute: EventEmitter<{ operation: string, enrollment: IEnrollmentModel }> =
     new EventEmitter<{ operation: string, enrollment: IEnrollmentModel }>();
+  @ViewChild('stepper', {static: true}) stepper: MatStepper;
 
   public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
   public isSelfEnrollment = this.userIsLoggedIn;
   public showLoginAndMailForm: boolean;
-
   public creatorError = false;
+
+  public form_selfEnrollment = this.formBuilder.group({
+    selfEnrollment: new FormControl('true', []),
+  });
 
   public form_main = this.formBuilder.group({
     name: new FormControl({value: '', disabled: this.isSelfEnrollment}, [Validators.required, Validators.min(2)]),
     comment: new FormControl('', [Validators.min(2)]),
-    additions: new FormArray([]),
   });
 
-  public form_selfEnrollment = this.formBuilder.group({
-    selfEnrollment: new FormControl('true', []),
+
+  public form_additions = this.formBuilder.group({
+    additions: new FormArray([]),
   });
 
   public form_driverPassenger = this.formBuilder.group({
@@ -42,14 +47,14 @@ export class EnrollmentCreateComponent implements OnInit {
     service: new FormControl('', [])
   });
 
-  private finalEnrollment_raw: string;
-  private finalEnrollment: IEnrollmentModel = new EnrollmentModel();
+  public finalEnrollment: IEnrollmentModel = new EnrollmentModel();
 
+  private finalEnrollment_raw: string;
   // SELF ENROLLMENT MANAGEMENT
   private isEnrolledAsCreator;
   private oldNameValue: string = undefined;
 
-  constructor(private formBuilder: FormBuilder, private authenticationService: AuthenticationService) {
+  constructor(private formBuilder: FormBuilder, public authenticationService: AuthenticationService) {
   }
 
   ngOnInit() {
@@ -67,6 +72,7 @@ export class EnrollmentCreateComponent implements OnInit {
 
     if (this.triggerDirectSend && !this.creatorError) {
       this.initializeEnrollmentSend();
+      this.stepper.selectedIndex = this.stepper.steps.length - 1;
       return;
     }
   }
@@ -85,23 +91,6 @@ export class EnrollmentCreateComponent implements OnInit {
     }
 
     this.execute.emit({operation: 'create', enrollment: this.finalEnrollment});
-  };
-
-  /**
-   * Initial function to send Enrollment
-   */
-  public parseDataFromEnrollmentForm: () => void = () => {
-    if (!this.formsValid()) {
-      return;
-    }
-
-    // Parse data from form into object
-    this.finalEnrollment.name = this.getName().value;
-    this.finalEnrollment.comment = this.getComment().value;
-    this.parseDriverAddition();
-    this.finalEnrollment.additions = this.getIdsOfSelectedAdditions();
-
-    this.enrollmentAssignmentDecision();
   };
 
   public changeSelfEnrollment() {
@@ -123,6 +112,7 @@ export class EnrollmentCreateComponent implements OnInit {
 
   public mailFormCancel() {
     this.clearLoginAndMailFormIntercepting();
+    this.stepper.selectedIndex = this.stepper.steps.length - 2;
   }
 
   public mailFormSubmit($event: string) {
@@ -141,7 +131,7 @@ export class EnrollmentCreateComponent implements OnInit {
   }
 
   public getAdditionsControls() {
-    return (this.form_main.get('additions') as FormArray).controls;
+    return (this.form_additions.get('additions') as FormArray).controls;
   }
 
   public getNameErrorMessage(): string {
@@ -178,11 +168,37 @@ export class EnrollmentCreateComponent implements OnInit {
 
     this[fnName]().setErrors({inUse: true});
     this[fnName]().markAsTouched();
+
+    this.stepper.selectedIndex = 0;
   }
 
-  setCreatorError(fColumn: any) {
+  setCreatorError() {
     this.creatorError = true;
     this.isEnrolledAsCreator = true;
+  }
+
+  /**
+   * Check if id of addition is checked by enrollment.
+   *
+   * @param enrollment IEnrollmentModel Enrollment to search in
+   * @param id string ID of addition to check for
+   */
+  public enrollmentCheckedAddition: (enrollment: IEnrollmentModel, id: string) => boolean
+    = (enrollment: IEnrollmentModel, id: string): boolean => {
+    return enrollment.additions.findIndex(add => add.id === id) !== -1;
+  };
+
+  public saveMainForm() {
+    this.finalEnrollment.name = this.getName().value;
+    this.finalEnrollment.comment = this.getComment().value;
+  }
+
+  public saveAdditionsForm() {
+    this.finalEnrollment.additions = this.getIdsOfSelectedAdditions();
+  }
+
+  public saveDriverForm() {
+    this.parseDriverAddition();
   }
 
   /**
@@ -190,13 +206,14 @@ export class EnrollmentCreateComponent implements OnInit {
    * Otherwise, the user is asked to login with his account, or send the enrollment with his mail (for auth purposes). <br/>
    * For the possible redirect to the login page, the data needs to be stored locally, to be fetched later.
    */
-  private enrollmentAssignmentDecision() {
+  public enrollmentAssignmentDecision() {
     // If user selected selfEnrollment
     // Or if mail is set, then send enrollment
 
     if (this.isSelfEnrolling()
       || this.finalEnrollment.editMail) {
       this.showLoginAndMailForm = false;
+      this.stepper.selectedIndex = this.stepper.steps.length - 2;
       this.initializeEnrollmentSend();
     } else {
       // not logged
@@ -204,6 +221,7 @@ export class EnrollmentCreateComponent implements OnInit {
       localStorage.setItem(EnrollmentComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY, JSON.stringify(this.finalEnrollment));
 
       this.showLoginAndMailForm = true;
+      this.stepper.next();
     }
   }
 
@@ -215,7 +233,7 @@ export class EnrollmentCreateComponent implements OnInit {
         selected = this.finalEnrollment.additions.some(iAddition => iAddition.id === o.id);
       }
       const control = new FormControl(selected);
-      (this.form_main.controls.additions as FormArray).push(control);
+      (this.form_additions.controls.additions as FormArray).push(control);
     });
   };
 
@@ -260,29 +278,6 @@ export class EnrollmentCreateComponent implements OnInit {
     }
   }
 
-  private formsValid() {
-    // mark as touched when main enrollment is invalid
-    if (!this.form_main.valid) {
-      this.form_driverPassenger.markAllAsTouched();
-      return false;
-    }
-
-    // Either check for driver or passenger form validity
-    // return if selected is invalid
-    if (this.getDriver().value) {
-      if ((this.getService().valid && this.getSeats().valid)) {
-      } else {
-        this.form_driverPassenger.markAllAsTouched();
-        return false;
-      }
-    } else if (!this.getRequirement().valid) {
-      this.form_driverPassenger.markAllAsTouched();
-      return false;
-    }
-
-    return true;
-  }
-
   private parseDriverAddition() {
     if (this.appointment.driverAddition) {
       if (this.getDriver().value) {
@@ -301,7 +296,7 @@ export class EnrollmentCreateComponent implements OnInit {
   }
 
   private getIdsOfSelectedAdditions: () => IAdditionModel[] = () => {
-    const additionListRaw = this.form_main.value.additions
+    const additionListRaw = this.form_additions.value.additions
       .map((v, i) => v ? this.appointment.additions[i].id : null)
       .filter(v => v !== null);
 

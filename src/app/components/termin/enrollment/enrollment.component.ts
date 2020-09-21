@@ -184,7 +184,7 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     err.error.data.forEach(fColumn => {
       if (fColumn === 'creator') {
         if (!this.isEdit) {
-          this.enrollmentCreate.setCreatorError(fColumn);
+          this.enrollmentCreate.setCreatorError();
         }
       } else {
         if (this.isEdit) {
