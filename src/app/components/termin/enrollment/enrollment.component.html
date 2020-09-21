@@ -20,9 +20,9 @@
 </ng-container>
 
 <ng-template #loading>
-  <app-loading *ngIf="!loaded && !showLoginAndMailForm">
+  <app-loading *ngIf="!loaded">
   </app-loading>
   <app-fetch-appointment
-    [done]="loaded && !showLoginAndMailForm">
+    [done]="loaded">
   </app-fetch-appointment>
 </ng-template>

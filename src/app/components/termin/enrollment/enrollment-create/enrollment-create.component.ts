@@ -180,6 +180,11 @@ export class EnrollmentCreateComponent implements OnInit {
     this[fnName]().markAsTouched();
   }
 
+  setCreatorError(fColumn: any) {
+    this.creatorError = true;
+    this.isEnrolledAsCreator = true;
+  }
+
   /**
    * Determine if data can be send to API directly. This is the case, if the user is already logged in.
    * Otherwise, the user is asked to login with his account, or send the enrollment with his mail (for auth purposes). <br/>
