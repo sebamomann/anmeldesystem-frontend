@@ -9,7 +9,9 @@
         <mat-card-content>
           <mat-form-field class="username">
             <input formControlName="username"
+                   #nameInput
                    id="username"
+                   autofocus
                    matInput
                    placeholder="Email/Benutzername"
                    required>
@@ -47,9 +49,11 @@
           <mat-form-field class="pass">
             <input [type]="hidePassword ? 'password' : 'text'"
                    formControlName="password"
+                   #passwordInput
                    id="password"
                    matInput
-                   placeholder="Passwort" required>
+                   placeholder="Passwort"
+                   required>
             <button (click)="hidePassword = !hidePassword"
                     aria-label="toggle password visibility"
                     mat-icon-button

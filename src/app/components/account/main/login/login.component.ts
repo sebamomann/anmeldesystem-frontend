@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthenticationService} from '../../../../services/authentication.service';
@@ -25,6 +25,8 @@ export class LoginComponent implements OnInit {
   public sendingRequestEmit = new EventEmitter<boolean>();
 
   @ViewChild('stepper', {static: true}) private stepper: MatStepper;
+  @ViewChild('nameInput', {static: true}) private nameInputRef: ElementRef;
+  @ViewChild('passwordInput', {static: true}) private passwordInputRef: ElementRef;
 
   private changeDate: Date;
 
@@ -38,6 +40,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/dashboard';
+    this.nameInputRef.nativeElement.focus();
   }
 
   async login(): Promise<void> {
@@ -115,6 +118,9 @@ export class LoginComponent implements OnInit {
   public validateUsername() {
     if (this.eventUsername.valid) {
       this.stepper.next();
+      setTimeout(() => {
+        this.passwordInputRef.nativeElement.focus();
+      }, 500);
     }
   }
 
