@@ -19,7 +19,7 @@
       <form (ngSubmit)="saveAdditionsForm()"
             [formGroup]="form_additions">
         <mat-card-content>
-          <div class="additions">
+          <div class="addition-list-checkboxes">
             <div *ngFor="let addition of getAdditionsControls(); let i = index;"
                  formArrayName="additions">
               <mat-checkbox

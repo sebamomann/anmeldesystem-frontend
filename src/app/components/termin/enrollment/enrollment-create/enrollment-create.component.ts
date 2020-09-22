@@ -40,8 +40,8 @@ export class EnrollmentCreateComponent implements OnInit {
 
   public finalEnrollment: IEnrollmentModel = new EnrollmentModel();
   public mainFormValues: any;
+  public isEnrolledAsCreator: boolean;
   private finalEnrollment_raw: string;
-  private isEnrolledAsCreator: boolean;
   private creatorError: boolean;
   private selfEnrollment: any;
 
@@ -204,6 +204,10 @@ export class EnrollmentCreateComponent implements OnInit {
     this.selfEnrollment = val;
   }
 
+  public getDriver() {
+    return this.form_driverPassenger.get('driver');
+  }
+
   // @ts-ignore // dynamic call
   private setNameError() {
     this.stepper.selectedIndex = 0;
@@ -314,9 +318,5 @@ export class EnrollmentCreateComponent implements OnInit {
 
   private getService() {
     return this.form_driverPassenger.get('service');
-  }
-
-  private getDriver() {
-    return this.form_driverPassenger.get('driver');
   }
 }
