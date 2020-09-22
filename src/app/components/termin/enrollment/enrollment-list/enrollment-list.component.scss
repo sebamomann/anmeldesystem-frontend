@@ -44,7 +44,7 @@
     }
   }
 
-  .enrollment {
+  .enrollment-panel {
     margin: 2px auto;
 
     &.small {
@@ -58,10 +58,6 @@
       &:nth-child(even) {
         float: right;
       }
-    }
-
-    &.mat-expansion-panel-spacing {
-      margin: 16px 0;
     }
 
     .enrollment-info {
@@ -115,34 +111,10 @@
         float: right;
       }
     }
+  }
 
-
-    .addition-list {
-      font-size: 0.75em;
-
-      & > div {
-        display: inline-block;
-        min-width: 50%;
-        width: 50%;
-
-        span {
-          width: 81% !important;
-          text-align: left;
-        }
-
-        span, mat-icon {
-          display: inline-block;
-          width: auto;
-          vertical-align: middle;
-        }
-
-        mat-icon {
-          @include md-icon-size(19px);
-          margin-right: 5px;
-          color: #00126e;
-        }
-      }
-    }
+  &.mat-expansion-panel-spacing {
+    margin: 16px 0;
   }
 }
 
@@ -159,7 +131,7 @@
 
 @media all and (min-width: 1024px) {
   .enrollment-list {
-    margin: 30px 0px;
+    margin: 30px 0;
     max-width: unset;
     display: inline-block;
     vertical-align: top;

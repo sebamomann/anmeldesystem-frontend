@@ -22,6 +22,7 @@ import {ConfirmationDialogComponent} from '../../../dialogs/confirmation-dialog/
 import {ResendEnrollmentPermissionComponent} from '../../../dialogs/key-dialog/resend-enrollment-permission.component';
 import {RouterModule} from '@angular/router';
 import {LoadingDisableModule} from '../../../../directives/loading-disable/loading-disable.module';
+import {EnrollmentDetailsModule} from '../enrollment-details/enrollment-details.module';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import {LoadingDisableModule} from '../../../../directives/loading-disable/loadi
     MatSelectModule,
     LoadingDisableModule,
     MatCardModule,
+    EnrollmentDetailsModule,
   ],
   entryComponents: [
     FilterDialogComponent,

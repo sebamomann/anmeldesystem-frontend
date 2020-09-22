@@ -33,40 +33,14 @@
     <mat-accordion *ngIf="this._enrollments.length > 0" [@listAnimation]>
       <ng-container *ngFor="let enrollment of _enrollments">
         <mat-expansion-panel [@.disabled]="disableAnimation"
-                             class="enrollment">
+                             class="enrollment-panel">
           <mat-expansion-panel-header [collapsedHeight]="'auto'"
                                       [expandedHeight]="'auto'"
                                       class="enrollment-info">
-            <span class="user-information">
-              <ng-container *ngIf="!enrollment.creator">
-                <mat-icon *ngIf="enrollment.driver"> directions_car </mat-icon>
-                {{enrollment.name}}
-              </ng-container>
-              <ng-container *ngIf="enrollment.creator">
-                <mat-icon *ngIf="enrollment.driver"> directions_car </mat-icon>
-                {{enrollment.creator.name}}
-                <span>@{{enrollment.creator.username}}</span>
-              </ng-container>
-            </span>
-            <ng-container *ngIf="enrollment.comment">
-              <span class="separator small colored high"></span>
-              <span class="comment-block"> {{ enrollment.comment }} </span>
-            </ng-container>
-            <div *ngIf="appointment.additions.length > 0 && showAdditions"
-                 class="addition-list">
-              <span class="separator light small high">
-              </span>
-              <ng-container *ngFor="let addition of appointment.additions">
-                <div>
-                  <mat-icon *ngIf="enrollmentCheckedAddition(enrollment, addition.id); else blank">check_box
-                  </mat-icon>
-                  <ng-template #blank>
-                    <mat-icon>check_box_outline_blank</mat-icon>
-                  </ng-template>
-                  <span> {{ addition.name }} </span>
-                </div>
-              </ng-container>
-            </div>
+            <app-enrollment-details
+              [appointment]="appointment"
+              [enrollment]="enrollment">
+            </app-enrollment-details>
           </mat-expansion-panel-header>
 
           <div class="enrollment-additions">
