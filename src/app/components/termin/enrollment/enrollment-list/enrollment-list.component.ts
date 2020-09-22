@@ -85,17 +85,6 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Check if id of addition is checked by enrollment.
-   *
-   * @param enrollment IEnrollmentModel Enrollment to search in
-   * @param id string ID of addition to check for
-   */
-  public enrollmentCheckedAddition: (enrollment: IEnrollmentModel, id: string) => boolean
-    = (enrollment: IEnrollmentModel, id: string): boolean => {
-    return enrollment.additions.findIndex(add => add.id === id) !== -1;
-  };
-
-  /**
    * Open dialog for setting filters for enrollment list. <br />
    * After closing, filter instantly applies and updates list of enrollments.
    *

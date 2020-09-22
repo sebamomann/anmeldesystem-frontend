@@ -12,10 +12,12 @@
   </ng-container>
 
   <div *ngIf="appointment.additions.length > 0"
-       class="addition-list">
+       class="addition-list-wrapper">
+
     <span class="separator light small high"></span>
-    <ng-container *ngFor="let addition of appointment.additions">
-      <div>
+
+    <div class="addition-list">
+      <div *ngFor="let addition of appointment.additions">
         <mat-icon *ngIf="enrollmentCheckedAddition(enrollment, addition.id); else blank">
           check_box
         </mat-icon>
@@ -24,6 +26,6 @@
         </ng-template>
         <span> {{ addition.name }} </span>
       </div>
-    </ng-container>
+    </div>
   </div>
 </div>

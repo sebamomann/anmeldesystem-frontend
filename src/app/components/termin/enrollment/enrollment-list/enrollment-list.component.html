@@ -14,11 +14,6 @@
         </span>
       </mat-card>
 
-      <!--    <div class="list-style">-->
-      <!--      <mat-icon (click)="list = true">list</mat-icon>-->
-      <!--      <mat-icon (click)="list = false">view_module</mat-icon>-->
-      <!--    </div>-->
-
       <button (click)="_openFilterDialog()"
               matBadge="{{getNumberOfActiveFilter(true) > 0 ? getNumberOfActiveFilter(true) : ''}}"
               matBadgeColor="info"
@@ -44,30 +39,18 @@
           </mat-expansion-panel-header>
 
           <div class="enrollment-additions">
-            <!--          <mat-icon-->
-            <!--            (click)="_openCommentDialog(enrollment)"-->
-            <!--            matBadge="{{enrollment.comments != null-->
-            <!--                && enrollment.comments.length > 0-->
-            <!--                  ? enrollment.comments.length-->
-            <!--                  : ''}}"-->
-            <!--            matBadgeColor="info"-->
-            <!--            matBadgeSize="small">-->
-            <!--            comment-->
-            <!--          </mat-icon>-->
-            <ng-container>
-              <mat-icon (click)="preCheckOpenConfirmationDialog(enrollment, 'edit')"
-                        [active]="sendingRequestEmitEdit"
-                        [hideValue]="true"
-                        [innerValue]="'edit'"
-                        appLoadingDisable>edit
-              </mat-icon>
-              <mat-icon (click)="preCheckOpenConfirmationDialog(enrollment, 'delete')"
-                        [active]="sendingRequestEmitDelete"
-                        [hideValue]="true"
-                        [innerValue]="'delete'"
-                        appLoadingDisable>delete
-              </mat-icon>
-            </ng-container>
+            <mat-icon (click)="preCheckOpenConfirmationDialog(enrollment, 'edit')"
+                      [active]="sendingRequestEmitEdit"
+                      [hideValue]="true"
+                      [innerValue]="'edit'"
+                      appLoadingDisable>edit
+            </mat-icon>
+            <mat-icon (click)="preCheckOpenConfirmationDialog(enrollment, 'delete')"
+                      [active]="sendingRequestEmitDelete"
+                      [hideValue]="true"
+                      [innerValue]="'delete'"
+                      appLoadingDisable>delete
+            </mat-icon>
           </div>
           <span class="creationDate">
           {{enrollment.iat | date : 'dd.MM.y, HH:mm'}} Uhr
