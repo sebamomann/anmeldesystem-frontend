@@ -97,7 +97,11 @@ export class EnrollmentPage {
   }
 
   public loginAndMailFormExists() {
-    return element(by.id('login-mail-form')).isPresent();
+    const until = protractor.ExpectedConditions;
+    const elm = element(by.id('login-mail-form'));
+    browser.wait(until.presenceOf(elm), 10000);
+
+    return elm.isPresent();
   }
 
   public loginAndMailFormLoginContentExists() {
@@ -111,7 +115,7 @@ export class EnrollmentPage {
   public async getNameError() {
     const elem = element(by.id('name-error'));
     const until = protractor.ExpectedConditions;
-    await browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
+    browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
     await browser.wait(this.textNotToBePresentInElement(elem, ''), 5000, 'Element taking too long to appear in the DOM');
     return elem;
   }

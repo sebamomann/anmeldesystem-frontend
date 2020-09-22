@@ -101,7 +101,6 @@ describe('Enrollment Page - Logged in', () => {
             expect(page.loginAndMailFormExists()).toBeTruthy();
             expect(page.loginAndMailFormLoginContentExists()).toBeFalsy();
             expect(page.loginAndMailFormLoginContentAltExists()).toBeTruthy();
-            expect(page.loginAndMailFormExists()).toBeTruthy();
           });
 
           it('go back still having data (false self login)', async () => {
