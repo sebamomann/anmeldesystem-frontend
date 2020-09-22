@@ -1,53 +1,47 @@
-<mat-card class="float high" id="login-mail-form">
-  <mat-card-title class="headline">
-    Anmelden
-  </mat-card-title>
-
-  <ng-container *ngIf="!userIsLoggedIn; else userLoggedInMessageTempl">
-    <mat-card-content id="login-content">
+<ng-container *ngIf="!userIsLoggedIn; else userLoggedInMessageTempl">
+  <mat-card-content id="login-content">
       <span>
         Logge dich ein um deine Anmeldung deinem Account zuzuordnen und sie später bearbeiten/löschen zu können.
       </span>
-      <button [queryParams]="{returnUrl: currentURL + '&send=true'}"
-              [routerLink]="['/account/login']"
-              color="primary"
-              id="login"
-              mat-raised-button>
-        Login
-      </button>
-    </mat-card-content>
+    <button [queryParams]="{returnUrl: currentURL + '&send=true'}"
+            [routerLink]="['/account/login']"
+            color="primary"
+            id="login"
+            mat-raised-button>
+      Login
+    </button>
+  </mat-card-content>
 
-    <div class="separator middle center dividing">
-      <div class="tooltip-wrapper center">
-        <!--suppress TypeScriptUnresolvedFunction -->
-        <mat-icon #tooltip="matTooltip"
-                  (click)="tooltip.toggle()"
-                  class="highlight-animation tooltip"
-                  matTooltip="{{'Wenn du keinen Account hast, dann gebe hier deine Mail-Adresse ein, um später deine ' +
+  <div class="separator middle center dividing">
+    <div class="tooltip-wrapper center">
+      <!--suppress TypeScriptUnresolvedFunction -->
+      <mat-icon #tooltip="matTooltip"
+                (click)="tooltip.toggle()"
+                class="highlight-animation tooltip"
+                matTooltip="{{'Wenn du keinen Account hast, dann gebe hier deine Mail-Adresse ein, um später deine ' +
                   'Anmeldung ändern oder löschen zu können. Mit der Angabe der Mail-Adresse, kannst du die ' +
                   'Berechtigung zum Bearbeiten auf verschiedenen Geräten erhalten.' }}">
-          help_outline
-        </mat-icon>
-      </div>
+        help_outline
+      </mat-icon>
     </div>
+  </div>
 
-    <mat-card-content>
+  <mat-card-content>
       <span>
         Oder gebe deine Email-Adresse an um die Berechtigungen per Mail zu erhalten.
       </span>
 
-      <ng-container *ngIf="false; else emailFormTempl"></ng-container>
-    </mat-card-content>
-  </ng-container>
+    <ng-container *ngIf="false; else emailFormTempl"></ng-container>
+  </mat-card-content>
+</ng-container>
 
-  <mat-card-actions>
-    <button (click)="_cancel()"
-            id="back"
-            mat-flat-button>
-      Zurück
-    </button>
-  </mat-card-actions>
-</mat-card>
+<mat-card-actions>
+  <button (click)="_cancel()"
+          id="back"
+          mat-flat-button>
+    Zurück
+  </button>
+</mat-card-actions>
 
 <ng-template #userLoggedInMessageTempl>
   <mat-card-content id="login-content-alt">
