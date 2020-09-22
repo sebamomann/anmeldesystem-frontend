@@ -1,0 +1,29 @@
+<div class="enrollment">
+  <span class="user-information">
+    <mat-icon *ngIf="enrollment.driver"> directions_car </mat-icon>
+      <ng-container *ngIf="enrollment.creator">{{enrollment.creator.name}}</ng-container>
+      <ng-container *ngIf="!enrollment.creator">{{enrollment.name}}</ng-container>
+      <span *ngIf="enrollment.creator">@{{enrollment.creator.name}}</span>
+  </span>
+
+  <ng-container *ngIf="enrollment.comment">
+    <span class="separator small colored high"></span>
+    <span class="comment-block"> {{ enrollment.comment }} </span>
+  </ng-container>
+
+  <div *ngIf="appointment.additions.length > 0"
+       class="addition-list">
+    <span class="separator light small high"></span>
+    <ng-container *ngFor="let addition of appointment.additions">
+      <div>
+        <mat-icon *ngIf="enrollmentCheckedAddition(enrollment, addition.id); else blank">
+          check_box
+        </mat-icon>
+        <ng-template #blank>
+          <mat-icon>check_box_outline_blank</mat-icon>
+        </ng-template>
+        <span> {{ addition.name }} </span>
+      </div>
+    </ng-container>
+  </div>
+</div>

@@ -5,6 +5,7 @@ import {
   MatButtonModule,
   MatCardModule,
   MatCheckboxModule,
+  MatDividerModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
@@ -17,6 +18,7 @@ import {RouterModule} from '@angular/router';
 import {LoadingDisableModule} from '../../../../directives/loading-disable/loading-disable.module';
 import {EnrollmentLoginMailModule} from '../enrollment-login-mail/enrollment-login-mail.module';
 import {EnrollmentMainFormModule} from '../enrollment-main-form/enrollment-main-form.module';
+import {EnrollmentDetailsModule} from '../enrollment-details/enrollment-details.module';
 
 
 @NgModule({
@@ -40,6 +42,8 @@ import {EnrollmentMainFormModule} from '../enrollment-main-form/enrollment-main-
     EnrollmentLoginMailModule,
     MatStepperModule,
     EnrollmentMainFormModule,
+    MatDividerModule,
+    EnrollmentDetailsModule,
   ]
 })
 export class EnrollmentCreateModule {

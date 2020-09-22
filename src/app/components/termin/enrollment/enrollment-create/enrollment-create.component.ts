@@ -187,6 +187,12 @@ export class EnrollmentCreateComponent implements OnInit {
     this.finalEnrollment.comment = val.comment;
     this.selfEnrollment = val.selfEnrollment;
 
+    if (val.selfEnrollment) {
+      this.finalEnrollment.creator = {} as any;
+      this.finalEnrollment.creator.name = this.authenticationService.currentUserValue.name;
+      this.finalEnrollment.creator.username = this.authenticationService.currentUserValue.username;
+    }
+
     this.stepper.next();
   }
 

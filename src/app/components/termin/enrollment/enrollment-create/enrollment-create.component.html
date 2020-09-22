@@ -129,41 +129,15 @@
     </mat-step>
     <mat-step>
       <mat-card-content>
-        <div class="enrollment">
-        <span class="user-information">
-          <ng-container *ngIf="!isSelfEnrolling()">
-            <mat-icon *ngIf="finalEnrollment.driver"> directions_car </mat-icon>
-            {{finalEnrollment.name}}
-          </ng-container>
-          <ng-container *ngIf="isSelfEnrolling()">
-            <mat-icon *ngIf="finalEnrollment.driver"> directions_car </mat-icon>
-            {{this.authenticationService.currentUserValue.name}}
-            <span>@{{this.authenticationService.currentUserValue.username}}</span>
-          </ng-container>
-        </span>
-          <ng-container *ngIf="finalEnrollment.comment">
-            <span class="separator small colored high"></span>
-            <span class="comment-block"> {{ finalEnrollment.comment }} </span>
-          </ng-container>
-          <div *ngIf="appointment.additions.length > 0"
-               class="addition-list">
-            <span class="separator light small high"></span>
-            <ng-container *ngFor="let addition of appointment.additions">
-              <div>
-                <mat-icon *ngIf="enrollmentCheckedAddition(finalEnrollment, addition.id); else blank">
-                  check_box
-                </mat-icon>
-                <ng-template #blank>
-                  <mat-icon>check_box_outline_blank</mat-icon>
-                </ng-template>
-                <span> {{ addition.name }} </span>
-              </div>
-            </ng-container>
-          </div>
-        </div>
+        <app-enrollment-details
+          [appointment]="appointment"
+          [enrollment]="finalEnrollment">
+        </app-enrollment-details>
       </mat-card-content>
 
-      <div class="info after-input">
+      <mat-divider></mat-divider>
+
+      <div class="info">
         Sind alle daten korrekt?
       </div>
 
