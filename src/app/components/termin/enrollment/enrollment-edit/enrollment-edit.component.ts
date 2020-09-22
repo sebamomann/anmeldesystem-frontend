@@ -249,7 +249,7 @@ export class EnrollmentEditComponent implements OnInit {
     return this.form_main.get('comment');
   }
 
-  private getDriver() {
+  public getDriver() {
     return this.form_driverPassenger.get('driver');
   }
 
