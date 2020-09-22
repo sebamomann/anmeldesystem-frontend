@@ -654,6 +654,10 @@ mat-card {
       &.after-input {
         margin: calc(26px - 1.25em) 0 0;
       }
+
+      &.long {
+        width: 80%;
+      }
     }
 
     mat-card-actions {
@@ -1014,6 +1018,10 @@ $ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
   font-size: 1em;
   color: #646464;
   text-align: center;
+
+  &.long {
+    width: 100%;
+  }
 
   &.spacing {
     margin-top: 25px;
