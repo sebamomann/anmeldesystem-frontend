@@ -7,6 +7,7 @@ import {IAppointmentModel} from '../../../../models/IAppointment.model';
 import {IAdditionModel} from '../../../../models/IAddition.model';
 import {EnrollmentComponent} from '../enrollment.component';
 import {MatStepper} from '@angular/material';
+import {EnrollmentMainFormComponent} from '../enrollment-main-form/enrollment-main-form.component';
 
 @Component({
   selector: 'app-enrollment-create',
@@ -20,21 +21,11 @@ export class EnrollmentCreateComponent implements OnInit {
   @Output() execute: EventEmitter<{ operation: string, enrollment: IEnrollmentModel }> =
     new EventEmitter<{ operation: string, enrollment: IEnrollmentModel }>();
   @ViewChild('stepper', {static: true}) stepper: MatStepper;
+  @ViewChild('mainForm', {static: true}) mainFormRef: EnrollmentMainFormComponent;
 
   public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
-  public isSelfEnrollment = this.userIsLoggedIn;
+
   public showLoginAndMailForm: boolean;
-  public creatorError = false;
-
-  public form_selfEnrollment = this.formBuilder.group({
-    selfEnrollment: new FormControl('true', []),
-  });
-
-  public form_main = this.formBuilder.group({
-    name: new FormControl({value: '', disabled: this.isSelfEnrollment}, [Validators.required, Validators.min(2)]),
-    comment: new FormControl('', [Validators.min(2)]),
-  });
-
 
   public form_additions = this.formBuilder.group({
     additions: new FormArray([]),
@@ -48,27 +39,32 @@ export class EnrollmentCreateComponent implements OnInit {
   });
 
   public finalEnrollment: IEnrollmentModel = new EnrollmentModel();
-
+  public mainFormValues: any;
   private finalEnrollment_raw: string;
-  // SELF ENROLLMENT MANAGEMENT
-  private isEnrolledAsCreator;
-  private oldNameValue: string = undefined;
+  private isEnrolledAsCreator: boolean;
+  private creatorError: boolean;
+  private selfEnrollment: any;
 
   constructor(private formBuilder: FormBuilder, public authenticationService: AuthenticationService) {
   }
 
   ngOnInit() {
-    // Automatically insert username from current user
     if (this.userIsLoggedIn) {
       this.isEnrolledAsCreator = this.appointment.enrollments.some(sEnrollment =>
         sEnrollment.creator && sEnrollment.creator.username === this.authenticationService.currentUserValue.username);
       this.creatorError = this.isEnrolledAsCreator;
-      this.getName().setValue(this.authenticationService.currentUserValue.name);
     }
 
     this.storageDataToFields();
 
     this.buildFormCheckboxes();
+
+    if (this.triggerDirectSend && this.userIsLoggedIn) {
+      this.selfEnrollment = true;
+      this.finalEnrollment.name = this.authenticationService.currentUserValue.name;
+      this.mainFormValues.name = this.authenticationService.currentUserValue.name;
+      this.mainFormValues.selfEnrollment = this.selfEnrollment;
+    }
 
     if (this.triggerDirectSend && !this.creatorError) {
       this.initializeEnrollmentSend();
@@ -90,25 +86,10 @@ export class EnrollmentCreateComponent implements OnInit {
       return;
     }
 
+
+    this.clearLoginAndMailFormIntercepting();
     this.execute.emit({operation: 'create', enrollment: this.finalEnrollment});
   };
-
-  public changeSelfEnrollment() {
-    this.isSelfEnrollment = !this.isSelfEnrollment;
-    if (this.isSelfEnrollment) {
-      this.creatorError = this.isEnrolledAsCreator;
-      this.oldNameValue = this.form_main.get('name').value;
-      delete this.finalEnrollment.editMail;
-      this.disableNameInput();
-      this.form_main.get('name').setValue(this.authenticationService.currentUserValue.name);
-    } else {
-      if (this.oldNameValue) {
-        this.form_main.get('name').setValue(this.oldNameValue);
-      }
-      this.creatorError = false;
-      this.form_main.get('name').enable();
-    }
-  }
 
   public mailFormCancel() {
     this.clearLoginAndMailFormIntercepting();
@@ -127,21 +108,11 @@ export class EnrollmentCreateComponent implements OnInit {
   }
 
   public isSelfEnrolling() {
-    return this.getSelfEnrollment().value && this.userIsLoggedIn;
+    return this.selfEnrollment;
   }
 
   public getAdditionsControls() {
     return (this.form_additions.get('additions') as FormArray).controls;
-  }
-
-  public getNameErrorMessage(): string {
-    if (this.getName().hasError('required')) {
-      return 'Bitte gebe einen Namen an';
-    }
-
-    if (this.getName().hasError('inUse')) {
-      return 'Es besteht bereits eine Anmeldung mit diesem Namen';
-    }
   }
 
   public getSelectErrorMessage(): string {
@@ -156,25 +127,15 @@ export class EnrollmentCreateComponent implements OnInit {
     }
   }
 
-  public getCreatorErrorMessage(): string {
-    if (this.creatorError) {
-      return 'Du bist bereits angemeldet';
-    }
-  }
-
   inUseError(fColumn: any) {
     const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
-    const fnName: string = 'get' + uppercaseName;
+    const fnName: string = 'set' + uppercaseName + 'Error';
 
-    this[fnName]().setErrors({inUse: true});
-    this[fnName]().markAsTouched();
-
-    this.stepper.selectedIndex = 0;
+    this[fnName]();
   }
 
-  setCreatorError() {
-    this.creatorError = true;
-    this.isEnrolledAsCreator = true;
+  public setCreatorError() {
+    this.mainFormRef.setCreatorError();
   }
 
   /**
@@ -187,11 +148,6 @@ export class EnrollmentCreateComponent implements OnInit {
     = (enrollment: IEnrollmentModel, id: string): boolean => {
     return enrollment.additions.findIndex(add => add.id === id) !== -1;
   };
-
-  public saveMainForm() {
-    this.finalEnrollment.name = this.getName().value;
-    this.finalEnrollment.comment = this.getComment().value;
-  }
 
   public saveAdditionsForm() {
     this.finalEnrollment.additions = this.getIdsOfSelectedAdditions();
@@ -218,11 +174,34 @@ export class EnrollmentCreateComponent implements OnInit {
     } else {
       // not logged
       // TempStore item for possible login redirect
+      this.finalEnrollment.selfEnrollment = this.selfEnrollment;
       localStorage.setItem(EnrollmentComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY, JSON.stringify(this.finalEnrollment));
 
       this.showLoginAndMailForm = true;
       this.stepper.next();
     }
+  }
+
+  public mainFormDone(val: any) {
+    this.finalEnrollment.name = val.name;
+    this.finalEnrollment.comment = val.comment;
+    this.selfEnrollment = val.selfEnrollment;
+
+    this.stepper.next();
+  }
+
+  public setSelfEnrollment(val: boolean) {
+    if (val) {
+      delete this.finalEnrollment.editMail;
+    }
+
+    this.selfEnrollment = val;
+  }
+
+  // @ts-ignore // dynamic call
+  private setNameError() {
+    this.stepper.selectedIndex = 0;
+    this.mainFormRef.setNameError();
   }
 
   private buildFormCheckboxes: () => void = () => {
@@ -250,23 +229,28 @@ export class EnrollmentCreateComponent implements OnInit {
   }
 
   private parseOutputIntoForm() {
+    const mainFormValues: any = {}; // TODO INTERFACE
+    mainFormValues.selfEnrollment = this.finalEnrollment.selfEnrollment;
+
     if (this.finalEnrollment.creator) {
-      this.getName().setValue(this.authenticationService.currentUserValue.name);
+      mainFormValues.name = this.authenticationService.currentUserValue.name;
     } else {
-      if (this.isSelfEnrollment) {
+      if (this.isSelfEnrolling()) {
         if (this.finalEnrollment.name !== this.authenticationService.currentUserValue.name) {
-          this.isSelfEnrollment = false;
-          this.form_main.get('name').setValue(this.authenticationService.currentUserValue.name);
+          this.selfEnrollment = false;
+          mainFormValues.selfEnrollment = false;
+          mainFormValues.name = this.authenticationService.currentUserValue.name;
         } else {
-          this.form_main.get('name').setValue(this.finalEnrollment.name);
+          mainFormValues.name = this.finalEnrollment.name;
         }
       } else {
-        this.form_main.get('name').setValue(this.finalEnrollment.name);
+        mainFormValues.name = this.finalEnrollment.name;
       }
     }
 
+    mainFormValues.comment = this.finalEnrollment.comment;
+    this.mainFormValues = mainFormValues;
 
-    this.form_main.get('comment').setValue(this.finalEnrollment.comment);
     if (this.finalEnrollment.driver != null) {
       this.form_driverPassenger.get('driver').setValue(this.finalEnrollment.driver);
       this.form_driverPassenger.get('seats').setValue(this.finalEnrollment.driver.seats);
@@ -314,10 +298,6 @@ export class EnrollmentCreateComponent implements OnInit {
    * FORM GETTER
    * FORM GETTER
    */
-  private disableNameInput() {
-    this.getName().disable();
-  }
-
   private getSeats() {
     return this.form_driverPassenger.get('seats');
   }
@@ -330,19 +310,7 @@ export class EnrollmentCreateComponent implements OnInit {
     return this.form_driverPassenger.get('service');
   }
 
-  private getComment() {
-    return this.form_main.get('comment');
-  }
-
   private getDriver() {
     return this.form_driverPassenger.get('driver');
-  }
-
-  private getName() {
-    return this.form_main.get('name');
-  }
-
-  private getSelfEnrollment() {
-    return this.form_selfEnrollment.get('selfEnrollment');
   }
 }

@@ -14,9 +14,9 @@ describe('Enrollment Edit Page', () => {
     it('appointment not found', async () => {
       page = new EnrollmentEditPage('unknownAppointment', 'any');
       browser.ignoreSynchronization = true;
-      await browser.get('/enrollment?a=unknownAppointment').then(() => {
-      }).catch(() => {
-      });
+
+      await browser.get('/enrollment?a=unknownAppointment');
+      browser.executeScript('window.localStorage.clear();');
       page.spinnerGone();
 
       expect(await page.appointmentNotFoundCardExists()).toBeTruthy();

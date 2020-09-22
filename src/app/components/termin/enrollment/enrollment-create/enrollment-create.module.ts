@@ -16,6 +16,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {LoadingDisableModule} from '../../../../directives/loading-disable/loading-disable.module';
 import {EnrollmentLoginMailModule} from '../enrollment-login-mail/enrollment-login-mail.module';
+import {EnrollmentMainFormModule} from '../enrollment-main-form/enrollment-main-form.module';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import {EnrollmentLoginMailModule} from '../enrollment-login-mail/enrollment-log
     LoadingDisableModule,
     EnrollmentLoginMailModule,
     MatStepperModule,
+    EnrollmentMainFormModule,
   ]
 })
 export class EnrollmentCreateModule {

@@ -1,0 +1,73 @@
+<form (ngSubmit)="save()"
+      [formGroup]="form_main">
+  <mat-card-content>
+    <div *ngIf="userIsLoggedIn"
+         [formGroup]="form_selfEnrollment"
+         class="additions tooltip-container self-enrollment">
+      <mat-checkbox (change)="changeSelfEnrollment()"
+                    formControlName="selfEnrollment"
+                    id="selfEnrollment">
+        Ich melde mich selber an
+      </mat-checkbox>
+      <!--suppress TypeScriptUnresolvedFunction -->
+      <mat-icon #tooltip="matTooltip"
+                (click)="tooltip.toggle()"
+                class="tooltip"
+                matTooltip="{{'Diese Anmeldung wird mit deinem Account verbunden. ' +
+                     'Somit kannst du von überall deine Anmeldung bearbeiten oder löschen.'}}">
+        info
+      </mat-icon>
+    </div>
+
+    <mat-form-field class="name">
+      <label for="name">
+        <input formControlName="name"
+               id="name"
+               matInput
+               placeholder="Name"
+               required>
+      </label>
+      <mat-error id="name-error">
+        {{ getNameErrorMessage() }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field [formGroup]="form_main">
+      <textarea cdkAutosizeMaxRows="5"
+                cdkAutosizeMinRows="1"
+                cdkTextareaAutosize
+                formControlName="comment"
+                id="comment"
+                matInput placeholder="Kommentar">
+      </textarea>
+    </mat-form-field>
+  </mat-card-content>
+
+  <div *ngIf="creatorError"
+       class="info after-input">
+    <mat-error id="creator-error">
+      {{ getCreatorErrorMessage() }}
+    </mat-error>
+  </div>
+
+  <mat-card-actions class="double">
+    <div>
+      <button [queryParams]="{a: appointment.link}"
+              [routerLink]="['/enroll']"
+              class="left"
+              color="primary"
+              id="back_main"
+              mat-button
+              type="button">
+        Abbrechen
+      </button>
+    </div>
+    <button [disabled]="creatorError"
+            color="primary"
+            id="next_main"
+            mat-raised-button
+            type="submit">
+      Weiter
+    </button>
+  </mat-card-actions>
+</form>

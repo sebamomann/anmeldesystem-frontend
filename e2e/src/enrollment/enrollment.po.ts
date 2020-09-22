@@ -46,6 +46,9 @@ export class EnrollmentPage {
 
   public setName(value: string) {
     const ref = this.getName();
+    const EC2 = protractor.ExpectedConditions;
+    browser.wait(EC2.elementToBeClickable(ref), 10000, 'Element taking too long to be clickable');
+
     return ref.clear().then(async () => {
       await ref.sendKeys(value);
     });
@@ -53,6 +56,8 @@ export class EnrollmentPage {
 
   public setEmail(value: string) {
     const ref = element(by.id('mail'));
+    const EC2 = protractor.ExpectedConditions;
+    browser.wait(EC2.elementToBeClickable(ref), 10000, 'Element taking too long to be clickable');
     return ref.clear().then(async () => {
       await ref.sendKeys(value);
     });

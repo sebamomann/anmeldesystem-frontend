@@ -18,4 +18,5 @@ export interface IEnrollmentModel {
   createdByUser?: boolean;
   token?: string;
   creator?: IUserModel;
+  selfEnrollment?: boolean;
 }

@@ -84,12 +84,14 @@ $max-width: 500px;
 
 html, body {
   height: 100%;
+  transition: none !important;
 }
 
 body {
   margin: 0;
   font-family: "Nunito", "Helvetica Neue", sans-serif;
 
+  a
   h1, h2, h3, h4 {
     font-family: "Montserrat", "Helvetica Neue", sans-serif;
   }

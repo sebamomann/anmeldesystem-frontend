@@ -8,14 +8,10 @@ describe('Enrollment Page - Unknown user', () => {
   it('Should display message on appointment not found', async () => {
     const page = new EnrollmentPage('unknownAppointment');
     browser.ignoreSynchronization = true;
-    await browser.get('/enroll/add?a=unknownAppointment')
-      .then(() => {
-      })
-      .catch(() => {
-      });
-    page.spinnerGone();
 
-    // TODO PRINT ERROR LOGS
+    await browser.get('/enroll/add?a=unknownAppointment');
+    browser.executeScript('window.localStorage.clear();');
+    page.spinnerGone();
 
     expect(await page.appointmentNotFoundCardExists()).toBeTruthy();
   });

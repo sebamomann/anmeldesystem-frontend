@@ -16,7 +16,9 @@ describe('Enrollment Page - Logged in', () => {
 
     // USER MANAGEMENT
     await page.logout();
+    browser.executeScript('window.localStorage.clear();');
     await page.login(user.username);
+
 
     // APPOINTMENT PREPARATION
     await browser.get('/enroll?a=' + appointmentLink); // removes **pinned** snackbar
