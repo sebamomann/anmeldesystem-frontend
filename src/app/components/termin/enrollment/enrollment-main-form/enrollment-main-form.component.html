@@ -3,7 +3,7 @@
   <mat-card-content>
     <div *ngIf="userIsLoggedIn"
          [formGroup]="form_selfEnrollment"
-         class="additions tooltip-container self-enrollment">
+         class="additions tooltip-container checkbox-standalone">
       <mat-checkbox (change)="changeSelfEnrollment()"
                     formControlName="selfEnrollment"
                     id="selfEnrollment">

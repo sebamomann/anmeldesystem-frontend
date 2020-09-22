@@ -1136,6 +1136,12 @@ $ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
   }
 }
 
+.checkbox-standalone {
+  text-align: left;
+  margin: 5px auto 0 !important;
+  padding-bottom: 1.25em;
+}
+
 .input-with-button-wrapper {
   mat-form-field {
     padding: 0 10px 0 0 !important;
