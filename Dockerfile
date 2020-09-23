@@ -27,14 +27,9 @@ COPY . .
 
 ARG BACKEND_URL="http://localhost:3000/"
 ENV BACKEND_URL=$BACKEND_URL
-RUN echo $BACKEND_URL;
 
-RUN echo $BACKEND_URL
-RUN cat ./src/assets/env.js
 RUN sed -i "s|http://localhost:3000|$BACKEND_URL|g" ./src/assets/env.js
-RUN cat ./src/assets/env.js
 
-RUN npm run-script build
 RUN npm run e2e
 RUN npm run-script build:prod
 
