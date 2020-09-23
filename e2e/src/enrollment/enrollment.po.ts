@@ -247,7 +247,19 @@ export class EnrollmentPage {
     return elm.click();
   }
 
-  public disableAnimation() {
-    element(by.css('body')).allowAnimations(false);
+  public getCheckName() {
+    const until = protractor.ExpectedConditions;
+    const elm = element(by.css('.enrollment'));
+    browser.wait(until.presenceOf(elm), 10000);
+
+    return element(by.css('.enrollment .user-information .name'));
+  }
+
+  public getCheckComment() {
+    const until = protractor.ExpectedConditions;
+    const elm = element(by.css('.enrollment'));
+    browser.wait(until.presenceOf(elm), 10000);
+
+    return element(by.css('.enrollment .comment'));
   }
 }

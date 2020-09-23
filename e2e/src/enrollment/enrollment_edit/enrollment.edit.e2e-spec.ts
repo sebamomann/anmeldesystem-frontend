@@ -64,14 +64,14 @@ describe('Enrollment Edit Page', () => {
           await page.navigateTo();
         });
 
-        describe('valid form attributes', () => {
-          beforeEach(async () => {
+        describe('form', () => {
+          it('correct attributes', async () => {
             await expect(page.getName().isEnabled()).toBe(false);
             await expect(page.getSubmit().isEnabled()).toBe(true);
             await expect((await page.creatorErrorExists())).toBeFalsy();
           });
 
-          it('valid form values', async () => {
+          it('valid values', async () => {
             expect(await page.getName().getAttribute('value')).toEqual(userEnrollmentValues.name);
             expect(await page.getComment().getAttribute('value')).toEqual(userEnrollmentValues.comment);
           });

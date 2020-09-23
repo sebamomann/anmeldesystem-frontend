@@ -1,40 +1,39 @@
 import {browser, protractor} from 'protractor';
 import {EnrollmentPage} from './enrollment.po';
 
-// TODO
-// validate check overview
-
 describe('Enrollment Page - Unknown user', () => {
-  it('Should display message on appointment not found', async () => {
-    const page = new EnrollmentPage('unknownAppointment');
-    browser.ignoreSynchronization = true;
+  const appointmentLink = 'protractorEnroll';
 
-    await browser.get('/enroll/add?a=unknownAppointment');
-    browser.executeScript('window.localStorage.clear();');
-    page.spinnerGone();
+  let page: EnrollmentPage;
 
-    expect(await page.appointmentNotFoundCardExists()).toBeTruthy();
+  describe('Faulty navigation', () => {
+    it('Should display message on appointment not found', async () => {
+      page = new EnrollmentPage('unknownAppointment');
+      browser.ignoreSynchronization = true;
+
+      await browser.get('/enroll/add?a=unknownAppointment');
+      browser.executeScript('window.localStorage.clear();');
+      page.spinnerGone();
+
+      expect(await page.appointmentNotFoundCardExists()).toBeTruthy();
+    });
   });
 
-  describe('main', () => {
+  describe('Main', () => {
     const user = {
       name: 'User Enroll Foreign',
       username: 'user_enroll_foreign'
     };
-    const appointmentLink = 'protractorEnroll';
-    let page = new EnrollmentPage(appointmentLink);
 
-    beforeAll(() => {
+    beforeAll(async () => {
+      page = new EnrollmentPage(appointmentLink);
+      browser.ignoreSynchronization = true;
       page.logout();
     });
 
     beforeEach(async () => {
       page = new EnrollmentPage(appointmentLink);
       browser.ignoreSynchronization = true;
-      // page.disableAnimation();
-
-      // USER MANAGEMENT
-      // await page.logout();
 
       // APPOINTMENT PREPARATION
       await browser.get('/enroll?a=' + appointmentLink); // NEEDED TO REMOVE "PINNED" Snackbar
@@ -71,52 +70,62 @@ describe('Enrollment Page - Unknown user', () => {
           await expect((await page.getNameError()).getText()).toEqual('Bitte gebe einen Namen an');
         });
 
-        describe('send', () => {
+        describe('next main', () => {
           beforeEach(() => {
             page.nextMain();
-            page.nextCheck();
           });
 
-          describe('loginAndMailForm', () => {
-            beforeEach(() => {
-              expect(page.loginAndMailFormExists()).toBeTruthy();
+          describe('enrollment check overview', () => {
+            it('correct data in check form', () => {
+              expect(page.getCheckName().getText()).toEqual(__name);
+              expect(page.getCheckComment().getText()).toEqual(__comment);
             });
 
-            it('go back to form data still inside', async () => {
-              page.goBack(); // back from mail and login
-              page.goBackCheck(); // back from check
-
-              const name = await page.getName().getAttribute('value');
-              const comment = await page.getComment().getAttribute('value');
-
-              expect(name).toEqual(__name);
-              expect(comment).toEqual(__comment);
-            });
-
-            describe('fill form', () => {
-              beforeEach(async () => {
-                await page.setEmail('mail@example.com');
+            describe('next check', () => {
+              beforeEach(() => {
+                page.nextCheck();
               });
 
-              // TODO NEED CORRECT MAIL
+              it('login and mail form present', () => {
+                expect(page.loginAndMailFormExists()).toBeTruthy();
+              });
 
-              describe('send', () => {
-                beforeEach(() => {
-                  page.submit();
+              it('go back to form data still inside', async () => {
+                page.goBack(); // back from mail and login
+                page.goBackCheck(); // back from check
+
+                const name = await page.getName().getAttribute('value');
+                const comment = await page.getComment().getAttribute('value');
+
+                expect(name).toEqual(__name);
+                expect(comment).toEqual(__comment);
+              });
+
+              describe('fill form', () => {
+                beforeEach(async () => {
+                  await page.setEmail('mail@example.com');
                 });
 
-                it('should complete enrollment', async () => {
-                  expect(
-                    browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
-                      .catch(() => {
-                        return false;
-                      })
-                  ).toBeTruthy(`Url match could not succeed`);
-                  expect(await page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
-                });
+                // TODO NEED CORRECT MAIL
 
-                it('name already in use', async () => {
-                  await expect((await page.getNameError()).getText()).toEqual('Es besteht bereits eine Anmeldung mit diesem Namen');
+                describe('send', () => {
+                  beforeEach(() => {
+                    page.submit();
+                  });
+
+                  it('should complete enrollment', async () => {
+                    expect(
+                      browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
+                        .catch(() => {
+                          return false;
+                        })
+                    ).toBeTruthy(`Url match could not succeed`);
+                    expect(await page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
+                  });
+
+                  it('name already in use', async () => {
+                    await expect((await page.getNameError()).getText()).toEqual('Es besteht bereits eine Anmeldung mit diesem Namen');
+                  });
                 });
               });
             });

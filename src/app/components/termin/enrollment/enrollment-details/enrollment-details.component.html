@@ -1,14 +1,19 @@
 <div class="enrollment">
-  <span class="user-information">
-    <mat-icon *ngIf="enrollment.driver"> directions_car </mat-icon>
-      <ng-container *ngIf="enrollment.creator">{{enrollment.creator.name}}</ng-container>
-      <ng-container *ngIf="!enrollment.creator">{{enrollment.name}}</ng-container>
-      <span *ngIf="enrollment.creator">@{{enrollment.creator.name}}</span>
-  </span>
+  <div class="user-information">
+    <mat-icon *ngIf="enrollment.driver"> directions_car</mat-icon>
+    <span class="name">
+        <ng-container *ngIf="enrollment.creator">{{enrollment.creator.name}}</ng-container>
+        <ng-container *ngIf="!enrollment.creator">{{enrollment.name}}</ng-container>
+    </span>
+    <span *ngIf="enrollment.creator"
+          class="username">
+      @{{enrollment.creator.name}}
+    </span>
+  </div>
 
   <ng-container *ngIf="enrollment.comment">
     <span class="separator small colored high"></span>
-    <span class="comment-block"> {{ enrollment.comment }} </span>
+    <span class="comment"> {{ enrollment.comment }} </span>
   </ng-container>
 
   <div *ngIf="appointment.additions.length > 0"
