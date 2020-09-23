@@ -122,8 +122,9 @@
 </ng-container>
 
 <ng-template #enrollmentGoneTmpls>
-  <mat-card class="float error empty" id="enrollment-not-found">
-    <img alt="error robot" src="/assets/img/404.svg">
+  <mat-card class="float error-card"
+            id="enrollment-not-found">
+    <img alt="anmeldesystem not found robot icon" src="/assets/img/404.svg">
     <span>Sorry, diese Anmeldung gibt es lieder nicht mehr.</span>
     <button [queryParams]="{a: appointment.link}"
             [routerLink]="['/enroll']"
