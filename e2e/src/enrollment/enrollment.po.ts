@@ -4,17 +4,16 @@ export class EnrollmentPage {
   constructor(private appointmentLink: string) {
   }
 
-  public async navigateTo() {
-    return browser.get('/enroll/add?a=' + this.appointmentLink)
-      .then(() => {
-        return this.waitForFormBuild();
-      })
-      .catch(() => {
-      });
+  public navigateTo() {
+    return browser.get('/enroll/add?a=' + this.appointmentLink);
   }
 
   public getMatCardTitle() {
-    return element(by.css('#title')).getText();
+    const EC = protractor.ExpectedConditions;
+    const elem = element(by.id('title'));
+    browser.wait(EC.visibilityOf(elem), 10000);
+
+    return elem;
   }
 
   public spinnerGone() {
@@ -25,15 +24,27 @@ export class EnrollmentPage {
   }
 
   public getName() {
-    return element(by.id('name'));
+    const EC = protractor.ExpectedConditions;
+    const elem = element(by.id('name'));
+    browser.wait(EC.visibilityOf(elem), 10000);
+
+    return elem;
   }
 
   public getUsername() {
-    return element(by.id('username'));
+    const EC = protractor.ExpectedConditions;
+    const elem = element(by.id('username'));
+    browser.wait(EC.visibilityOf(elem), 10000);
+
+    return elem;
   }
 
   public getComment() {
-    return element(by.id('comment'));
+    const EC = protractor.ExpectedConditions;
+    const elem = element(by.id('comment'));
+    browser.wait(EC.visibilityOf(elem), 10000);
+
+    return elem;
   }
 
   public getSubmit() {
@@ -41,7 +52,11 @@ export class EnrollmentPage {
   }
 
   public getNextMain() {
-    return element(by.id('next_main'));
+    const EC = protractor.ExpectedConditions;
+    const elem = element(by.id('next_main'));
+    browser.wait(EC.visibilityOf(elem), 10000);
+
+    return elem;
   }
 
   public setName(value: string) {
@@ -63,9 +78,9 @@ export class EnrollmentPage {
     });
   }
 
-  public setComment(value: string) {
-    const ref = element(by.id('comment'));
-    return ref.clear().then(() => ref.sendKeys(value));
+  public async setComment(value: string) {
+    const ref = this.getComment();
+    return await ref.clear().then(() => ref.sendKeys(value));
   }
 
   public submit() {
@@ -137,13 +152,18 @@ export class EnrollmentPage {
   }
 
   public getSelfEnrollment() {
+    const EC = protractor.ExpectedConditions;
+    const elem = element(by.id('selfEnrollment-input'));
+    browser.wait(EC.visibilityOf(elem), 10000);
+
     return element(by.id('selfEnrollment-input'));
   }
 
   public goBack() {
+    browser.sleep(100); // TODO ???????? thats dumb, but doesnt work otherwise somehow ....
     const elm = element(by.id('back'));
     const EC2 = protractor.ExpectedConditions;
-    browser.wait(EC2.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
+    browser.wait(EC2.visibilityOf(elm) && EC2.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
 
     return elm.click();
   }
@@ -151,7 +171,7 @@ export class EnrollmentPage {
   public goBackCheck() {
     const elm = element(by.id('back_check'));
     const EC2 = protractor.ExpectedConditions;
-    browser.wait(EC2.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
+    browser.wait(EC2.visibilityOf(elm) && EC2.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
 
     return elm.click();
   }
@@ -254,6 +274,15 @@ export class EnrollmentPage {
     await browser.wait(this.textNotToBePresentInElement(elm, ''), 5000, 'Element taking too long to appear in the DOM');
 
     return element(by.css('.enrollment .user-information .name'));
+  }
+
+  public async getCheckUsername() {
+    const until = protractor.ExpectedConditions;
+    const elm = element(by.css('.enrollment .user-information .username'));
+    browser.wait(until.presenceOf(elm), 10000);
+    await browser.wait(this.textNotToBePresentInElement(elm, ''), 5000, 'Element taking too long to appear in the DOM');
+
+    return element(by.css('.enrollment .user-information .username'));
   }
 
   public async getCheckComment() {

@@ -20,7 +20,6 @@ import {SpyLocation} from '@angular/common/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {RouterTestingModule} from '@angular/router/testing';
-import {GoBackHeaderComponent} from '../../util/go-back-header/go-back-header.component';
 import {Globals} from '../../../globals';
 
 describe('EnrollmentComponent', () => {
@@ -38,7 +37,7 @@ describe('EnrollmentComponent', () => {
         RouterTestingModule, BrowserAnimationsModule,
         MatTooltipModule, MatExpansionModule,
         MatSnackBarModule],
-      declarations: [EnrollmentComponent, GoBackHeaderComponent],
+      declarations: [EnrollmentComponent],
       providers: [{provide: Location, useClass: SpyLocation}, Globals],
     })
       .compileComponents();

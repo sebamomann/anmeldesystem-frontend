@@ -15,7 +15,7 @@ exports.config = {
   capabilities: {
     chromeOptions: {
       args: [
-        // '--headless',
+        '--headless',
         '--no-sandbox',
         '--disable-gpu',
         '--disable-dev-shm-usage'
@@ -37,14 +37,5 @@ exports.config = {
       project: require("path").join(__dirname, "./tsconfig.json"),
     });
     jasmine.getEnv().addReporter(new SpecReporter({spec: {displayStacktrace: true}}));
-
-    // Disable animations so e2e tests run more quickly
-    var disableNgAnimate = function () {
-      angular.module('disableNgAnimate', []).run(['$animate', function ($animate) {
-        $animate.enabled(false);
-      }]);
-    };
-
-    browser.addMockModule('disableNgAnimate', disableNgAnimate);
   },
 };

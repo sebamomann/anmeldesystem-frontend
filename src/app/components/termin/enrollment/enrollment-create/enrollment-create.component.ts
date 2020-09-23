@@ -138,17 +138,6 @@ export class EnrollmentCreateComponent implements OnInit {
     this.mainFormRef.setCreatorError();
   }
 
-  /**
-   * Check if id of addition is checked by enrollment.
-   *
-   * @param enrollment IEnrollmentModel Enrollment to search in
-   * @param id string ID of addition to check for
-   */
-  public enrollmentCheckedAddition: (enrollment: IEnrollmentModel, id: string) => boolean
-    = (enrollment: IEnrollmentModel, id: string): boolean => {
-    return enrollment.additions.findIndex(add => add.id === id) !== -1;
-  };
-
   public saveAdditionsForm() {
     this.finalEnrollment.additions = this.getIdsOfSelectedAdditions();
   }
