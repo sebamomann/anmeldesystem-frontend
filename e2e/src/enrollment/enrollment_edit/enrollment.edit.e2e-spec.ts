@@ -57,9 +57,7 @@ describe('Enrollment Edit Page', () => {
           await page.logout();
           await page.login(user_enroll_edit.username);
 
-          // APPOINTMENT PREPARATION
-          await browser.get('/enroll?a=' + appointmentLink); // NEEDED TO REMOVE "PINNED" Snackbar
-          page.spinnerGone();
+          browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
           await page.navigateTo();
         });
@@ -121,9 +119,7 @@ describe('Enrollment Edit Page', () => {
           await page.logout();
           await page.login(creator_enroll_edit.username);
 
-          // APPOINTMENT PREPARATION
-          await browser.get('/enroll?a=' + appointmentLink); // NEEDED TO REMOVE "PINNED" Snackbar
-          page.spinnerGone();
+          browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
           await page.navigateTo();
         });
@@ -176,9 +172,7 @@ describe('Enrollment Edit Page', () => {
           // USER MANAGEMENT
           await page.logout();
 
-          // APPOINTMENT PREPARATION
-          await browser.get('/enroll?a=' + appointmentLink); // NEEDED TO REMOVE "PINNED" Snackbar
-          page.spinnerGone();
+          browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
           await page.navigateTo();
 
@@ -264,9 +258,7 @@ describe('Enrollment Edit Page', () => {
           await page.logout();
           await page.login(creator_enroll_edit.username);
 
-          // APPOINTMENT PREPARATION
-          await browser.get('/enroll?a=' + appointmentLink); // NEEDED TO REMOVE "PINNED" Snackbar
-          page.spinnerGone();
+          browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
           await page.navigateTo();
         });

@@ -35,9 +35,7 @@ describe('Enrollment Page - Unknown user', () => {
       page = new EnrollmentPage(appointmentLink);
       browser.ignoreSynchronization = true;
 
-      // APPOINTMENT PREPARATION
-      await browser.get('/enroll?a=' + appointmentLink); // NEEDED TO REMOVE "PINNED" Snackbar
-      page.spinnerGone();
+      browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
       await page.navigateTo();
     });

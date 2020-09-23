@@ -22,9 +22,7 @@ describe('Enrollment Page - Logged in', () => {
         browser.executeScript('window.localStorage.clear();');
         await page.login(user.username);
 
-        // APPOINTMENT PREPARATION
-        await browser.get('/enroll?a=' + appointmentLink); // removes **pinned** snackbar
-        page.spinnerGone();
+        browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
         await page.navigateTo();
       });
@@ -88,9 +86,7 @@ describe('Enrollment Page - Logged in', () => {
         browser.executeScript('window.localStorage.clear();');
         await page.login(user_existing.username);
 
-        // APPOINTMENT PREPARATION
-        browser.get('/enroll?a=' + appointmentLink); // removes **pinned** snackbar
-        page.spinnerGone();
+        browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
         page.navigateTo();
       });
@@ -116,9 +112,7 @@ describe('Enrollment Page - Logged in', () => {
       browser.executeScript('window.localStorage.clear();');
       await page.login(user.username);
 
-      // APPOINTMENT PREPARATION
-      await browser.get('/enroll?a=' + appointmentLink); // removes **pinned** snackbar
-      page.spinnerGone();
+      browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
       await page.navigateTo();
     });
