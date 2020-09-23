@@ -3,6 +3,7 @@ import {EnrollmentPage} from './enrollment.po';
 
 describe('Enrollment Page - Logged in', () => {
   let page: EnrollmentPage;
+
   const user = {
     name: 'User Enroll',
     username: 'user_enroll'
@@ -19,7 +20,6 @@ describe('Enrollment Page - Logged in', () => {
     browser.executeScript('window.localStorage.clear();');
     await page.login(user.username);
 
-
     // APPOINTMENT PREPARATION
     await browser.get('/enroll?a=' + appointmentLink); // removes **pinned** snackbar
     page.spinnerGone();
@@ -27,37 +27,49 @@ describe('Enrollment Page - Logged in', () => {
     await page.navigateTo();
   });
 
-  it('Should display form with title "Anmelden"', async () => {
-    expect(await page.getMatCardTitle()).toEqual('Anmelden');
+  it('Should display form with title "Anmelden"', () => {
+    expect(page.getMatCardTitle()).toEqual('Anmelden');
   });
 
   describe('self enrollment', () => {
     const __comment = 'my cool comment';
 
-    beforeEach(async () => {
-      await expect(page.getName().isEnabled()).toBe(false);
-      await expect(page.getSelfEnrollment().isSelected()).toBe(true);
+    it('correct form attributes', () => {
+      expect(page.getName().isEnabled()).toBe(false);
+      expect(page.getSelfEnrollment().isSelected()).toBe(true);
     });
 
     describe('fill form', () => {
-      beforeEach(async () => {
-        await page.setComment(__comment);
+      beforeEach(() => {
+        page.setComment(__comment);
       });
 
-      describe('send', () => {
+      describe('next main', () => {
         beforeEach(() => {
           page.nextMain();
-          page.nextCheck();
         });
 
-        it('should complete enrollment', async () => {
-          expect(
-            browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
-              .catch(() => {
-                return false;
-              })
-          ).toBeTruthy(`Url match could not succced`);
-          expect(await page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
+        describe('enrollment check overview', () => {
+          it('correct data in check form', async () => {
+            await expect((await page.getCheckName()).getText()).toEqual(user.name);
+            await expect((await page.getCheckComment()).getText()).toEqual(__comment);
+          });
+
+          describe('next check', () => {
+            beforeEach(() => {
+              page.nextCheck();
+            });
+
+            it('should complete enrollment', () => {
+              expect(
+                browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
+                  .catch(() => {
+                    return false;
+                  })
+              ).toBeTruthy(`Url match could not succced`);
+              expect(page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
+            });
+          });
         });
       });
 
@@ -72,66 +84,99 @@ describe('Enrollment Page - Logged in', () => {
     const __name = 'foreign';
     const __comment = 'foreign_comment';
 
-    describe('fill form', () => {
-      beforeEach(async () => {
-        await page.deselectSelfEnrollment();
-        await expect(page.getNextMain().isEnabled()).toBe(true);
-
-        // enroll
-        await page.setName(__name);
-        await page.setComment(__comment);
+    describe('deselect self enrollment', () => {
+      beforeEach(() => {
+        page.deselectSelfEnrollment();
       });
 
-      it('name missing - send', async () => {
-        await page.clearName();
-
-        page.nextMain();
-
-        await expect((await page.getNameError()).getText()).toEqual('Bitte gebe einen Namen an');
+      it('name field enabled', () => {
+        expect(page.getNextMain().isEnabled()).toBe(true);
       });
 
-      describe('send', () => {
-        beforeEach(async () => {
-          page.nextMain();
-          page.nextCheck();
+      describe('fill form', () => {
+        beforeEach(() => {
+          page.setName(__name);
+          page.setComment(__comment);
         });
 
-        describe('valid - login and mail form without login part', () => {
-          beforeEach(async () => {
-            expect(page.loginAndMailFormExists()).toBeTruthy();
-            expect(page.loginAndMailFormLoginContentExists()).toBeFalsy();
-            expect(page.loginAndMailFormLoginContentAltExists()).toBeTruthy();
+        it('name missing - send', async () => {
+          page.clearName();
+
+          page.nextMain();
+
+          await expect((await page.getNameError()).getText()).toEqual('Bitte gebe einen Namen an');
+        });
+
+        describe('next main', () => {
+          beforeEach(() => {
+            page.nextMain();
           });
 
-          it('go back still having data (false self login)', async () => {
-            page.goBack();
-
-            expect(page.getSelfEnrollment().isSelected()).toBeFalsy();
-            await expect(await page.getName().getAttribute('value')).toEqual(__name);
-            await expect(await page.getComment().getAttribute('value')).toEqual(__comment);
-
-            await expect(await page.getName().getAttribute('readonly')).toBeNull();
-          });
-
-          describe('insert mail - submit', () => {
-            beforeEach(async () => {
-              await page.setEmail('mail@example.com');
-              page.submit();
+          describe('enrollment check overview', () => {
+            it('correct data in check form', async () => {
+              await expect((await page.getCheckName()).getText()).toEqual(__name);
+              await expect((await page.getCheckComment()).getText()).toEqual(__comment);
             });
 
-            it('should complete enrollment', async () => {
-              expect(
-                browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
-                  .catch(() => {
-                    return false;
-                  })
-              ).toBeTruthy(`Url match could not succced`);
-              expect(await page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
-            });
+            describe('next check', () => {
+              beforeEach(() => {
+                page.nextCheck();
+              });
 
-            // send second time
-            it('name already in use', async () => {
-              await expect((await page.getNameError()).getText()).toEqual('Es besteht bereits eine Anmeldung mit diesem Namen');
+              it('login and mail form exists without login part', () => {
+                expect(page.loginAndMailFormExists()).toBeTruthy();
+                expect(page.loginAndMailFormLoginContentExists()).toBeFalsy();
+                expect(page.loginAndMailFormLoginContentAltExists()).toBeTruthy();
+              });
+
+              describe('go back to check', () => {
+                beforeEach(() => {
+                  page.goBack();
+                });
+
+                it('correct check form', async () => {
+                  await expect((await page.getCheckName()).getText()).toEqual(__name);
+                  await expect((await page.getCheckComment()).getText()).toEqual(__comment);
+                });
+
+                describe('go back to main form', () => {
+                  beforeEach(() => {
+                    page.goBackCheck(); // go back to main
+                  });
+
+                  it('correct main form values', () => {
+                    expect(page.getName().getAttribute('value')).toEqual(__name);
+                    expect(page.getComment().getAttribute('value')).toEqual(__comment);
+                  });
+
+                  it('correct main form attributes', () => {
+                    expect(page.getSelfEnrollment().isSelected()).toBeFalsy();
+                    expect(page.getName().getAttribute('readonly')).toBeNull();
+                  });
+                });
+              });
+
+              describe('insert mail - submit', () => {
+                beforeEach(() => {
+                  page.setEmail('mail@example.com');
+
+                  page.submit();
+                });
+
+                it('should complete enrollment', () => {
+                  expect(
+                    browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
+                      .catch(() => {
+                        return false;
+                      })
+                  ).toBeTruthy(`Url match could not succeed`);
+                  expect(page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
+                });
+
+                it('name already in use', async () => {
+                  await expect((await page.getNameError()).getText()).toEqual('Es besteht bereits eine Anmeldung mit diesem Namen');
+                });
+              });
             });
           });
         });

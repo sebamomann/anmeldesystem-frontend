@@ -195,7 +195,7 @@ export class EnrollmentPage {
     return browser.wait(EC.presenceOf(e), 10000, 'Form could not be loaded');
   }
 
-  public async clearName() {
+  public clearName() {
     const ref = this.getName();
     ref.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, 'a'));
     ref.sendKeys(protractor.Key.BACK_SPACE);
@@ -247,18 +247,20 @@ export class EnrollmentPage {
     return elm.click();
   }
 
-  public getCheckName() {
+  public async getCheckName() {
     const until = protractor.ExpectedConditions;
-    const elm = element(by.css('.enrollment'));
+    const elm = element(by.css('.enrollment .user-information .name'));
     browser.wait(until.presenceOf(elm), 10000);
+    await browser.wait(this.textNotToBePresentInElement(elm, ''), 5000, 'Element taking too long to appear in the DOM');
 
     return element(by.css('.enrollment .user-information .name'));
   }
 
-  public getCheckComment() {
+  public async getCheckComment() {
     const until = protractor.ExpectedConditions;
-    const elm = element(by.css('.enrollment'));
+    const elm = element(by.css('.enrollment .comment'));
     browser.wait(until.presenceOf(elm), 10000);
+    await browser.wait(this.textNotToBePresentInElement(elm, ''), 5000, 'Element taking too long to appear in the DOM');
 
     return element(by.css('.enrollment .comment'));
   }
