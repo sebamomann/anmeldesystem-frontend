@@ -1,4 +1,9 @@
-<div class="enrollment">
+<div [attr.enrollment-id]="enrollment.id"
+     [ngClass]="{
+       'creator': enrollment.creator,
+       'unknown': !enrollment.creator
+       }"
+     class="enrollment">
   <div class="user-information">
     <mat-icon *ngIf="enrollment.driver"> directions_car</mat-icon>
     <span class="name">
@@ -12,7 +17,7 @@
   </div>
 
   <ng-container *ngIf="enrollment.comment">
-    <span class="separator small colored high"></span>
+    <span class="separator small colored high comment-separator"></span>
     <span class="comment"> {{ enrollment.comment }} </span>
   </ng-container>
 
