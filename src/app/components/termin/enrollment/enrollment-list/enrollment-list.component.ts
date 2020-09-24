@@ -353,7 +353,7 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
 
                 this.appointmentProvider.update(this.appointment);
 
-                this.snackBar.open(`"${enrollment.name}" gelöscht`, null, {
+                this.snackBar.open(`"${name}" gelöscht`, null, {
                   duration: 2000,
                   panelClass: 'snackbar-default'
                 });

@@ -38,17 +38,19 @@
             </app-enrollment-details>
           </mat-expansion-panel-header>
 
-          <div class="enrollment-additions">
+          <div [attr.enrollment-id]="enrollment.id" class="enrollment-additions">
             <mat-icon (click)="preCheckOpenConfirmationDialog(enrollment, 'edit')"
                       [active]="sendingRequestEmitEdit"
                       [hideValue]="true"
                       [innerValue]="'edit'"
+                      class="edit"
                       appLoadingDisable>edit
             </mat-icon>
             <mat-icon (click)="preCheckOpenConfirmationDialog(enrollment, 'delete')"
                       [active]="sendingRequestEmitDelete"
                       [hideValue]="true"
                       [innerValue]="'delete'"
+                      class="delete"
                       appLoadingDisable>delete
             </mat-icon>
           </div>

@@ -233,7 +233,7 @@ export class AppointmentOverviewPage {
   }
 
   async getEnrollmentName(id: string) {
-    const elem = element(by.css('[enrollment-id="' + id + '"] .user-information .name'));
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment .user-information .name'));
 
     const EC = protractor.ExpectedConditions;
     browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
@@ -243,27 +243,92 @@ export class AppointmentOverviewPage {
   }
 
   enrollmentUsernamePresent(id: string) {
-    const elem = element(by.css('[enrollment-id="' + id + '"] .user-information .username'));
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment .user-information .username'));
     return elem.isPresent();
   }
 
   enrollmentCommentPresent(id: string) {
-    const elem = element(by.css('[enrollment-id="' + id + '"] .comment'));
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment .comment'));
     return elem.isPresent();
   }
 
   enrollmentCommentSeparatorPresent(id: string) {
-    const elem = element(by.css('[enrollment-id="' + id + '"] .comment-separator'));
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment .comment-separator'));
     return elem.isPresent();
   }
 
   async getEnrollmentComment(id: string) {
-    const elem = element(by.css('[enrollment-id="' + id + '"] .comment'));
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment .comment'));
 
     const EC = protractor.ExpectedConditions;
     browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
     await browser.wait(this.textNotToBePresentInElement(elem, ''), 5000, 'Element taking too long to appear in the DOM');
 
     return elem;
+  }
+
+  clickEnrollment(id: string) {
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
+
+    return elem.click();
+  }
+
+  enrollmentExpanded(id: string) {
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment-additions'));
+    return elem.isPresent();
+  }
+
+  clickEnrollmentDelete(id: string) {
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment-additions .delete'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
+
+    return elem.click();
+  }
+
+  clickEnrollmentEdit(id: string) {
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment-additions .edit'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
+
+    return elem.click();
+  }
+
+  confirmationDialogOpened() {
+    const elem = this.getConfirmationDialog();
+
+    return elem.isPresent();
+  }
+
+  getConfirmationDialog() {
+    const elem = element(by.css('.confirmation-dialog'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
+
+    return elem;
+  }
+
+  getConfirmationDialogMessage() {
+    const elem = element(by.css('.confirmation-dialog .message'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
+
+    return elem;
+  }
+
+  confirm() {
+    const elem = element(by.id('confirm'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
+
+    return elem.click();
   }
 }

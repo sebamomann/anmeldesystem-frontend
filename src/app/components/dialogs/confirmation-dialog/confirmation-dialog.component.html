@@ -1,7 +1,18 @@
-<div mat-dialog-content>
-  {{message}}
-</div>
-<div mat-dialog-actions>
-  <button (click)="onNoClick()" mat-button>Nein</button>
-  <button [mat-dialog-close]="true" cdkFocusInitial mat-button>Ja</button>
+<div class="confirmation-dialog">
+  <div class="message" mat-dialog-content>
+    {{message}}
+  </div>
+  <div mat-dialog-actions>
+    <button (click)="onNoClick()"
+            id="cancel"
+            mat-button>
+      Nein
+    </button>
+    <button [mat-dialog-close]="true"
+            cdkFocusInitial
+            id="confirm"
+            mat-button>
+      Ja
+    </button>
+  </div>
 </div>
