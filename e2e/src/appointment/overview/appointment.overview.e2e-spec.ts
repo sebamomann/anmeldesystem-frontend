@@ -6,6 +6,14 @@ describe('Appointment Overview Page', () => {
 
   let page: AppointmentOverviewPage;
 
+  // TODO
+  // split into multiple?
+  // layout
+  // edit
+  // delete
+  // appointment-details
+
+
   describe('Faulty navigation', () => {
     it('appointment not found', async () => {
       page = new AppointmentOverviewPage('unknownAppointment');
