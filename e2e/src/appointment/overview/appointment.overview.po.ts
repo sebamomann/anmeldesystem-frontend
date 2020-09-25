@@ -285,7 +285,7 @@ export class AppointmentOverviewPage {
     const elem = element(by.css('[enrollment-id="' + id + '"].enrollment-additions .delete'));
 
     const EC = protractor.ExpectedConditions;
-    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
+    browser.wait(EC.elementToBeClickable(elem), 10000, 'Element taking too long to be present');
 
     return elem.click();
   }
@@ -294,7 +294,7 @@ export class AppointmentOverviewPage {
     const elem = element(by.css('[enrollment-id="' + id + '"].enrollment-additions .edit'));
 
     const EC = protractor.ExpectedConditions;
-    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
+    browser.wait(EC.elementToBeClickable(elem), 10000, 'Element taking too long to be present');
 
     return elem.click();
   }

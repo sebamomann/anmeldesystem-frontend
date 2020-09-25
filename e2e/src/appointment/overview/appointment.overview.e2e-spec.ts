@@ -1,6 +1,10 @@
 import {browser} from 'protractor';
 import {AppointmentOverviewPage} from './appointment.overview.po';
 
+const crypto = require('crypto');
+
+const salt = 'mysalt';
+
 describe('Appointment Overview Page', () => {
   const appointmentLink = 'protractorAppointmentOverview';
 
@@ -196,6 +200,127 @@ describe('Appointment Overview Page', () => {
               it('should show correct snackbar', () => {
                 expect(page.getSnackbar().getText())
                   .toEqual(`"${unknown_appointment_overview_creator_enrollment.name}" gelöscht`);
+              });
+            });
+          });
+        });
+      });
+    });
+
+    describe('as enrollment creator', () => {
+      describe('user enrollment', () => {
+        const user_appointment_overview_self = {
+          name: 'User Appointment Overview Self',
+          username: 'user_appointment_overview_self'
+        };
+
+        beforeEach(async () => {
+          page = new AppointmentOverviewPage(appointmentLink);
+          browser.ignoreSynchronization = true;
+
+          await page.logout();
+          browser.executeScript('window.localStorage.clear();');
+          await page.login(user_appointment_overview_self.username);
+          browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
+
+          await page.navigateTo();
+        });
+
+        describe('click enrollment', () => {
+          const user_appointment_overview_self_enrollment = {
+            id: 'cb5fb484-f6b0-4280-a5cd-479793b352fc',
+            name: user_appointment_overview_self.name,
+            comment: 'my comment'
+          };
+
+          beforeEach(() => {
+            page.clickEnrollment(user_appointment_overview_self_enrollment.id);
+          });
+
+          it('should open expansion body', () => {
+            expect(page.enrollmentExpanded(user_appointment_overview_self_enrollment.id)).toBeTruthy();
+          });
+
+          describe('click delete', () => {
+            beforeEach(() => {
+              page.clickEnrollmentDelete(user_appointment_overview_self_enrollment.id);
+            });
+
+            it('should show confirmation dialog', () => {
+              expect(page.confirmationDialogOpened()).toBeTruthy();
+            });
+
+            it('should show correct message', () => {
+              expect(page.getConfirmationDialogMessage().getText())
+                .toEqual(`Bist du sicher, dass du "${user_appointment_overview_self_enrollment.name}" löschen möchtest?`);
+            });
+
+            describe('confirm', () => {
+              beforeEach(() => {
+                page.confirm();
+              });
+
+              it('should show correct snackbar', () => {
+                expect(page.getSnackbar().getText())
+                  .toEqual(`"${user_appointment_overview_self_enrollment.name}" gelöscht`);
+              });
+            });
+          });
+        });
+      });
+
+      describe('unknown enrollment', () => {
+        const unknown_appointment_overview_self_enrollment = {
+          id: 'abeb4b4a-fb5b-4d3b-95be-16f264ac32ad',
+          name: 'Unknown Appointment Overview Self',
+          comment: 'my comment'
+        };
+
+        beforeEach(async () => {
+          page = new AppointmentOverviewPage(appointmentLink);
+          browser.ignoreSynchronization = true;
+
+          await page.logout();
+          browser.executeScript('window.localStorage.clear();');
+          const token = crypto.createHash('sha256').update(unknown_appointment_overview_self_enrollment.id + salt).digest('hex');
+          const permissions = [{link: appointmentLink, enrollments: [{id: unknown_appointment_overview_self_enrollment.id, token}]}];
+          browser.executeScript('return window.localStorage.setItem(\'permissions\', \'' + JSON.stringify(permissions) + '\');');
+          browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
+
+          await page.navigateTo();
+        });
+
+        describe('click enrollment', () => {
+          beforeEach(() => {
+            page.clickEnrollment(unknown_appointment_overview_self_enrollment.id);
+          });
+
+          it('should open expansion body', () => {
+            expect(page.enrollmentExpanded(unknown_appointment_overview_self_enrollment.id)).toBeTruthy();
+          });
+
+          describe('click delete', () => {
+            beforeEach(() => {
+              page.clickEnrollmentDelete(unknown_appointment_overview_self_enrollment.id);
+            });
+
+            it('should show confirmation dialog', () => {
+              expect(page.confirmationDialogOpened()).toBeTruthy();
+            });
+
+            it('should show correct message', () => {
+              expect(page.getConfirmationDialogMessage().getText())
+                .toEqual(`Bist du sicher, dass du "${unknown_appointment_overview_self_enrollment.name}" löschen möchtest?`);
+            });
+
+            describe('confirm', () => {
+              beforeEach(() => {
+                page.confirm();
+              });
+
+              it('should show correct snackbar', () => {
+                expect(page.getSnackbar().getText())
+                  .toEqual(`"${unknown_appointment_overview_self_enrollment.name}" gelöscht`);
               });
             });
           });
