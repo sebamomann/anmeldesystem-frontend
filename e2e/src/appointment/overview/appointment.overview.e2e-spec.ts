@@ -43,7 +43,7 @@ describe('Appointment Overview Page', () => {
     });
 
     describe('Count enrollment list', () => {
-      it('should show 6 enrollments', () => {
+      it('should show 7 enrollments', () => {
         expect(page.getEnrollments().count()).toBe(7);
       });
 
@@ -52,7 +52,7 @@ describe('Appointment Overview Page', () => {
           .filter(async (e) => (await e.getAttribute('class')).includes('creator')).count()).toBe(3);
       });
 
-      it('should show 3 unknown enrollments', () => {
+      it('should show 4 unknown enrollments', () => {
         expect(page.getEnrollments()
           .filter(async (e) => (await e.getAttribute('class')).includes('unknown')).count()).toBe(4);
       });
