@@ -305,8 +305,23 @@ export class AppointmentOverviewPage {
     return elem.isPresent();
   }
 
+  missingPermissionDialogOpened() {
+    const elem = this.getMissingPermissionDialog();
+
+    return elem.isPresent();
+  }
+
   getConfirmationDialog() {
     const elem = element(by.css('.confirmation-dialog'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
+
+    return elem;
+  }
+
+  getMissingPermissionDialog() {
+    const elem = element(by.css('.missing-permission-dialog'));
 
     const EC = protractor.ExpectedConditions;
     browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');

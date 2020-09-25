@@ -226,43 +226,71 @@ describe('Appointment Overview Page', () => {
           await page.navigateTo();
         });
 
-        describe('click enrollment', () => {
-          const user_appointment_overview_self_enrollment = {
-            id: 'cb5fb484-f6b0-4280-a5cd-479793b352fc',
-            name: user_appointment_overview_self.name,
-            comment: 'my comment'
-          };
+        describe('click enrollment - valid', () => {
+          describe('valid', () => {
+            const user_appointment_overview_self_enrollment = {
+              id: 'cb5fb484-f6b0-4280-a5cd-479793b352fc',
+              name: user_appointment_overview_self.name,
+              comment: 'my comment'
+            };
 
-          beforeEach(() => {
-            page.clickEnrollment(user_appointment_overview_self_enrollment.id);
-          });
-
-          it('should open expansion body', () => {
-            expect(page.enrollmentExpanded(user_appointment_overview_self_enrollment.id)).toBeTruthy();
-          });
-
-          describe('click delete', () => {
             beforeEach(() => {
-              page.clickEnrollmentDelete(user_appointment_overview_self_enrollment.id);
+              page.clickEnrollment(user_appointment_overview_self_enrollment.id);
             });
 
-            it('should show confirmation dialog', () => {
-              expect(page.confirmationDialogOpened()).toBeTruthy();
+            it('should open expansion body', () => {
+              expect(page.enrollmentExpanded(user_appointment_overview_self_enrollment.id)).toBeTruthy();
             });
 
-            it('should show correct message', () => {
-              expect(page.getConfirmationDialogMessage().getText())
-                .toEqual(`Bist du sicher, dass du "${user_appointment_overview_self_enrollment.name}" löschen möchtest?`);
-            });
-
-            describe('confirm', () => {
+            describe('click delete', () => {
               beforeEach(() => {
-                page.confirm();
+                page.clickEnrollmentDelete(user_appointment_overview_self_enrollment.id);
               });
 
-              it('should show correct snackbar', () => {
-                expect(page.getSnackbar().getText())
-                  .toEqual(`"${user_appointment_overview_self_enrollment.name}" gelöscht`);
+              it('should show confirmation dialog', () => {
+                expect(page.confirmationDialogOpened()).toBeTruthy();
+              });
+
+              it('should show correct message', () => {
+                expect(page.getConfirmationDialogMessage().getText())
+                  .toEqual(`Bist du sicher, dass du "${user_appointment_overview_self_enrollment.name}" löschen möchtest?`);
+              });
+
+              describe('confirm', () => {
+                beforeEach(() => {
+                  page.confirm();
+                });
+
+                it('should show correct snackbar', () => {
+                  expect(page.getSnackbar().getText())
+                    .toEqual(`"${user_appointment_overview_self_enrollment.name}" gelöscht`);
+                });
+              });
+            });
+          });
+
+          describe('invalid', () => {
+            const unknown_appointment_overview_no_permission = {
+              id: '3c38f1cd-a740-4d26-b5d6-0cea92bb97dd',
+              name: 'Unknown Appointment Overview No Permission',
+              comment: 'my comment'
+            };
+
+            beforeEach(() => {
+              page.clickEnrollment(unknown_appointment_overview_no_permission.id);
+            });
+
+            it('should open expansion body', () => {
+              expect(page.enrollmentExpanded(unknown_appointment_overview_no_permission.id)).toBeTruthy();
+            });
+
+            describe('click delete', () => {
+              beforeEach(() => {
+                page.clickEnrollmentDelete(unknown_appointment_overview_no_permission.id);
+              });
+
+              it('should show missing permission snackbar', () => {
+                expect(page.getSnackbar().getText()).toEqual('Fehlende Berechtigungen');
               });
             });
           });
@@ -291,36 +319,64 @@ describe('Appointment Overview Page', () => {
         });
 
         describe('click enrollment', () => {
-          beforeEach(() => {
-            page.clickEnrollment(unknown_appointment_overview_self_enrollment.id);
-          });
-
-          it('should open expansion body', () => {
-            expect(page.enrollmentExpanded(unknown_appointment_overview_self_enrollment.id)).toBeTruthy();
-          });
-
-          describe('click delete', () => {
+          describe('valid', () => {
             beforeEach(() => {
-              page.clickEnrollmentDelete(unknown_appointment_overview_self_enrollment.id);
+              page.clickEnrollment(unknown_appointment_overview_self_enrollment.id);
             });
 
-            it('should show confirmation dialog', () => {
-              expect(page.confirmationDialogOpened()).toBeTruthy();
+            it('should open expansion body', () => {
+              expect(page.enrollmentExpanded(unknown_appointment_overview_self_enrollment.id)).toBeTruthy();
             });
 
-            it('should show correct message', () => {
-              expect(page.getConfirmationDialogMessage().getText())
-                .toEqual(`Bist du sicher, dass du "${unknown_appointment_overview_self_enrollment.name}" löschen möchtest?`);
-            });
-
-            describe('confirm', () => {
+            describe('click delete', () => {
               beforeEach(() => {
-                page.confirm();
+                page.clickEnrollmentDelete(unknown_appointment_overview_self_enrollment.id);
               });
 
-              it('should show correct snackbar', () => {
-                expect(page.getSnackbar().getText())
-                  .toEqual(`"${unknown_appointment_overview_self_enrollment.name}" gelöscht`);
+              it('should show confirmation dialog', () => {
+                expect(page.confirmationDialogOpened()).toBeTruthy();
+              });
+
+              it('should show correct message', () => {
+                expect(page.getConfirmationDialogMessage().getText())
+                  .toEqual(`Bist du sicher, dass du "${unknown_appointment_overview_self_enrollment.name}" löschen möchtest?`);
+              });
+
+              describe('confirm', () => {
+                beforeEach(() => {
+                  page.confirm();
+                });
+
+                it('should show correct snackbar', () => {
+                  expect(page.getSnackbar().getText())
+                    .toEqual(`"${unknown_appointment_overview_self_enrollment.name}" gelöscht`);
+                });
+              });
+            });
+          });
+
+          describe('invalid', () => {
+            const unknown_appointment_overview_no_permission = {
+              id: '3c38f1cd-a740-4d26-b5d6-0cea92bb97dd',
+              name: 'Unknown Appointment Overview No Permission',
+              comment: 'my comment'
+            };
+
+            beforeEach(() => {
+              page.clickEnrollment(unknown_appointment_overview_no_permission.id);
+            });
+
+            it('should open expansion body', () => {
+              expect(page.enrollmentExpanded(unknown_appointment_overview_no_permission.id)).toBeTruthy();
+            });
+
+            describe('click delete', () => {
+              beforeEach(() => {
+                page.clickEnrollmentDelete(unknown_appointment_overview_no_permission.id);
+              });
+
+              it('should show missing permission dialog', () => {
+                expect(page.missingPermissionDialogOpened()).toBeTruthy();
               });
             });
           });
