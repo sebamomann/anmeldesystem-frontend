@@ -1,6 +1,6 @@
 {
   "name": "anmeldesystem-ui",
-  "version": "1.4.8-1",
+  "version": "1.4.9",
   "scripts": {
     "ng": "ng",
     "clean": "rimraf ./dist",
