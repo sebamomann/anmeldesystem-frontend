@@ -1,5 +1,5 @@
 import {browser, by, element, protractor} from 'protractor';
-import {HttpClient} from 'protractor-http-client';
+import {HttpClient} from 'protractor-http-client/dist/http-client';
 
 // const request = require('request');
 
