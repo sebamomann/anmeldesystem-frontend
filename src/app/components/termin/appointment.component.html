@@ -1,8 +1,10 @@
 <ng-container *ngIf="appointment$ | async as appointment; else loadingTemplate">
   <div class="wrapper">
-    <div class="head-wrapper masonry-item">
-      <app-appointment-data [appointment]="appointment"></app-appointment-data>
+    <app-appointment-data [appointment]="appointment"
+                          class="masonry-item">
+    </app-appointment-data>
 
+    <div class="information-wrapper masonry-item">
       <mat-card *ngIf="!authenticationService.userIsLoggedIn()"
                 class="split slim">
         <span>Dir fehlen möglicherweise Berechtigungen für diesen Termin</span>
@@ -13,9 +15,6 @@
           Login
         </button>
       </mat-card>
-    </div>
-
-    <div class="information-wrapper masonry-item">
       <mat-card *ngIf="!websocketSubscriptionEstablished && !hideWebsocketSubscriptionInformation"
                 class="closable slim">
         <mat-icon (click)="hideWebsocketSubscriptionInformation = true" class="close">close</mat-icon>
