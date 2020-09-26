@@ -171,7 +171,6 @@ describe('Enrollment Edit Page', () => {
 
           // USER MANAGEMENT
           await page.logout();
-
           browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
           await page.navigateTo();

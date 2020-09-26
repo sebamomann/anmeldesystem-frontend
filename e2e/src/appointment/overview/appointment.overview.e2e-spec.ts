@@ -114,7 +114,6 @@ describe('Appointment Overview Page', () => {
         browser.ignoreSynchronization = true;
 
         await page.logout();
-        browser.executeScript('window.localStorage.clear();');
         await page.login(user_appointment_creator.username);
         browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
@@ -219,7 +218,6 @@ describe('Appointment Overview Page', () => {
           browser.ignoreSynchronization = true;
 
           await page.logout();
-          browser.executeScript('window.localStorage.clear();');
           await page.login(user_appointment_overview_self.username);
           browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
@@ -309,7 +307,6 @@ describe('Appointment Overview Page', () => {
           browser.ignoreSynchronization = true;
 
           await page.logout();
-          browser.executeScript('window.localStorage.clear();');
           const token = crypto.createHash('sha256').update(unknown_appointment_overview_self_enrollment.id + salt).digest('hex');
           const permissions = [{link: appointmentLink, enrollments: [{id: unknown_appointment_overview_self_enrollment.id, token}]}];
           browser.executeScript('return window.localStorage.setItem(\'permissions\', \'' + JSON.stringify(permissions) + '\');');

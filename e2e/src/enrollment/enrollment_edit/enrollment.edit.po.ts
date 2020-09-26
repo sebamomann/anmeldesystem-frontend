@@ -170,8 +170,8 @@ export class EnrollmentEditPage {
     await this.submit();
   }
 
-  public logout() {
-    return browser.get('/account/logout');
+  public async logout() {
+    await browser.executeScript('window.localStorage.clear();');
   }
 
   public waitForFormBuild() {

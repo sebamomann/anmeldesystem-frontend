@@ -28,7 +28,7 @@ describe('Enrollment Page - Unknown user', () => {
     beforeAll(async () => {
       page = new EnrollmentPage(appointmentLink);
       browser.ignoreSynchronization = true;
-      page.logout();
+      await page.logout();
     });
 
     beforeEach(async () => {

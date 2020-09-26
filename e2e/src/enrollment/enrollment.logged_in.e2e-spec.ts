@@ -19,7 +19,6 @@ describe('Enrollment Page - Logged in', () => {
 
         // USER MANAGEMENT
         await page.logout();
-        browser.executeScript('window.localStorage.clear();');
         await page.login(user.username);
 
         browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
@@ -82,8 +81,7 @@ describe('Enrollment Page - Logged in', () => {
         browser.ignoreSynchronization = true;
 
         // USER MANAGEMENT
-        page.logout();
-        browser.executeScript('window.localStorage.clear();');
+        await page.logout();
         await page.login(user_existing.username);
 
         browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
@@ -109,7 +107,6 @@ describe('Enrollment Page - Logged in', () => {
 
       // USER MANAGEMENT
       await page.logout();
-      browser.executeScript('window.localStorage.clear();');
       await page.login(user.username);
 
       browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
