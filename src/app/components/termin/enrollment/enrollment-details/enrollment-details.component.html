@@ -21,7 +21,7 @@
     <span class="comment"> {{ enrollment.comment }} </span>
   </ng-container>
 
-  <div *ngIf="appointment.additions.length > 0"
+  <div *ngIf="appointment.additions.length > 0 && showAdditions"
        class="addition-list-wrapper">
 
     <span class="separator light small high"></span>

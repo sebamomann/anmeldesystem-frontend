@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
 
@@ -7,15 +7,19 @@ import {IAppointmentModel} from '../../../../models/IAppointment.model';
   templateUrl: './enrollment-details.component.html',
   styleUrls: ['./enrollment-details.component.scss']
 })
-export class EnrollmentDetailsComponent implements OnInit {
+export class EnrollmentDetailsComponent implements OnInit, OnChanges {
 
   @Input() appointment: IAppointmentModel;
   @Input() enrollment: IEnrollmentModel;
+  @Input() showAdditions = true;
 
   constructor() {
   }
 
   ngOnInit() {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
   }
 
   /**
