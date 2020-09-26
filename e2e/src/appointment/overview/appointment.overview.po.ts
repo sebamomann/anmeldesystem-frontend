@@ -1,4 +1,5 @@
 import {browser, by, element, protractor} from 'protractor';
+import {HttpClient} from 'protractor-http-client/dist/http-client';
 
 export class AppointmentOverviewPage {
   constructor(private appointmentLink: string) {
@@ -128,11 +129,14 @@ export class AppointmentOverviewPage {
   }
 
   public async login(val: string) {
-    browser.get('/account/login');
+    const data = {
+      username: val,
+      password: '123',
+    };
+    const http = new HttpClient('http://localhost:3000');
 
-    await this.fillLoginData(val);
-
-    return browser.driver.wait(() => browser.driver.getCurrentUrl().then(url => /dashboard/.test(url)), 10000);
+    const res = await http.post('/auth/login', data);
+    await browser.executeScript('return window.localStorage.setItem(\'currentUser\', \'' + JSON.stringify(res.body) + '\');');
   }
 
   public getSelfEnrollment() {

@@ -47,8 +47,8 @@ describe('Appointment Overview Page', () => {
     });
 
     describe('Count enrollment list', () => {
-      it('should show 7 enrollments', () => {
-        expect(page.getEnrollments().count()).toBe(7);
+      it('should show 8 enrollments', () => {
+        expect(page.getEnrollments().count()).toBe(8);
       });
 
       it('should show 3 creator enrollments', () => {
@@ -56,9 +56,9 @@ describe('Appointment Overview Page', () => {
           .filter(async (e) => (await e.getAttribute('class')).includes('creator')).count()).toBe(3);
       });
 
-      it('should show 4 unknown enrollments', () => {
+      it('should show 55 unknown enrollments', () => {
         expect(page.getEnrollments()
-          .filter(async (e) => (await e.getAttribute('class')).includes('unknown')).count()).toBe(4);
+          .filter(async (e) => (await e.getAttribute('class')).includes('unknown')).count()).toBe(5);
       });
     });
 
