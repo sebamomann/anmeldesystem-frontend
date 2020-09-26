@@ -56,7 +56,7 @@ describe('Appointment Overview Page', () => {
           .filter(async (e) => (await e.getAttribute('class')).includes('creator')).count()).toBe(3);
       });
 
-      it('should show 55 unknown enrollments', () => {
+      it('should show 5 unknown enrollments', () => {
         expect(page.getEnrollments()
           .filter(async (e) => (await e.getAttribute('class')).includes('unknown')).count()).toBe(5);
       });
