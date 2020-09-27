@@ -1,6 +1,10 @@
 import {browser, protractor} from 'protractor';
 import {EnrollmentPage} from './enrollment.po';
 
+beforeAll(async () => {
+  await browser.get('/');
+});
+
 describe('Enrollment Page - Logged in', () => {
   let page: EnrollmentPage;
 

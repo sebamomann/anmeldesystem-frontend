@@ -5,6 +5,10 @@ const crypto = require('crypto');
 
 const salt = 'mysalt';
 
+beforeAll(async () => {
+  await browser.get('/');
+});
+
 describe('Enrollment Edit Page', () => {
   const appointmentLink = 'protractorEnrollEdit';
 
@@ -171,6 +175,7 @@ describe('Enrollment Edit Page', () => {
 
           // USER MANAGEMENT
           await page.logout();
+
           browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
           await page.navigateTo();

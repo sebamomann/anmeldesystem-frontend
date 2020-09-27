@@ -1,17 +1,23 @@
 import {browser, protractor} from 'protractor';
 import {LoginPage} from './login.po';
 
+beforeAll(async () => {
+  await browser.get('/');
+});
+
 describe('Login Page', () => {
   const user = {
     username: 'user_login',
     mail: 'user_login@example.com',
     password: '123',
   };
+
   const user_lock = {
     username: 'user_login_lock',
     mail: 'user_login_lock@example.com',
     password: '123',
   };
+
   let page = new LoginPage();
 
   beforeEach(async () => {

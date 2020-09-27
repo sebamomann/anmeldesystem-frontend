@@ -5,6 +5,10 @@ const crypto = require('crypto');
 
 const salt = 'mysalt';
 
+beforeAll(async () => {
+  await browser.get('/');
+});
+
 describe('Appointment Overview Page', () => {
   const appointmentLink = 'protractorAppointmentOverview';
 
@@ -16,7 +20,6 @@ describe('Appointment Overview Page', () => {
   // edit
   // delete
   // appointment-details
-
 
   describe('Faulty navigation', () => {
     it('appointment not found', async () => {
@@ -33,11 +36,6 @@ describe('Appointment Overview Page', () => {
   // ANGEPINNT MESSAGE
 
   describe('Main - Overall Layout', () => {
-    beforeAll(() => {
-      page = new AppointmentOverviewPage('unknownAppointment');
-      page.logout();
-    });
-
     beforeEach(async () => {
       page = new AppointmentOverviewPage(appointmentLink);
       browser.ignoreSynchronization = true;
@@ -115,6 +113,7 @@ describe('Appointment Overview Page', () => {
 
         await page.logout();
         await page.login(user_appointment_creator.username);
+
         browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
         await page.navigateTo();
@@ -219,6 +218,7 @@ describe('Appointment Overview Page', () => {
 
           await page.logout();
           await page.login(user_appointment_overview_self.username);
+
           browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
           await page.navigateTo();
@@ -307,8 +307,10 @@ describe('Appointment Overview Page', () => {
           browser.ignoreSynchronization = true;
 
           await page.logout();
+
           const token = crypto.createHash('sha256').update(unknown_appointment_overview_self_enrollment.id + salt).digest('hex');
           const permissions = [{link: appointmentLink, enrollments: [{id: unknown_appointment_overview_self_enrollment.id, token}]}];
+
           browser.executeScript('return window.localStorage.setItem(\'permissions\', \'' + JSON.stringify(permissions) + '\');');
           browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 

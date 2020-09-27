@@ -1,6 +1,10 @@
 import {browser, protractor} from 'protractor';
 import {EnrollmentPage} from './enrollment.po';
 
+beforeAll(async () => {
+  await browser.get('/');
+});
+
 describe('Enrollment Page - Unknown user', () => {
   const appointmentLink = 'protractorEnroll';
 
@@ -12,7 +16,7 @@ describe('Enrollment Page - Unknown user', () => {
       browser.ignoreSynchronization = true;
 
       await browser.get('/enroll/add?a=unknownAppointment');
-      browser.executeScript('window.localStorage.clear();');
+      await browser.executeScript('window.localStorage.clear();');
       page.spinnerGone();
 
       expect(await page.appointmentNotFoundCardExists()).toBeTruthy();
@@ -25,15 +29,11 @@ describe('Enrollment Page - Unknown user', () => {
       username: 'user_enroll_mid_login'
     };
 
-    beforeAll(async () => {
-      page = new EnrollmentPage(appointmentLink);
-      browser.ignoreSynchronization = true;
-      await page.logout();
-    });
-
     beforeEach(async () => {
       page = new EnrollmentPage(appointmentLink);
       browser.ignoreSynchronization = true;
+
+      await page.logout();
 
       browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
