@@ -1,5 +1,6 @@
 import {browser, by, element, protractor} from 'protractor';
 import {HttpClient} from 'protractor-http-client/dist/http-client';
+import {environment} from '../../../src/environments/environment';
 
 export class LoginPage {
   constructor() {
@@ -133,7 +134,7 @@ export class LoginPage {
       username: val,
       password: '123',
     };
-    const http = new HttpClient('http://localhost:3000');
+    const http = new HttpClient(environment.API_URL);
 
     const res = await http.post('/auth/login', data);
     await browser.executeScript('return window.localStorage.setItem(\'currentUser\', \'' + JSON.stringify(res.body) + '\');');

@@ -133,7 +133,7 @@ export class AppointmentOverviewPage {
       username: val,
       password: '123',
     };
-    const http = new HttpClient('http://localhost:3000');
+    const http = new HttpClient(environment.API_URL);
 
     const res = await http.post('/auth/login', data);
     await browser.executeScript('return window.localStorage.setItem(\'currentUser\', \'' + JSON.stringify(res.body) + '\');');
