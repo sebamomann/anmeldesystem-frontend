@@ -1,10 +1,6 @@
 import {browser, protractor} from 'protractor';
 import {EnrollmentPage} from './enrollment.po';
 
-beforeAll(async () => {
-  await browser.get('/');
-});
-
 describe('Enrollment Page - Logged in', () => {
   let page: EnrollmentPage;
 
@@ -15,11 +11,21 @@ describe('Enrollment Page - Logged in', () => {
     username: 'user_enroll_login'
   };
 
+  beforeAll(async () => {
+
+  });
+
   describe('self enrollment', () => {
     describe('main', () => {
       beforeEach(async () => {
         page = new EnrollmentPage(appointmentLink);
         browser.ignoreSynchronization = true;
+
+        await browser.get('/');
+
+        (browser.getWindowHandle());
+
+        browser.sleep(1000);
 
         // USER MANAGEMENT
         await page.logout();
