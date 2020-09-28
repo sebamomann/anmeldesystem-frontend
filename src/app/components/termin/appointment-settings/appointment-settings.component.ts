@@ -158,7 +158,9 @@ export class AppointmentSettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.appointment$$.unsubscribe();
+    if (this.appointment$$) {
+      this.appointment$$.unsubscribe();
+    }
   }
 
   private _save(data: any) {
