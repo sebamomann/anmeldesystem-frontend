@@ -36,7 +36,7 @@ export class UserDataComponent implements OnInit {
   });
   public hide = true;
 
-  public button: string;
+  public buttonText: string;
   public tooltip: string;
 
   public mailSuccess: string;
@@ -52,7 +52,7 @@ export class UserDataComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.button = this.isRegister ? 'Registrieren' : 'Speichern';
+    this.buttonText = this.isRegister ? 'Registrieren' : 'Speichern';
     this.tooltip = this.getToolTip();
 
     if (!this.isRegister) {
@@ -184,6 +184,7 @@ export class UserDataComponent implements OnInit {
         + '\r\n max_m '
         + '\r\n max_123_muster '
         + '\r\n'
+        + '\r\n Keine Großbuchstaben'
         + '\r\n Mindestens 3 Buchstaben. '
         + '\r\n Kein _ am Anfang oder Ende. '
         + '\r\n Nur ein _ in Folge.';
