@@ -167,6 +167,15 @@ export class EnrollmentPage {
     return element(by.id('selfEnrollment-input'));
   }
 
+  public getAddition(id: string) {
+    console.log('addition-' + id + '-input');
+    const EC = protractor.ExpectedConditions;
+    const elem = element(by.id('addition-' + id + '-input'));
+    browser.wait(EC.visibilityOf(elem), 10000);
+
+    return elem;
+  }
+
   public goBack() {
     browser.sleep(100); // TODO ???????? thats dumb, but doesnt work otherwise somehow ....
     const elm = element(by.id('back'));
@@ -240,6 +249,9 @@ export class EnrollmentPage {
   }
 
   async closeLoginSnackbar() {
+    browser.driver.wait(() =>
+      browser.driver.getCurrentUrl().then(url => /enroll\/add\?a=url/.test(url.replace(this.appointmentLink, 'url'))), 10000);
+
     await browser.executeScript('document.getElementsByClassName(\'login-snackbar\')[0].remove();');
   }
 
@@ -275,6 +287,14 @@ export class EnrollmentPage {
     return elm.click();
   }
 
+  public nextAdditions() {
+    const elm = element(by.id('next_additions'));
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
+
+    return elm.click();
+  }
+
   public async getCheckName() {
     const until = protractor.ExpectedConditions;
     const elm = element(by.css('.enrollment .user-information .name'));
@@ -300,5 +320,48 @@ export class EnrollmentPage {
     await browser.wait(this.textNotToBePresentInElement(elm, ''), 5000, 'Element taking too long to appear in the DOM');
 
     return element(by.css('.enrollment .comment'));
+  }
+
+  getCheckboxes() {
+    const EC = protractor.ExpectedConditions;
+    const elem = element.all(by.css('.addition-checkbox'));
+
+    browser.wait(EC.presenceOf(elem.get(0)), 10000, 'Element taking too long to be present');
+
+    return elem;
+  }
+
+  public async selectAddition(id: string) {
+    const elm = this.getAdditionElement(id);
+    if ((await elm.isSelected() === false)) {
+      return browser.executeScript('arguments[0].click();', elm.getWebElement());
+    }
+
+    return Promise.resolve();
+  }
+
+  public getAdditionElement(id: string) {
+    const elem = element(by.id('addition-' + id + '-input'));
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.visibilityOf(elem), 10000);
+
+    return elem;
+  }
+
+  getAdditionCheckSelected(s: string) {
+    const elm = element(by.css('.addition-list .addition-index-' + s + ' .checkbox_selected'));
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.visibilityOf(elm), 10000);
+
+    return elm.isPresent();
+  }
+
+
+  getAdditionCheckDeselected(s: string) {
+    const elm = element(by.css('.addition-list .addition-index-' + s + ' .checkbox_blank'));
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.visibilityOf(elm), 10000);
+
+    return elm.isPresent();
   }
 }

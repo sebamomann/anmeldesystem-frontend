@@ -21,8 +21,11 @@
         <mat-card-content>
           <div class="addition-list-checkboxes">
             <div *ngFor="let addition of getAdditionsControls(); let i = index;"
+                 [attr.addition-index]="i"
+                 class="addition-checkbox"
                  formArrayName="additions">
               <mat-checkbox
+                id="{{ 'addition-' + i }}"
                 [formControlName]="'' + i">
                 {{appointment.additions[i].name}}
               </mat-checkbox>
