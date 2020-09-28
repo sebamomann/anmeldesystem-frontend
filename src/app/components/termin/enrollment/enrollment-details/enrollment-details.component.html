@@ -27,12 +27,16 @@
     <span class="separator light small high"></span>
 
     <div class="addition-list">
-      <div *ngFor="let addition of appointment.additions">
-        <mat-icon *ngIf="enrollmentCheckedAddition(enrollment, addition.id); else blank">
+      <div *ngFor="let addition of appointment.additions; let i = index"
+           class="{{ 'addition-index-' + i}}">
+        <mat-icon *ngIf="enrollmentCheckedAddition(enrollment, addition.id); else blank"
+                  class="checkbox_selected">
           check_box
         </mat-icon>
         <ng-template #blank>
-          <mat-icon>check_box_outline_blank</mat-icon>
+          <mat-icon class="checkbox_blank">
+            check_box_outline_blank
+          </mat-icon>
         </ng-template>
         <span> {{ addition.name }} </span>
       </div>

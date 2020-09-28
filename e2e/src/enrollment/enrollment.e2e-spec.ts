@@ -98,30 +98,25 @@ describe('Enrollment Page - Unknown user', () => {
                 });
               });
 
-              describe('fill form', () => {
+
+              describe('insert mail', () => {
                 beforeEach(() => {
                   page.setEmail('mail@example.com');
                 });
 
-                describe('insert mail', () => {
+                describe('send', () => {
                   beforeEach(() => {
-                    page.setEmail('mail@example.com');
+                    page.submit();
                   });
 
-                  describe('send', () => {
-                    beforeEach(() => {
-                      page.submit();
-                    });
-
-                    it('should complete enrollment', () => {
-                      expect(
-                        browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
-                          .catch(() => {
-                            return false;
-                          })
-                      ).toBeTruthy(`Url match could not succeed`);
-                      expect(page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
-                    });
+                  it('should complete enrollment', () => {
+                    expect(
+                      browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
+                        .catch(() => {
+                          return false;
+                        })
+                    ).toBeTruthy(`Url match could not succeed`);
+                    expect(page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
                   });
                 });
               });
@@ -130,8 +125,6 @@ describe('Enrollment Page - Unknown user', () => {
                 beforeEach(() => {
                   page.clickLogin();
                   page.fillLoginData(user.username);
-                  browser.driver.wait(() =>
-                    browser.driver.getCurrentUrl().then(url => /enroll\/add\?a=url/.test(url.replace(appointmentLink, 'url'))), 10000);
                   page.closeLoginSnackbar();
                 });
 
@@ -159,8 +152,6 @@ describe('Enrollment Page - Unknown user', () => {
                 beforeEach(() => {
                   page.clickLogin();
                   page.fillLoginData(user_existing.username);
-                  browser.driver.wait(() =>
-                    browser.driver.getCurrentUrl().then(url => /enroll\/add\?a=url/.test(url.replace(appointmentLink, 'url'))), 10000);
                   page.closeLoginSnackbar();
                 });
 

@@ -28,6 +28,9 @@ describe('Appointment Overview Page', () => {
 
       await page.navigateTo();
 
+      browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' + JSON.stringify([appointmentLink]) + '\');');
+      browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
+
       expect(await page.appointmentNotFoundCardExists()).toBeTruthy();
     });
   });

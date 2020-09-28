@@ -5,6 +5,7 @@
     <label for="username">
       <input [required]="isRegister"
              formControlName="username"
+             autocomplete="off"
              id="username"
              matInput
              placeholder="Benutzername">
@@ -20,6 +21,17 @@
     </button>
     <mat-error>{{ getErrorMessage('username') }}</mat-error>
   </mat-form-field>
+
+  <div *ngIf="event.get('username').hasError('invalidUsername') && event.get('username').value"
+       class="info after-input">
+    <ul>
+      <li> Nur Kleinbuchstaben</li>
+      <li> Mindestens 3 Buchstaben.</li>
+      <li> Kein _ am Anfang oder Ende</li>
+      <li> Nur ein _ in Folge</li>
+      <li> Keine Sonderzeichen</li>
+    </ul>
+  </div>
 
   <span *ngIf="!isRegister"
         class="separator extra-extra-tall hidden"></span>
@@ -130,9 +142,9 @@
 
   <mat-card-actions class="double">
     <div>
-      <button (click)="saveFnc()"
-              *ngIf="isRegister"
+      <button *ngIf="isRegister"
               [routerLink]="['/account/login']"
+              type="button"
               class="left"
               color="primary"
               mat-button>
@@ -141,13 +153,14 @@
     </div>
 
     <button (click)="saveFnc()"
+            [active]="sendingRequestEmit"
+            [innerValue]="buttonText"
             color="primary"
             id="submit"
-            [active]="sendingRequestEmit"
-            [innerValue]="button"
+            type="submit"
             appLoadingDisable
             mat-raised-button>
-      {{button}}
+      {{buttonText}}
     </button>
   </mat-card-actions>
 </form>
