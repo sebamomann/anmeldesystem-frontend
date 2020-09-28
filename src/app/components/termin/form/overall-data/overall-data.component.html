@@ -11,34 +11,34 @@
   </mat-form-field>
   <mat-form-field class="example-full-width">
     <label for="date">
-      <input [ngxMatDatetimePicker]="date"
-             matInput
+      <input matInput
              formControlName="date"
              id="date"
+             type="datetime-local"
              placeholder="Datum"
              required>
     </label>
-    <mat-datepicker-toggle
-      [for]="date"
-      matSuffix>
-    </mat-datepicker-toggle>
-    <ngx-mat-datetime-picker #date>
-    </ngx-mat-datetime-picker>
+    <!--    <mat-datepicker-toggle-->
+    <!--      [for]="date"-->
+    <!--      matSuffix>-->
+    <!--    </mat-datepicker-toggle>-->
+    <!--    <ngx-mat-datetime-picker #date>-->
+    <!--    </ngx-mat-datetime-picker>-->
   </mat-form-field>
   <mat-form-field class="example-full-width">
     <label for="deadline">
-      <input [ngxMatDatetimePicker]="deadlinePicker"
-             matInput
+      <input id="deadline"
              formControlName="deadline"
-             id="deadline"
+             matInputpack
+             type="datetime-local"
              placeholder="Anmeldefrist">
     </label>
-    <mat-datepicker-toggle
-      [for]="deadlinePicker"
-      matSuffix>
-    </mat-datepicker-toggle>
-    <ngx-mat-datetime-picker #deadlinePicker>
-    </ngx-mat-datetime-picker>
+    <!--    <mat-datepicker-toggle-->
+    <!--      [for]="deadlinePicker"-->
+    <!--      matSuffix>-->
+    <!--    </mat-datepicker-toggle>-->
+    <!--    <ngx-mat-datetime-picker #deadlinePicker>-->
+    <!--    </ngx-mat-datetime-picker>-->
   </mat-form-field>
   <mat-form-field class="">
     <label for="location">
