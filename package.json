@@ -16,7 +16,6 @@
   },
   "private": true,
   "dependencies": {
-    "@angular-material-components/datetime-picker": "^2.0.2",
     "@angular/animations": "^8.2.14",
     "@angular/cdk": "^8.2.3",
     "@angular/common": "~8.2.12",
@@ -43,7 +42,6 @@
     "masonry-layout": "^4.2.2",
     "moment": "^2.24.0",
     "ngx-infinite-scroll": "^9.0.0",
-    "ngx-mat-datetime-picker": "^1.0.2",
     "npm-force-resolutions": "0.0.3",
     "particles.js": "^2.0.0",
     "protractor": "^5.4.4",
