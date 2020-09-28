@@ -38,11 +38,11 @@
 
   <mat-form-field class="name">
     <label for="name">
-      <input formControlName="name"
+      <input [required]="isRegister"
+             formControlName="name"
              id="name"
-             matInput
              placeholder="Anzeigename"
-             [required]="isRegister">
+             matInput>
     </label>
     <button mat-icon-button matSuffix type="button">
       <!--suppress TypeScriptUnresolvedFunction -->
@@ -63,11 +63,11 @@
   </mat-form-field>
   <mat-form-field class="mail">
     <label for="mail">
-      <input formControlName="mail"
+      <input [required]="isRegister"
+             formControlName="mail"
              id="mail"
-             matInput
              placeholder="E-Mail"
-             [required]="isRegister">
+             matInput>
     </label>
     <!--suppress TypeScriptUnresolvedFunction -->
     <mat-spinner #mailPending="matTooltip"
@@ -166,8 +166,10 @@
 </form>
 
 <ng-template #doneTemplate>
-  <span>
-    Dein Account wurde erfolgreich angelegt. Bitte Folge den Anweisungen in der dir eben zugesandten E-Mail, um
-    die Registrierung abzuschließen.
-  </span>
+  <div id="registration-done">
+    <span>
+      Dein Account wurde erfolgreich angelegt. Bitte Folge den Anweisungen in der dir eben zugesandten E-Mail, um
+      die Registrierung abzuschließen.
+    </span>
+  </div>
 </ng-template>
