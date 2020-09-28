@@ -139,8 +139,29 @@ export class RegisterPage {
     return elem;
   }
 
-  public async getCreatorError() {
-    const elem = element(by.id('creator-error'));
+  public getMailError() {
+    const elem = element(by.id('mail-error'));
+    const until = protractor.ExpectedConditions;
+    browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
+    return elem;
+  }
+
+  public getPasswordError() {
+    const elem = element(by.id('password-error'));
+    const until = protractor.ExpectedConditions;
+    browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
+    return elem;
+  }
+
+  public getPasswordVerifyError() {
+    const elem = element(by.id('passwordVerify-error'));
+    const until = protractor.ExpectedConditions;
+    browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
+    return elem;
+  }
+
+  public async getUsernameError() {
+    const elem = element(by.id('username-error'));
     const until = protractor.ExpectedConditions;
     await browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
     return elem;
@@ -203,6 +224,34 @@ export class RegisterPage {
     return ref.clear();
   }
 
+  public async clearUsername() {
+    const ref = this.getUsername();
+    ref.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, 'a'));
+    ref.sendKeys(protractor.Key.BACK_SPACE);
+    return ref.clear();
+  }
+
+  public async clearMail() {
+    const ref = this.getMail();
+    ref.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, 'a'));
+    ref.sendKeys(protractor.Key.BACK_SPACE);
+    return ref.clear();
+  }
+
+  public async clearPassword() {
+    const ref = this.getPassword();
+    ref.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, 'a'));
+    ref.sendKeys(protractor.Key.BACK_SPACE);
+    return ref.clear();
+  }
+
+  public async clearPasswordVerify() {
+    const ref = this.getPasswordVerify();
+    ref.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, 'a'));
+    ref.sendKeys(protractor.Key.BACK_SPACE);
+    return ref.clear();
+  }
+
   public async deselectSelfEnrollment() {
     const elm = this.getSelfEnrollment();
     if ((await elm.isSelected() === true)) {
@@ -250,6 +299,12 @@ export class RegisterPage {
     const until = protractor.ExpectedConditions;
     const elm = element(by.id('registration-done'));
     browser.wait(until.presenceOf(elm), 10000);
+
+    return elm.isPresent();
+  }
+
+  usernameErrorAdditionExists() {
+    const elm = element(by.id('username-error-addition'));
 
     return elm.isPresent();
   }

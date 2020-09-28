@@ -31,15 +31,173 @@ describe('Register Page', () => {
         page.setPasswordVerify('123');
       });
 
+      describe('invalid values', () => {
+        describe('username', () => {
+          describe('invalid', () => {
+            beforeEach(() => {
+              page.setUsername('_user_register');
+            });
+
+            describe('send', () => {
+              beforeEach(() => {
+                page.submit();
+              });
+
+              it('should show error message', async () => {
+                await expect((await page.getUsernameError()).getText()).toEqual('Invalides Format (i)');
+                expect(page.usernameErrorAdditionExists()).toBeTruthy();
+              });
+            });
+          });
+          describe('missing', () => {
+            beforeEach(() => {
+              page.clearUsername();
+            });
+
+            describe('send', () => {
+              beforeEach(() => {
+                page.submit();
+              });
+
+              it('should show error message', async () => {
+                await expect((await page.getUsernameError()).getText()).toEqual('Erforderlich');
+                expect(page.usernameErrorAdditionExists()).toBeFalsy();
+              });
+            });
+          });
+        });
+
+        describe('name', () => {
+          describe('invalid', () => {
+            beforeEach(() => {
+              page.setName('User_Register');
+            });
+
+            describe('send', () => {
+              beforeEach(() => {
+                page.submit();
+              });
+
+              it('should show error message', async () => {
+                await expect((await page.getNameError()).getText()).toEqual('Invalides Format (i)');
+              });
+            });
+          });
+          describe('missing', () => {
+            beforeEach(() => {
+              page.clearName();
+            });
+
+            describe('send', () => {
+              beforeEach(() => {
+                page.submit();
+              });
+
+              it('should show error message', async () => {
+                await expect((await page.getNameError()).getText()).toEqual('Erforderlich');
+              });
+            });
+          });
+        });
+
+        describe('mail', () => {
+          describe('invalid', () => {
+            beforeEach(() => {
+              page.setMail('mail');
+            });
+
+            describe('send', () => {
+              beforeEach(() => {
+                page.submit();
+              });
+
+              it('should show error message', async () => {
+                await expect((await page.getMailError()).getText()).toEqual('Diese Email-Adresse hat kein gültiges Format');
+              });
+            });
+          });
+          describe('missing', () => {
+            beforeEach(() => {
+              page.clearMail();
+            });
+
+            describe('send', () => {
+              beforeEach(() => {
+                page.submit();
+              });
+
+              it('should show error message', async () => {
+                await expect((await page.getMailError()).getText()).toEqual('Erforderlich');
+              });
+            });
+          });
+        });
+
+        describe('password', () => {
+          describe('mismatch', () => {
+            beforeEach(() => {
+              page.setPasswordVerify('1234');
+            });
+
+            describe('send', () => {
+              beforeEach(() => {
+                page.submit();
+              });
+
+              it('should show error message', async () => {
+                await expect((await page.getPasswordVerifyError()).getText()).toEqual('Die Passwörter stimmen nicht überein');
+              });
+            });
+          });
+
+          describe('missing', () => {
+            describe('password', () => {
+              beforeEach(() => {
+                page.clearPassword();
+                page.clearPasswordVerify();
+              });
+
+              describe('send', () => {
+                beforeEach(() => {
+                  page.submit();
+                });
+
+                it('should show error message', async () => {
+                  await expect((await page.getPasswordError()).getText()).toEqual('Erforderlich');
+                });
+              });
+            });
+
+            describe('passwordVerify', () => {
+              beforeEach(() => {
+                page.clearPassword();
+                page.clearPasswordVerify();
+              });
+
+              describe('send', () => {
+                beforeEach(() => {
+                  page.submit();
+                });
+
+                it('should show error message', async () => {
+                  await expect((await page.getPasswordVerifyError()).getText()).toEqual('Erforderlich');
+                });
+              });
+            });
+          });
+        });
+      });
+
       describe('send', () => {
         beforeEach(() => {
           page.submit();
         });
 
         it('should complete registration', () => {
-          page.registrationDoneExists();
+          expect(page.registrationDoneExists()).toBeTruthy();
         });
       });
+
     });
   });
 
