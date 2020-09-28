@@ -134,7 +134,7 @@ export class LoginPage {
       password: '123',
     };
     // @ts-ignore
-    const http = new HttpClient(process.env.API_URL ? process.env.API_URL : 'http://localhost:3000');
+    const http = new HttpClient(await browser.executeScript('return window.env.API_URL;') ? await browser.executeScript('return window.env.API_URL;') : 'http://localhost:3000');
 
     const res = await http.post('/auth/login', data);
     await browser.executeScript('return window.localStorage.setItem(\'currentUser\', \'' + JSON.stringify(res.body) + '\');');
