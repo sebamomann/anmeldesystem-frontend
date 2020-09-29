@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material';
 import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-overall-data',
@@ -31,7 +32,7 @@ export class OverallDataComponent implements OnInit {
   public event: FormGroup;
   public valuesChanged = true;
 
-  constructor(private formBuilder: FormBuilder, private _adapter: DateAdapter<any>) {
+  constructor(private formBuilder: FormBuilder, private _adapter: DateAdapter<any>, private datePipe: DatePipe) {
   }
 
   ngOnInit() {
@@ -50,24 +51,6 @@ export class OverallDataComponent implements OnInit {
     }
   }
 
-  private parseOverallData() {
-    this.event.setValue({
-      title: this.appointment.title,
-      date: this.appointment.date,
-      deadline: this.appointment.deadline,
-      location: this.appointment.location,
-      maxEnrollments: this.appointment.maxEnrollments
-    });
-
-    const eventSnapshot = this.event.value;
-
-    this.event.valueChanges.subscribe(
-      result => {
-        this.valuesChanged = JSON.stringify(result) === JSON.stringify(eventSnapshot);
-      }
-    );
-  }
-
   public saveFnc() {
     if (this.event.valid) {
       const data = {
@@ -80,6 +63,30 @@ export class OverallDataComponent implements OnInit {
 
       this.save.emit(data);
     }
+  }
+
+  private parseOverallData() {
+    const _deadline = new Date(this.appointment.deadline);
+    const deadline = this.datePipe.transform(_deadline, 'yyyy-MM-ddThh:mm');
+
+    const _date = new Date(this.appointment.deadline);
+    const date = this.datePipe.transform(_date, 'yyyy-MM-ddThh:mm');
+
+    this.event.setValue({
+      title: this.appointment.title,
+      date,
+      deadline,
+      location: this.appointment.location,
+      maxEnrollments: this.appointment.maxEnrollments
+    });
+
+    const eventSnapshot = this.event.value;
+
+    this.event.valueChanges.subscribe(
+      result => {
+        this.valuesChanged = JSON.stringify(result) === JSON.stringify(eventSnapshot);
+      }
+    );
   }
 
   private get(str: string) {

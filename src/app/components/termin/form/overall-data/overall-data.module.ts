@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, DatePipe} from '@angular/common';
 import {OverallDataComponent} from './overall-data.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule, MatDatepickerModule, MatFormFieldModule, MatInputModule, MatProgressSpinnerModule} from '@angular/material';
@@ -18,7 +18,8 @@ import {MatButtonModule, MatDatepickerModule, MatFormFieldModule, MatInputModule
     MatDatepickerModule,
     MatButtonModule,
     MatProgressSpinnerModule
-  ]
+  ],
+  providers: [DatePipe]
 })
 export class OverallDataModule {
 }
