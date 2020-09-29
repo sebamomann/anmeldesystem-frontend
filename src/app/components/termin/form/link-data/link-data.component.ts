@@ -12,6 +12,8 @@ export class LinkDataComponent implements OnInit {
 
   @Output()
   save = new EventEmitter<any>();
+  @Output()
+  back = new EventEmitter<any>();
   @Input()
   public appointment: IAppointmentModel;
   @Input()
@@ -42,15 +44,6 @@ export class LinkDataComponent implements OnInit {
     );
   }
 
-  private parseIntoForm() {
-    this.event.setValue({
-      link: this.appointment.link,
-      description: this.appointment.description,
-    });
-
-    this.checkLink();
-  }
-
   public saveFnc() {
     if (this.get('description').value.length >= 10 && !this.get('link').hasError('inUse')) {
       const data = {
@@ -60,6 +53,10 @@ export class LinkDataComponent implements OnInit {
 
       this.save.emit(data);
     }
+  }
+
+  public goBack() {
+    this.back.emit();
   }
 
   getLinkErrorMessage(): string {
@@ -82,12 +79,21 @@ export class LinkDataComponent implements OnInit {
     }
   }
 
-  private get(str: string) {
-    return this.event.get(str);
-  }
-
   public updateErrors(err) {
     this.get(err.attr).setErrors({[err.error]: true});
+  }
+
+  private parseIntoForm() {
+    this.event.setValue({
+      link: this.appointment.link,
+      description: this.appointment.description,
+    });
+
+    this.checkLink();
+  }
+
+  private get(str: string) {
+    return this.event.get(str);
   }
 }
 

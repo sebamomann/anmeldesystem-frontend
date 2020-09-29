@@ -214,7 +214,7 @@ mat-icon {
     & > div {
       width: 60%;
       height: 50%;
-      overflow: auto;
+      overflow-x: hidden;
       margin: 50px auto 0;
     }
 
@@ -305,6 +305,17 @@ mat-icon {
   &.standalone {
     margin-bottom: 25px !important;
   }
+}
+
+.form-component-title {
+  width: 100%;
+  text-align: left;
+  text-align-last: left;
+  font-weight: bolder;
+  margin-bottom: 1.125em;
+  display: block;
+  color: $secondary;
+  font-size: 1.125em;
 }
 
 .bar {
@@ -630,8 +641,6 @@ mat-card {
   }
 
   &.form {
-    text-align: center;
-
     mat-card-content {
       mat-form-field {
         width: 100%;
@@ -646,7 +655,7 @@ mat-card {
 
     .info {
       text-align: left;
-      margin: 26px 0 0;
+      margin: 24px 0 0;
       font-size: 14px;
       width: 75%;
       max-width: 350px;
@@ -657,6 +666,10 @@ mat-card {
 
       &.long {
         width: 80%;
+      }
+
+      &.last {
+        padding-bottom: 1.25em;
       }
     }
 
@@ -1012,30 +1025,34 @@ $ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
   }
 }
 
-.info {
-  display: block;
-  margin: 5px auto 15px;
-  font-size: 1em;
-  color: #646464;
-  text-align: center;
-
-  &.long {
-    width: 100%;
-  }
-
-  &.spacing {
-    margin-top: 25px;
-  }
-
-  &.small {
-    font-size: 0.85em;
-    max-width: 200px;
-  }
-
-  &.link {
-    text-decoration: underline;
-  }
-}
+//.info {
+//  display: block;
+//  margin: 5px auto 15px;
+//  font-size: 1em;
+//  color: #646464;
+//  text-align: center;
+//
+//  &.long {
+//    width: 100%;
+//  }
+//
+//  &.spacing {
+//    margin-top: 25px;
+//  }
+//
+//  &.small {
+//    font-size: 0.85em;
+//    max-width: 200px;
+//  }
+//
+//  &.link {
+//    text-decoration: underline;
+//  }
+//
+//  &.last {
+//    padding-bottom: 1.25em;
+//  }
+//}
 
 .progress-bar {
   display: block;
@@ -1153,7 +1170,7 @@ $ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
 .input-with-button-wrapper {
   mat-form-field {
     padding: 0 10px 0 0 !important;
-    width: calc(70% - 15px) !important;
+    width: calc(60% - 15px) !important;
   }
 
   button {

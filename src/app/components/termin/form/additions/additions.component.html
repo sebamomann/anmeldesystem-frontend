@@ -1,21 +1,30 @@
 <form [formGroup]="event">
-  <span class="info">
-    Zusätze, welche beim Anmelden mit Ja/Nein beantwortet werden
-  </span>
-  <ng-container id="additionList">
+
+  <span class="form-component-title">Zusätze</span>
+
+  <mat-card-content>
     <div class="tooltip-container">
-      <mat-checkbox formControlName="driverAddition">
-        Fahrer
-      </mat-checkbox>
-      <!--suppress TypeScriptUnresolvedFunction -->
-      <mat-icon #driverAdditionTooltip="matTooltip"
-                (click)="driverAdditionTooltip.toggle()"
-                class="tooltip"
-                matTooltip="{{ 'Hierbei können sich Teilnehmer als Fahrer melden. Sie geben unter Anderem die ' +
+      <div class="checkbox-standalone">
+        <mat-checkbox formControlName="driverAddition">
+          Fahrerzusatz
+        </mat-checkbox>
+        <!--suppress TypeScriptUnresolvedFunction -->
+        <mat-icon #driverAdditionTooltip="matTooltip"
+                  (click)="driverAdditionTooltip.toggle()"
+                  class="tooltip"
+                  matTooltip="{{ 'Hierbei können sich Teilnehmer als Fahrer melden. Sie geben unter Anderem die ' +
                        'Anzahl freier Plätze ein und in welche Richtung sie fahren.'}}">
-        info
-      </mat-icon>
+          info
+        </mat-icon>
+      </div>
     </div>
+
+    <div class="info after-input last">
+      Zusatz zum Verwalten von Fahrern und Mitfahrern.
+    </div>
+
+    <span class="form-component-title">Weitere Zusätze</span>
+
     <div class="addition-wrapper">
       <!--suppress AngularInvalidExpressionResultType, JSUnusedGlobalSymbols -->
       <div *ngFor="let addition of event.controls.additions.controls; let i = index"
@@ -32,16 +41,37 @@
           </mat-icon>
         </mat-form-field>
       </div>
+
+      <button (click)="addAddition()"
+              class="solo"
+              mat-button>
+        <mat-icon>library_add</mat-icon>
+        Weiterer Zusatz
+      </button>
     </div>
-  </ng-container>
-  <button (click)="addAddition()"
-          class="solo"
-          mat-stroked-button>
-    Hinzufügen
-  </button>
-  <button (click)="saveFnc()"
-          [disabled]="sameValues && appointment !== undefined"
-          mat-raised-button>
-    {{ button === 'Speichern' ? button : (hasAdditions() ? button : 'Nein danke') }}
-  </button>
+  </mat-card-content>
+
+  <div class="info">
+    Zusätze, welche beim Anmelden optional angekreutzt werden können.
+  </div>
+
+  <mat-card-actions class="double">
+    <div>
+      <button (click)="goBack()"
+              class="left"
+              color="primary"
+              mat-button
+              disableRipple
+              type="button">
+        Zurück
+      </button>
+    </div>
+    <button
+      (click)="saveFnc()"
+      [disabled]="sameValues && appointment !== undefined"
+      color="primary"
+      mat-raised-button>
+      {{ button === 'Speichern' ? button : (hasAdditions() ? button : 'Nein danke') }}
+    </button>
+  </mat-card-actions>
 </form>

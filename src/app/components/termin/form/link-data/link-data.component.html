@@ -1,23 +1,38 @@
 <form [formGroup]="event">
-  <span class="info">Eigener URL Pfad zum Termin</span>
-  <mat-form-field class="">
-    <label for="link">
-      <input (change)="checkLink()"
-             formControlName="link"
-             id="link"
-             matInput
-             placeholder="Wunschlink">
-    </label>
-    <mat-hint *ngIf="event.get('link').value !== ''
+
+  <div class="form-component-title">Link Infos</div>
+
+  <mat-card-content>
+    <mat-form-field class="">
+      <label for="link">
+        <input (change)="checkLink()"
+               formControlName="link"
+               id="link"
+               matInput
+               placeholder="Wunschlink">
+      </label>
+
+      <button mat-icon-button matSuffix type="button">
+        <!--suppress TypeScriptUnresolvedFunction -->
+        <mat-icon #username="matTooltip"
+                  (click)="username.toggle()"
+                  class="tooltip"
+                  matTooltip="Wird kein Wunschlink angegeben wird ein Link aus 5 zufälligen Groß-, Kleinbuchstaben und
+                  Zahlen generiert">
+          info
+        </mat-icon>
+      </button>
+
+      <mat-hint *ngIf="event.get('link').value !== ''
                   && event.get('link').value !== null"
-              class="small">
-      {{urlService.getHostname()}}{{event.get('link').value | urlEncode}}
-    </mat-hint>
-    <mat-error>{{ this.getLinkErrorMessage() }}</mat-error>
-  </mat-form-field>
-  <mat-form-field>
-    <div class="tooltip-container">
-      <label for="description">
+                class="small">
+        {{urlService.getHostname()}}{{event.get('link').value | urlEncode}}
+      </mat-hint>
+      <mat-error>{{ this.getLinkErrorMessage() }}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <div class="tooltip-container">
+        <label for="description">
           <textarea #description
                     formControlName="description"
                     id="description"
@@ -26,25 +41,42 @@
                     placeholder="Zusatzinformationen"
                     required>
           </textarea>
-      </label>
-      <!--suppress TypeScriptUnresolvedFunction -->
-      <mat-icon #descriptionTooltip="matTooltip"
-                (click)="descriptionTooltip.toggle()"
-                class="tooltip"
-                matTooltip="{{'Dieser Text wird unter Anderem beim Versenden des Anmeldelinks als Linkvorschau angezeigt.'}}">
-        info
-      </mat-icon>
+        </label>
+        <!--suppress TypeScriptUnresolvedFunction -->
+        <mat-icon #descriptionTooltip="matTooltip"
+                  (click)="descriptionTooltip.toggle()"
+                  class="tooltip"
+                  matTooltip="{{'Dieser Text wird unter Anderem beim Versenden des Anmeldelinks als Linkvorschau angezeigt.'}}">
+          info
+        </mat-icon>
+      </div>
+      <mat-hint *ngIf="description.value.length < 10"
+                align="start">
+        Noch mindestens {{10 - description.value.length}} Zeichen
+      </mat-hint>
+      <mat-error>{{ this.getDescriptionErrorMessage() }}</mat-error>
+    </mat-form-field>
+  </mat-card-content>
+
+  <span class="info">Eigener URL Pfad zum Termin und weitere Informationen.</span>
+
+  <mat-card-actions class="double">
+    <div>
+      <button (click)="goBack()"
+              class="left"
+              color="primary"
+              disableRipple
+              mat-button
+              type="button">
+        Zurück
+      </button>
     </div>
-    <mat-hint *ngIf="description.value.length < 10"
-              align="start">
-      Noch mindestens {{10 - description.value.length}} Zeichen
-    </mat-hint>
-    <mat-error>{{ this.getDescriptionErrorMessage() }}</mat-error>
-  </mat-form-field>
-  <button
-    (click)="saveFnc()"
-    [disabled]="sameValues && appointment !== undefined"
-    mat-raised-button>
-    {{button}}
-  </button>
+    <button
+      (click)="saveFnc()"
+      [disabled]="sameValues && appointment !== undefined"
+      color="primary"
+      mat-raised-button>
+      {{button}}
+    </button>
+  </mat-card-actions>
 </form>

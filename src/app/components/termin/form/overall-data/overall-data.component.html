@@ -1,66 +1,104 @@
 <form [formGroup]="event">
-  <span class="info">Kerninformationen</span>
-  <mat-form-field class="">
-    <label for="title">
-      <input formControlName="title"
-             id="title"
-             matInput
-             placeholder="Titel"
-             required>
-    </label>
-  </mat-form-field>
-  <mat-form-field class="example-full-width">
-    <label for="date">
-      <input matInput
-             formControlName="date"
-             id="date"
-             type="datetime-local"
-             placeholder="Datum"
-             required>
-    </label>
-    <!--    <mat-datepicker-toggle-->
-    <!--      [for]="date"-->
-    <!--      matSuffix>-->
-    <!--    </mat-datepicker-toggle>-->
-    <!--    <ngx-mat-datetime-picker #date>-->
-    <!--    </ngx-mat-datetime-picker>-->
-  </mat-form-field>
-  <mat-form-field class="example-full-width">
-    <label for="deadline">
-      <input id="deadline"
-             formControlName="deadline"
-             type="datetime-local"
-             matInput
-             placeholder="Anmeldefrist">
-    </label>
-    <!--    <mat-datepicker-toggle-->
-    <!--      [for]="deadlinePicker"-->
-    <!--      matSuffix>-->
-    <!--    </mat-datepicker-toggle>-->
-    <!--    <ngx-mat-datetime-picker #deadlinePicker>-->
-    <!--    </ngx-mat-datetime-picker>-->
-  </mat-form-field>
-  <mat-form-field class="">
-    <label for="location">
-      <input formControlName="location"
-             id="location"
-             matInput
-             placeholder="Ort"
-             required>
-    </label>
-  </mat-form-field>
-  <mat-form-field class="">
-    <label for="maxEnrollments">
-      <input formControlName="maxEnrollments"
-             id="maxEnrollments"
-             matInput
-             placeholder="Maximale Teilnehmer">
-    </label>
-  </mat-form-field>
-  <button
-    (click)="saveFnc()"
-    [disabled]="valuesChanged && appointment !== undefined"
-    mat-raised-button>
-    {{button}}
-  </button>
+
+  <span class="form-component-title">
+    Allgemein
+  </span>
+
+  <mat-card-content>
+    <mat-form-field class="">
+      <label for="title">
+        <input formControlName="title"
+               id="title"
+               matInput
+               placeholder="Titel"
+               required>
+      </label>
+      <mat-error id="title-error">{{ getErrorMessage('title') }}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <label for="date">
+        <input formControlName="date"
+               id="date"
+               matInput
+               placeholder="Datum"
+               required
+               type="datetime-local">
+      </label>
+      <!--    <mat-datepicker-toggle-->
+      <!--      [for]="date"-->
+      <!--      matSuffix>-->
+      <!--    </mat-datepicker-toggle>-->
+      <!--    <ngx-mat-datetime-picker #date>-->
+      <!--    </ngx-mat-datetime-picker>-->
+      <mat-error id="date-error">{{ getErrorMessage('date') }}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <label for="deadline">
+        <input formControlName="deadline"
+               id="deadline"
+               matInput
+               placeholder="Anmeldefrist"
+               type="datetime-local">
+      </label>
+      <!--    <mat-datepicker-toggle-->
+      <!--      [for]="deadlinePicker"-->
+      <!--      matSuffix>-->
+      <!--    </mat-datepicker-toggle>-->
+      <!--    <ngx-mat-datetime-picker #deadlinePicker>-->
+      <!--    </ngx-mat-datetime-picker>-->
+    </mat-form-field>
+    <mat-form-field class="">
+      <label for="location">
+        <input formControlName="location"
+               id="location"
+               matInput
+               placeholder="Ort"
+               required>
+      </label>
+      <mat-error id="location-error">{{ getErrorMessage('location') }}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="">
+      <label for="maxEnrollments">
+        <input formControlName="maxEnrollments"
+               id="maxEnrollments"
+               matInput
+               placeholder="Maximale Teilnehmer">
+      </label>
+    </mat-form-field>
+  </mat-card-content>
+
+  <div class="info">
+    Gebe die wichtigsten Informationen zu deinem Termin an.
+  </div>
+
+  <mat-card-actions class="double">
+    <div *ngIf="!isEdit">
+      <button [routerLink]="'/dashboard'"
+              class="left"
+              color="primary"
+              disableRipple
+              mat-button
+              type="button">
+        Abbrechen
+      </button>
+    </div>
+    <div *ngIf="isEdit">
+      <button [queryParamsHandling]="'preserve'"
+              [routerLink]="'/enroll' "
+              class="left"
+              color="primary"
+              disableRipple
+              mat-button
+              type="button">
+        Zurück
+      </button>
+    </div>
+    <button
+      (click)="saveFnc()"
+      [disabled]="valuesChanged && appointment !== undefined"
+      color="primary"
+      mat-raised-button>
+      {{button}}
+    </button>
+  </mat-card-actions>
 </form>

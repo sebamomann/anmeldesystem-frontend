@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AdministratorComponent} from './administrator.component';
 import {AdministratorDeleteModule} from './administrator-delete/administrator-delete.module';
-import {MatButtonModule, MatFormFieldModule, MatInputModule} from '@angular/material';
+import {MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule} from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
 
 
@@ -17,7 +17,9 @@ import {ReactiveFormsModule} from '@angular/forms';
     MatButtonModule,
     MatFormFieldModule,
     ReactiveFormsModule,
-    MatInputModule
+    MatInputModule,
+    MatCardModule,
+    MatCardModule
   ]
 })
 export class AdministratorModule {

@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {LinkDataComponent} from './link-data.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {MatButtonModule, MatIconModule, MatInputModule, MatTooltipModule} from '@angular/material';
+import {MatButtonModule, MatCardModule, MatIconModule, MatInputModule, MatTooltipModule} from '@angular/material';
 import {ApplicationPipesModule} from '../../../../pipes/application-pipes.module';
 
 
@@ -18,7 +18,8 @@ import {ApplicationPipesModule} from '../../../../pipes/application-pipes.module
     ApplicationPipesModule,
     MatTooltipModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatCardModule
   ]
 })
 export class LinkDataModule {

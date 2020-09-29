@@ -1,20 +1,5 @@
-form {
-  .addition-wrapper {
-    margin-top: 15px;
-  }
-
-  .mat-form-field {
-    width: 100%;
-  }
-
-  .solo {
-    font-size: .8em;
-    padding: 0 10px;
-    line-height: 30px;
-  }
-
-  button:last-of-type {
-    margin-top: 15px;
-    display: block;
+.addition-wrapper {
+  button {
+    padding: 0px;
   }
 }
