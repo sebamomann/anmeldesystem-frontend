@@ -11,6 +11,7 @@ import {
   MatProgressSpinnerModule
 } from '@angular/material';
 import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
+import {RouterModule} from '@angular/router';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
     MatDatepickerModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatCardModule
+    MatCardModule,
+    RouterModule
   ],
   providers: [DatePipe,
     {

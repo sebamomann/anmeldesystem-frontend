@@ -64,17 +64,19 @@
     </mat-form-field>
   </mat-card-content>
 
-  <div class="info long">
+  <div class="info">
     Gebe die wichtigsten Informationen zu deinem Termin an.
   </div>
 
   <mat-card-actions class="double">
     <div>
-      <button class="left"
+      <button [routerLink]="'/dashboard'"
+              class="left"
               color="primary"
+              disableRipple
               mat-button
               type="button">
-        Zurück
+        Abbrechen
       </button>
     </div>
     <button
