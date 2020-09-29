@@ -19,10 +19,11 @@
         info
       </mat-icon>
     </button>
-    <mat-error>{{ getErrorMessage('username') }}</mat-error>
+    <mat-error id="username-error">{{ getErrorMessage('username') }}</mat-error>
   </mat-form-field>
 
   <div *ngIf="event.get('username').hasError('invalidUsername') && event.get('username').value"
+       id="username-error-addition"
        class="info after-input">
     <ul>
       <li> Nur Kleinbuchstaben</li>
@@ -38,11 +39,11 @@
 
   <mat-form-field class="name">
     <label for="name">
-      <input formControlName="name"
+      <input [required]="isRegister"
+             formControlName="name"
              id="name"
-             matInput
              placeholder="Anzeigename"
-             [required]="isRegister">
+             matInput>
     </label>
     <button mat-icon-button matSuffix type="button">
       <!--suppress TypeScriptUnresolvedFunction -->
@@ -59,15 +60,15 @@
         info
       </mat-icon>
     </button>
-    <mat-error>{{ getErrorMessage('name') }}</mat-error>
+    <mat-error id="name-error">{{ getErrorMessage('name') }}</mat-error>
   </mat-form-field>
   <mat-form-field class="mail">
     <label for="mail">
-      <input formControlName="mail"
+      <input [required]="isRegister"
+             formControlName="mail"
              id="mail"
-             matInput
              placeholder="E-Mail"
-             [required]="isRegister">
+             matInput>
     </label>
     <!--suppress TypeScriptUnresolvedFunction -->
     <mat-spinner #mailPending="matTooltip"
@@ -82,7 +83,7 @@
                 + '\r\n Aktuelle Email:'
                 + '\r\n ' + this.userData.mail}}">
     </mat-spinner>
-    <mat-error>{{ getErrorMessage('mail') }}</mat-error>
+    <mat-error id="mail-error">{{ getErrorMessage('mail') }}</mat-error>
   </mat-form-field>
   <div *ngIf="mailPending"
        class="input-additions">
@@ -119,7 +120,7 @@
             type="button">
       <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
-    <mat-error>{{ getErrorMessage('') }}</mat-error>
+    <mat-error id="password-error">{{ getErrorMessage('') }}</mat-error>
   </mat-form-field>
   <mat-form-field class="pass" formGroupName="passwords">
     <label for="passwordVerify">
@@ -137,7 +138,7 @@
             type="button">
       <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
-    <mat-error>{{ getErrorMessage('') }} </mat-error>
+    <mat-error id="passwordVerify-error">{{ getErrorMessage('') }} </mat-error>
   </mat-form-field>
 
   <mat-card-actions class="double">
@@ -166,8 +167,10 @@
 </form>
 
 <ng-template #doneTemplate>
-  <span>
-    Dein Account wurde erfolgreich angelegt. Bitte Folge den Anweisungen in der dir eben zugesandten E-Mail, um
-    die Registrierung abzuschließen.
-  </span>
+  <div id="registration-done">
+    <span>
+      Dein Account wurde erfolgreich angelegt. Bitte Folge den Anweisungen in der dir eben zugesandten E-Mail, um
+      die Registrierung abzuschließen.
+    </span>
+  </div>
 </ng-template>
