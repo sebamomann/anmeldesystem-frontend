@@ -11,6 +11,8 @@ export class AdditionsComponent implements OnInit {
 
   @Output()
   save = new EventEmitter<any>();
+  @Output()
+  back = new EventEmitter<any>();
   @Input()
   public appointment: IAppointmentModel;
   @Input()
@@ -43,18 +45,6 @@ export class AdditionsComponent implements OnInit {
     );
   }
 
-  private parseIntoForm() {
-    this.appointment.additions.forEach(fAddition => {
-      this.addAddition(fAddition.name);
-    });
-
-    if (this.appointment.additions.length === 0) {
-      this.addAddition();
-    }
-
-    this.event.get('driverAddition').setValue(this.appointment.driverAddition);
-  }
-
   saveFnc() {
     if (this.event.valid) {
       const data = {
@@ -65,12 +55,6 @@ export class AdditionsComponent implements OnInit {
       this.save.emit(data);
     }
   }
-
-  private parseAdditionsFromForm() {
-    const additions = [];
-    this.event.controls.additions.controls.forEach(field => field.value != null ? additions.push({name: field.value}) : '');
-    return additions;
-  };
 
   public addAddition(value: string | null = null) {
     return (this.event.controls.additions as FormArray).push(new FormControl(value));
@@ -84,4 +68,26 @@ export class AdditionsComponent implements OnInit {
     return this.event.controls.additions.controls.some(addition => addition.value !== null)
       || this.event.get('driverAddition').value;
   }
+
+  public goBack() {
+    this.back.emit();
+  }
+
+  private parseIntoForm() {
+    this.appointment.additions.forEach(fAddition => {
+      this.addAddition(fAddition.name);
+    });
+
+    if (this.appointment.additions.length === 0) {
+      this.addAddition();
+    }
+
+    this.event.get('driverAddition').setValue(this.appointment.driverAddition);
+  }
+
+  private parseAdditionsFromForm() {
+    const additions = [];
+    this.event.controls.additions.controls.forEach(field => field.value != null ? additions.push({name: field.value}) : '');
+    return additions;
+  };
 }
