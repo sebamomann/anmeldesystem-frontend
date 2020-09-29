@@ -17,7 +17,9 @@
         <mat-tab label="Allgemein">
           <app-overall-data
             (save)="saveOverall($event)"
-            [appointment]="appointment">
+            [appointment]="appointment"
+            isEdit=" true"
+          >
           </app-overall-data>
         </mat-tab>
         <mat-tab label="Zusätze">

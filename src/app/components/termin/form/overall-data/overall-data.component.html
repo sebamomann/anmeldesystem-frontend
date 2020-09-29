@@ -72,7 +72,7 @@
   </div>
 
   <mat-card-actions class="double">
-    <div>
+    <div *ngIf="!isEdit">
       <button [routerLink]="'/dashboard'"
               class="left"
               color="primary"
@@ -80,6 +80,17 @@
               mat-button
               type="button">
         Abbrechen
+      </button>
+    </div>
+    <div *ngIf="isEdit">
+      <button [queryParamsHandling]="'preserve'"
+              [routerLink]="'/enroll' "
+              class="left"
+              color="primary"
+              disableRipple
+              mat-button
+              type="button">
+        Zurück
       </button>
     </div>
     <button

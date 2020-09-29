@@ -28,6 +28,8 @@ export class OverallDataComponent implements OnInit {
   public appointment: IAppointmentModel;
   @Input()
   public button = 'Speichern';
+  @Input()
+  public isEdit = false;
 
   public event: FormGroup;
   public valuesChanged = true;
