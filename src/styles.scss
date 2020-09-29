@@ -307,6 +307,16 @@ mat-icon {
   }
 }
 
+.form-component-title {
+  width: 100%;
+  text-align: left;
+  font-weight: bolder;
+  margin-bottom: 1.125em;
+  display: block;
+  color: $secondary;
+  font-size: 1.125em;
+}
+
 .bar {
   background-color: $secondary;
   color: white !important;

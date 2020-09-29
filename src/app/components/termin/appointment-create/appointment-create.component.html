@@ -1,14 +1,22 @@
-<mat-card *ngIf="percentDone === 0">
-  <mat-card-title class="headline">
+<mat-card *ngIf="percentDone === 0"
+          class="form float high">
+  <mat-card-title class="headline"
+                  id="title">
     Termin erstellen
   </mat-card-title>
+
   <!--  <span (click)="_openAppointmentTemplateDialog()">-->
   <!--    Vorlagen-->
   <!--    <mat-icon>file_copy</mat-icon>-->
   <!--  </span>-->
-  <mat-vertical-stepper #stepper linear>
+
+  <mat-horizontal-stepper #stepper labelPosition="bottom">
     <!-- OVERALL DATA-->
-    <mat-step>
+    <ng-template matStepperIcon="overall">
+      <mat-icon>event</mat-icon>
+    </ng-template>
+    <mat-step [completed]="doneForms['overall']"
+              state="overall">
       <ng-template matStepLabel>
         Allgemein
       </ng-template>
@@ -19,19 +27,28 @@
     </mat-step>
 
     <!-- ADDITIONS-->
-    <mat-step>
+    <ng-template matStepperIcon="additions">
+      <mat-icon>check_box</mat-icon>
+    </ng-template>
+    <mat-step [completed]="doneForms['additions']"
+              [optional]="true"
+              state="additions">
       <ng-template matStepLabel>
         Zusätze
       </ng-template>
       <app-additions
         (save)="getAdditions($event)"
+        (back)="back()"
         [button]="'Weiter'">
       </app-additions>
-      <button class="stepper-navigation" mat-button matStepperPrevious>Zurück</button>
     </mat-step>
 
     <!-- LINK DATA -->
-    <mat-step>
+    <ng-template matStepperIcon="link">
+      <mat-icon>link</mat-icon>
+    </ng-template>
+    <mat-step [completed]="doneForms['link']"
+              state="link">
       <ng-template matStepLabel>
         Link
       </ng-template>
@@ -43,7 +60,10 @@
     </mat-step>
 
     <!-- DONE -->
-    <mat-step [stepControl]="doneGroup">
+    <ng-template matStepperIcon="gr">
+      <mat-icon>done_outline</mat-icon>
+    </ng-template>
+    <mat-step [stepControl]="doneGroup" state="gr">
       <form [formGroup]="doneGroup">
         <ng-template matStepLabel>
           Fertig
@@ -67,7 +87,7 @@
         <button mat-button matStepperPrevious>Zurück</button>
       </form>
     </mat-step>
-  </mat-vertical-stepper>
+  </mat-horizontal-stepper>
 </mat-card>
 
 <div *ngIf="percentDone !== 0" class="upload-progress">

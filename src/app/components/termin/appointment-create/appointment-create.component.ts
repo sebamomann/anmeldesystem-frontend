@@ -24,6 +24,7 @@ export class AppointmentCreateComponent implements OnInit {
   public output: any = {};
   public percentDone = 0;
   public stepValid = [false, false, false];
+  doneForms = {overall: false, additions: false, link: false};
 
   constructor(private formBuilder: FormBuilder,
               public dialog: MatDialog, private appointmentService: AppointmentService,
@@ -34,9 +35,34 @@ export class AppointmentCreateComponent implements OnInit {
     });
   }
 
-
   ngOnInit() {
   }
+
+  // Dialogs
+  // public _openAppointmentTemplateDialog: () => void = () => {
+  //   const dialogRef = this.dialog.open(TemplateDialogComponent, {
+  //     width: '90%',
+  //     maxWidth: '500px',
+  //     height: 'auto',
+  //     maxHeight: '80vh',
+  //   });
+  //
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (isObject(result)) {
+  // this.overallDataFormGroup.get('title').setValue(result.title);
+  // this.overallDataFormGroup.get('location').setValue(result.location);
+  // this.overallDataFormGroup.get('maxEnrollments').setValue(result.maxEnrollments);
+  //
+  // this.linkFormGroup.get('description').setValue(result.description);
+  // result.additions.forEach(addition => {
+  //   // add additions
+  // });
+  //
+  // this.getDriverAddition().setValue(result.driverAddition);
+  //     }
+  //   });
+  // };
+
 
   async create() {
     this.output.administrators = [];
@@ -78,31 +104,6 @@ export class AppointmentCreateComponent implements OnInit {
       );
   }
 
-  // Dialogs
-  // public _openAppointmentTemplateDialog: () => void = () => {
-  //   const dialogRef = this.dialog.open(TemplateDialogComponent, {
-  //     width: '90%',
-  //     maxWidth: '500px',
-  //     height: 'auto',
-  //     maxHeight: '80vh',
-  //   });
-  //
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (isObject(result)) {
-  // this.overallDataFormGroup.get('title').setValue(result.title);
-  // this.overallDataFormGroup.get('location').setValue(result.location);
-  // this.overallDataFormGroup.get('maxEnrollments').setValue(result.maxEnrollments);
-  //
-  // this.linkFormGroup.get('description').setValue(result.description);
-  // result.additions.forEach(addition => {
-  //   // add additions
-  // });
-  //
-  // this.getDriverAddition().setValue(result.driverAddition);
-  //     }
-  //   });
-  // };
-
   getOverallData(data: any) {
     this.stepValid[0] = true;
     this.output.title = data.title;
@@ -110,6 +111,8 @@ export class AppointmentCreateComponent implements OnInit {
     this.output.deadline = data.deadline;
     this.output.location = data.location;
     this.output.maxEnrollments = data.maxEnrollments;
+
+    this.doneForms.overall = true;
 
     this.stepper.next();
   }
@@ -119,6 +122,8 @@ export class AppointmentCreateComponent implements OnInit {
     this.output.driverAddition = data.driverAddition;
     this.output.additions = data.additions;
 
+    this.doneForms.additions = true;
+
     this.stepper.next();
   }
 
@@ -127,6 +132,12 @@ export class AppointmentCreateComponent implements OnInit {
     this.output.link = data.link;
     this.output.description = data.description;
 
+    this.doneForms.link = true;
+
     this.stepper.next();
+  }
+
+  back() {
+    this.stepper.previous();
   }
 }

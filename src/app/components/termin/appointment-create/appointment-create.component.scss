@@ -5,26 +5,44 @@
   line-height: $size;
 }
 
-::ng-deep .mat-vertical-stepper-header {
-  pointer-events: none !important;
-}
+::ng-deep .mat-stepper-horizontal {
+  .mat-horizontal-stepper-header-container {
+    overflow: scroll;
+    margin-bottom: 1.25em;
+  }
 
-.mat-card {
-  margin: 25px auto;
+  .mat-horizontal-stepper-header {
+    overflow: visible;
+    padding: 16px 16px !important;
+    height: auto !important;
 
-  span:first-of-type {
-    display: block;
-    margin: 0 auto;
-    width: fit-content;
+    &:first-of-type {
+      padding-left: 0 !important;
+    }
 
-    mat-icon {
-      @include md-icon-size(1.25em);
+    &:last-of-type {
+      padding-right: 0 !important;
+    }
+
+    &::before {
+      top: 28px !important;
+    }
+
+    &::after {
+      top: 28px !important;
     }
   }
-}
 
-.mat-form-field {
-  font-size: 0.8em;
+  .mat-stepper-horizontal-line {
+  }
+
+  //.mat-vertical-horizontal-header {
+  //  pointer-events: none !important;
+  //}
+
+  .mat-horizontal-content-container {
+    padding: 0 0 0 0;
+  }
 }
 
 .stepper-navigation {
