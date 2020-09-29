@@ -13,6 +13,7 @@
                placeholder="Titel"
                required>
       </label>
+      <mat-error id="title-error">{{ getErrorMessage('title') }}</mat-error>
     </mat-form-field>
     <mat-form-field class="example-full-width">
       <label for="date">
@@ -29,6 +30,7 @@
       <!--    </mat-datepicker-toggle>-->
       <!--    <ngx-mat-datetime-picker #date>-->
       <!--    </ngx-mat-datetime-picker>-->
+      <mat-error id="date-error">{{ getErrorMessage('date') }}</mat-error>
     </mat-form-field>
     <mat-form-field class="example-full-width">
       <label for="deadline">
@@ -53,6 +55,7 @@
                placeholder="Ort"
                required>
       </label>
+      <mat-error id="location-error">{{ getErrorMessage('location') }}</mat-error>
     </mat-form-field>
     <mat-form-field class="">
       <label for="maxEnrollments">

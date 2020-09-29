@@ -10,7 +10,7 @@
   <!--    <mat-icon>file_copy</mat-icon>-->
   <!--  </span>-->
 
-  <mat-horizontal-stepper #stepper [selectedIndex]="2" labelPosition="bottom">
+  <mat-horizontal-stepper #stepper labelPosition="bottom" linear>
     <!-- OVERALL DATA-->
     <ng-template matStepperIcon="overall">
       <mat-icon>event</mat-icon>
@@ -64,10 +64,39 @@
       <mat-icon>done_outline</mat-icon>
     </ng-template>
     <mat-step [stepControl]="doneGroup" state="gr">
+      <ng-template matStepLabel>
+        Fertig
+      </ng-template>
       <form [formGroup]="doneGroup">
-        <ng-template matStepLabel>
-          Fertig
-        </ng-template>
+
+        <span class="form-component-title">Fertig?</span>
+
+        <mat-card-content>
+        </mat-card-content>
+
+        <div class="info">
+          Sind alle Daten korrekt?
+        </div>
+
+        <mat-card-actions class="double">
+          <div>
+            <button (click)="back()"
+                    class="left"
+                    color="primary"
+                    disableRipple
+                    mat-button
+                    type="button">
+              Zurück
+            </button>
+          </div>
+          <button
+            (click)="create()"
+            color="primary"
+            mat-raised-button>
+            Erstellen
+          </button>
+        </mat-card-actions>
+
         <!--        <div class="tooltip-container">-->
         <!--          <mat-checkbox formControlName="saveAsTemplate">-->
         <!--            Als Vorlage Speichern-->
@@ -80,11 +109,6 @@
         <!--            info-->
         <!--          </mat-icon>-->
         <!--        </div>-->
-        <button (click)="create()"
-                mat-stroked-button>
-          Erstellen
-        </button>
-        <button mat-button matStepperPrevious>Zurück</button>
       </form>
     </mat-step>
   </mat-horizontal-stepper>

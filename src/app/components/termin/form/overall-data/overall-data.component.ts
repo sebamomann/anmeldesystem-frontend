@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material';
 import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
@@ -39,11 +39,11 @@ export class OverallDataComponent implements OnInit {
     this._adapter.setLocale('de');
 
     this.event = this.formBuilder.group({
-      title: ['', Validators.required],
-      date: ['', Validators.required],
-      deadline: [''],
-      location: ['', Validators.required],
-      maxEnrollments: [''],
+      title: new FormControl('', [Validators.required]),
+      date: new FormControl('', [Validators.required]),
+      deadline: new FormControl(''),
+      location: new FormControl('', [Validators.required]),
+      maxEnrollments: new FormControl(''),
     });
 
     if (this.appointment !== undefined) {
@@ -62,6 +62,14 @@ export class OverallDataComponent implements OnInit {
       };
 
       this.save.emit(data);
+    }
+  }
+
+  public getErrorMessage(str: string) {
+    if (str !== '') {
+      if (this.get(str).hasError('required')) {
+        return 'Erforderlich';
+      }
     }
   }
 
