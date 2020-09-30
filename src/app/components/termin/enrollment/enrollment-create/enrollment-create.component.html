@@ -4,8 +4,18 @@
     Anmelden
   </mat-card-title>
 
-  <mat-horizontal-stepper #stepper linear>
-    <mat-step>
+  <mat-horizontal-stepper #stepper
+                          labelPosition="bottom"
+                          linear>
+    <!-- OVERALL DATA-->
+    <ng-template matStepperIcon="overall">
+      <mat-icon>person</mat-icon>
+    </ng-template>
+    <mat-step [completed]="doneForms['overall']"
+              state="overall">
+      <ng-template matStepLabel>
+        Allgemein
+      </ng-template>
       <app-enrollment-main-form
         #mainForm
         (done)="mainFormDone($event)"
@@ -16,9 +26,21 @@
       </app-enrollment-main-form>
     </mat-step>
 
-    <mat-step *ngIf="getAdditionsControls().length > 0">
+    <!-- ADDITIONS -->
+    <ng-template matStepperIcon="additions">
+      <mat-icon>check_box</mat-icon>
+    </ng-template>
+    <mat-step *ngIf="getAdditionsControls().length > 0"
+              [completed]="doneForms['additions']"
+              [optional]="true"
+              state="additions">
+      <ng-template matStepLabel>
+        Zusätze
+      </ng-template>
       <form (ngSubmit)="saveAdditionsForm()"
             [formGroup]="form_additions">
+        <span class="form-component-title"> Zusätze </span>
+
         <mat-card-content>
           <div class="addition-list-checkboxes">
             <div *ngFor="let addition of getAdditionsControls(); let i = index;"
@@ -60,10 +82,22 @@
       </form>
     </mat-step>
 
+    <!-- DRIVER ADDITION -->
+    <ng-template matStepperIcon="driver">
+      <mat-icon>directions_car</mat-icon>
+    </ng-template>
     <mat-step *ngIf="appointment.driverAddition"
-              [stepControl]="form_driverPassenger">
+              [completed]="doneForms['driver']"
+              [stepControl]="form_driverPassenger"
+              state="driver">
+      <ng-template matStepLabel>
+        Fahrer
+      </ng-template>
+
       <form (ngSubmit)="saveDriverForm()"
             [formGroup]="form_driverPassenger">
+        <span class="form-component-title"> Fahrerzusatz </span>
+
         <mat-card-content>
           <div class="driverAddition">
             <div class="checkbox-standalone">
@@ -100,12 +134,14 @@
               </mat-form-field>
 
               <mat-form-field class="seats">
-                <input formControlName="seats"
-                       id="seats"
-                       matInput
-                       placeholder="FREIE Plätze"
-                       required
-                       type="number">
+                <label for="seats">
+                  <input formControlName="seats"
+                         id="seats"
+                         matInput
+                         placeholder="FREIE Plätze"
+                         required
+                         type="number">
+                </label>
                 <mat-error *ngIf="form_driverPassenger.get('seats').invalid">
                   {{ getSeatsErrorMessage() }}
                 </mat-error>
@@ -139,7 +175,18 @@
         </mat-card-actions>
       </form>
     </mat-step>
-    <mat-step>
+
+    <!-- DONE -->
+    <ng-template matStepperIcon="last">
+      <mat-icon>done_outline</mat-icon>
+    </ng-template>
+    <mat-step state="last">
+      <ng-template matStepLabel>
+        Fertig
+      </ng-template>
+
+      <span class="form-component-title"> Fertig? </span>
+
       <mat-card-content>
         <app-enrollment-details
           [appointment]="appointment"
@@ -178,11 +225,20 @@
       </mat-card-actions>
     </mat-step>
 
-    <mat-step>
-      <app-enrollment-login-mail
-        (cancel)="mailFormCancel()"
-        (done)="mailFormSubmit($event)">
-      </app-enrollment-login-mail>
-    </mat-step>
+    <ng-container *ngIf="showLoginAndMailForm">
+      <ng-template matStepperIcon="email">
+        <mat-icon>email</mat-icon>
+      </ng-template>
+      <mat-step state="mail">
+        <ng-template matStepLabel>
+          Mails
+        </ng-template>
+
+        <app-enrollment-login-mail
+          (cancel)="mailFormCancel()"
+          (done)="mailFormSubmit($event)">
+        </app-enrollment-login-mail>
+      </mat-step>
+    </ng-container>
   </mat-horizontal-stepper>
 </mat-card>

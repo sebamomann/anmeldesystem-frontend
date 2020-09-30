@@ -5,10 +5,18 @@
   line-height: $size;
 }
 
+::ng-deep .mat-stepper-label-position-bottom .mat-stepper-horizontal-line {
+  top: 28px;
+}
+
 ::ng-deep .mat-stepper-horizontal {
   .mat-horizontal-stepper-header-container {
     overflow: auto;
     margin-bottom: 1.25em;
+
+    & .mat-stepper-horizontal-line {
+      top: 28px;
+    }
   }
 
   .mat-horizontal-stepper-header {
@@ -45,24 +53,15 @@
   }
 }
 
-.stepper-navigation {
-  display: block;
-  left: 35vw;
-  margin-top: -30px;
-}
+//.stepper-navigation {
+//  display: block;
+//  left: 35vw;
+//  margin-top: -30px;
+//}
 
 button.mat-button {
   line-height: 27px;
   padding: 0 10px;
-}
-
-mat-chip-list {
-  mat-chip {
-    font-size: 0.9em;
-    overflow: initial;
-    padding: 4px 8px 4px 12px;
-    min-height: 25px;
-  }
 }
 
 .info {

@@ -17,7 +17,9 @@ export class AdministratorComponent implements OnInit {
   public button = 'Speichern';
 
   public event: any;
+
   public administrators: any;
+  public recentAdminList = [];
 
   constructor(private formBuilder: FormBuilder) {
   }
@@ -37,5 +39,19 @@ export class AdministratorComponent implements OnInit {
   removeAdministrator(data: any) {
     const removeIndex = this.administrators.indexOf(data);
     this.administrators.splice(removeIndex, 1);
+  }
+
+  public pending(data: any) {
+    this.recentAdminList.push(data);
+  }
+
+  unknownUserError() {
+    this.event.get('username').setErrors({notFound: true});
+  }
+
+  getErrorMessage() {
+    if (this.event.get('username').hasError('notFound')) {
+      return 'Benutzer nicht gefunden';
+    }
   }
 }

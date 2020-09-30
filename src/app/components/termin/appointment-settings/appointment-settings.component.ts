@@ -7,6 +7,7 @@ import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import {LinkDataComponent} from '../form/link-data/link-data.component';
 import {Observable, Subscription} from 'rxjs';
 import {AppointmentProvider} from '../appointment.provider';
+import {AdministratorComponent} from '../administrator/administrator.component';
 
 const HttpStatus = require('http-status-codes');
 
@@ -17,14 +18,17 @@ const HttpStatus = require('http-status-codes');
 })
 export class AppointmentSettingsComponent implements OnInit, OnDestroy {
   @ViewChild(LinkDataComponent, null)
-  linkDataComponent: LinkDataComponent;
+  linkDataComponentRef: LinkDataComponent;
+
+  @ViewChild(AdministratorComponent, null)
+  administratorComponentRef: AdministratorComponent;
 
   public appointment$: Observable<IAppointmentModel>;
 
   public link: any;
   public appointment: IAppointmentModel;
   public saveSuccess: boolean;
-  public uploadingFile: any = [];
+  public uploadingFiles: any = [];
   public permission = null;
 
   private appointment$$: Subscription;
@@ -106,16 +110,15 @@ export class AppointmentSettingsComponent implements OnInit, OnDestroy {
 
               // TODO ADD ADMIN TO LIST
               // MAYBE ALSO FORCE ADMIN TO ACCEPT CIA MAIL
+
+              this.administratorComponentRef.pending(data);
             }
           }
         },
         err => {
           if (err instanceof HttpErrorResponse) {
-            if (err.status === 400) {
-              this.snackBar.open('Benutzer nicht gefunden', null, {
-                duration: 2000,
-                panelClass: 'snackbar-error'
-              });
+            if (err.status === 404) {
+              this.administratorComponentRef.unknownUserError();
             }
           }
         });
@@ -124,13 +127,13 @@ export class AppointmentSettingsComponent implements OnInit, OnDestroy {
   saveFile(data: any) {
     const d = new Date();
     const n = d.getMilliseconds();
-    this.uploadingFile.push({index: n, name: data.name, progress: 0});
+    this.uploadingFiles.push({index: n, name: data.name, progress: 0});
     this.appointmentService
       .addFile(data, this.appointment)
       .subscribe(
         res => {
           if (res.type === HttpEventType.UploadProgress) {
-            this.uploadingFile.forEach(fFile => {
+            this.uploadingFiles.forEach(fFile => {
               if (fFile.index === n) {
                 fFile.progress = Math.round(100 * res.loaded / res.total);
               }
@@ -147,12 +150,16 @@ export class AppointmentSettingsComponent implements OnInit, OnDestroy {
         err => {
           console.log(err);
           if (err instanceof HttpErrorResponse) {
-            if (err.status === 400) {
-              this.snackBar.open('Sorry, etwas hat nicht geklappt', null, {
-                duration: 2000,
-                panelClass: 'snackbar-error'
-              });
-            }
+            this.snackBar.open('Sorry, etwas hat nicht geklappt!', null, {
+              duration: 2000,
+              panelClass: 'snackbar-error'
+            });
+
+            this.uploadingFiles.forEach(fFile => {
+              if (fFile.index === n) {
+                fFile.progress = undefined;
+              }
+            });
           }
         });
   }
@@ -195,7 +202,7 @@ export class AppointmentSettingsComponent implements OnInit, OnDestroy {
                 if (error.error.code === 'ER_DUP_ENTRY') {
                   error.error.error.columns.forEach(fColumn => {
                       if (fColumn === 'link') {
-                        this.linkDataComponent.updateErrors({attr: 'link', error: 'inUse'});
+                        this.linkDataComponentRef.updateErrors({attr: 'link', error: 'inUse'});
                       }
                     }
                   );

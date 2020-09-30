@@ -1,22 +1,55 @@
 <form [formGroup]="event">
-  <div class="tooltip-container">
-    <mat-checkbox formControlName="hidden">
-      Anonym
-    </mat-checkbox>
-    <!--suppress TypeScriptUnresolvedFunction -->
-    <mat-icon #anonymous="matTooltip"
-              (click)="anonymous.toggle()"
-              class="tooltip"
-              matTooltip="{{ 'Ist diese Option aktiv, so ist die Teilnehmerliste nicht mehr für normale Teilnehmer ' +
+  <span class="form-component-title"> Sonstiges</span>
+
+  <mat-card-content>
+
+    <div class="tooltip-container checkbox-standalone">
+      <mat-checkbox formControlName="hidden"
+                    id="hidden">
+        Anonym
+
+      </mat-checkbox>
+      <!--suppress TypeScriptUnresolvedFunction -->
+      <mat-icon #anonymous="matTooltip"
+                (click)="anonymous.toggle()"
+                class="tooltip"
+                matTooltip="{{ 'Ist diese Option aktiv, so ist die Teilnehmerliste nicht mehr für normale Teilnehmer ' +
                'zugänglich. Nur die eigens angelegten Teilnehmer sind einsehbar. Administratoren oder der Ersteller des ' +
                'Termins sehen jedoch weiterhin alle Teilnehmer.'}}">
-      info
-    </mat-icon>
+        info
+      </mat-icon>
+    </div>
+
+  </mat-card-content>
+
+  <div class="info">
+    Verstecke die Teilnehmer vor anderen Teilnehmern. Datenschutz lässt grüßen.
   </div>
-  <button
-    (click)="saveFnc()"
-    [disabled]="sameValues"
-    mat-raised-button>
-    {{button}}
-  </button>
+
+  <div [routerLink]="['/support']"
+       class="info small link"
+       fragment="anonymous">
+    Mehr erfahren.
+  </div>
+
+  <mat-card-actions class="double">
+    <div>
+      <button [routerLink]="['/enroll']"
+              class="left"
+              color="primary"
+              mat-button
+              queryParamsHandling="'preserve'"
+              type="button">
+        Zurück
+      </button>
+    </div>
+    <button (click)="saveFnc()"
+            [disabled]="sameValues"
+            color="primary"
+            id="next"
+            mat-raised-button
+            type="submit">
+      {{button}}
+    </button>
+  </mat-card-actions>
 </form>

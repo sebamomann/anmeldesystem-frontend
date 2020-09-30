@@ -376,6 +376,15 @@ a {
   }
 }
 
+.span-icon {
+  display: grid;
+  width: 100%;
+  margin: 2px auto;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+
 .block {
   background-color: white;
   z-index: 5;
@@ -530,7 +539,6 @@ mat-card {
     & > span {
       display: block;
       text-align: justify;
-      text-align-last: center;
       margin: 10px auto;
     }
 
@@ -670,6 +678,19 @@ mat-card {
 
       &.last {
         padding-bottom: 1.25em;
+      }
+
+      &.spacing {
+        margin-top: 25px;
+      }
+
+      &.small {
+        font-size: 0.85em;
+        max-width: 200px;
+      }
+
+      &.link {
+        text-decoration: underline;
       }
     }
 

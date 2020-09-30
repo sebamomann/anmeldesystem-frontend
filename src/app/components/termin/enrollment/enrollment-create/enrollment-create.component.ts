@@ -41,6 +41,9 @@ export class EnrollmentCreateComponent implements OnInit {
   public finalEnrollment: IEnrollmentModel = new EnrollmentModel();
   public mainFormValues: any;
   public isEnrolledAsCreator: boolean;
+
+  doneForms = {overall: false, additions: false, driver: false};
+
   private finalEnrollment_raw: string;
   private creatorError: boolean;
   private selfEnrollment: any;
@@ -140,10 +143,14 @@ export class EnrollmentCreateComponent implements OnInit {
 
   public saveAdditionsForm() {
     this.finalEnrollment.additions = this.getIdsOfSelectedAdditions();
+
+    this.doneForms.additions = true;
   }
 
   public saveDriverForm() {
     this.parseDriverAddition();
+
+    this.doneForms.driver = true;
   }
 
   /**
@@ -167,11 +174,16 @@ export class EnrollmentCreateComponent implements OnInit {
       localStorage.setItem(EnrollmentComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY, JSON.stringify(this.finalEnrollment));
 
       this.showLoginAndMailForm = true;
-      this.stepper.next();
+
+      setTimeout(() => {
+        this.stepper.next();
+      });
     }
   }
 
   public mainFormDone(val: any) {
+    this.doneForms.overall = true;
+
     this.finalEnrollment.name = val.name;
     this.finalEnrollment.comment = val.comment;
     this.selfEnrollment = val.selfEnrollment;
@@ -182,7 +194,9 @@ export class EnrollmentCreateComponent implements OnInit {
       this.finalEnrollment.creator.username = this.authenticationService.currentUserValue.username;
     }
 
-    this.stepper.next();
+    setTimeout(() => {
+      this.stepper.next();
+    });
   }
 
   public setSelfEnrollment(val: boolean) {
