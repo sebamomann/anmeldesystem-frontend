@@ -1,5 +1,8 @@
 <div id="login-mail-form">
   <ng-container *ngIf="!userIsLoggedIn; else userLoggedInMessageTempl">
+
+    <span class="form-component-title"> Login </span>
+
     <mat-card-content id="login-content">
       <span>
         Logge dich ein um deine Anmeldung deinem Account zuzuordnen und sie später bearbeiten/löschen zu können.
@@ -46,6 +49,8 @@
 </div>
 
 <ng-template #userLoggedInMessageTempl>
+  <span class="form-component-title"> Mail </span>
+
   <mat-card-content id="login-content-alt">
     <span>
       Du bist zwar eingeloggt, meldest aber jemand anderen an. Bitte gebe dessen E-Mail Adresse ein, damit er später dazu
@@ -53,7 +58,7 @@
     </span>
   </mat-card-content>
 
-  <div class="separator middle center extra-tall"></div>
+  <div class="separator middle center dividing"></div>
 
   <ng-container *ngIf="false; else emailFormTempl"></ng-container>
 </ng-template>

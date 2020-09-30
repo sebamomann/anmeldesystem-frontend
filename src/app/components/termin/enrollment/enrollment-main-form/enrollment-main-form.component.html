@@ -1,5 +1,8 @@
 <form (ngSubmit)="save()"
       [formGroup]="form_main">
+
+  <span class="form-component-title"> Allgemein </span>
+
   <mat-card-content>
     <div *ngIf="userIsLoggedIn"
          [formGroup]="form_selfEnrollment"

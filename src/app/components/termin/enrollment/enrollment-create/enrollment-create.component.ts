@@ -41,6 +41,9 @@ export class EnrollmentCreateComponent implements OnInit {
   public finalEnrollment: IEnrollmentModel = new EnrollmentModel();
   public mainFormValues: any;
   public isEnrolledAsCreator: boolean;
+
+  doneForms = {overall: false, additions: false, driver: false};
+
   private finalEnrollment_raw: string;
   private creatorError: boolean;
   private selfEnrollment: any;
@@ -140,10 +143,14 @@ export class EnrollmentCreateComponent implements OnInit {
 
   public saveAdditionsForm() {
     this.finalEnrollment.additions = this.getIdsOfSelectedAdditions();
+
+    this.doneForms.additions = true;
   }
 
   public saveDriverForm() {
     this.parseDriverAddition();
+
+    this.doneForms.driver = true;
   }
 
   /**
@@ -181,6 +188,8 @@ export class EnrollmentCreateComponent implements OnInit {
       this.finalEnrollment.creator.name = this.authenticationService.currentUserValue.name;
       this.finalEnrollment.creator.username = this.authenticationService.currentUserValue.username;
     }
+
+    this.doneForms.overall = true;
 
     this.stepper.next();
   }

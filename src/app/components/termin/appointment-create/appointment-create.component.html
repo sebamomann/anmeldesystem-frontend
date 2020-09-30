@@ -10,8 +10,10 @@
   <!--    <mat-icon>file_copy</mat-icon>-->
   <!--  </span>-->
 
-  <mat-horizontal-stepper #stepper labelPosition="bottom" linear>
-    <!-- OVERALL DATA-->
+  <mat-horizontal-stepper #stepper
+                          labelPosition="bottom"
+                          linear>
+    <!-- OVERALL DATA -->
     <ng-template matStepperIcon="overall">
       <mat-icon>event</mat-icon>
     </ng-template>
@@ -26,7 +28,7 @@
       </app-overall-data>
     </mat-step>
 
-    <!-- ADDITIONS-->
+    <!-- ADDITIONS -->
     <ng-template matStepperIcon="additions">
       <mat-icon>check_box</mat-icon>
     </ng-template>
@@ -60,10 +62,10 @@
     </mat-step>
 
     <!-- DONE -->
-    <ng-template matStepperIcon="gr">
+    <ng-template matStepperIcon="last">
       <mat-icon>done_outline</mat-icon>
     </ng-template>
-    <mat-step [stepControl]="doneGroup" state="gr">
+    <mat-step [stepControl]="doneGroup" state="last">
       <ng-template matStepLabel>
         Fertig
       </ng-template>

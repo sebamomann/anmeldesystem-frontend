@@ -1,15 +1,47 @@
 @import "src/variables";
 
-::ng-deep .mat-horizontal-stepper-header-container {
-  display: none !important;
-}
+::ng-deep .mat-stepper-horizontal {
+  .mat-horizontal-stepper-header-container {
+    overflow: auto;
+    margin-bottom: 1.25em;
 
-::ng-deep .mat-horizontal-content-container {
-  padding: 0 !important;
-}
+    & .mat-stepper-horizontal-line {
+      top: 28px;
+    }
+  }
 
-::ng-deep mat-card-content {
-  padding-top: 5px;
+  .mat-horizontal-stepper-header {
+    overflow: visible;
+    padding: 16px 16px !important;
+    height: auto !important;
+
+    &:first-of-type {
+      padding-left: 0 !important;
+    }
+
+    &:last-of-type {
+      padding-right: 0 !important;
+    }
+
+    &::before {
+      top: 28px !important;
+    }
+
+    &::after {
+      top: 28px !important;
+    }
+  }
+
+  .mat-stepper-horizontal-line {
+  }
+
+  //.mat-vertical-horizontal-header {
+  //  pointer-events: none !important;
+  //}
+
+  .mat-horizontal-content-container {
+    padding: 0 0 0 0;
+  }
 }
 
 .mat-divider-horizontal {
