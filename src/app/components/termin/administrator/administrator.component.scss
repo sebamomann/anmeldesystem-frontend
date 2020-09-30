@@ -1,0 +1,13 @@
+.administrator-wrapper {
+  text-align-last: left;
+
+  &:not(:last-of-type) {
+    margin-bottom: 30px;
+  }
+
+  span {
+    display: inline-block;
+    width: 100%;
+    margin: 2px auto;
+  }
+}

@@ -1,5 +1,4 @@
 <form [formGroup]="event">
-
   <span class="form-component-title"> Administratoren</span>
 
   <mat-card-content>
@@ -10,24 +9,37 @@
                matInput
                placeholder="Benutzername"
                type="text">
+        <mat-error>{{getErrorMessage()}}</mat-error>
       </mat-form-field>
 
-      <button (click)="add()" mat-raised-button>Hinzufügen</button>
+      <button (click)="add()" mat-raised-button type="submit">Hinzufügen</button>
     </div>
 
+    <span class="info after-input last">
+      Ernenne einen Administrator.
+    </span>
+
+    <ng-container *ngIf="recentAdminList.length > 0">
+      <span class="form-component-title">Neue Admins</span>
+      <div class="administrator-wrapper">
+        <span *ngFor="let admin of recentAdminList">{{admin}}</span>
+      </div>
+    </ng-container>
+
     <ng-container *ngIf="administrators.length > 0">
+      <span class="form-component-title">Aktuelle Admins</span>
       <div class="administrator-wrapper">
         <app-administrator-delete
-          (deleted)="removeAdministrator($event)"
           *ngFor="let admin of administrators"
+          (deleted)="removeAdministrator($event)"
           [admin]="admin"
           [appointment]="appointment">
         </app-administrator-delete>
       </div>
+
+      <span class="info after-input">
+        Entziehe deinen Administratoren die Rechte.
+      </span>
     </ng-container>
   </mat-card-content>
-
-  <span class="info">
-    Erlaube jemandem die Administration dieses Termins
-  </span>
 </form>

@@ -7,6 +7,7 @@ import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
 import {LinkDataComponent} from '../form/link-data/link-data.component';
 import {Observable, Subscription} from 'rxjs';
 import {AppointmentProvider} from '../appointment.provider';
+import {AdministratorComponent} from '../administrator/administrator.component';
 
 const HttpStatus = require('http-status-codes');
 
@@ -17,7 +18,10 @@ const HttpStatus = require('http-status-codes');
 })
 export class AppointmentSettingsComponent implements OnInit, OnDestroy {
   @ViewChild(LinkDataComponent, null)
-  linkDataComponent: LinkDataComponent;
+  linkDataComponentRef: LinkDataComponent;
+
+  @ViewChild(AdministratorComponent, null)
+  administratorComponentRef: AdministratorComponent;
 
   public appointment$: Observable<IAppointmentModel>;
 
@@ -106,16 +110,15 @@ export class AppointmentSettingsComponent implements OnInit, OnDestroy {
 
               // TODO ADD ADMIN TO LIST
               // MAYBE ALSO FORCE ADMIN TO ACCEPT CIA MAIL
+
+              this.administratorComponentRef.pending(data);
             }
           }
         },
         err => {
           if (err instanceof HttpErrorResponse) {
-            if (err.status === 400) {
-              this.snackBar.open('Benutzer nicht gefunden', null, {
-                duration: 2000,
-                panelClass: 'snackbar-error'
-              });
+            if (err.status === 404) {
+              this.administratorComponentRef.unknownUserError();
             }
           }
         });
@@ -195,7 +198,7 @@ export class AppointmentSettingsComponent implements OnInit, OnDestroy {
                 if (error.error.code === 'ER_DUP_ENTRY') {
                   error.error.error.columns.forEach(fColumn => {
                       if (fColumn === 'link') {
-                        this.linkDataComponent.updateErrors({attr: 'link', error: 'inUse'});
+                        this.linkDataComponentRef.updateErrors({attr: 'link', error: 'inUse'});
                       }
                     }
                   );
