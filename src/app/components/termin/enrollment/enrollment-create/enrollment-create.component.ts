@@ -174,11 +174,16 @@ export class EnrollmentCreateComponent implements OnInit {
       localStorage.setItem(EnrollmentComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY, JSON.stringify(this.finalEnrollment));
 
       this.showLoginAndMailForm = true;
-      this.stepper.next();
+
+      setTimeout(() => {
+        this.stepper.next();
+      });
     }
   }
 
   public mainFormDone(val: any) {
+    this.doneForms.overall = true;
+
     this.finalEnrollment.name = val.name;
     this.finalEnrollment.comment = val.comment;
     this.selfEnrollment = val.selfEnrollment;
@@ -189,9 +194,9 @@ export class EnrollmentCreateComponent implements OnInit {
       this.finalEnrollment.creator.username = this.authenticationService.currentUserValue.username;
     }
 
-    this.doneForms.overall = true;
-
-    this.stepper.next();
+    setTimeout(() => {
+      this.stepper.next();
+    });
   }
 
   public setSelfEnrollment(val: boolean) {
