@@ -28,7 +28,7 @@ export class AppointmentSettingsComponent implements OnInit, OnDestroy {
   public link: any;
   public appointment: IAppointmentModel;
   public saveSuccess: boolean;
-  public uploadingFile: any = [];
+  public uploadingFiles: any = [];
   public permission = null;
 
   private appointment$$: Subscription;
@@ -127,13 +127,13 @@ export class AppointmentSettingsComponent implements OnInit, OnDestroy {
   saveFile(data: any) {
     const d = new Date();
     const n = d.getMilliseconds();
-    this.uploadingFile.push({index: n, name: data.name, progress: 0});
+    this.uploadingFiles.push({index: n, name: data.name, progress: 0});
     this.appointmentService
       .addFile(data, this.appointment)
       .subscribe(
         res => {
           if (res.type === HttpEventType.UploadProgress) {
-            this.uploadingFile.forEach(fFile => {
+            this.uploadingFiles.forEach(fFile => {
               if (fFile.index === n) {
                 fFile.progress = Math.round(100 * res.loaded / res.total);
               }
@@ -150,12 +150,16 @@ export class AppointmentSettingsComponent implements OnInit, OnDestroy {
         err => {
           console.log(err);
           if (err instanceof HttpErrorResponse) {
-            if (err.status === 400) {
-              this.snackBar.open('Sorry, etwas hat nicht geklappt', null, {
-                duration: 2000,
-                panelClass: 'snackbar-error'
-              });
-            }
+            this.snackBar.open('Sorry, etwas hat nicht geklappt!', null, {
+              duration: 2000,
+              panelClass: 'snackbar-error'
+            });
+
+            this.uploadingFiles.forEach(fFile => {
+              if (fFile.index === n) {
+                fFile.progress = undefined;
+              }
+            });
           }
         });
   }
