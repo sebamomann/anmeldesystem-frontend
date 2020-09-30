@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import {AppComponent} from './components/app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule, MatDialogModule, MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
@@ -44,7 +44,8 @@ registerLocaleData(localeDe);
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
-    }],
+    },
+    {provide: LOCALE_ID, useValue: 'de-DE'}],
   bootstrap: [AppComponent],
   exports: [
     DatePipe,
