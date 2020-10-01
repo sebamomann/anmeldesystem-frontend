@@ -11,13 +11,13 @@ import {UrlService} from '../../../../services/url.service';
 export class LinkDataComponent implements OnInit {
 
   @Output()
-  save = new EventEmitter<any>();
+  public save = new EventEmitter<any>();
   @Output()
-  back = new EventEmitter<any>();
+  public back = new EventEmitter<any>();
   @Input()
   public appointment: IAppointmentModel;
   @Input()
-  public button = 'Speichern';
+  public isEdit = false;
 
   public event: FormGroup;
   public sameValues = true;

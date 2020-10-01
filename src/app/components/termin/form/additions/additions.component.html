@@ -56,12 +56,23 @@
   </div>
 
   <mat-card-actions class="double">
-    <div>
+    <div *ngIf="isEdit">
+      <button [queryParamsHandling]="'preserve'"
+              [routerLink]="'/enroll' "
+              class="left"
+              color="primary"
+              disableRipple
+              mat-button
+              type="button">
+        Zum Termin
+      </button>
+    </div>
+    <div *ngIf="!isEdit">
       <button (click)="goBack()"
               class="left"
               color="primary"
-              mat-button
               disableRipple
+              mat-button
               type="button">
         Zurück
       </button>
@@ -71,7 +82,7 @@
       [disabled]="sameValues && appointment !== undefined"
       color="primary"
       mat-raised-button>
-      {{ button === 'Speichern' ? button : (hasAdditions() ? button : 'Nein danke') }}
+      {{ isEdit ? "Speichern" : (hasAdditions() ? "Weiter" : 'Nein danke') }}
     </button>
   </mat-card-actions>
 </form>

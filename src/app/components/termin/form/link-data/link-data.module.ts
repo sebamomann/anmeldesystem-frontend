@@ -4,6 +4,7 @@ import {LinkDataComponent} from './link-data.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule, MatCardModule, MatIconModule, MatInputModule, MatTooltipModule} from '@angular/material';
 import {ApplicationPipesModule} from '../../../../pipes/application-pipes.module';
+import {RouterModule} from '@angular/router';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {ApplicationPipesModule} from '../../../../pipes/application-pipes.module
     MatTooltipModule,
     MatButtonModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    RouterModule
   ]
 })
 export class LinkDataModule {

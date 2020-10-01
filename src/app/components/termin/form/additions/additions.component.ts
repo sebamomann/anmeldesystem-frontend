@@ -16,7 +16,7 @@ export class AdditionsComponent implements OnInit {
   @Input()
   public appointment: IAppointmentModel;
   @Input()
-  public button = 'Speichern';
+  public isEdit = false;
 
   public event: any;
   public sameValues = true;

@@ -34,13 +34,14 @@
 
   <mat-card-actions class="double">
     <div>
-      <button [routerLink]="['/enroll']"
+      <button [queryParamsHandling]="'preserve'"
+              [routerLink]="'/enroll' "
               class="left"
               color="primary"
+              disableRipple
               mat-button
-              queryParamsHandling="'preserve'"
               type="button">
-        Zurück
+        Zum Termin
       </button>
     </div>
     <button (click)="saveFnc()"

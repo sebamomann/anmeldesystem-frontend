@@ -14,9 +14,9 @@ export class OtherComponent implements OnInit {
   @Input()
   public button = 'Speichern';
   public event: FormGroup;
+  public sameValues = true;
   @Input()
   private appointment: IAppointmentModel;
-  public sameValues = true;
 
   constructor(private formBuilder: FormBuilder) {
   }
@@ -56,5 +56,4 @@ export class OtherComponent implements OnInit {
   private get(str: string) {
     return this.event.get(str);
   }
-
 }

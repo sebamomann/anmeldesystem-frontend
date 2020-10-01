@@ -4,11 +4,6 @@
           }"
           class="float high">
   <mat-card-title class="headline">
-      <span [queryParams]="{a: link}"
-            [routerLink]="['/enroll']"
-            class="redirect">
-        <mat-icon>arrow_back_ios</mat-icon>
-      </span>
     Bearbeiten
   </mat-card-title>
   <mat-card-content>
@@ -16,21 +11,23 @@
       <mat-tab-group [selectedIndex]="0" dynamicHeight>
         <mat-tab label="Allgemein">
           <app-overall-data
-            (save)="saveOverall($event)"
             [appointment]="appointment"
+            (save)="saveOverall($event)"
             isEdit="true">
           </app-overall-data>
         </mat-tab>
         <mat-tab label="Zusätze">
           <app-additions
+            [appointment]="appointment"
             (save)="saveAdditions($event)"
-            [appointment]="appointment">
+            isEdit="true">
           </app-additions>
         </mat-tab>
         <mat-tab label="Link">
           <app-link-data
+            [appointment]="appointment"
             (save)="saveLink($event)"
-            [appointment]="appointment">
+            isEdit="true">
           </app-link-data>
         </mat-tab>
         <mat-tab label="Administration">
@@ -41,8 +38,8 @@
         </mat-tab>
         <mat-tab label="Anhänge">
           <app-file
-            (save)="saveFile($event)"
             [appointment]="appointment"
+            (save)="saveFile($event)"
             [uploading]="uploadingFiles">
           </app-file>
         </mat-tab>

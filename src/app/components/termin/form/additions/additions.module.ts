@@ -12,6 +12,7 @@ import {
   MatInputModule,
   MatTooltipModule
 } from '@angular/material';
+import {RouterModule} from '@angular/router';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import {
     MatInputModule,
     MatButtonModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    RouterModule
   ]
 })
 export class AdditionsModule {

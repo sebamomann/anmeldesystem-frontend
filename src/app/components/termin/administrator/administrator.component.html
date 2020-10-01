@@ -42,4 +42,18 @@
       </span>
     </ng-container>
   </mat-card-content>
+
+  <mat-card-actions class="double">
+    <div>
+      <button [queryParamsHandling]="'preserve'"
+              [routerLink]="'/enroll' "
+              class="left"
+              color="primary" disableRipple
+              mat-button
+              o
+              type="button">
+        Zum Termin
+      </button>
+    </div>
+  </mat-card-actions>
 </form>

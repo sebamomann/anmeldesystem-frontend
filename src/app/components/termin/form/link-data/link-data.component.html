@@ -61,7 +61,18 @@
   <span class="info">Eigener URL Pfad zum Termin und weitere Informationen.</span>
 
   <mat-card-actions class="double">
-    <div>
+    <div *ngIf="isEdit">
+      <button [queryParamsHandling]="'preserve'"
+              [routerLink]="'/enroll' "
+              class="left"
+              color="primary"
+              disableRipple
+              mat-button
+              type="button">
+        Zum Termin
+      </button>
+    </div>
+    <div *ngIf="!isEdit">
       <button (click)="goBack()"
               class="left"
               color="primary"
@@ -76,7 +87,7 @@
       [disabled]="sameValues && appointment !== undefined"
       color="primary"
       mat-raised-button>
-      {{button}}
+      {{isEdit ? "Speichern" : "Weiter"}}
     </button>
   </mat-card-actions>
 </form>
