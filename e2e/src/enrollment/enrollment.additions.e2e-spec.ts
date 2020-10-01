@@ -10,9 +10,6 @@ describe('Enrollment Page - Additions', () => {
 
   let page: EnrollmentPage;
 
-  // TODO
-  // REMOVE JETZT ANMELDEN HINWEIS
-
   describe('Main', () => {
     beforeEach(async () => {
       page = new EnrollmentPage(appointmentLink);
@@ -20,6 +17,7 @@ describe('Enrollment Page - Additions', () => {
 
       await page.logout();
 
+      browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' + JSON.stringify([appointmentLink]) + '\');');
       browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
       await page.navigateTo();
