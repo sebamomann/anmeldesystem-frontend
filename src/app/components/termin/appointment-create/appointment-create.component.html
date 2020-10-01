@@ -23,8 +23,7 @@
         Allgemein
       </ng-template>
       <app-overall-data
-        (save)="getOverallData($event)"
-        [button]="'Weiter'">
+        (save)="getOverallData($event)">
       </app-overall-data>
     </mat-step>
 
@@ -40,8 +39,7 @@
       </ng-template>
       <app-additions
         (save)="getAdditions($event)"
-        (back)="back()"
-        [button]="'Weiter'">
+        (back)="back()">
       </app-additions>
     </mat-step>
 
@@ -56,8 +54,7 @@
       </ng-template>
       <app-link-data
         (save)="getLinkData($event)"
-        (back)="back()"
-        [button]="'Weiter'">>
+        (back)="back()">
       </app-link-data>
     </mat-step>
 
@@ -85,8 +82,8 @@
             <button (click)="back()"
                     class="left"
                     color="primary"
-                    disableRipple
                     mat-button
+                    disableRipple
                     type="button">
               Zurück
             </button>

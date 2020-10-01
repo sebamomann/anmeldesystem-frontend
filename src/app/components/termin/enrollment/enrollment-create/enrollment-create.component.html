@@ -225,20 +225,19 @@
       </mat-card-actions>
     </mat-step>
 
-    <ng-container *ngIf="showLoginAndMailForm">
-      <ng-template matStepperIcon="email">
-        <mat-icon>email</mat-icon>
+    <ng-template matStepperIcon="email">
+      <mat-icon>email</mat-icon>
+    </ng-template>
+    <mat-step [optional]="!showLoginAndMailForm"
+              state="mail">
+      <ng-template matStepLabel>
+        Mail
       </ng-template>
-      <mat-step state="mail">
-        <ng-template matStepLabel>
-          Mails
-        </ng-template>
 
-        <app-enrollment-login-mail
-          (cancel)="mailFormCancel()"
-          (done)="mailFormSubmit($event)">
-        </app-enrollment-login-mail>
-      </mat-step>
-    </ng-container>
+      <app-enrollment-login-mail
+        (cancel)="mailFormCancel()"
+        (done)="mailFormSubmit($event)">
+      </app-enrollment-login-mail>
+    </mat-step>
   </mat-horizontal-stepper>
 </mat-card>
