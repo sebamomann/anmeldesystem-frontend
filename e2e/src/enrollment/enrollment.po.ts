@@ -176,7 +176,6 @@ export class EnrollmentPage {
   }
 
   public getAddition(id: string) {
-    console.log('addition-' + id + '-input');
     const EC = protractor.ExpectedConditions;
     const elem = element(by.id('addition-' + id + '-input'));
     browser.wait(EC.visibilityOf(elem), 10000);
