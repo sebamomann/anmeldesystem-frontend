@@ -39,12 +39,17 @@
     </mat-card-content>
   </ng-container>
 
-  <mat-card-actions>
-    <button (click)="_cancel()"
-            id="back"
-            mat-flat-button>
-      Zurück
-    </button>
+  <mat-card-actions class="double">
+    <div>
+      <button (click)="cancel()"
+              class="left"
+              color="primary"
+              disableRipple
+              mat-button
+              type="button">
+        Zum Termin
+      </button>
+    </div>
   </mat-card-actions>
 </div>
 

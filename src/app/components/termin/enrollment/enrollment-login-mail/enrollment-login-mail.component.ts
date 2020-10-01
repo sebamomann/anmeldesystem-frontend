@@ -10,8 +10,8 @@ import {FormBuilder, FormControl, Validators} from '@angular/forms';
 })
 export class EnrollmentLoginMailComponent implements OnInit {
 
-  @Output() done = new EventEmitter<string>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output('done') done__ = new EventEmitter<string>();
+  @Output('cancel') cancel__ = new EventEmitter<void>();
 
   public currentURL: string;
   public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
@@ -40,12 +40,12 @@ export class EnrollmentLoginMailComponent implements OnInit {
 
   public save() {
     if (this.form_mail.valid) {
-      this.done.emit(this.getMail().value);
+      this.done__.emit(this.getMail().value);
     }
   }
 
-  public _cancel() {
-    this.cancel.emit();
+  public cancel() {
+    this.cancel__.emit();
   }
 
   private getMail() {
