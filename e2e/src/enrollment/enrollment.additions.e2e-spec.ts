@@ -103,7 +103,7 @@ describe('Enrollment Page - Additions', () => {
                       });
                     });
 
-                    describe('insert mail', () => {
+                    describe('insert mail', () => { // no failed mail test needed, covered in normal test
                       beforeEach(() => {
                         page.setEmail('mail@example.com');
                       });

@@ -31,15 +31,17 @@ export class EnrollmentLoginMailComponent implements OnInit {
 
   public getMailErrorMessage() {
     if (this.getMail().hasError('required')) {
-      return 'Bitte angeben';
+      return 'Bitte erforderlich';
     }
     if (this.getMail().hasError('email')) {
-      return 'Bitte eine gültige Email angeben';
+      return 'Bitte gebe eine gültige E-Mail Adresse an';
     }
   }
 
-  public _done() {
-    this.done.emit(this.getMail().value);
+  public save() {
+    if (this.form_mail.valid) {
+      this.done.emit(this.getMail().value);
+    }
   }
 
   public _cancel() {
@@ -49,5 +51,4 @@ export class EnrollmentLoginMailComponent implements OnInit {
   private getMail() {
     return this.form_mail.get('mail');
   }
-
 }

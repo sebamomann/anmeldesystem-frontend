@@ -138,6 +138,14 @@ export class EnrollmentPage {
     return elem;
   }
 
+  public async getMailError() {
+    const elem = element(by.id('mail-error'));
+    const until = protractor.ExpectedConditions;
+    browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
+    await browser.wait(this.textNotToBePresentInElement(elem, ''), 5000, 'Element taking too long to appear in the DOM');
+    return elem;
+  }
+
   public async getCreatorError() {
     const elem = element(by.id('creator-error'));
     const until = protractor.ExpectedConditions;

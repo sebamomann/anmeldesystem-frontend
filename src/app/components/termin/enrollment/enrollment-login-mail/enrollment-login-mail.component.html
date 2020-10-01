@@ -73,11 +73,11 @@
                  matInput
                  placeholder="Mail-Adresse">
         </label>
-        <mat-error>
+        <mat-error id="mail-error">
           {{ getMailErrorMessage() }}
         </mat-error>
       </mat-form-field>
-      <button (click)="_done()"
+      <button (click)="save()"
               id="submit"
               mat-raised-button>
         Absenden

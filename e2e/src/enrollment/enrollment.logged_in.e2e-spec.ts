@@ -197,23 +197,40 @@ describe('Enrollment Page - Logged in', () => {
               });
 
               describe('insert mail', () => {
-                beforeEach(() => {
-                  page.setEmail('mail@example.com');
-                });
-
-                describe('send', () => {
+                describe('valid', () => {
                   beforeEach(() => {
-                    page.submit();
+                    page.setEmail('mail@example.com');
                   });
 
-                  it('should complete enrollment', () => {
-                    expect(
-                      browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
-                        .catch(() => {
-                          return false;
-                        })
-                    ).toBeTruthy(`Url match could not succeed`);
-                    expect(page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
+                  describe('send', () => {
+                    beforeEach(() => {
+                      page.submit();
+                    });
+
+                    it('should complete enrollment', () => {
+                      expect(
+                        browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
+                          .catch(() => {
+                            return false;
+                          })
+                      ).toBeTruthy(`Url match could not succeed`);
+                      expect(page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
+                    });
+                  });
+                });
+
+                describe('invalid', () => {
+                  beforeEach(() => {
+                    page.setEmail('mail');
+                  });
+                  describe('send', () => {
+                    beforeEach(() => {
+                      page.submit();
+                    });
+
+                    it('should show mail error', async () => {
+                      await expect((await page.getMailError()).getText()).toEqual('Bitte gebe eine gültige E-Mail Adresse an');
+                    });
                   });
                 });
               });
