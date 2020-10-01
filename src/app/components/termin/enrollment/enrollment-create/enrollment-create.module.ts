@@ -19,6 +19,7 @@ import {LoadingDisableModule} from '../../../../directives/loading-disable/loadi
 import {EnrollmentLoginMailModule} from '../enrollment-login-mail/enrollment-login-mail.module';
 import {EnrollmentMainFormModule} from '../enrollment-main-form/enrollment-main-form.module';
 import {EnrollmentDetailsModule} from '../enrollment-details/enrollment-details.module';
+import {EnrollmentAdditionsModule} from '../enrollment-additions/enrollment-additions.module';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import {EnrollmentDetailsModule} from '../enrollment-details/enrollment-details.
     EnrollmentMainFormModule,
     MatDividerModule,
     EnrollmentDetailsModule,
+    EnrollmentAdditionsModule,
   ]
 })
 export class EnrollmentCreateModule {

@@ -24,7 +24,7 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   // SELF ENROLLMENT VARS
   public creatorError = false;
 
-  public form_main = this.formBuilder.group({
+  public form = this.formBuilder.group({
     name: new FormControl({value: '', disabled: this.isSelfEnrollment}, [Validators.required, Validators.min(2)]),
     comment: new FormControl('', [Validators.min(2)]),
   });
@@ -64,17 +64,17 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   public setSelfEnrollment() {
     if (this.isSelfEnrollment) {
       this.creatorError = this.isEnrolledAsCreator;
-      this.oldNameValue = this.form_main.get('name').value;
+      this.oldNameValue = this.form.get('name').value;
       this.selfEnrollment.emit(true);
       this.disableNameInput();
-      this.form_main.get('name').setValue(this.authenticationService.currentUserValue.name);
+      this.form.get('name').setValue(this.authenticationService.currentUserValue.name);
     } else {
       if (this.oldNameValue) {
-        this.form_main.get('name').setValue(this.oldNameValue);
+        this.form.get('name').setValue(this.oldNameValue);
       }
       this.selfEnrollment.emit(false);
       this.creatorError = false;
-      this.form_main.get('name').enable();
+      this.form.get('name').enable();
     }
   }
 
@@ -84,7 +84,7 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   }
 
   public save() {
-    if (this.form_main.valid) {
+    if (this.form.valid) {
       this.done.emit({
         name: this.getName().value,
         comment: this.getComment().value,
@@ -119,11 +119,11 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   }
 
   private getName() {
-    return this.form_main.get('name');
+    return this.form.get('name');
   }
 
   private getComment() {
-    return this.form_main.get('comment');
+    return this.form.get('comment');
   }
 
   private getSelfEnrollment() {

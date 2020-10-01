@@ -1,5 +1,5 @@
 <form (ngSubmit)="save()"
-      [formGroup]="form_main">
+      [formGroup]="form">
 
   <span class="form-component-title"> Allgemein </span>
 
@@ -35,13 +35,13 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field [formGroup]="form_main">
+    <mat-form-field [formGroup]="form">
       <textarea cdkAutosizeMaxRows="5"
-                cdkAutosizeMinRows="1"
                 cdkTextareaAutosize
+                cdkAutosizeMinRows="1"
                 formControlName="comment"
-                id="comment"
-                matInput placeholder="Kommentar">
+                id="comment" matInput
+                placeholder="Kommentar">
       </textarea>
     </mat-form-field>
   </mat-card-content>
@@ -70,8 +70,8 @@
       </button>
     </div>
     <button [disabled]="creatorError"
-            color="primary"
             id="next_main"
+            color="primary"
             mat-raised-button
             type="submit">
       Weiter

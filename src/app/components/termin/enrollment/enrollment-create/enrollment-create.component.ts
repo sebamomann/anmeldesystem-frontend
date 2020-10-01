@@ -1,10 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import {AuthenticationService} from '../../../../services/authentication.service';
 import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
 import {EnrollmentModel} from '../../../../models/EnrollmentModel.model';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
-import {IAdditionModel} from '../../../../models/IAddition.model';
 import {EnrollmentComponent} from '../enrollment.component';
 import {MatStepper} from '@angular/material';
 import {EnrollmentMainFormComponent} from '../enrollment-main-form/enrollment-main-form.component';
@@ -18,18 +17,16 @@ export class EnrollmentCreateComponent implements OnInit {
   @Input() appointment: IAppointmentModel;
   @Input() sendingRequestEmit: EventEmitter<boolean>;
   @Input() triggerDirectSend: boolean;
+
   @Output() execute: EventEmitter<{ operation: string, enrollment: IEnrollmentModel }> =
     new EventEmitter<{ operation: string, enrollment: IEnrollmentModel }>();
+
   @ViewChild('stepper', {static: true}) stepper: MatStepper;
   @ViewChild('mainForm', {static: true}) mainFormRef: EnrollmentMainFormComponent;
 
   public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
 
   public showLoginAndMailForm: boolean;
-
-  public form_additions = this.formBuilder.group({
-    additions: new FormArray([]),
-  });
 
   public form_driverPassenger = this.formBuilder.group({
     driver: new FormControl(false),
@@ -59,8 +56,6 @@ export class EnrollmentCreateComponent implements OnInit {
     }
 
     this.storageDataToFields();
-
-    this.buildFormCheckboxes();
 
     if (this.triggerDirectSend && this.userIsLoggedIn) {
       this.selfEnrollment = true;
@@ -114,10 +109,6 @@ export class EnrollmentCreateComponent implements OnInit {
     return this.selfEnrollment;
   }
 
-  public getAdditionsControls() {
-    return (this.form_additions.get('additions') as FormArray).controls;
-  }
-
   public getSelectErrorMessage(): string {
     if (this.getRequirement().hasError('required')) {
       return 'Bitte auswählen';
@@ -139,12 +130,6 @@ export class EnrollmentCreateComponent implements OnInit {
 
   public setCreatorError() {
     this.mainFormRef.setCreatorError();
-  }
-
-  public saveAdditionsForm() {
-    this.finalEnrollment.additions = this.getIdsOfSelectedAdditions();
-
-    this.doneForms.additions = true;
   }
 
   public saveDriverForm() {
@@ -199,6 +184,14 @@ export class EnrollmentCreateComponent implements OnInit {
     });
   }
 
+  public additionsFormDone(val) {
+    this.finalEnrollment.additions = val;
+
+    setTimeout(() => {
+      this.stepper.next();
+    });
+  }
+
   public setSelfEnrollment(val: boolean) {
     if (val) {
       delete this.finalEnrollment.editMail;
@@ -211,23 +204,15 @@ export class EnrollmentCreateComponent implements OnInit {
     return this.form_driverPassenger.get('driver');
   }
 
+  stepperPrevious() {
+    this.stepper.previous();
+  }
+
   // @ts-ignore // dynamic call
   private setNameError() {
     this.stepper.selectedIndex = 0;
     this.mainFormRef.setNameError();
   }
-
-  private buildFormCheckboxes: () => void = () => {
-    this.appointment.additions.forEach((o) => {
-      // if output has addition with this id then set to true
-      let selected = false;
-      if (this.finalEnrollment) {
-        selected = this.finalEnrollment.additions.some(iAddition => iAddition.id === o.id);
-      }
-      const control = new FormControl(selected);
-      (this.form_additions.controls.additions as FormArray).push(control);
-    });
-  };
 
   private storageDataToFields() {
     // Fetch output from localStorage
@@ -291,20 +276,6 @@ export class EnrollmentCreateComponent implements OnInit {
       }
     }
   }
-
-  private getIdsOfSelectedAdditions: () => IAdditionModel[] = () => {
-    const additionListRaw = this.form_additions.value.additions
-      .map((v, i) => v ? this.appointment.additions[i].id : null)
-      .filter(v => v !== null);
-
-    const additionList = [];
-    additionListRaw.forEach(fAddition => {
-      const addition = {id: fAddition};
-      additionList.push(addition);
-    });
-
-    return additionList;
-  };
 
   /**
    * FORM GETTER

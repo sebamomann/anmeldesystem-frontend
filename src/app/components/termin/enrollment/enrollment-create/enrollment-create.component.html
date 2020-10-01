@@ -19,9 +19,9 @@
       <app-enrollment-main-form
         #mainForm
         (done)="mainFormDone($event)"
-        (selfEnrollment)="setSelfEnrollment($event)"
         [appointment]="appointment"
         [isEnrolledAsCreator]="isEnrolledAsCreator"
+        (selfEnrollment)="setSelfEnrollment($event)"
         [values]="mainFormValues">
       </app-enrollment-main-form>
     </mat-step>
@@ -30,56 +30,19 @@
     <ng-template matStepperIcon="additions">
       <mat-icon>check_box</mat-icon>
     </ng-template>
-    <mat-step *ngIf="getAdditionsControls().length > 0"
+    <mat-step *ngIf="appointment.additions.length > 0"
               [completed]="doneForms['additions']"
               [optional]="true"
               state="additions">
       <ng-template matStepLabel>
         Zusätze
       </ng-template>
-      <form (ngSubmit)="saveAdditionsForm()"
-            [formGroup]="form_additions">
-        <span class="form-component-title"> Zusätze </span>
-
-        <mat-card-content>
-          <div class="addition-list-checkboxes">
-            <div *ngFor="let addition of getAdditionsControls(); let i = index;"
-                 [attr.addition-index]="i"
-                 class="addition-checkbox"
-                 formArrayName="additions">
-              <mat-checkbox
-                id="{{ 'addition-' + i }}"
-                [formControlName]="'' + i">
-                {{appointment.additions[i].name}}
-              </mat-checkbox>
-            </div>
-          </div>
-        </mat-card-content>
-
-        <div class="info long">
-          Genauere Informationen zu deiner Anmeldung.
-        </div>
-
-        <mat-card-actions class="double">
-          <div>
-            <button class="left"
-                    color="primary"
-                    id="back_additions"
-                    mat-button
-                    matStepperPrevious
-                    type="button">
-              Zurück
-            </button>
-          </div>
-          <button color="primary"
-                  id="next_additions"
-                  mat-raised-button
-                  matStepperNext
-                  type="submit">
-            Weiter
-          </button>
-        </mat-card-actions>
-      </form>
+      <app-enrollment-additions
+        #additionsForm
+        (cancel)="stepperPrevious()"
+        (done)="additionsFormDone($event)"
+        [appointment]="appointment">
+      </app-enrollment-additions>
     </mat-step>
 
     <!-- DRIVER ADDITION -->
