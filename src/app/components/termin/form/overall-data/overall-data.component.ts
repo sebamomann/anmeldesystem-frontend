@@ -79,13 +79,13 @@ export class OverallDataComponent implements OnInit {
     let deadline = null;
     if (this.appointment.deadline) {
       const _deadline = new Date(this.appointment.deadline);
-      deadline = this.datePipe.transform(_deadline, 'yyyy-MM-ddThh:mm');
+      deadline = this.datePipe.transform(_deadline, 'yyyy-MM-ddTHH:mm');
     }
 
     let date = null;
     if (this.appointment.date) {
       const _date = new Date(this.appointment.date);
-      date = this.datePipe.transform(_date, 'yyyy-MM-ddThh:mm');
+      date = this.datePipe.transform(_date, 'yyyy-MM-ddTHH:mm');
     }
 
     this.event.setValue({
