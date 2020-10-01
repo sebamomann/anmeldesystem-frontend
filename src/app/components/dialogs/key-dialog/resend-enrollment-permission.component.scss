@@ -21,35 +21,6 @@
 
   }
 
-  .token-select {
-    position: relative;
-    display: inline-block;
-
-    .mat-form-field {
-      width: 45%;
-      vertical-align: center;
-      margin: 0 auto;
-
-      &:first-of-type {
-        float: left;
-      }
-
-      &:last-child {
-        float: right;
-      }
-
-      &.solo {
-        text-align: center;
-        width: 75%;
-        float: none;
-      }
-
-      mat-card-actions {
-        display: block;
-      }
-    }
-  }
-
   .mat-dialog-actions {
     & > button {
       margin: 0 auto;

@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import {AuthenticationService} from '../../../../services/authentication.service';
 import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
 import {EnrollmentModel} from '../../../../models/EnrollmentModel.model';
@@ -28,13 +27,6 @@ export class EnrollmentCreateComponent implements OnInit {
 
   public showLoginAndMailForm: boolean;
 
-  public form_driverPassenger = this.formBuilder.group({
-    driver: new FormControl(false),
-    seats: new FormControl('', [Validators.min(1)]),
-    requirement: new FormControl('', []),
-    service: new FormControl('', [])
-  });
-
   public finalEnrollment: IEnrollmentModel = new EnrollmentModel();
   public mainFormValues: any;
   public isEnrolledAsCreator: boolean;
@@ -45,7 +37,7 @@ export class EnrollmentCreateComponent implements OnInit {
   private creatorError: boolean;
   private selfEnrollment: any;
 
-  constructor(private formBuilder: FormBuilder, public authenticationService: AuthenticationService) {
+  constructor(public authenticationService: AuthenticationService) {
   }
 
   ngOnInit() {
@@ -109,19 +101,7 @@ export class EnrollmentCreateComponent implements OnInit {
     return this.selfEnrollment;
   }
 
-  public getSelectErrorMessage(): string {
-    if (this.getRequirement().hasError('required')) {
-      return 'Bitte auswählen';
-    }
-  }
-
-  public getSeatsErrorMessage() {
-    if (this.getSeats().hasError('required')) {
-      return 'Bite gebe die Anzahl FREIER Plätze an';
-    }
-  }
-
-  inUseError(fColumn: any) {
+  public inUseError(fColumn: any) {
     const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
     const fnName: string = 'set' + uppercaseName + 'Error';
 
@@ -130,12 +110,6 @@ export class EnrollmentCreateComponent implements OnInit {
 
   public setCreatorError() {
     this.mainFormRef.setCreatorError();
-  }
-
-  public saveDriverForm() {
-    this.parseDriverAddition();
-
-    this.doneForms.driver = true;
   }
 
   /**
@@ -192,6 +166,17 @@ export class EnrollmentCreateComponent implements OnInit {
     });
   }
 
+  public driverFormDone($event) {
+    this.doneForms.driver = true;
+
+    this.finalEnrollment.driver = $event.driver;
+    this.finalEnrollment.passenger = $event.passenger;
+
+    setTimeout(() => {
+      this.stepper.next();
+    });
+  }
+
   public setSelfEnrollment(val: boolean) {
     if (val) {
       delete this.finalEnrollment.editMail;
@@ -200,11 +185,7 @@ export class EnrollmentCreateComponent implements OnInit {
     this.selfEnrollment = val;
   }
 
-  public getDriver() {
-    return this.form_driverPassenger.get('driver');
-  }
-
-  stepperPrevious() {
+  public stepperPrevious() {
     this.stepper.previous();
   }
 
@@ -248,49 +229,5 @@ export class EnrollmentCreateComponent implements OnInit {
 
     mainFormValues.comment = this.finalEnrollment.comment;
     this.mainFormValues = mainFormValues;
-
-    if (this.finalEnrollment.driver != null) {
-      this.form_driverPassenger.get('driver').setValue(this.finalEnrollment.driver);
-      this.form_driverPassenger.get('seats').setValue(this.finalEnrollment.driver.seats);
-      this.form_driverPassenger.get('service').setValue(this.finalEnrollment.driver.service);
-    }
-
-    if (this.finalEnrollment.passenger != null) {
-      this.form_driverPassenger.get('requirement').setValue(this.finalEnrollment.passenger.requirement);
-    }
-  }
-
-  private parseDriverAddition() {
-    if (this.appointment.driverAddition) {
-      if (this.getDriver().value) {
-        this.finalEnrollment.driver = {
-          service: this.getService().value,
-          seats: this.getSeats().value,
-        };
-        this.finalEnrollment.passenger = null;
-      } else {
-        this.finalEnrollment.passenger = {
-          requirement: this.getRequirement().value,
-        };
-        this.finalEnrollment.driver = null;
-      }
-    }
-  }
-
-  /**
-   * FORM GETTER
-   * FORM GETTER
-   * FORM GETTER
-   */
-  private getSeats() {
-    return this.form_driverPassenger.get('seats');
-  }
-
-  private getRequirement() {
-    return this.form_driverPassenger.get('requirement');
-  }
-
-  private getService() {
-    return this.form_driverPassenger.get('service');
   }
 }

@@ -11,7 +11,7 @@ import {IAppointmentModel} from '../../../../models/IAppointment.model';
 export class EnrollmentMainFormComponent implements OnInit, OnChanges {
 
   @Output() done = new EventEmitter();
-  @Output() selfEnrollment = new EventEmitter();
+  @Output() selfEnrollmentChange = new EventEmitter();
 
   @Input() appointment: IAppointmentModel;
   @Input() isEnrolledAsCreator: boolean;
@@ -19,7 +19,6 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
 
   public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
   public isSelfEnrollment = this.userIsLoggedIn;
-  public __selfEnrollment;
 
   // SELF ENROLLMENT VARS
   public creatorError = false;
@@ -50,7 +49,6 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
     if (this.values) {
       // tslint:disable-next-line:no-unused-expression
       this.values.name && this.getName().setValue(this.values.name);
-      console.log(this.values.name);
       // tslint:disable-next-line:no-unused-expression
       this.values.comment && this.getComment().setValue(this.values.comment);
 
@@ -65,14 +63,14 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
     if (this.isSelfEnrollment) {
       this.creatorError = this.isEnrolledAsCreator;
       this.oldNameValue = this.form.get('name').value;
-      this.selfEnrollment.emit(true);
+      this.selfEnrollmentChange.emit(true);
       this.disableNameInput();
       this.form.get('name').setValue(this.authenticationService.currentUserValue.name);
     } else {
       if (this.oldNameValue) {
         this.form.get('name').setValue(this.oldNameValue);
       }
-      this.selfEnrollment.emit(false);
+      this.selfEnrollmentChange.emit(false);
       this.creatorError = false;
       this.form.get('name').enable();
     }

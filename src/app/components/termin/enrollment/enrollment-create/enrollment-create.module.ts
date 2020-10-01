@@ -20,6 +20,7 @@ import {EnrollmentLoginMailModule} from '../enrollment-login-mail/enrollment-log
 import {EnrollmentMainFormModule} from '../enrollment-main-form/enrollment-main-form.module';
 import {EnrollmentDetailsModule} from '../enrollment-details/enrollment-details.module';
 import {EnrollmentAdditionsModule} from '../enrollment-additions/enrollment-additions.module';
+import {EnrollmentDriverPassengerModule} from '../enrollment-driver-passenger/enrollment-driver-passenger.module';
 
 
 @NgModule({
@@ -46,6 +47,7 @@ import {EnrollmentAdditionsModule} from '../enrollment-additions/enrollment-addi
     MatDividerModule,
     EnrollmentDetailsModule,
     EnrollmentAdditionsModule,
+    EnrollmentDriverPassengerModule,
   ]
 })
 export class EnrollmentCreateModule {

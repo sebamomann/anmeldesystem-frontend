@@ -53,8 +53,8 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
   public permissionToken: any;
   public enrollmentId: string;
 
-  @ViewChild('enrollmentCreateRef', {static: false}) private enrollmentCreate: EnrollmentCreateComponent;
-  @ViewChild('enrollmentEditRef', {static: false}) private enrollmentEdit: EnrollmentEditComponent;
+  @ViewChild('enrollmentCreateRef', {static: false}) private enrollmentCreateComponentRef: EnrollmentCreateComponent;
+  @ViewChild('enrollmentEditRef', {static: false}) private enrollmentEditComponentRef: EnrollmentEditComponent;
 
   // Preparation for login redirect fields
   private appointment$$: Subscription;
@@ -184,13 +184,13 @@ export class EnrollmentComponent implements OnInit, OnDestroy {
     err.error.data.forEach(fColumn => {
       if (fColumn === 'creator') {
         if (!this.isEdit) {
-          this.enrollmentCreate.setCreatorError();
+          this.enrollmentCreateComponentRef.setCreatorError();
         }
       } else {
         if (this.isEdit) {
-          this.enrollmentEdit.inUseError(fColumn);
+          this.enrollmentEditComponentRef.inUseError(fColumn);
         } else {
-          this.enrollmentCreate.inUseError(fColumn);
+          this.enrollmentCreateComponentRef.inUseError(fColumn);
         }
       }
     });

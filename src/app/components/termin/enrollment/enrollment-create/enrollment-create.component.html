@@ -8,24 +8,23 @@
                           labelPosition="bottom"
                           linear>
     <!-- OVERALL DATA-->
+    <!-- OVERALL DATA-->
     <ng-template matStepperIcon="overall">
       <mat-icon>person</mat-icon>
     </ng-template>
     <mat-step [completed]="doneForms['overall']"
               state="overall">
-      <ng-template matStepLabel>
-        Allgemein
-      </ng-template>
-      <app-enrollment-main-form
-        #mainForm
-        (done)="mainFormDone($event)"
-        [appointment]="appointment"
-        [isEnrolledAsCreator]="isEnrolledAsCreator"
-        (selfEnrollment)="setSelfEnrollment($event)"
-        [values]="mainFormValues">
+      <ng-template matStepLabel>Allgemein</ng-template>
+      <app-enrollment-main-form #mainForm
+                                (done)="mainFormDone($event)"
+                                (selfEnrollmentChange)="setSelfEnrollment($event)"
+                                [appointment]="appointment"
+                                [isEnrolledAsCreator]="isEnrolledAsCreator"
+                                [values]="mainFormValues">
       </app-enrollment-main-form>
     </mat-step>
 
+    <!-- ADDITIONS -->
     <!-- ADDITIONS -->
     <ng-template matStepperIcon="additions">
       <mat-icon>check_box</mat-icon>
@@ -34,111 +33,31 @@
               [completed]="doneForms['additions']"
               [optional]="true"
               state="additions">
-      <ng-template matStepLabel>
-        Zusätze
-      </ng-template>
-      <app-enrollment-additions
-        #additionsForm
-        (cancel)="stepperPrevious()"
-        (done)="additionsFormDone($event)"
-        [appointment]="appointment">
+      <ng-template matStepLabel>Zusätze</ng-template>
+      <app-enrollment-additions #additionsForm
+                                (cancel)="stepperPrevious()"
+                                (done)="additionsFormDone($event)"
+                                [appointment]="appointment">
       </app-enrollment-additions>
     </mat-step>
 
+    <!-- DRIVER ADDITION -->
     <!-- DRIVER ADDITION -->
     <ng-template matStepperIcon="driver">
       <mat-icon>directions_car</mat-icon>
     </ng-template>
     <mat-step *ngIf="appointment.driverAddition"
               [completed]="doneForms['driver']"
-              [stepControl]="form_driverPassenger"
               state="driver">
-      <ng-template matStepLabel>
-        Fahrer
-      </ng-template>
-
-      <form (ngSubmit)="saveDriverForm()"
-            [formGroup]="form_driverPassenger">
-        <span class="form-component-title"> Fahrerzusatz </span>
-
-        <mat-card-content>
-          <div class="driverAddition">
-            <div class="checkbox-standalone">
-              <mat-checkbox formControlName="driver"
-                            id="driver">
-                Ich bin Fahrer
-              </mat-checkbox>
-            </div>
-
-            <mat-form-field *ngIf="!getDriver().value; else driver">
-              <mat-label>Mich bitte mitnehmen</mat-label>
-              <mat-select formControlName="requirement" required>
-                <mat-option [value]="0"> ---</mat-option>
-                <mat-option [value]="1"> Nur Hin</mat-option>
-                <mat-option [value]="2"> Nur Zurück</mat-option>
-                <mat-option [value]="3"> Hin und Zurück</mat-option>
-              </mat-select>
-              <mat-error *ngIf="form_driverPassenger.get('requirement').invalid">
-                {{ getSelectErrorMessage() }}
-              </mat-error>
-            </mat-form-field>
-
-            <ng-template #driver>
-              <mat-form-field>
-                <mat-label>Ich fahre ...</mat-label>
-                <mat-select formControlName="service" required>
-                  <mat-option [value]="1"> Nur Hin</mat-option>
-                  <mat-option [value]="2"> Nur Zurück</mat-option>
-                  <mat-option [value]="3"> Hin und Zurück</mat-option>
-                </mat-select>
-                <mat-error *ngIf="form_driverPassenger.get('service').invalid">
-                  {{ getSelectErrorMessage() }}
-                </mat-error>
-              </mat-form-field>
-
-              <mat-form-field class="seats">
-                <label for="seats">
-                  <input formControlName="seats"
-                         id="seats"
-                         matInput
-                         placeholder="FREIE Plätze"
-                         required
-                         type="number">
-                </label>
-                <mat-error *ngIf="form_driverPassenger.get('seats').invalid">
-                  {{ getSeatsErrorMessage() }}
-                </mat-error>
-              </mat-form-field>
-            </ng-template>
-          </div>
-        </mat-card-content>
-
-        <div class="info long">
-          Hast du noch Platz im Auto, oder soll man dich mitnehmen?
-        </div>
-
-        <mat-card-actions class="double">
-          <div>
-            <button class="left"
-                    color="primary"
-                    id="back_driver"
-                    mat-button
-                    matStepperPrevious
-                    type="button">
-              Zurück
-            </button>
-          </div>
-          <button color="primary"
-                  id="next_driver"
-                  mat-raised-button
-                  matStepperNext
-                  type="submit">
-            Weiter
-          </button>
-        </mat-card-actions>
-      </form>
+      <ng-template matStepLabel>Fahrer</ng-template>
+      <app-enrollment-driver-passenger #driverForm
+                                       (cancel)="stepperPrevious()"
+                                       (done)="driverFormDone($event)"
+                                       [appointment]="appointment">
+      </app-enrollment-driver-passenger>
     </mat-step>
 
+    <!-- DONE -->
     <!-- DONE -->
     <ng-template matStepperIcon="last">
       <mat-icon>done_outline</mat-icon>

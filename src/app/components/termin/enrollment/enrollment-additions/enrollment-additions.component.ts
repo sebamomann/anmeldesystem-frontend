@@ -25,7 +25,7 @@ export class EnrollmentAdditionsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.buildFormCheckboxes();
+    this.buildFormGroup();
   }
 
   public save() {
@@ -40,7 +40,7 @@ export class EnrollmentAdditionsComponent implements OnInit {
     return (this.form.get('additions') as FormArray).controls;
   }
 
-  private buildFormCheckboxes: () => void = () => {
+  private buildFormGroup: () => void = () => {
     this.appointment.additions.forEach((o) => {
       // if output has addition with this id then set to true
       let selected = false;

@@ -1,0 +1,90 @@
+<form (ngSubmit)="save()"
+      [formGroup]="form">
+  <span class="form-component-title"> Fahrerzusatz </span>
+
+  <mat-card-content>
+    <div class="driverAddition">
+      <div class="checkbox-standalone">
+        <mat-checkbox formControlName="driver"
+                      id="driver">
+          Ich bin Fahrer
+        </mat-checkbox>
+      </div>
+
+      <!-- TODO EXTRACT IN TWO SINGLE COMPONENTS -->
+
+      <ng-container *ngIf="!getDriver().value; else driver">
+        <div class="passenger-form-wrapper"
+             formGroupName="passengerForm">
+          <mat-form-field>
+            <mat-label>Mich bitte mitnehmen ...</mat-label>
+            <mat-select formControlName="requirement">
+              <mat-option [value]="0"> ---</mat-option>
+              <mat-option [value]="1"> Nur Hin</mat-option>
+              <mat-option [value]="2"> Nur Zurück</mat-option>
+              <mat-option [value]="3"> Hin und Zurück</mat-option>
+            </mat-select>
+            <mat-error>
+              {{ getSelectErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </ng-container>
+
+      <ng-template #driver>
+        <div class="driver-form-wrapper"
+             formGroupName="driverForm">
+          <mat-form-field>
+            <mat-label>Ich fahre ...</mat-label>
+            <mat-select formControlName="service">
+              <mat-option [value]="1"> Nur Hin</mat-option>
+              <mat-option [value]="2"> Nur Zurück</mat-option>
+              <mat-option [value]="3"> Hin und Zurück</mat-option>
+            </mat-select>
+            <mat-error>
+              {{ getSelectErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="seats">
+            <label for="seats">
+              <input formControlName="seats"
+                     id="seats"
+                     matInput
+                     placeholder="FREIE Plätze"
+                     required
+                     type="number">
+            </label>
+            <mat-error>
+              {{ getSeatsErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </ng-template>
+    </div>
+  </mat-card-content>
+
+  <div class="info long">
+    Hast du noch Platz im Auto, oder soll man dich mitnehmen?
+  </div>
+
+  <mat-card-actions class="double">
+    <div>
+      <button (click)="cancel()"
+              class="left"
+              color="primary"
+              disableRipple
+              id="back_driver"
+              mat-button
+              type="button">
+        Zurück
+      </button>
+    </div>
+    <button color="primary"
+            id="next_driver"
+            mat-raised-button
+            type="submit">
+      Weiter
+    </button>
+  </mat-card-actions>
+</form>
