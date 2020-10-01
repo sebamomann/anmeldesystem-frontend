@@ -94,9 +94,7 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   public getNameErrorMessage(): string {
     if (this.getName().hasError('required')) {
       return 'Bitte gebe einen Namen an';
-    }
-
-    if (this.getName().hasError('inUse')) {
+    } else if (this.getName().hasError('inUse')) {
       return 'Es besteht bereits eine Anmeldung mit diesem Namen';
     }
   }

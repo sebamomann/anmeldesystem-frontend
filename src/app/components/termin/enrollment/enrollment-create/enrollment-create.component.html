@@ -35,8 +35,8 @@
               state="additions">
       <ng-template matStepLabel>Zusätze</ng-template>
       <app-enrollment-additions #additionsForm
-                                (cancel)="stepperPrevious()"
                                 (done)="additionsFormDone($event)"
+                                (cancel)="stepperPrevious()"
                                 [appointment]="appointment">
       </app-enrollment-additions>
     </mat-step>
@@ -63,59 +63,24 @@
       <mat-icon>done_outline</mat-icon>
     </ng-template>
     <mat-step state="last">
-      <ng-template matStepLabel>
-        Fertig
-      </ng-template>
-
-      <span class="form-component-title"> Fertig? </span>
-
-      <mat-card-content>
-        <app-enrollment-details
-          [appointment]="appointment"
-          [enrollment]="finalEnrollment">
-        </app-enrollment-details>
-      </mat-card-content>
-
-      <mat-divider></mat-divider>
-
-      <div class="info">
-        Sind alle Daten korrekt?
-      </div>
-
-      <mat-card-actions class="double">
-        <div>
-          <button class="left"
-                  color="primary"
-                  id="back_check"
-                  mat-button
-                  matStepperPrevious
-                  type="button">
-            Zurück
-          </button>
-        </div>
-        <button (click)="this.enrollmentAssignmentDecision()"
-                [active]="sendingRequestEmit"
-                [innerValue]="'Anmelden'"
-                appLoadingDisable
-                color="primary"
-                id="next_check"
-                matStepperNext
-                type="submit"
-                mat-raised-button>
-          Anmelden
-        </button>
-      </mat-card-actions>
+      <ng-template matStepLabel>Fertig</ng-template>
+      <app-enrollment-check #checkForm
+                            (cancel)="stepperPrevious()"
+                            (done)="enrollmentAssignmentDecision()"
+                            [appointment]="appointment"
+                            [enrollment]="finalEnrollment"
+                            [sendingRequestEmit]="sendingRequestEmit">
+      </app-enrollment-check>
     </mat-step>
 
+    <!-- MAIL -->
+    <!-- MAIL -->
     <ng-template matStepperIcon="email">
       <mat-icon>email</mat-icon>
     </ng-template>
     <mat-step [optional]="!showLoginAndMailForm"
               state="mail">
-      <ng-template matStepLabel>
-        Mail
-      </ng-template>
-
+      <ng-template matStepLabel>Mail</ng-template>
       <app-enrollment-login-mail
         (cancel)="mailFormCancel()"
         (done)="mailFormSubmit($event)">

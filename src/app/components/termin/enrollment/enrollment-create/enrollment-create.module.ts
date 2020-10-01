@@ -21,6 +21,7 @@ import {EnrollmentMainFormModule} from '../enrollment-main-form/enrollment-main-
 import {EnrollmentDetailsModule} from '../enrollment-details/enrollment-details.module';
 import {EnrollmentAdditionsModule} from '../enrollment-additions/enrollment-additions.module';
 import {EnrollmentDriverPassengerModule} from '../enrollment-driver-passenger/enrollment-driver-passenger.module';
+import {EnrollmentCheckModule} from '../enrollment-check/enrollment-check.module';
 
 
 @NgModule({
@@ -48,6 +49,7 @@ import {EnrollmentDriverPassengerModule} from '../enrollment-driver-passenger/en
     EnrollmentDetailsModule,
     EnrollmentAdditionsModule,
     EnrollmentDriverPassengerModule,
+    EnrollmentCheckModule,
   ]
 })
 export class EnrollmentCreateModule {
