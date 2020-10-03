@@ -29,7 +29,7 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   public form = this.formBuilder.group({
     name: new FormControl({
       value: '',
-      disabled: this.isSelfEnrollment || this.enrollment.creator
+      disabled: this.isSelfEnrollment || (this.enrollment && this.enrollment.creator)
     }, [Validators.required, Validators.min(2)]),
     comment: new FormControl('', [Validators.min(2)]),
   });
