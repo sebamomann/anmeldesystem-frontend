@@ -9,7 +9,7 @@
   </app-enrollment-create>
   <app-enrollment-edit
     #enrollmentEditRef
-    (execute)="sendEnrollmentRequest($event)"
+    (done)="sendEnrollmentRequest($event)"
     *ngIf="isEdit"
     [appointment]="appointment"
     [enrollmentId]="enrollmentId"

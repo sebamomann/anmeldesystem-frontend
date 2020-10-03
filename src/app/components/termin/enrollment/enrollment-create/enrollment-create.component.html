@@ -15,12 +15,13 @@
     <mat-step [completed]="doneForms['overall']"
               state="overall">
       <ng-template matStepLabel>Allgemein</ng-template>
-      <app-enrollment-main-form #mainForm
-                                (done)="mainFormDone($event)"
-                                (selfEnrollmentChange)="setSelfEnrollment($event)"
-                                [appointment]="appointment"
-                                [isEnrolledAsCreator]="isEnrolledAsCreator"
-                                [values]="mainFormValues">
+      <app-enrollment-main-form
+        #mainForm
+        (done)="mainFormDone($event)"
+        (selfEnrollmentChange)="setSelfEnrollment($event)"
+        [appointment]="appointment"
+        [isEnrolledAsCreator]="isEnrolledAsCreator"
+        [values]="mainFormValues">
       </app-enrollment-main-form>
     </mat-step>
 
@@ -34,10 +35,11 @@
               [optional]="true"
               state="additions">
       <ng-template matStepLabel>Zusätze</ng-template>
-      <app-enrollment-additions #additionsForm
-                                (done)="additionsFormDone($event)"
-                                (cancel)="stepperPrevious()"
-                                [appointment]="appointment">
+      <app-enrollment-additions
+        #additionsForm
+        (cancel)="stepperPrevious()"
+        (done)="additionsFormDone($event)"
+        [appointment]="appointment">
       </app-enrollment-additions>
     </mat-step>
 
@@ -50,10 +52,11 @@
               [completed]="doneForms['driver']"
               state="driver">
       <ng-template matStepLabel>Fahrer</ng-template>
-      <app-enrollment-driver-passenger #driverForm
-                                       (cancel)="stepperPrevious()"
-                                       (done)="driverFormDone($event)"
-                                       [appointment]="appointment">
+      <app-enrollment-driver-passenger
+        #driverForm
+        (cancel)="stepperPrevious()"
+        (done)="driverFormDone($event)"
+        [appointment]="appointment">
       </app-enrollment-driver-passenger>
     </mat-step>
 
@@ -64,12 +67,13 @@
     </ng-template>
     <mat-step state="last">
       <ng-template matStepLabel>Fertig</ng-template>
-      <app-enrollment-check #checkForm
-                            (cancel)="stepperPrevious()"
-                            (done)="enrollmentAssignmentDecision()"
-                            [appointment]="appointment"
-                            [enrollment]="finalEnrollment"
-                            [sendingRequestEmit]="sendingRequestEmit">
+      <app-enrollment-check
+        #checkForm
+        (cancel)="stepperPrevious()"
+        (done)="enrollmentAssignmentDecision()"
+        [sendingRequestEmit]="sendingRequestEmit">
+        [appointment]="appointment"
+        [enrollment]="finalEnrollment"
       </app-enrollment-check>
     </mat-step>
 
@@ -82,8 +86,8 @@
               state="mail">
       <ng-template matStepLabel>Mail</ng-template>
       <app-enrollment-login-mail
-        (cancel)="mailFormCancel()"
         (done)="mailFormSubmit($event)">
+        (cancel)="mailFormCancel()"
       </app-enrollment-login-mail>
     </mat-step>
   </mat-horizontal-stepper>

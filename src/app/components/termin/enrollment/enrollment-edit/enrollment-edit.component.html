@@ -1,123 +1,49 @@
 <ng-container *ngIf="!enrollmentGone; else enrollmentGoneTmpls">
   <mat-card class="form float high">
-    <mat-card-title class="headline" id="title">
+    <mat-card-title class="headline"
+                    id="title">
       Bearbeiten
     </mat-card-title>
-    <form (ngSubmit)="parseDataFromEnrollmentForm()"
-          [formGroup]="form_main">
-      <mat-card-content>
-        <div>
-          <mat-form-field class="name">
-            <label for="name">
-              <input formControlName="name"
-                     id="name"
-                     matInput
-                     placeholder="Name"
-                     required>
-            </label>
-            <mat-error id="name-error">
-              {{ getNameErrorMessage() }}
-            </mat-error>
-          </mat-form-field>
+    <mat-card-content>
+      <mat-tab-group [selectedIndex]="0"
+                     dynamicHeight>
 
-          <div class="additions">
-            <div *ngFor="let addition of getAdditionsControls(); let i = index;"
-                 formArrayName="additions">
-              <mat-checkbox
-                [formControlName]="'' + i">
-                {{appointment.additions[i].name}}
-              </mat-checkbox>
-            </div>
-          </div>
-        </div>
+        <!-- OVERALL -->
+        <!-- OVERALL -->
+        <mat-tab label="Allgemein">
+          <app-enrollment-main-form
+            #mainForm
+            (done)="mainFormDone($event)"
+            [appointment]="appointment"
+            [isEdit]="true"
+            [isEnrolledAsCreator]="isEnrolledAsCreator"
+            [values]="mainFormValues">
+          </app-enrollment-main-form>
+        </mat-tab>
 
-        <div [formGroup]="form_driverPassenger">
-          <div *ngIf="appointment.driverAddition" class="driverAddition">
-            <div>
-              <mat-checkbox
-                formControlName="driver">
-                Fahrer
-              </mat-checkbox>
-            </div>
+        <!-- ADDITIONS -->
+        <!-- ADDITIONS -->
+        <mat-tab label="Zusätze">
+          <app-enrollment-additions
+            #additionsForm
+            (cancel)="cancel()"
+            (done)="additionsFormDone($event)"
+            [appointment]="appointment">
+          </app-enrollment-additions>
+        </mat-tab>
 
-            <mat-form-field *ngIf="!getDriver().value; else driver">
-              <mat-label>Mich bitte mitnehmen</mat-label>
-              <mat-select formControlName="requirement" required>
-                <mat-option [value]="0"> ---</mat-option>
-                <mat-option [value]="1"> Nur Hin</mat-option>
-                <mat-option [value]="2"> Nur Zurück</mat-option>
-                <mat-option [value]="3"> Hin und Zurück</mat-option>
-              </mat-select>
-              <mat-error *ngIf="form_driverPassenger.get('requirement').invalid">
-                {{ getSelectErrorMessage() }}
-              </mat-error>
-            </mat-form-field>
-
-            <ng-template #driver>
-              <mat-form-field>
-                <mat-label>Ich fahre ...</mat-label>
-                <mat-select formControlName="service" required>
-                  <mat-option [value]="1"> Nur Hin</mat-option>
-                  <mat-option [value]="2"> Nur Zurück</mat-option>
-                  <mat-option [value]="3"> Hin und Zurück</mat-option>
-                </mat-select>
-                <mat-error *ngIf="form_driverPassenger.get('service').invalid">
-                  {{ getSelectErrorMessage() }}
-                </mat-error>
-              </mat-form-field>
-
-              <mat-form-field class="seats">
-                <input formControlName="seats"
-                       id="seats"
-                       matInput
-                       placeholder="FREIE Plätze"
-                       required
-                       type="number">
-                <mat-error *ngIf="form_driverPassenger.get('seats').invalid">
-                  {{ getSeatsErrorMessage() }}
-                </mat-error>
-              </mat-form-field>
-            </ng-template>
-          </div>
-        </div>
-
-        <mat-form-field [formGroup]="form_main">
-              <textarea cdkAutosizeMaxRows="5"
-                        cdkAutosizeMinRows="1"
-                        cdkTextareaAutosize
-                        formControlName="comment"
-                        id="comment"
-                        matInput placeholder="Kommentar">
-              </textarea>
-        </mat-form-field>
-
-        <div *ngIf="creatorError"
-             class="info after-input">
-          <mat-error id="creator-error">
-            {{ getCreatorErrorMessage() }}
-          </mat-error>
-        </div>
-      </mat-card-content>
-
-      <mat-card-actions class="double fill">
-        <button [queryParams]="{a: appointment.link}"
-                [routerLink]="['/enroll']"
-                mat-raised-button
-                type="button">
-          Zurück
-        </button>
-        <button [active]="sendingRequestEmit"
-                [disabled]="creatorError"
-                [innerValue]="'Speichern'"
-                appLoadingDisable
-                color="primary"
-                id="submit"
-                mat-raised-button
-                type="submit">
-          Speichern
-        </button>
-      </mat-card-actions>
-    </form>
+        <!-- DRIVER -->
+        <!-- DRIVER -->
+        <mat-tab label="Fahrer">
+          <app-enrollment-driver-passenger
+            #driverForm
+            (cancel)="cancel()"
+            (done)="driverFormDone($event)"
+            [appointment]="appointment">
+          </app-enrollment-driver-passenger>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
   </mat-card>
 </ng-container>
 

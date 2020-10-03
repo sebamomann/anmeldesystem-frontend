@@ -1,0 +1,22 @@
+mat-tab-group {
+  margin-top: 10px;
+}
+
+::ng-deep .mat-tab-header-pagination {
+  min-width: 20px !important;
+}
+
+::ng-deep form {
+  padding: 4px;
+}
+
+::ng-deep .mat-tab-labels {
+  .mat-tab-label {
+    height: 35px;
+    padding: 0 15px;
+  }
+}
+
+::ng-deep mat-tab-body {
+  padding: 15px 0 0 0;
+}

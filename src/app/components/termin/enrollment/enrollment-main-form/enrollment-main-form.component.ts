@@ -16,6 +16,7 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   @Input() appointment: IAppointmentModel;
   @Input() isEnrolledAsCreator: boolean;
   @Input() values: any;
+  @Input() isEdit = false;
 
   public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
   public isSelfEnrollment = this.userIsLoggedIn;

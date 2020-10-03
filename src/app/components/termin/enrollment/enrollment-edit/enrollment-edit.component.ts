@@ -17,7 +17,8 @@ export class EnrollmentEditComponent implements OnInit {
   @Input() triggerDirectSend: boolean;
   @Input() enrollmentId: string;
   @Input() permissionToken: string;
-  @Output() execute: EventEmitter<{ operation: string, enrollment: IEnrollmentModel }>
+
+  @Output('done') done__: EventEmitter<{ operation: string, enrollment: IEnrollmentModel }>
     = new EventEmitter<{ operation: string, enrollment: IEnrollmentModel }>();
 
   public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
@@ -41,7 +42,8 @@ export class EnrollmentEditComponent implements OnInit {
     requirement: new FormControl('', []),
     service: new FormControl('', [])
   });
-
+  mainFormValues: any;
+  isEnrolledAsCreator: any;
   private finalEnrollment: IEnrollmentModel = new EnrollmentModel();
 
   constructor(private formBuilder: FormBuilder, private authenticationService: AuthenticationService) {
@@ -77,7 +79,7 @@ export class EnrollmentEditComponent implements OnInit {
 
     this.finalEnrollment.token = this.permissionToken;
 
-    this.execute.emit({operation: 'update', enrollment: this.finalEnrollment});
+    this.done__.emit({operation: 'update', enrollment: this.finalEnrollment});
   };
 
   /**
@@ -136,6 +138,31 @@ export class EnrollmentEditComponent implements OnInit {
 
     this[fnName]().setErrors({inUse: true});
     this[fnName]().markAsTouched();
+  }
+
+  public getDriver() {
+    return this.form_driverPassenger.get('driver');
+  }
+
+  additionsFormDone($event: any) {
+
+  }
+
+  cancel() {
+
+  }
+
+  driverFormDone($event: any) {
+
+  }
+
+  public mainFormDone($event: any) {
+    const output = $event;
+    output.id = this.enrollmentId;
+    
+    delete output.selfEnrollment;
+
+    this.done__.emit({operation: 'update', enrollment: output});
   }
 
   private buildFormCheckboxes: () => void = () => {
@@ -247,10 +274,6 @@ export class EnrollmentEditComponent implements OnInit {
 
   private getComment() {
     return this.form_main.get('comment');
-  }
-
-  public getDriver() {
-    return this.form_driverPassenger.get('driver');
   }
 
   private getName() {
