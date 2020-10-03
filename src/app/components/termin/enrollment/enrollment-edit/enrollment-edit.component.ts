@@ -163,7 +163,13 @@ export class EnrollmentEditComponent implements OnInit {
   }
 
   driverFormDone($event: any) {
+    const output: any = {};
 
+    output.id = this.enrollmentId;
+    output.driver = $event.driver;
+    output.passenger = $event.passenger;
+
+    this.done__.emit({operation: 'update', enrollment: output});
   }
 
   public mainFormDone($event: any) {
@@ -241,12 +247,12 @@ export class EnrollmentEditComponent implements OnInit {
           service: this.getService().value,
           seats: this.getSeats().value,
         };
-        this.enrollment.passenger = null;
+        this.enrollment.passenger = undefined;
       } else {
         this.enrollment.passenger = {
           requirement: this.getRequirement().value,
         };
-        this.enrollment.driver = null;
+        this.enrollment.driver = undefined;
       }
     }
   }

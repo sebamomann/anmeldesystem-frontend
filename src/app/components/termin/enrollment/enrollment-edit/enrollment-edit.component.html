@@ -10,14 +10,15 @@
 
         <!-- OVERALL -->
         <!-- OVERALL -->
+        <!-- needed mainFormValues?-->
         <mat-tab label="Allgemein">
           <app-enrollment-main-form
             #mainForm
             (done)="mainFormDone($event)"
+            [isEdit]="true"
+            [isEnrolledAsCreator]="isEnrolledAsCreator"
             [enrollment]="enrollment"
             [appointment]="appointment"
-            [isEnrolledAsCreator]="isEnrolledAsCreator"
-            [isEdit]="true"
             [values]="mainFormValues">
           </app-enrollment-main-form>
         </mat-tab>
@@ -40,9 +41,11 @@
         <mat-tab label="Fahrer">
           <app-enrollment-driver-passenger
             #driverForm
-            (cancel)="cancel()"
             (done)="driverFormDone($event)"
-            [appointment]="appointment">
+            (cancel)="cancel()"
+            [appointment]="appointment"
+            [enrollment]="enrollment"
+            [isEdit]="true">
           </app-enrollment-driver-passenger>
         </mat-tab>
       </mat-tab-group>

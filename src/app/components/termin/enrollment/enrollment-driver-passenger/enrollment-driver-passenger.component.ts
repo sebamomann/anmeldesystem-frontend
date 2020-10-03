@@ -15,6 +15,7 @@ export class EnrollmentDriverPassengerComponent implements OnInit {
 
   @Input() appointment: IAppointmentModel;
   @Input() enrollment: IEnrollmentModel;
+  @Input() isEdit = false;
 
   public form = this.formBuilder.group({
     driver: new FormControl(false),
@@ -63,10 +64,6 @@ export class EnrollmentDriverPassengerComponent implements OnInit {
     this.cancel__.emit();
   }
 
-  public getDriver() {
-    return this.form.get('driver');
-  }
-
   public getSelectErrorMessage(): string {
     if (this.getRequirement().hasError('required')) {
       return 'Bitte auswählen';
@@ -79,16 +76,20 @@ export class EnrollmentDriverPassengerComponent implements OnInit {
     }
   }
 
+  public getDriver() {
+    return this.form.get('driver');
+  }
+
   private fillForm() {
     if (this.enrollment) {
       if (this.enrollment.driver != null) {
-        this.form.get('driver').setValue(this.enrollment.driver);
-        this.form.get('seats').setValue(this.enrollment.driver.seats);
-        this.form.get('service').setValue(this.enrollment.driver.service);
+        this.getDriver().setValue(this.enrollment.driver);
+        this.getSeats().setValue(this.enrollment.driver.seats);
+        this.getService().setValue(this.enrollment.driver.service);
       }
 
       if (this.enrollment.passenger != null) {
-        this.form.get('requirement').setValue(this.enrollment.passenger.requirement);
+        this.getRequirement().setValue(this.enrollment.passenger.requirement);
       }
     }
   }
