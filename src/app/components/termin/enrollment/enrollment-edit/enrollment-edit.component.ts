@@ -151,7 +151,11 @@ export class EnrollmentEditComponent implements OnInit {
   }
 
   additionsFormDone($event: any) {
+    const output: any = {}; // IEnrollmentModel
+    output.additions = $event;
+    output.id = this.enrollmentId;
 
+    this.done__.emit({operation: 'update', enrollment: output});
   }
 
   cancel() {

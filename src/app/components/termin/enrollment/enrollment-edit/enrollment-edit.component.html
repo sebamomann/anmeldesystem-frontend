@@ -27,9 +27,11 @@
         <mat-tab label="Zusätze">
           <app-enrollment-additions
             #additionsForm
-            (cancel)="cancel()"
             (done)="additionsFormDone($event)"
-            [appointment]="appointment">
+            [appointment]="appointment"
+            [enrollment]="enrollment"
+            (cancel)="cancel()"
+            [isEdit]="true">
           </app-enrollment-additions>
         </mat-tab>
 
