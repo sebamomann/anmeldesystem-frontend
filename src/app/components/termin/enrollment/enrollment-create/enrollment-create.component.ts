@@ -149,7 +149,7 @@ export class EnrollmentCreateComponent implements OnInit {
 
     if (val.selfEnrollment) {
       this.finalEnrollment.creator = {} as any;
-      this.finalEnrollment.creator.name = this.authenticationService.currentUserValue.name;
+      this.finalEnrollment.creator.name = this.authenticationService.currentUserValue.name; // TODO CAN BE MANAGED IN COMPONENT
       this.finalEnrollment.creator.username = this.authenticationService.currentUserValue.username;
     }
 
@@ -207,7 +207,7 @@ export class EnrollmentCreateComponent implements OnInit {
     }
   }
 
-  private parseOutputIntoForm() {
+  private parseOutputIntoForm() { // TODO CAN BE MANAGED IN COMPONENT
     const mainFormValues: any = {}; // TODO INTERFACE
     mainFormValues.selfEnrollment = this.finalEnrollment.selfEnrollment;
 
