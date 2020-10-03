@@ -69,7 +69,7 @@ describe('Enrollment Edit Page', () => {
         describe('form', () => {
           it('correct attributes', async () => {
             await expect(page.getName().isEnabled()).toBe(false);
-            await expect(page.getSubmit().isEnabled()).toBe(true);
+            await expect(page.getNextMain().isEnabled()).toBe(true);
             await expect((await page.creatorErrorExists())).toBeFalsy();
           });
 
@@ -81,7 +81,7 @@ describe('Enrollment Edit Page', () => {
           describe('edit comment - send', () => {
             beforeEach(async () => {
               await page.setComment(userEnrollmentValues.comment + ' edited by enrollment creator');
-              page.submit();
+              page.nextMain();
             });
 
             it('should complete edit', async () => {
@@ -131,7 +131,7 @@ describe('Enrollment Edit Page', () => {
         describe('valid form attributes', () => {
           beforeEach(async () => {
             await expect(page.getName().isEnabled()).toBe(false);
-            await expect(page.getSubmit().isEnabled()).toBe(true);
+            await expect(page.getNextMain().isEnabled()).toBe(true);
             await expect((await page.creatorErrorExists())).toBeFalsy();
           });
 
@@ -143,7 +143,7 @@ describe('Enrollment Edit Page', () => {
           describe('edit comment - send', () => {
             beforeEach(async () => {
               await page.setComment(user2EnrollmentValues.comment + ' edited by different user');
-              page.submit();
+              page.nextMain();
             });
 
             it('should complete edit', async () => {
@@ -189,7 +189,7 @@ describe('Enrollment Edit Page', () => {
         describe('valid form attributes', () => {
           beforeEach(async () => {
             await expect(page.getName().isEnabled()).toBe(true);
-            await expect(page.getSubmit().isEnabled()).toBe(true);
+            await expect(page.getNextMain().isEnabled()).toBe(true);
             await expect((await page.creatorErrorExists())).toBeFalsy();
           });
 
@@ -206,7 +206,7 @@ describe('Enrollment Edit Page', () => {
 
             describe('send', () => {
               beforeEach(async () => {
-                page.submit();
+                page.nextMain();
               });
 
               it('should complete edit', async () => {
@@ -220,11 +220,11 @@ describe('Enrollment Edit Page', () => {
               });
             });
 
-            describe('clear permissions  - send', () => {
+            describe('clear permissions - send', () => {
               beforeEach(async () => {
                 browser.executeScript('window.localStorage.removeItem(\'permissions\');');
 
-                page.submit();
+                page.nextMain();
               });
 
               it('invalid permissions', async () => {
@@ -270,7 +270,7 @@ describe('Enrollment Edit Page', () => {
         describe('valid form attributes', () => {
           beforeEach(async () => {
             await expect(page.getName().isEnabled()).toBe(true);
-            await expect(page.getSubmit().isEnabled()).toBe(true);
+            await expect(page.getNextMain().isEnabled()).toBe(true);
             await expect((await page.creatorErrorExists())).toBeFalsy();
           });
 
@@ -283,7 +283,7 @@ describe('Enrollment Edit Page', () => {
             beforeEach(async () => {
               await page.setName(unknownEnrollment2Values.name + ' edited');
               await page.setComment(unknownEnrollment2Values.comment + ' edited by different user');
-              page.submit();
+              page.nextMain();
             });
 
             it('should complete edit', async () => {

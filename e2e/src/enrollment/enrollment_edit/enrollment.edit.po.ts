@@ -41,6 +41,10 @@ export class EnrollmentEditPage {
     return element(by.id('submit'));
   }
 
+  public getNextMain() {
+    return element(by.id('next_main'));
+  }
+
   public setName(value: string) {
     const ref = this.getName();
     return ref.clear().then(async () => {
@@ -216,5 +220,11 @@ export class EnrollmentEditPage {
     browser.wait(EC.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
 
     return elm.click();
+  }
+
+  nextMain() {
+    const elem = this.getNextMain();
+
+    return elem.click();
   }
 }

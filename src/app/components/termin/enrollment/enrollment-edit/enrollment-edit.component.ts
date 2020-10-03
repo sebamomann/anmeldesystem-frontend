@@ -37,7 +37,6 @@ export class EnrollmentEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    // get referenced enrollment
     const enrollment: IEnrollmentModel = this.appointment.enrollments.filter(fEnrollment => {
       return fEnrollment.id === this.enrollmentId;
     })[0];

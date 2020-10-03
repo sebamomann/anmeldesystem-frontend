@@ -86,8 +86,8 @@
               state="mail">
       <ng-template matStepLabel>Mail</ng-template>
       <app-enrollment-login-mail
-        (done)="mailFormSubmit($event)">
         (cancel)="mailFormCancel()"
+        (done)="mailFormSubmit($event)">
       </app-enrollment-login-mail>
     </mat-step>
   </mat-horizontal-stepper>
