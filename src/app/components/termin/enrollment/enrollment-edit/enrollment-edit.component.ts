@@ -44,7 +44,8 @@ export class EnrollmentEditComponent implements OnInit {
   });
   mainFormValues: any;
   isEnrolledAsCreator: any;
-  private finalEnrollment: IEnrollmentModel = new EnrollmentModel();
+
+  public enrollment: IEnrollmentModel = new EnrollmentModel();
 
   constructor(private formBuilder: FormBuilder, private authenticationService: AuthenticationService) {
   }
@@ -55,11 +56,16 @@ export class EnrollmentEditComponent implements OnInit {
       return fEnrollment.id === this.enrollmentId;
     })[0];
 
+    this.mainFormValues = {};
+
     if (enrollment) {
-      this.finalEnrollment = enrollment;
+      this.enrollment = enrollment;
+
       if (enrollment.creator) {
+        // NEED
         this.disableNameInput();
       }
+
       this.parseOutputIntoForm();
     } else if (this.enrollmentId !== null && this.permissionToken !== null) {
       this.enrollmentGone = true;
@@ -73,13 +79,13 @@ export class EnrollmentEditComponent implements OnInit {
    * Information gathering and enrollment assigning (account or mail)
    */
   public initializeEnrollmentSend: () => void = () => {
-    if (this.finalEnrollment.creator) {
-      delete this.finalEnrollment.name;
+    if (this.enrollment.creator) {
+      delete this.enrollment.name;
     }
 
-    this.finalEnrollment.token = this.permissionToken;
+    this.enrollment.token = this.permissionToken;
 
-    this.done__.emit({operation: 'update', enrollment: this.finalEnrollment});
+    this.done__.emit({operation: 'update', enrollment: this.enrollment});
   };
 
   /**
@@ -92,10 +98,10 @@ export class EnrollmentEditComponent implements OnInit {
     }
 
     // Parse data from form into object
-    this.finalEnrollment.name = this.getName().value;
-    this.finalEnrollment.comment = this.getComment().value;
+    this.enrollment.name = this.getName().value;
+    this.enrollment.comment = this.getComment().value;
     this.parseDriverAddition();
-    this.finalEnrollment.additions = this.getIdsOfSelectedAdditions();
+    this.enrollment.additions = this.getIdsOfSelectedAdditions();
 
     this.initializeEnrollmentSend();
   };
@@ -159,7 +165,11 @@ export class EnrollmentEditComponent implements OnInit {
   public mainFormDone($event: any) {
     const output = $event;
     output.id = this.enrollmentId;
-    
+
+    if (this.enrollment.creator) {
+      delete output.name;
+    }
+
     delete output.selfEnrollment;
 
     this.done__.emit({operation: 'update', enrollment: output});
@@ -169,8 +179,8 @@ export class EnrollmentEditComponent implements OnInit {
     this.appointment.additions.forEach((o) => {
       // if output has addition with this id then set to true
       let selected = false;
-      if (this.finalEnrollment) {
-        selected = this.finalEnrollment.additions.some(iAddition => iAddition.id === o.id);
+      if (this.enrollment) {
+        selected = this.enrollment.additions.some(iAddition => iAddition.id === o.id);
       }
       const control = new FormControl(selected);
       (this.form_main.controls.additions as FormArray).push(control);
@@ -178,22 +188,22 @@ export class EnrollmentEditComponent implements OnInit {
   };
 
   private parseOutputIntoForm() {
-    if (this.finalEnrollment.creator) {
-      this.getName().setValue(this.finalEnrollment.creator.name);
+    if (this.enrollment.creator) {
+      this.getName().setValue(this.enrollment.creator.name);
     } else {
-      this.getName().setValue(this.finalEnrollment.name);
+      this.getName().setValue(this.enrollment.name);
     }
 
 
-    this.form_main.get('comment').setValue(this.finalEnrollment.comment);
-    if (this.finalEnrollment.driver != null) {
-      this.form_driverPassenger.get('driver').setValue(this.finalEnrollment.driver);
-      this.form_driverPassenger.get('seats').setValue(this.finalEnrollment.driver.seats);
-      this.form_driverPassenger.get('service').setValue(this.finalEnrollment.driver.service);
+    this.form_main.get('comment').setValue(this.enrollment.comment);
+    if (this.enrollment.driver != null) {
+      this.form_driverPassenger.get('driver').setValue(this.enrollment.driver);
+      this.form_driverPassenger.get('seats').setValue(this.enrollment.driver.seats);
+      this.form_driverPassenger.get('service').setValue(this.enrollment.driver.service);
     }
 
-    if (this.finalEnrollment.passenger != null) {
-      this.form_driverPassenger.get('requirement').setValue(this.finalEnrollment.passenger.requirement);
+    if (this.enrollment.passenger != null) {
+      this.form_driverPassenger.get('requirement').setValue(this.enrollment.passenger.requirement);
     }
   }
 
@@ -223,16 +233,16 @@ export class EnrollmentEditComponent implements OnInit {
   private parseDriverAddition() {
     if (this.appointment.driverAddition) {
       if (this.getDriver().value) {
-        this.finalEnrollment.driver = {
+        this.enrollment.driver = {
           service: this.getService().value,
           seats: this.getSeats().value,
         };
-        this.finalEnrollment.passenger = null;
+        this.enrollment.passenger = null;
       } else {
-        this.finalEnrollment.passenger = {
+        this.enrollment.passenger = {
           requirement: this.getRequirement().value,
         };
-        this.finalEnrollment.driver = null;
+        this.enrollment.driver = null;
       }
     }
   }

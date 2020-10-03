@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import {AuthenticationService} from '../../../../services/authentication.service';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
+import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
 
 @Component({
   selector: 'app-enrollment-main-form',
@@ -14,6 +15,7 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   @Output() selfEnrollmentChange = new EventEmitter();
 
   @Input() appointment: IAppointmentModel;
+  @Input() enrollment: IEnrollmentModel;
   @Input() isEnrolledAsCreator: boolean;
   @Input() values: any;
   @Input() isEdit = false;
@@ -25,7 +27,10 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   public creatorError = false;
 
   public form = this.formBuilder.group({
-    name: new FormControl({value: '', disabled: this.isSelfEnrollment}, [Validators.required, Validators.min(2)]),
+    name: new FormControl({
+      value: '',
+      disabled: this.isSelfEnrollment || this.enrollment.creator
+    }, [Validators.required, Validators.min(2)]),
     comment: new FormControl('', [Validators.min(2)]),
   });
 
@@ -41,9 +46,8 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.creatorError = this.isEnrolledAsCreator;
-    if (this.userIsLoggedIn && this.isSelfEnrollment) {
-      this.getName().setValue(this.authenticationService.currentUserValue.name);
-    }
+
+    this.fillFormValues();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -113,6 +117,24 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   public setCreatorError() {
     this.creatorError = true;
     this.isEnrolledAsCreator = true;
+  }
+
+  private fillFormValues() {
+    if (this.enrollment) {
+      if (this.enrollment.creator) {
+        this.getName().setValue(this.enrollment.creator.name);
+        this.disableNameInput();
+      } else {
+        this.getName().setValue(this.enrollment.name);
+      }
+
+      this.getComment().setValue(this.enrollment.comment);
+    } else {
+      if (this.userIsLoggedIn && this.isSelfEnrollment) {
+        this.getName().setValue(this.authenticationService.currentUserValue.name);
+        this.disableNameInput();
+      }
+    }
   }
 
   private getName() {

@@ -14,9 +14,10 @@
           <app-enrollment-main-form
             #mainForm
             (done)="mainFormDone($event)"
+            [enrollment]="enrollment"
             [appointment]="appointment"
-            [isEdit]="true"
             [isEnrolledAsCreator]="isEnrolledAsCreator"
+            [isEdit]="true"
             [values]="mainFormValues">
           </app-enrollment-main-form>
         </mat-tab>
