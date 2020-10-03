@@ -227,4 +227,43 @@ export class EnrollmentEditPage {
 
     return elem.click();
   }
+
+  gotoAdditionsTab() {
+    const elem = element(by.id('mat-tab-label-0-1'));
+
+    return elem.click();
+  }
+
+  getCheckboxes() {
+    const EC = protractor.ExpectedConditions;
+    const elem = element.all(by.css('.addition-checkbox'));
+
+    browser.wait(EC.presenceOf(elem.get(0)), 10000, 'Element taking too long to be present');
+
+    return elem;
+  }
+
+  public getAdditionElement(id: string) {
+    const elem = element(by.id('addition-' + id + '-input'));
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.visibilityOf(elem), 10000);
+
+    return elem;
+  }
+
+  getAdditionCheckSelected(s: string) {
+    const elm = element(by.css('.addition-list .addition-index-' + s + ' .checkbox_selected'));
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.visibilityOf(elm), 10000);
+
+    return elm.isPresent();
+  }
+
+  getAdditionCheckDeselected(s: string) {
+    const elm = element(by.css('.addition-list .addition-index-' + s + ' .checkbox_blank'));
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.visibilityOf(elm), 10000);
+
+    return elm.isPresent();
+  }
 }

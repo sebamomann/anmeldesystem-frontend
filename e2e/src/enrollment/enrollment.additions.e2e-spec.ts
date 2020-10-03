@@ -43,8 +43,8 @@ describe('Enrollment Page - Additions', () => {
           });
 
           describe('additions form', () => {
-            it('should show 4 additions', async () => {
-              await expect(page.getCheckboxes().count()).toEqual(4);
+            it('should show 4 additions', () => {
+              expect(page.getCheckboxes().count()).toEqual(4);
             });
 
             describe('select additions', () => {

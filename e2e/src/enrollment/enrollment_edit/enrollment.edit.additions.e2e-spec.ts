@@ -9,47 +9,23 @@ beforeAll(async () => {
   await browser.get('/');
 });
 
-describe('Enrollment Edit Page', () => {
-  const appointmentLink = 'protractorEnrollEdit';
+describe('Enrollment Edit Page With Additions', () => {
+  const appointmentLink = 'protractorEnrollEditAdditions';
 
   let page: EnrollmentEditPage;
-
-  describe('Faulty navigation', () => { // TODO extract in own test file
-    it('appointment not found', async () => {
-      page = new EnrollmentEditPage('unknownAppointment', 'any');
-      browser.ignoreSynchronization = true;
-
-      await browser.get('/enrollment?a=unknownAppointment');
-      browser.executeScript('window.localStorage.clear();');
-      page.spinnerGone();
-
-      expect(await page.appointmentNotFoundCardExists()).toBeTruthy();
-    });
-
-    it('enrolment not found', async () => {
-      page = new EnrollmentEditPage('protractorEnrollEdit', 'any');
-      browser.ignoreSynchronization = true;
-      await browser.get('/enrollment?a=protractorEnrollEdit&e=any').then(() => {
-      }).catch(() => {
-      });
-      page.spinnerGone();
-
-      expect(await page.enrollmentNotFoundCardExists()).toBeTruthy();
-    });
-  });
 
   describe('Main', () => {
     describe('user Enrollment', () => {
       describe('as enrollment creator', () => {
-        const enrollmentIdUser = 'bfd95241-8b2e-4b43-b3b4-bd1e39f925c1';
+        const enrollmentIdUser = 'aeddcc8c-14f8-4425-bbff-f61841fed6da';
 
-        const user_enroll_edit = {
-          name: 'User Enroll Edit',
-          username: 'user_enroll_edit'
+        const user_enroll_edit_additions = {
+          name: 'User Enroll Edit Additions',
+          username: 'user_enroll_edit_additions'
         };
 
         const userEnrollmentValues = {
-          name: user_enroll_edit.name,
+          name: user_enroll_edit_additions.name,
           comment: 'my comment',
         };
 
@@ -59,39 +35,56 @@ describe('Enrollment Edit Page', () => {
 
           // USER MANAGEMENT
           await page.logout();
-          await page.login(user_enroll_edit.username);
+          await page.login(user_enroll_edit_additions.username);
 
           browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
           await page.navigateTo();
         });
 
-        describe('form', () => {
-          it('correct attributes', async () => {
-            await expect(page.getName().isEnabled()).toBe(false);
-            await expect(page.getNextMain().isEnabled()).toBe(true);
-            await expect((await page.creatorErrorExists())).toBeFalsy();
+        describe('navigate to additions tab', () => {
+          beforeEach(() => {
+            page.gotoAdditionsTab();
           });
 
-          it('valid values', async () => {
-            expect(await page.getName().getAttribute('value')).toEqual(userEnrollmentValues.name);
-            expect(await page.getComment().getAttribute('value')).toEqual(userEnrollmentValues.comment);
+          it('should display 4 additions', () => {
+            expect(page.getCheckboxes().count()).toEqual(4);
           });
 
-          describe('edit comment - send', () => {
-            beforeEach(async () => {
-              await page.setComment(userEnrollmentValues.comment + ' edited by enrollment creator');
-              page.nextMain();
+          it('correct checkboxes should be selected', () => {
+            expect(page.getAdditionElement('0').isSelected()).toBeTruthy();
+            expect(page.getAdditionElement('2').isSelected()).toBeTruthy();
+            expect(page.getAdditionElement('1').isSelected()).toBeFalsy();
+            expect(page.getAdditionElement('3').isSelected()).toBeFalsy();
+          });
+
+          describe('form', () => {
+            it('correct attributes', async () => {
+              await expect(page.getName().isEnabled()).toBe(false);
+              await expect(page.getNextMain().isEnabled()).toBe(true);
+              await expect((await page.creatorErrorExists())).toBeFalsy();
             });
 
-            it('should complete edit', async () => {
-              expect(
-                browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
-                  .catch(() => {
-                    return false;
-                  })
-              ).toBeTruthy(`Url match could not succeed`);
-              expect(await page.getSnackbar().getText()).toEqual('Erfolgreich bearbeitet');
+            it('valid values', async () => {
+              expect(await page.getName().getAttribute('value')).toEqual(userEnrollmentValues.name);
+              expect(await page.getComment().getAttribute('value')).toEqual(userEnrollmentValues.comment);
+            });
+
+            describe('edit comment - send', () => {
+              beforeEach(async () => {
+                await page.setComment(userEnrollmentValues.comment + ' edited by enrollment creator');
+                page.nextMain();
+              });
+
+              it('should complete edit', async () => {
+                expect(
+                  browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
+                    .catch(() => {
+                      return false;
+                    })
+                ).toBeTruthy(`Url match could not succeed`);
+                expect(await page.getSnackbar().getText()).toEqual('Erfolgreich bearbeitet');
+              });
             });
           });
         });
@@ -161,7 +154,7 @@ describe('Enrollment Edit Page', () => {
     });
 
     describe('unknown enrollment', () => {
-      describe('as enrollment creator', () => {
+      describe('As enrollment creator', () => {
         const enrollmentIdUnknown = '4099f68b-4b0e-4682-8295-d78373cc0669';
 
         const unknownEnrollmentValues = {
