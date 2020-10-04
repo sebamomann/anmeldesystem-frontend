@@ -3,7 +3,6 @@ import {AuthenticationService} from '../../../../services/authentication.service
 import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
 import {EnrollmentModel} from '../../../../models/EnrollmentModel.model';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
-import {EnrollmentComponent} from '../enrollment.component';
 import {MatSnackBar, MatStepper} from '@angular/material';
 import {EnrollmentMainFormComponent} from '../enrollment-main-form/enrollment-main-form.component';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -22,6 +21,8 @@ const HttpStatus = require('http-status-codes');
   styleUrls: ['./enrollment-create.component.scss']
 })
 export class EnrollmentCreateComponent implements OnInit, OnDestroy {
+  static LOCAL_STORAGE_ENROLLMENT_TMP_KEY = 'enrollmentOutput';
+
   @ViewChild('stepper', {static: false}) stepper: MatStepper;
   @ViewChild('mainForm', {static: false}) mainFormRef: EnrollmentMainFormComponent;
 
@@ -37,7 +38,6 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
 
   public doneForms = {overall: false, additions: false, driver: false};
 
-  // Sending options
   public triggerDirectSend = false;
   public sendingRequestEmit = new EventEmitter();
   public directSend: boolean;
@@ -166,7 +166,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
     } else {
       // not logged
       // tmp store item for possible login redirect
-      localStorage.setItem(EnrollmentComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY, JSON.stringify(this.enrollmentOutput));
+      localStorage.setItem(EnrollmentCreateComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY, JSON.stringify(this.enrollmentOutput));
 
       this.showLoginAndMailForm = true;
 
@@ -232,19 +232,15 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
         }, (err: HttpErrorResponse) => {
           this.sendingRequestEmit.emit(false);
 
-          if (err.status === HttpStatus.BAD_REQUEST) {
-            if (err.error.code === 'DUPLICATE_ENTRY') {
-              this.request_error_handleDuplicateValues(err);
-            }
-          } else if (err.status === HttpStatus.FORBIDDEN) {
-            this.request_error_forbidden();
+          if (err.status === HttpStatus.BAD_REQUEST && err.error.code === 'DUPLICATE_ENTRY') {
+            this.request_error_handleDuplicateValues(err);
           }
         }
       );
   }
 
   private clearLoginAndMailFormIntercepting() {
-    localStorage.removeItem(EnrollmentComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY);
+    localStorage.removeItem(EnrollmentCreateComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY);
     this.showLoginAndMailForm = false;
   }
 
@@ -256,7 +252,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
 
   private getEnrollmentFromLocalStorage() {
     // Fetch output from localStorage
-    this.enrollmentOutput = JSON.parse(localStorage.getItem(EnrollmentComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY));
+    this.enrollmentOutput = JSON.parse(localStorage.getItem(EnrollmentCreateComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY));
 
     if (!this.enrollmentOutput) {
       this.enrollmentOutput = new EnrollmentModel();
@@ -280,10 +276,6 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
 
   private request_success_finalize() {
     this.redirect(`Erfolgreich angemeldet`, false);
-  }
-
-  private request_error_forbidden() {
-    this.redirect(`Sorry, du hast keine Berechtigung diesen Teilnehmer zu bearbeiten.`, true);
   }
 
   private redirect(message: string, error = false) {

@@ -10,7 +10,6 @@ import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
   styleUrls: ['./enrollment-main-form.component.scss']
 })
 export class EnrollmentMainFormComponent implements OnInit, OnChanges {
-
   @Output() done = new EventEmitter();
   @Output() selfEnrollmentChange = new EventEmitter();
 
@@ -131,6 +130,10 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
       } else if (this.directSend) {
         this.getFormControl('name').setValue(this.authenticationService.currentUserValue.name);
       } else {
+        if (this.isEdit) {
+          this.enableNameInput();
+        }
+
         this.getFormControl('name').setValue(this.enrollment.name);
       }
 
@@ -153,5 +156,9 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
 
   private disableNameInput() {
     this.getFormControl('name').disable();
+  }
+
+  private enableNameInput() {
+    this.getFormControl('name').enable();
   }
 }

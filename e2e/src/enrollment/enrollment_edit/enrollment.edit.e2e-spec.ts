@@ -19,7 +19,7 @@ describe('Enrollment Edit Page', () => {
       page = new EnrollmentEditPage('unknownAppointment', 'any');
       browser.ignoreSynchronization = true;
 
-      await browser.get('/enrollment?a=unknownAppointment');
+      await browser.get('/enrollment/edit?a=unknownAppointment');
       browser.executeScript('window.localStorage.clear();');
       page.spinnerGone();
 
@@ -29,7 +29,7 @@ describe('Enrollment Edit Page', () => {
     it('enrolment not found', async () => {
       page = new EnrollmentEditPage('protractorEnrollEdit', 'any');
       browser.ignoreSynchronization = true;
-      await browser.get('/enrollment?a=protractorEnrollEdit&e=any').then(() => {
+      await browser.get('/enrollment/edit?a=protractorEnrollEdit&e=any').then(() => {
       }).catch(() => {
       });
       page.spinnerGone();
@@ -267,34 +267,32 @@ describe('Enrollment Edit Page', () => {
           await page.navigateTo();
         });
 
-        describe('valid form attributes', () => {
+        it('valid form attributes', () => {
+          expect(page.getName().isEnabled()).toBe(true);
+          expect(page.getNextMain().isEnabled()).toBe(true);
+          expect(page.creatorErrorExists()).toBeFalsy();
+        });
+
+        it('valid form values', async () => {
+          expect(await page.getName().getAttribute('value')).toEqual(unknownEnrollment2Values.name);
+          expect(await page.getComment().getAttribute('value')).toEqual(unknownEnrollment2Values.comment);
+        });
+
+        describe('edit comment and name - send', () => {
           beforeEach(async () => {
-            await expect(page.getName().isEnabled()).toBe(true);
-            await expect(page.getNextMain().isEnabled()).toBe(true);
-            await expect((await page.creatorErrorExists())).toBeFalsy();
+            await page.setName(unknownEnrollment2Values.name + ' edited');
+            await page.setComment(unknownEnrollment2Values.comment + ' edited by different user');
+            page.nextMain();
           });
 
-          it('valid form values', async () => {
-            expect(await page.getName().getAttribute('value')).toEqual(unknownEnrollment2Values.name);
-            expect(await page.getComment().getAttribute('value')).toEqual(unknownEnrollment2Values.comment);
-          });
-
-          describe('edit comment and name - send', () => {
-            beforeEach(async () => {
-              await page.setName(unknownEnrollment2Values.name + ' edited');
-              await page.setComment(unknownEnrollment2Values.comment + ' edited by different user');
-              page.nextMain();
-            });
-
-            it('should complete edit', async () => {
-              expect(
-                browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
-                  .catch(() => {
-                    return false;
-                  })
-              ).toBeTruthy(`Url match could not succeed`);
-              expect(await page.getSnackbar().getText()).toEqual('Erfolgreich bearbeitet');
-            });
+          it('should complete edit', async () => {
+            expect(
+              browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
+                .catch(() => {
+                  return false;
+                })
+            ).toBeTruthy(`Url match could not succeed`);
+            expect(await page.getSnackbar().getText()).toEqual('Erfolgreich bearbeitet');
           });
         });
       });

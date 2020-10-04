@@ -1,55 +1,66 @@
-<ng-container *ngIf="!enrollmentGone; else enrollmentGoneTmpls">
-  <mat-card class="form float high">
-    <mat-card-title class="headline"
-                    id="title">
-      Bearbeiten
-    </mat-card-title>
-    <mat-card-content>
-      <mat-tab-group [selectedIndex]="selectedIndex"
-                     dynamicHeight>
+<ng-container *ngIf="appointment$ | async as appointment; else loading">
+  <ng-container *ngIf="!enrollmentGone; else enrollmentGoneTmpls">
+    <mat-card class="form float high">
+      <mat-card-title class="headline"
+                      id="title">
+        Bearbeiten
+      </mat-card-title>
+      <mat-card-content>
+        <mat-tab-group [selectedIndex]="selectedIndex"
+                       dynamicHeight>
 
-        <!-- OVERALL -->
-        <!-- OVERALL -->
-        <mat-tab label="Allgemein">
-          <app-enrollment-main-form
-            #mainForm
-            (done)="mainFormDone($event)"
-            [isEdit]="true"
-            [isEnrolledAsCreator]="isEnrolledAsCreator"
-            [enrollment]="enrollment"
-            [appointment]="appointment">
-          </app-enrollment-main-form>
-        </mat-tab>
+          <!-- OVERALL -->
+          <!-- OVERALL -->
+          <mat-tab label="Allgemein">
+            <app-enrollment-main-form
+              #mainForm
+              (done)="mainFormDone($event)"
+              [appointment]="appointment"
+              [enrollment]="enrollment"
+              [isEdit]="true"
+              [isEnrolledAsCreator]="isEnrolledAsCreator">
+            </app-enrollment-main-form>
+          </mat-tab>
 
-        <!-- ADDITIONS -->
-        <!-- ADDITIONS -->
-        <mat-tab label="Zusätze">
-          <app-enrollment-additions
-            #additionsForm
-            (done)="additionsFormDone($event)"
-            [appointment]="appointment"
-            [enrollment]="enrollment"
-            (cancel)="cancel()"
-            [isEdit]="true">
-          </app-enrollment-additions>
-        </mat-tab>
+          <!-- ADDITIONS -->
+          <!-- ADDITIONS -->
+          <mat-tab label="Zusätze">
+            <app-enrollment-additions
+              #additionsForm
+              (cancel)="cancel()"
+              (done)="additionsFormDone($event)"
+              [appointment]="appointment"
+              [enrollment]="enrollment"
+              [isEdit]="true">
+            </app-enrollment-additions>
+          </mat-tab>
 
-        <!-- DRIVER -->
-        <!-- DRIVER -->
-        <mat-tab label="Fahrer">
-          <app-enrollment-driver-passenger
-            #driverForm
-            (done)="driverFormDone($event)"
-            (cancel)="cancel()"
-            [appointment]="appointment"
-            [enrollment]="enrollment"
-            [isEdit]="true">
-          </app-enrollment-driver-passenger>
-        </mat-tab>
-      </mat-tab-group>
-    </mat-card-content>
-  </mat-card>
+          <!-- DRIVER -->
+          <!-- DRIVER -->
+          <mat-tab label="Fahrer">
+            <app-enrollment-driver-passenger
+              #driverForm
+              (cancel)="cancel()"
+              (done)="driverFormDone($event)"
+              [appointment]="appointment"
+              [enrollment]="enrollment"
+              [isEdit]="true">
+            </app-enrollment-driver-passenger>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
 </ng-container>
+
+<ng-template #loading>
+  <app-loading *ngIf="!loaded">
+  </app-loading>
+  <app-fetch-appointment
+    [done]="loaded">
+  </app-fetch-appointment>
+</ng-template>
+
 
 <ng-template #enrollmentGoneTmpls> <!--// TODO OWN TEMPLATE -->
   <mat-card class="float error-card"
