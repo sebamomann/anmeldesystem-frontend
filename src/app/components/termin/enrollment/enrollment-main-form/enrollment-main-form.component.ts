@@ -11,7 +11,6 @@ import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
 })
 export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   @Output() done = new EventEmitter();
-  @Output() selfEnrollmentChange = new EventEmitter();
 
   @Input() appointment: IAppointmentModel;
   @Input() enrollment: IEnrollmentModel;
@@ -53,14 +52,12 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
     if (this.isSelfEnrollment) {
       this.creatorError = this.isEnrolledAsCreator;
       this.oldNameValue = this.getFormControl('name').value;
-      this.selfEnrollmentChange.emit(true);
       this.disableNameInput();
       this.getFormControl('name').setValue(this.authenticationService.currentUserValue.name);
     } else {
       if (this.oldNameValue) {
         this.getFormControl('name').setValue(this.oldNameValue);
       }
-      this.selfEnrollmentChange.emit(false);
       this.creatorError = false;
       this.getFormControl('name').enable();
     }

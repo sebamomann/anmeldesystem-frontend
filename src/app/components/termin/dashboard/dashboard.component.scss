@@ -124,27 +124,58 @@ $handleLength: 25px;
 
 @media all and (min-width: 1024px) {
   .appointment-list-wrapper {
-    margin-top: 35px;
-    text-align: center;
+    --gap: 25px;
 
-    .appointment-data {
-      &.archive {
-        width: 25%;
-        min-width: 300px;
-        display: inline-block;
-        margin: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap);
+
+    ::ng-deep app-appointment-data {
+      width: calc(50% - var(--gap));
+      margin: 0 auto var(--gap);
+
+      &:nth-child(even) {
+        margin-right: 0;
+      }
+
+      &:nth-child(odd) {
+        margin-left: 0;
+      }
+
+      &:last-child {
+        margin: 0 auto;
+      }
+
+      .appointment-data {
+        &.archive {
+          width: 25%;
+          min-width: 300px;
+          display: inline-block;
+          margin: 10px;
+        }
       }
     }
   }
 
-  ::ng-deep .appointment-data-wrapper {
-    width: 40%;
-    display: inline-block;
-  }
+  .appointment-list-wrapper {
+    &.archive-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-gap: var(--gap);
 
-  .template {
-    width: 40%;
-    margin: 15px 33px 5px;
+      .archive-block-wrapper {
+        width: 100%;
+        margin: 50px 0;
+
+        h3 {
+          width: fit-content;
+          margin: 0 auto 15px;
+          border-bottom-left-radius: 15px;
+          border-top-right-radius: 15px;
+          white-space: nowrap;
+        }
+      }
+    }
   }
 }
 
@@ -156,19 +187,6 @@ $handleLength: 25px;
     mat-icon {
       animation: spin 1s linear infinite;
     }
-  }
-}
-
-.archive-block-wrapper {
-  margin: 50px 0;
-
-
-  h3 {
-    width: fit-content;
-    margin: 0 auto 15px;
-    border-bottom-left-radius: 15px;
-    border-top-right-radius: 15px;
-    white-space: nowrap;
   }
 }
 

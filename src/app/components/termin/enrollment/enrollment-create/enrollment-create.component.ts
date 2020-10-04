@@ -119,6 +119,10 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.isSelfEnrolling()) {
+      delete this.enrollmentOutput.editMail;
+    }
+
     this.clearLoginAndMailFormIntercepting();
 
     this.sendEnrollmentRequest();
@@ -194,14 +198,6 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
     this.enrollmentOutput = {...$event, ...this.enrollmentOutput};
 
     setTimeout(() => this.stepper.next());
-  }
-
-  public setSelfEnrollment(val: boolean) {
-    if (val) {
-      delete this.enrollmentOutput.editMail;
-    }
-
-    this.enrollmentOutput.selfEnrollment = val;
   }
 
   public stepperPrevious() {
