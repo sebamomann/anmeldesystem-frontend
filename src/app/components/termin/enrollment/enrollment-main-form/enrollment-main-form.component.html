@@ -4,7 +4,7 @@
   <span class="form-component-title"> Allgemein </span>
 
   <mat-card-content>
-    <div *ngIf="userIsLoggedIn"
+    <div *ngIf="userIsLoggedIn && !isEdit"
          [formGroup]="form_selfEnrollment"
          class="tooltip-container checkbox-standalone">
       <mat-checkbox (change)="changeSelfEnrollment()"
@@ -36,12 +36,14 @@
     </mat-form-field>
 
     <mat-form-field [formGroup]="form">
-      <textarea cdkAutosizeMaxRows="5"
-                cdkTextareaAutosize
-                cdkAutosizeMinRows="1"
-                formControlName="comment"
-                id="comment" matInput
-                placeholder="Kommentar">
+      <textarea
+        cdkAutosizeMaxRows="5"
+        cdkAutosizeMinRows="1"
+        cdkTextareaAutosize
+        formControlName="comment"
+        id="comment"
+        matInput
+        placeholder="Kommentar">
       </textarea>
     </mat-form-field>
   </mat-card-content>
@@ -61,9 +63,9 @@
     <div>
       <button [queryParams]="{a: appointment.link}"
               [routerLink]="['/enroll']"
+              id="back_main"
               class="left"
               color="primary"
-              id="back_main"
               mat-button
               type="button">
         Abbrechen
@@ -74,7 +76,7 @@
             color="primary"
             mat-raised-button
             type="submit">
-      Weiter
+      {{isEdit ? "Speichern" : "Weiter"}}
     </button>
   </mat-card-actions>
 </form>

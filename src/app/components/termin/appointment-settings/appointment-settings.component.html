@@ -8,7 +8,11 @@
   </mat-card-title>
   <mat-card-content>
     <ng-container *ngIf="appointment != undefined; else loading">
-      <mat-tab-group [selectedIndex]="0" dynamicHeight>
+      <mat-tab-group [selectedIndex]="0"
+                     dynamicHeight>
+
+        <!-- OVERALL -->
+        <!-- OVERALL -->
         <mat-tab label="Allgemein">
           <app-overall-data
             [appointment]="appointment"
@@ -16,6 +20,9 @@
             isEdit="true">
           </app-overall-data>
         </mat-tab>
+
+        <!-- ADDITIONS -->
+        <!-- ADDITIONS -->
         <mat-tab label="Zusätze">
           <app-additions
             [appointment]="appointment"
@@ -23,6 +30,9 @@
             isEdit="true">
           </app-additions>
         </mat-tab>
+
+        <!-- LINK -->
+        <!-- LINK -->
         <mat-tab label="Link">
           <app-link-data
             [appointment]="appointment"
@@ -30,12 +40,18 @@
             isEdit="true">
           </app-link-data>
         </mat-tab>
+
+        <!-- ADMINS -->
+        <!-- ADMINS -->
         <mat-tab label="Administration">
           <app-administrator
             (save)="saveAdministrators($event)"
             [appointment]="appointment">
           </app-administrator>
         </mat-tab>
+
+        <!-- FILES -->
+        <!-- FILED -->
         <mat-tab label="Anhänge">
           <app-file
             [appointment]="appointment"
@@ -43,6 +59,9 @@
             [uploading]="uploadingFiles">
           </app-file>
         </mat-tab>
+
+        <!-- OTHER -->
+        <!-- OTHER -->
         <mat-tab label="Sonstiges">
           <app-other
             (save)="saveOther($event)"

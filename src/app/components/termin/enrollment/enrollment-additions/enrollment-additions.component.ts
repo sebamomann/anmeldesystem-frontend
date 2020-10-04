@@ -15,7 +15,8 @@ export class EnrollmentAdditionsComponent implements OnInit {
   @Output('cancel') cancel__ = new EventEmitter();
 
   @Input() appointment: IAppointmentModel;
-  @Input() enrollment: IEnrollmentModel = undefined;
+  @Input() enrollment: IEnrollmentModel;
+  @Input() isEdit = false;
 
   public form = this.formBuilder.group({
     additions: new FormArray([]),
