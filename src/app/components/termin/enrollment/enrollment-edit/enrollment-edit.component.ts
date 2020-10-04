@@ -103,7 +103,7 @@ export class EnrollmentEditComponent implements OnInit {
    * On cancel button click navigate back to appointment overview.
    */
   public cancel() {
-    this.router.navigate(['/account/profile'], {
+    this.router.navigate(['/enroll'], {
       queryParams: {
         a: this.appointment.link
       }

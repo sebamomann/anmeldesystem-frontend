@@ -68,7 +68,7 @@
               color="primary"
               mat-button
               type="button">
-        Abbrechen
+        {{isEdit ? "Zurück" : "Abbrechen"}}
       </button>
     </div>
     <button [disabled]="creatorError"
