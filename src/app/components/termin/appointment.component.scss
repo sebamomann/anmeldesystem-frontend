@@ -131,6 +131,18 @@
     .masonry-item {
       width: calc(50% - 25px);
       margin: 0 auto;
+
+      &:nth-child(even) {
+        margin-right: 0;
+      }
+
+      &:nth-child(odd) {
+        margin-left: 0;
+      }
+
+      &:last-child {
+        margin: 0 auto;
+      }
     }
   }
 
