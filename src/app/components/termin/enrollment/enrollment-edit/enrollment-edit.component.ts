@@ -25,7 +25,6 @@ export class EnrollmentEditComponent implements OnInit {
   @ViewChild('mainForm', {static: true}) mainFormRef: EnrollmentMainFormComponent;
 
   public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
-  public mainFormValues: any; // TODO
   public isEnrolledAsCreator: any;
 
   public enrollmentGone = false;
@@ -40,8 +39,6 @@ export class EnrollmentEditComponent implements OnInit {
     const enrollment: IEnrollmentModel = this.appointment.enrollments.filter(fEnrollment => {
       return fEnrollment.id === this.enrollmentId;
     })[0];
-
-    this.mainFormValues = {};
 
     if (enrollment) {
       this.enrollment = enrollment;
@@ -131,7 +128,7 @@ export class EnrollmentEditComponent implements OnInit {
   // @ts-ignore // dynamic call
   private setNameError() {
     this.selectedIndex = 0;
-    this.mainFormRef.setNameError();
+    this.mainFormRef.setNameInUseError();
   }
 }
 

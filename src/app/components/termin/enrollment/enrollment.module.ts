@@ -23,7 +23,14 @@ import {EnrollmentCreateModule} from './enrollment-create/enrollment-create.modu
 import {EnrollmentEditModule} from './enrollment-edit/enrollment-edit.module';
 
 const routes: Routes = [
-  {path: '', component: EnrollmentComponent},
+  {
+    path: 'edit',
+    loadChildren: './enrollment-edit/enrollment-edit.module#EnrollmentEditModule',
+  },
+  {
+    path: 'add',
+    loadChildren: './enrollment-create/enrollment-create.module#EnrollmentCreateModule',
+  },
 ];
 
 @NgModule({

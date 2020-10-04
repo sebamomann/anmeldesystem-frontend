@@ -1,94 +1,105 @@
-<mat-card class="form float high">
-  <mat-card-title class="headline"
-                  id="title">
-    Anmelden
-  </mat-card-title>
+<ng-container *ngIf="appointment$ | async as appointment; else loading">
+  <mat-card class="form float high">
+    <mat-card-title class="headline"
+                    id="title">
+      Anmelden
+    </mat-card-title>
 
-  <mat-horizontal-stepper #stepper
-                          labelPosition="bottom"
-                          linear>
-    <!-- OVERALL DATA-->
-    <!-- OVERALL DATA-->
-    <ng-template matStepperIcon="overall">
-      <mat-icon>person</mat-icon>
-    </ng-template>
-    <mat-step [completed]="doneForms['overall']"
-              state="overall">
-      <ng-template matStepLabel>Allgemein</ng-template>
-      <app-enrollment-main-form
-        #mainForm
-        (done)="mainFormDone($event)"
-        (selfEnrollmentChange)="setSelfEnrollment($event)"
-        [appointment]="appointment"
-        [isEnrolledAsCreator]="isEnrolledAsCreator"
-        [values]="mainFormValues">
-      </app-enrollment-main-form>
-    </mat-step>
+    <mat-horizontal-stepper #stepper
+                            labelPosition="bottom"
+                            linear>
+      <!-- OVERALL DATA-->
+      <!-- OVERALL DATA-->
+      <ng-template matStepperIcon="overall">
+        <mat-icon>person</mat-icon>
+      </ng-template>
+      <mat-step [completed]="doneForms['overall']"
+                state="overall">
+        <ng-template matStepLabel>Allgemein</ng-template>
+        <app-enrollment-main-form
+          #mainForm
+          (done)="mainFormDone($event)"
+          (selfEnrollmentChange)="setSelfEnrollment($event)"
+          [appointment]="appointment"
+          [directSend]="directSend"
+          [enrollment]="enrollmentOutput"
+          [isEnrolledAsCreator]="isEnrolledAsCreator">
+        </app-enrollment-main-form>
+      </mat-step>
 
-    <!-- ADDITIONS -->
-    <!-- ADDITIONS -->
-    <ng-template matStepperIcon="additions">
-      <mat-icon>check_box</mat-icon>
-    </ng-template>
-    <mat-step *ngIf="appointment.additions.length > 0"
-              [completed]="doneForms['additions']"
-              [optional]="true"
-              state="additions">
-      <ng-template matStepLabel>Zusätze</ng-template>
-      <app-enrollment-additions
-        #additionsForm
-        (cancel)="stepperPrevious()"
-        (done)="additionsFormDone($event)"
-        [appointment]="appointment">
-      </app-enrollment-additions>
-    </mat-step>
+      <!-- ADDITIONS -->
+      <!-- ADDITIONS -->
+      <ng-template matStepperIcon="additions">
+        <mat-icon>check_box</mat-icon>
+      </ng-template>
+      <mat-step *ngIf="appointment.additions.length > 0"
+                [completed]="doneForms['additions']"
+                [optional]="true"
+                state="additions">
+        <ng-template matStepLabel>Zusätze</ng-template>
+        <app-enrollment-additions
+          #additionsForm
+          (cancel)="stepperPrevious()"
+          (done)="additionsFormDone($event)"
+          [appointment]="appointment">
+        </app-enrollment-additions>
+      </mat-step>
 
-    <!-- DRIVER ADDITION -->
-    <!-- DRIVER ADDITION -->
-    <ng-template matStepperIcon="driver">
-      <mat-icon>directions_car</mat-icon>
-    </ng-template>
-    <mat-step *ngIf="appointment.driverAddition"
-              [completed]="doneForms['driver']"
-              state="driver">
-      <ng-template matStepLabel>Fahrer</ng-template>
-      <app-enrollment-driver-passenger
-        #driverForm
-        (cancel)="stepperPrevious()"
-        (done)="driverFormDone($event)"
-        [appointment]="appointment">
-      </app-enrollment-driver-passenger>
-    </mat-step>
+      <!-- DRIVER ADDITION -->
+      <!-- DRIVER ADDITION -->
+      <ng-template matStepperIcon="driver">
+        <mat-icon>directions_car</mat-icon>
+      </ng-template>
+      <mat-step *ngIf="appointment.driverAddition"
+                [completed]="doneForms['driver']"
+                state="driver">
+        <ng-template matStepLabel>Fahrer</ng-template>
+        <app-enrollment-driver-passenger
+          #driverForm
+          (cancel)="stepperPrevious()"
+          (done)="driverFormDone($event)"
+          [appointment]="appointment">
+        </app-enrollment-driver-passenger>
+      </mat-step>
 
-    <!-- DONE -->
-    <!-- DONE -->
-    <ng-template matStepperIcon="last">
-      <mat-icon>done_outline</mat-icon>
-    </ng-template>
-    <mat-step state="last">
-      <ng-template matStepLabel>Fertig</ng-template>
-      <app-enrollment-check
-        #checkForm
-        (cancel)="stepperPrevious()"
-        (done)="enrollmentAssignmentDecision()"
-        [enrollment]="finalEnrollment"
-        [appointment]="appointment"
-        [sendingRequestEmit]="sendingRequestEmit">
-      </app-enrollment-check>
-    </mat-step>
+      <!-- DONE -->
+      <!-- DONE -->
+      <ng-template matStepperIcon="last">
+        <mat-icon>done_outline</mat-icon>
+      </ng-template>
+      <mat-step state="last">
+        <ng-template matStepLabel>Fertig</ng-template>
+        <app-enrollment-check
+          #checkForm
+          (cancel)="stepperPrevious()"
+          (done)="enrollmentAssignmentDecision()"
+          [appointment]="appointment"
+          [enrollment]="enrollmentOutput"
+          [sendingRequestEmit]="sendingRequestEmit">
+        </app-enrollment-check>
+      </mat-step>
 
-    <!-- MAIL -->
-    <!-- MAIL -->
-    <ng-template matStepperIcon="email">
-      <mat-icon>email</mat-icon>
-    </ng-template>
-    <mat-step [optional]="!showLoginAndMailForm"
-              state="mail">
-      <ng-template matStepLabel>Mail</ng-template>
-      <app-enrollment-login-mail
-        (cancel)="mailFormCancel()"
-        (done)="mailFormSubmit($event)">
-      </app-enrollment-login-mail>
-    </mat-step>
-  </mat-horizontal-stepper>
-</mat-card>
+      <!-- MAIL -->
+      <!-- MAIL -->
+      <ng-template matStepperIcon="email">
+        <mat-icon>email</mat-icon>
+      </ng-template>
+      <mat-step [optional]="!showLoginAndMailForm"
+                state="mail">
+        <ng-template matStepLabel>Mail</ng-template>
+        <app-enrollment-login-mail
+          (cancel)="mailFormCancel()"
+          (done)="mailFormSubmit($event)">
+        </app-enrollment-login-mail>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </mat-card>
+</ng-container>
+
+<ng-template #loading>
+  <app-loading *ngIf="!loaded">
+  </app-loading>
+  <app-fetch-appointment
+    [done]="loaded">
+  </app-fetch-appointment>
+</ng-template>

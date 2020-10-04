@@ -14,7 +14,7 @@ import {
   MatTooltipModule
 } from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
-import {RouterModule} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {LoadingDisableModule} from '../../../../directives/loading-disable/loading-disable.module';
 import {EnrollmentLoginMailModule} from '../enrollment-login-mail/enrollment-login-mail.module';
 import {EnrollmentMainFormModule} from '../enrollment-main-form/enrollment-main-form.module';
@@ -22,7 +22,17 @@ import {EnrollmentDetailsModule} from '../enrollment-details/enrollment-details.
 import {EnrollmentAdditionsModule} from '../enrollment-additions/enrollment-additions.module';
 import {EnrollmentDriverPassengerModule} from '../enrollment-driver-passenger/enrollment-driver-passenger.module';
 import {EnrollmentCheckModule} from '../enrollment-check/enrollment-check.module';
+import {LoadingModule} from '../../../html-template/loading/loading.module';
+import {FetchAppointmentModule} from '../../html-template/fetch-appointment/fetch-appointment.module';
+import {SEOService} from '../../../../_helper/_seo.service';
 
+const routes: Routes = [
+  {
+    path: '',
+    pathMatch: 'full',
+    component: EnrollmentCreateComponent,
+  },
+];
 
 @NgModule({
   declarations: [EnrollmentCreateComponent],
@@ -31,6 +41,7 @@ import {EnrollmentCheckModule} from '../enrollment-check/enrollment-check.module
   ],
   imports: [
     CommonModule,
+    RouterModule.forChild(routes),
     MatCardModule,
     ReactiveFormsModule,
     MatCheckboxModule,
@@ -50,6 +61,11 @@ import {EnrollmentCheckModule} from '../enrollment-check/enrollment-check.module
     EnrollmentAdditionsModule,
     EnrollmentDriverPassengerModule,
     EnrollmentCheckModule,
+    LoadingModule,
+    FetchAppointmentModule,
+  ],
+  providers: [
+    SEOService
   ]
 })
 export class EnrollmentCreateModule {
