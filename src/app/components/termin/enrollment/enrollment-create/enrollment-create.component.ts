@@ -1,60 +1,103 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AuthenticationService} from '../../../../services/authentication.service';
 import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
 import {EnrollmentModel} from '../../../../models/EnrollmentModel.model';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
-import {EnrollmentComponent} from '../enrollment.component';
-import {MatStepper} from '@angular/material';
+import {MatSnackBar, MatStepper} from '@angular/material';
 import {EnrollmentMainFormComponent} from '../enrollment-main-form/enrollment-main-form.component';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Observable, Subscription} from 'rxjs';
+import {AppointmentProvider} from '../../appointment.provider';
+import {SEOService} from '../../../../_helper/_seo.service';
+import {HttpErrorResponse} from '@angular/common/http';
+import {AppointmentUtil} from '../../../../_util/appointmentUtil.util';
+import {EnrollmentService} from '../../../../services/enrollment.service';
+
+const HttpStatus = require('http-status-codes');
 
 @Component({
   selector: 'app-enrollment-create',
   templateUrl: './enrollment-create.component.html',
   styleUrls: ['./enrollment-create.component.scss']
 })
-export class EnrollmentCreateComponent implements OnInit {
-  @Input() appointment: IAppointmentModel;
-  @Input() sendingRequestEmit: EventEmitter<boolean>;
-  @Input() triggerDirectSend: boolean;
+export class EnrollmentCreateComponent implements OnInit, OnDestroy {
+  static LOCAL_STORAGE_ENROLLMENT_TMP_KEY = 'enrollmentOutput';
 
-  @Output() execute: EventEmitter<{ operation: string, enrollment: IEnrollmentModel }> =
-    new EventEmitter<{ operation: string, enrollment: IEnrollmentModel }>();
+  @ViewChild('stepper', {static: false}) stepper: MatStepper;
+  @ViewChild('mainForm', {static: false}) mainFormRef: EnrollmentMainFormComponent;
 
-  @ViewChild('stepper', {static: true}) stepper: MatStepper;
-  @ViewChild('mainForm', {static: true}) mainFormRef: EnrollmentMainFormComponent;
+  public appointment$: Observable<IAppointmentModel>;
+  public appointment: IAppointmentModel;
+  public linkFromURL: string;
+  public loaded = false;
 
   public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
-
   public showLoginAndMailForm: boolean;
 
-  public finalEnrollment: IEnrollmentModel = new EnrollmentModel();
-  public mainFormValues: any;
+  public enrollmentOutput: IEnrollmentModel = new EnrollmentModel();
+
+  public doneForms = {overall: false, additions: false, driver: false};
+
+  public triggerDirectSend = false;
+  public sendingRequestEmit = new EventEmitter();
+  public directSend: boolean;
+
   public isEnrolledAsCreator: boolean;
-
-  doneForms = {overall: false, additions: false, driver: false};
-
-  private finalEnrollment_raw: string;
   private creatorError: boolean;
-  private selfEnrollment: any;
 
-  constructor(public authenticationService: AuthenticationService) {
+  private appointment$$: Subscription;
+  private appointmentService$$: Subscription;
+
+  constructor(public authenticationService: AuthenticationService, private route: ActivatedRoute,
+              private appointmentProvider: AppointmentProvider, private _seoService: SEOService,
+              private enrollmentService: EnrollmentService, private snackBar: MatSnackBar,
+              private router: Router) {
+    this.route.queryParams.subscribe(params => {
+      this.linkFromURL = params.a;
+
+      this.triggerDirectSend = params.send === 'true';
+    });
+
+    this.appointment$ = this.appointmentProvider.appointment$;
+    this.appointment$$ = this.appointment$
+      .subscribe((sAppointment) => {
+        if (sAppointment !== undefined && !this.loaded) { // CAN BE NULL !!!
+          this.appointment = sAppointment;
+          this.loaded = true;
+          this.main();
+
+          if (this.appointment) {
+            this.__SEO();
+          }
+        } else if (!this.loaded) {
+          this.appointmentProvider.loadAppointment(this.linkFromURL);
+        } else {
+          // IGNORE FURTHER UPDATES
+        }
+      });
   }
 
   ngOnInit() {
+  }
+
+  public ngOnDestroy() {
+    this.appointment$$.unsubscribe();
+
+    if (this.appointmentService$$) {
+      this.appointmentService$$.unsubscribe();
+    }
+  }
+
+  public main() {
     if (this.userIsLoggedIn) {
       this.isEnrolledAsCreator = this.appointment.enrollments.some(sEnrollment =>
         sEnrollment.creator && sEnrollment.creator.username === this.authenticationService.currentUserValue.username);
       this.creatorError = this.isEnrolledAsCreator;
     }
 
-    this.storageDataToFields();
+    this.getEnrollmentFromLocalStorage();
 
-    if (this.triggerDirectSend && this.userIsLoggedIn) {
-      this.selfEnrollment = true;
-      this.finalEnrollment.name = this.authenticationService.currentUserValue.name;
-      this.mainFormValues.name = this.authenticationService.currentUserValue.name;
-      this.mainFormValues.selfEnrollment = this.selfEnrollment;
-    }
+    this.directSend = this.triggerDirectSend && this.userIsLoggedIn;
 
     if (this.triggerDirectSend && !this.creatorError) {
       this.initializeEnrollmentSend();
@@ -68,7 +111,7 @@ export class EnrollmentCreateComponent implements OnInit {
    * Information gathering and enrollment assigning (account or mail)
    */
   public initializeEnrollmentSend: () => void = () => {
-    if (!this.finalEnrollment.editMail
+    if (!this.enrollmentOutput.editMail
       && this.userIsLoggedIn
       && !this.isSelfEnrolling()
       && !this.triggerDirectSend) {
@@ -76,9 +119,13 @@ export class EnrollmentCreateComponent implements OnInit {
       return;
     }
 
+    if (this.isSelfEnrolling()) {
+      delete this.enrollmentOutput.editMail;
+    }
 
     this.clearLoginAndMailFormIntercepting();
-    this.execute.emit({operation: 'create', enrollment: this.finalEnrollment});
+
+    this.sendEnrollmentRequest();
   };
 
   public mailFormCancel() {
@@ -87,18 +134,12 @@ export class EnrollmentCreateComponent implements OnInit {
   }
 
   public mailFormSubmit($event: string) {
-    this.finalEnrollment.editMail = $event;
+    this.enrollmentOutput.editMail = $event;
     this.enrollmentAssignmentDecision();
   }
 
-  public clearLoginAndMailFormIntercepting() {
-    localStorage.removeItem(EnrollmentComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY);
-
-    this.showLoginAndMailForm = false;
-  }
-
   public isSelfEnrolling() {
-    return this.selfEnrollment;
+    return this.enrollmentOutput.selfEnrollment;
   }
 
   public inUseError(fColumn: any) {
@@ -122,112 +163,130 @@ export class EnrollmentCreateComponent implements OnInit {
     // Or if mail is set, then send enrollment
 
     if (this.isSelfEnrolling()
-      || this.finalEnrollment.editMail) {
-      this.showLoginAndMailForm = false;
-      this.stepper.selectedIndex = this.stepper.steps.length - 2;
+      || this.enrollmentOutput.editMail) {
+      this.stepper.selectedIndex = 0; // go back to main form
+
       this.initializeEnrollmentSend();
     } else {
       // not logged
-      // TempStore item for possible login redirect
-      this.finalEnrollment.selfEnrollment = this.selfEnrollment;
-      localStorage.setItem(EnrollmentComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY, JSON.stringify(this.finalEnrollment));
+      // tmp store item for possible login redirect
+      localStorage.setItem(EnrollmentCreateComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY, JSON.stringify(this.enrollmentOutput));
 
       this.showLoginAndMailForm = true;
 
-      setTimeout(() => {
-        this.stepper.next();
-      });
+      setTimeout(() => this.stepper.next());
     }
   }
 
-  public mainFormDone(val: any) {
+  public mainFormDone($event: any) {
     this.doneForms.overall = true;
 
-    this.finalEnrollment.name = val.name;
-    this.finalEnrollment.comment = val.comment;
-    this.selfEnrollment = val.selfEnrollment;
+    this.enrollmentOutput = {...$event, ...this.enrollmentOutput};
 
-    if (val.selfEnrollment) {
-      this.finalEnrollment.creator = {} as any;
-      this.finalEnrollment.creator.name = this.authenticationService.currentUserValue.name; // TODO CAN BE MANAGED IN COMPONENT
-      this.finalEnrollment.creator.username = this.authenticationService.currentUserValue.username;
-    }
-
-    setTimeout(() => {
-      this.stepper.next();
-    });
+    setTimeout(() => this.stepper.next());
   }
 
   public additionsFormDone(val) {
-    this.finalEnrollment.additions = val;
+    this.enrollmentOutput.additions = val;
 
-    setTimeout(() => {
-      this.stepper.next();
-    });
+    setTimeout(() => this.stepper.next());
   }
 
   public driverFormDone($event) {
     this.doneForms.driver = true;
 
-    this.finalEnrollment.driver = $event.driver;
-    this.finalEnrollment.passenger = $event.passenger;
+    this.enrollmentOutput = {...$event, ...this.enrollmentOutput};
 
-    setTimeout(() => {
-      this.stepper.next();
-    });
-  }
-
-  public setSelfEnrollment(val: boolean) {
-    if (val) {
-      delete this.finalEnrollment.editMail;
-    }
-
-    this.selfEnrollment = val;
+    setTimeout(() => this.stepper.next());
   }
 
   public stepperPrevious() {
     this.stepper.previous();
   }
 
+  /**
+   * Eventually send enrollment request, depending on edit or no edit;
+   */
+  public sendEnrollmentRequest() {
+    const enrollment = this.enrollmentOutput;
+
+    setTimeout(() => { // needed so loading directive triggers again after login or sth
+      this.sendingRequestEmit.emit(true);
+    });
+
+    this.appointmentService$$ = this.enrollmentService.create(enrollment, this.appointment)
+      .subscribe(
+        result => {
+          this.appointment.enrollments.push(result);
+          this.appointmentProvider.update(this.appointment);
+
+          if (result.token) {
+            AppointmentUtil.storeEnrollmentPermissions(this.linkFromURL, {id: result.id, token: result.token});
+          }
+
+          this.request_success_finalize();
+        }, (err: HttpErrorResponse) => {
+          this.sendingRequestEmit.emit(false);
+
+          if (err.status === HttpStatus.BAD_REQUEST && err.error.code === 'DUPLICATE_ENTRY') {
+            this.request_error_handleDuplicateValues(err);
+          }
+        }
+      );
+  }
+
+  private clearLoginAndMailFormIntercepting() {
+    localStorage.removeItem(EnrollmentCreateComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY);
+    this.showLoginAndMailForm = false;
+  }
+
   // @ts-ignore // dynamic call
   private setNameError() {
     this.stepper.selectedIndex = 0;
-    this.mainFormRef.setNameError();
+    this.mainFormRef.setNameInUseError();
   }
 
-  private storageDataToFields() {
+  private getEnrollmentFromLocalStorage() {
     // Fetch output from localStorage
-    this.finalEnrollment_raw = localStorage.getItem(EnrollmentComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY);
-    this.finalEnrollment = JSON.parse(this.finalEnrollment_raw);
+    this.enrollmentOutput = JSON.parse(localStorage.getItem(EnrollmentCreateComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY));
 
-    if (this.finalEnrollment) {
-      this.parseOutputIntoForm();
-    } else {
-      this.finalEnrollment = new EnrollmentModel();
+    if (!this.enrollmentOutput) {
+      this.enrollmentOutput = new EnrollmentModel();
     }
   }
 
-  private parseOutputIntoForm() { // TODO CAN BE MANAGED IN COMPONENT
-    const mainFormValues: any = {}; // TODO INTERFACE
-    mainFormValues.selfEnrollment = this.finalEnrollment.selfEnrollment;
-
-    if (this.finalEnrollment.creator) {
-      mainFormValues.name = this.authenticationService.currentUserValue.name;
-    } else {
-      if (this.isSelfEnrolling()) {
-        if (this.finalEnrollment.name !== this.authenticationService.currentUserValue.name) {
-          this.selfEnrollment = false;
-          mainFormValues.selfEnrollment = false;
-          mainFormValues.name = this.authenticationService.currentUserValue.name;
-        } else {
-          mainFormValues.name = this.finalEnrollment.name;
-        }
+  private request_error_handleDuplicateValues(err: HttpErrorResponse) {
+    err.error.data.forEach(fColumn => {
+      if (fColumn === 'creator') {
+        this.setCreatorError();
       } else {
-        mainFormValues.name = this.finalEnrollment.name;
+        this.inUseError(fColumn);
       }
-    }
+    });
+  }
 
-    mainFormValues.comment = this.finalEnrollment.comment;
-    this.mainFormValues = mainFormValues;
+  private __SEO() {
+    this._seoService.updateTitle(`${this.appointment.title} - Anmelden`);
+    this._seoService.updateDescription(this.appointment.title + ' - ' + this.appointment.description);
+  }
+
+  private request_success_finalize() {
+    this.redirect(`Erfolgreich angemeldet`, false);
+  }
+
+  private redirect(message: string, error = false) {
+    this.router.navigate([`enroll`], {queryParams: {a: this.appointment.link}})
+      .then(() => {
+        this.sendingRequestEmit.emit(false);
+
+        this.snackBar
+          .open(message,
+            '',
+            {
+              duration: error ? 4000 : 2000,
+              panelClass: `snackbar-${error ? 'error' : 'default'}`
+            }
+          );
+      });
   }
 }

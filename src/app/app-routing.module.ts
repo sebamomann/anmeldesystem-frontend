@@ -13,9 +13,7 @@ const routes: Routes = [
   {path: 'enroll', loadChildren: './components/termin/enroll.module#EnrollModule'},
   {
     path: 'enrollment',
-    pathMatch: 'full',
     loadChildren: './components/termin/enrollment/enrollment.module#EnrollmentModule',
-    data: {edit: true}
   },
   {path: ':link', loadChildren: './components/termin/appointment.module#AppointmentModule'},
 ];

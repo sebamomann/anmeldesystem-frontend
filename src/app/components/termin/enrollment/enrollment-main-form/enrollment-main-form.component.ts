@@ -10,15 +10,13 @@ import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
   styleUrls: ['./enrollment-main-form.component.scss']
 })
 export class EnrollmentMainFormComponent implements OnInit, OnChanges {
-
   @Output() done = new EventEmitter();
-  @Output() selfEnrollmentChange = new EventEmitter();
 
   @Input() appointment: IAppointmentModel;
   @Input() enrollment: IEnrollmentModel;
-  @Input() isEnrolledAsCreator: boolean;
-  @Input() values: any;
   @Input() isEdit = false;
+  @Input() directSend: boolean;
+  @Input() isEnrolledAsCreator: boolean;
 
   public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
   public isSelfEnrollment = this.userIsLoggedIn;
@@ -50,56 +48,50 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
     this.fillFormValues();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.values) {
-      // tslint:disable-next-line:no-unused-expression
-      this.values.name && this.getName().setValue(this.values.name);
-      // tslint:disable-next-line:no-unused-expression
-      this.values.comment && this.getComment().setValue(this.values.comment);
-
-      this.isSelfEnrollment = this.values.selfEnrollment;
-      this.getSelfEnrollment().setValue(this.isSelfEnrollment);
-
-      this.setSelfEnrollment();
-    }
-  }
-
   public setSelfEnrollment() {
     if (this.isSelfEnrollment) {
       this.creatorError = this.isEnrolledAsCreator;
-      this.oldNameValue = this.form.get('name').value;
-      this.selfEnrollmentChange.emit(true);
+      this.oldNameValue = this.getFormControl('name').value;
       this.disableNameInput();
-      this.form.get('name').setValue(this.authenticationService.currentUserValue.name);
+      this.getFormControl('name').setValue(this.authenticationService.currentUserValue.name);
     } else {
       if (this.oldNameValue) {
-        this.form.get('name').setValue(this.oldNameValue);
+        this.getFormControl('name').setValue(this.oldNameValue);
       }
-      this.selfEnrollmentChange.emit(false);
       this.creatorError = false;
-      this.form.get('name').enable();
+      this.getFormControl('name').enable();
     }
   }
 
   public changeSelfEnrollment() {
     this.isSelfEnrollment = !this.isSelfEnrollment;
+
     this.setSelfEnrollment();
   }
 
   public save() {
+    let creator;
+
     if (this.form.valid) {
+      if (this.isSelfEnrollment) {
+        creator = {} as any;
+        creator.name = this.authenticationService.currentUserValue.name;
+        creator.username = this.authenticationService.currentUserValue.username;
+      }
+
       this.done.emit({
-        name: this.getName().value,
-        comment: this.getComment().value,
+        name: this.getFormControl('name').value,
+        comment: this.getFormControl('comment').value,
         selfEnrollment: this.getSelfEnrollment().value,
+        creator
       });
     }
   }
 
   public getNameErrorMessage(): string {
-    if (this.getName().hasError('required')) {
+    if (this.getFormControl('name').hasError('required')) {
       return 'Bitte gebe einen Namen an';
-    } else if (this.getName().hasError('inUse')) {
+    } else if (this.getFormControl('name').hasError('inUse')) {
       return 'Es besteht bereits eine Anmeldung mit diesem Namen';
     }
   }
@@ -110,8 +102,8 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
     }
   }
 
-  public setNameError() {
-    this.getName().setErrors({inUse: true});
+  public setNameInUseError() {
+    this.getFormControl('name').setErrors({inUse: true});
   }
 
   public setCreatorError() {
@@ -119,30 +111,40 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
     this.isEnrolledAsCreator = true;
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.directSend) {
+      this.isSelfEnrollment = true;
+
+      this.setSelfEnrollment();
+    }
+  }
+
   private fillFormValues() {
     if (this.enrollment) {
       if (this.enrollment.creator) {
-        this.getName().setValue(this.enrollment.creator.name);
+        this.getFormControl('name').setValue(this.enrollment.creator.name);
         this.disableNameInput();
+      } else if (this.directSend) {
+        this.getFormControl('name').setValue(this.authenticationService.currentUserValue.name);
       } else {
-        this.getName().setValue(this.enrollment.name);
+        if (this.isEdit) {
+          this.enableNameInput();
+        }
+
+        this.getFormControl('name').setValue(this.enrollment.name);
       }
 
-      this.getComment().setValue(this.enrollment.comment);
+      this.getFormControl('comment').setValue(this.enrollment.comment);
     } else {
       if (this.userIsLoggedIn && this.isSelfEnrollment) {
-        this.getName().setValue(this.authenticationService.currentUserValue.name);
+        this.getFormControl('name').setValue(this.authenticationService.currentUserValue.name);
         this.disableNameInput();
       }
     }
   }
 
-  private getName() {
-    return this.form.get('name');
-  }
-
-  private getComment() {
-    return this.form.get('comment');
+  private getFormControl(str: string) {
+    return this.form.get(str);
   }
 
   private getSelfEnrollment() {
@@ -150,6 +152,10 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   }
 
   private disableNameInput() {
-    this.getName().disable();
+    this.getFormControl('name').disable();
+  }
+
+  private enableNameInput() {
+    this.getFormControl('name').enable();
   }
 }

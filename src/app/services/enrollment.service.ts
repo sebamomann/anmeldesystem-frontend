@@ -15,18 +15,20 @@ export class EnrollmentService {
   constructor(private readonly httpClient: HttpClient, @Inject(WINDOW) private window: Window) {
   }
 
-  create(enrollment: IEnrollmentModel, appointment: IAppointmentModel): Observable<HttpResponse<IEnrollmentModel>> {
+  create(enrollment: IEnrollmentModel, appointment: IAppointmentModel): Observable<IEnrollmentModel> {
     const _enrollment: any = enrollment;
     _enrollment.domain = `${this.window.location.hostname}/enrollment?a=${appointment.link}&e={{0}}&t={{1}}`;
     _enrollment.appointment = {link: appointment.link};
     const url = `${environment.API_URL}enrollment`;
-    return this.httpClient.post<IEnrollmentModel>(url, _enrollment, {observe: 'response', reportProgress: true});
+
+    return this.httpClient.post<IEnrollmentModel>(url, _enrollment);
   }
 
-  update(enrollment: IEnrollmentModel, appointment: IAppointmentModel): Observable<HttpResponse<IEnrollmentModel>> {
+  update(enrollment: IEnrollmentModel, appointment: IAppointmentModel): Observable<IEnrollmentModel> {
     const token = TokenUtil.getTokenForEnrollment(enrollment.id, appointment.link);
     const url = `${environment.API_URL}enrollment/${enrollment.id}/${token}`;
-    return this.httpClient.put<IEnrollmentModel>(url, enrollment, {observe: 'response', reportProgress: true});
+
+    return this.httpClient.put<IEnrollmentModel>(url, enrollment);
   }
 
   delete(enrollment: IEnrollmentModel, link) {

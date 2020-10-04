@@ -15,7 +15,7 @@ describe('Enrollment Page - Unknown user', () => {
       page = new EnrollmentPage('unknownAppointment');
       browser.ignoreSynchronization = true;
 
-      await browser.get('/enroll/add?a=unknownAppointment');
+      await browser.get('/enrollment/add?a=unknownAppointment');
       await browser.executeScript('window.localStorage.clear();');
       page.spinnerGone();
 

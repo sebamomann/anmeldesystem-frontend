@@ -8,7 +8,7 @@ export class EnrollmentPage {
   }
 
   public navigateTo() {
-    return browser.get('/enroll/add?a=' + this.appointmentLink);
+    return browser.get('/enrollment/add?a=' + this.appointmentLink);
   }
 
   public getMatCardTitle() {
@@ -257,7 +257,7 @@ export class EnrollmentPage {
 
   async closeLoginSnackbar() {
     browser.driver.wait(() =>
-      browser.driver.getCurrentUrl().then(url => /enroll\/add\?a=url/.test(url.replace(this.appointmentLink, 'url'))), 10000);
+      browser.driver.getCurrentUrl().then(url => /enrollment\/add\?a=url/.test(url.replace(this.appointmentLink, 'url'))), 10000);
 
     await browser.executeScript('document.getElementsByClassName(\'login-snackbar\')[0].remove();');
   }
