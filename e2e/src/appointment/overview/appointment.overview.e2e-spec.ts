@@ -44,6 +44,8 @@ describe('Appointment Overview Page', () => {
       browser.ignoreSynchronization = true;
 
       browser.executeScript('window.localStorage.clear();');
+      browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' + JSON.stringify([appointmentLink]) + '\');');
+
       await page.navigateTo();
     });
 
@@ -118,6 +120,7 @@ describe('Appointment Overview Page', () => {
         await page.login(user_appointment_creator.username);
 
         browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
+        browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
         await page.navigateTo();
       });
@@ -223,6 +226,7 @@ describe('Appointment Overview Page', () => {
           await page.login(user_appointment_overview_self.username);
 
           browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
+          browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
           await page.navigateTo();
         });
@@ -316,6 +320,7 @@ describe('Appointment Overview Page', () => {
 
           browser.executeScript('return window.localStorage.setItem(\'permissions\', \'' + JSON.stringify(permissions) + '\');');
           browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
+          browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' + JSON.stringify([appointmentLink]) + '\');');
 
           await page.navigateTo();
         });
