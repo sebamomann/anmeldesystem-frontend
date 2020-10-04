@@ -25,7 +25,8 @@
 
         <!-- ADDITIONS -->
         <!-- ADDITIONS -->
-        <mat-tab label="Zusätze">
+        <mat-tab *ngIf="appointment.additions.length > 0"
+                 label="Zusätze">
           <app-enrollment-additions
             #additionsForm
             (done)="additionsFormDone($event)"
@@ -38,7 +39,8 @@
 
         <!-- DRIVER -->
         <!-- DRIVER -->
-        <mat-tab label="Fahrer">
+        <mat-tab *ngIf="appointment.driverAddition"
+                 label="Fahrer">
           <app-enrollment-driver-passenger
             #driverForm
             (done)="driverFormDone($event)"
