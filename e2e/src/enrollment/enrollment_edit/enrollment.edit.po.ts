@@ -266,4 +266,28 @@ export class EnrollmentEditPage {
 
     return elm.isPresent();
   }
+
+  async additionSelect(s: string) {
+    const elm = this.getAdditionElement(s);
+    if ((await elm.isSelected() === false)) {
+      return browser.executeScript('arguments[0].click();', elm.getWebElement());
+    }
+
+    return Promise.resolve();
+  }
+
+  async additionDeselect(s: string) {
+    const elm = this.getAdditionElement(s);
+    if ((await elm.isSelected() === true)) {
+      return browser.executeScript('arguments[0].click();', elm.getWebElement());
+    }
+
+    return Promise.resolve();
+  }
+
+  nextAdditions() {
+    const elem = element(by.id('next_additions'));
+
+    return elem.click();
+  }
 }

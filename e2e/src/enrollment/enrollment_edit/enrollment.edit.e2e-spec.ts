@@ -182,7 +182,7 @@ describe('Enrollment Edit Page', () => {
 
           // store enrollment permission in local storage
           const token = crypto.createHash('sha256').update(enrollmentIdUnknown + salt).digest('hex');
-          const permissions = [{link: 'protractorEnrollEdit', enrollments: [{id: enrollmentIdUnknown, token}]}];
+          const permissions = [{link: appointmentLink, enrollments: [{id: enrollmentIdUnknown, token}]}];
           browser.executeScript('return window.localStorage.setItem(\'permissions\', \'' + JSON.stringify(permissions) + '\');');
         });
 
