@@ -39,7 +39,7 @@
            infiniteScroll>
         <h2 class="title bar">Archiv</h2>
         <div [@listAnimation]
-             class="appointment-list-wrapper">
+             class="appointment-list-wrapper archive-wrapper">
           <ng-container *ngFor="let monthYear of _archive">
             <div class="archive-block-wrapper">
               <h3 class="bar">{{monthYear.month | monthname}}&nbsp;-&nbsp;{{monthYear.year}}</h3>

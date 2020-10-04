@@ -124,12 +124,15 @@ $handleLength: 25px;
 
 @media all and (min-width: 1024px) {
   .appointment-list-wrapper {
+    --gap: 25px;
+
     display: flex;
     flex-wrap: wrap;
+    gap: var(--gap);
 
     ::ng-deep app-appointment-data {
-      width: calc(50% - 25px);
-      margin: 0 auto 25px;
+      width: calc(50% - var(--gap));
+      margin: 0 auto var(--gap);
 
       &:nth-child(even) {
         margin-right: 0;
@@ -153,6 +156,27 @@ $handleLength: 25px;
       }
     }
   }
+
+  .appointment-list-wrapper {
+    &.archive-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-gap: var(--gap);
+
+      .archive-block-wrapper {
+        width: 100%;
+        margin: 50px 0;
+
+        h3 {
+          width: fit-content;
+          margin: 0 auto 15px;
+          border-bottom-left-radius: 15px;
+          border-top-right-radius: 15px;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
 }
 
 .reload {
@@ -163,19 +187,6 @@ $handleLength: 25px;
     mat-icon {
       animation: spin 1s linear infinite;
     }
-  }
-}
-
-.archive-block-wrapper {
-  margin: 50px 0;
-
-
-  h3 {
-    width: fit-content;
-    margin: 0 auto 15px;
-    border-bottom-left-radius: 15px;
-    border-top-right-radius: 15px;
-    white-space: nowrap;
   }
 }
 
