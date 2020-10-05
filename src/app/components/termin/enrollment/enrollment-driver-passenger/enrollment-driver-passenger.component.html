@@ -14,11 +14,12 @@
       <!-- TODO EXTRACT IN TWO SINGLE COMPONENTS -->
 
       <ng-container *ngIf="!getDriver().value; else driver">
-        <div class="passenger-form-wrapper"
+        <div id="passenger-form-wrapper"
              formGroupName="passengerForm">
           <mat-form-field>
             <mat-label>Mich bitte mitnehmen ...</mat-label>
-            <mat-select formControlName="requirement">
+            <mat-select formControlName="requirement"
+                        id="requirement-select">
               <mat-option [value]="0"> ---</mat-option>
               <mat-option [value]="1"> Nur Hin</mat-option>
               <mat-option [value]="2"> Nur Zurück</mat-option>
@@ -32,11 +33,12 @@
       </ng-container>
 
       <ng-template #driver>
-        <div class="driver-form-wrapper"
+        <div id="driver-form-wrapper"
              formGroupName="driverForm">
           <mat-form-field>
             <mat-label>Ich fahre ...</mat-label>
-            <mat-select formControlName="service">
+            <mat-select formControlName="service"
+                        id="service-select">
               <mat-option [value]="1"> Nur Hin</mat-option>
               <mat-option [value]="2"> Nur Zurück</mat-option>
               <mat-option [value]="3"> Hin und Zurück</mat-option>

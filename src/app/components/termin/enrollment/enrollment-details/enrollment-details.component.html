@@ -5,7 +5,7 @@
        }"
      class="enrollment">
   <div class="user-information">
-    <mat-icon *ngIf="enrollment.driver"> directions_car</mat-icon>
+    <mat-icon *ngIf="enrollment.driver" class="isDriver-icon"> directions_car</mat-icon>
     <span class="name">
         <ng-container *ngIf="enrollment.creator">{{enrollment.creator.name}}</ng-container>
         <ng-container *ngIf="!enrollment.creator">{{enrollment.name}}</ng-container>
