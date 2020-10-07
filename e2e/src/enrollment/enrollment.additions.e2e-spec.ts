@@ -48,9 +48,9 @@ describe('Enrollment Page - Additions', () => {
             });
 
             describe('select additions', () => {
-              beforeEach(async () => {
-                await page.selectAddition('0');
-                await page.selectAddition('3');
+              beforeEach(() => {
+                page.selectAddition('0');
+                page.selectAddition('3');
               });
 
               describe('next additions', () => {
@@ -89,7 +89,7 @@ describe('Enrollment Page - Additions', () => {
                         expect(page.getAdditionCheckDeselected('2')).toBeTruthy();
                       });
 
-                      describe('go back to main form', () => {
+                      describe('go back to addition form', () => {
                         beforeEach(async () => {
                           await page.goBackCheck(); // go back to additions
                         });
@@ -123,31 +123,31 @@ describe('Enrollment Page - Additions', () => {
                       });
                     });
 
-                    describe('login', () => {
-                      const user_enroll_additions_mid_login = {
-                        username: 'user_enroll_additions_mid_login',
-                      };
-
-                      beforeEach(() => {
-                        page.clickLogin();
-                        page.fillLoginData(user_enroll_additions_mid_login.username);
-                        page.closeLoginSnackbar();
-                      });
-
-                      it('should complete enrollment (automatic send)', () => {
-                        expect(
-                          browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
-                            .catch(() => {
-                              return false;
-                            })
-                        ).toBeTruthy(`Url match could not succeed`);
-                        expect(page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
-                      });
-
-                      afterEach(() => {
-                        page.logout();
-                      });
-                    });
+                    // describe('login', () => {
+                    //   const user_enroll_additions_mid_login = {
+                    //     username: 'user_enroll_additions_mid_login',
+                    //   };
+                    //
+                    //   beforeEach(() => {
+                    //     page.clickLogin();
+                    //     page.fillLoginData(user_enroll_additions_mid_login.username);
+                    //     page.closeLoginSnackbar();
+                    //   });
+                    //
+                    //   it('should complete enrollment (automatic send)', () => {
+                    //     expect(
+                    //       browser.wait(protractor.ExpectedConditions.urlContains('/enroll?a=' + appointmentLink), 5000)
+                    //         .catch(() => {
+                    //           return false;
+                    //         })
+                    //     ).toBeTruthy(`Url match could not succeed`);
+                    //     expect(page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
+                    //   });
+                    //
+                    //   afterEach(() => {
+                    //     page.logout();
+                    //   });
+                    // });
                   });
                 });
               });

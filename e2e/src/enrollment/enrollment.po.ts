@@ -34,6 +34,14 @@ export class EnrollmentPage {
     return elem;
   }
 
+  public getSeats() {
+    const EC = protractor.ExpectedConditions;
+    const elem = element(by.id('seats'));
+    browser.wait(EC.visibilityOf(elem), 10000);
+
+    return elem;
+  }
+
   public getUsername() {
     const EC = protractor.ExpectedConditions;
     const elem = element(by.id('username'));
@@ -302,6 +310,14 @@ export class EnrollmentPage {
     return elm.click();
   }
 
+  public nextDriver() {
+    const elm = element(by.id('next_driver'));
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
+
+    return elm.click();
+  }
+
   public async getCheckName() {
     const until = protractor.ExpectedConditions;
     const elm = element(by.css('.enrollment .user-information .name'));
@@ -370,5 +386,88 @@ export class EnrollmentPage {
     browser.wait(EC.visibilityOf(elm), 10000);
 
     return elm.isPresent();
+  }
+
+  getDriverCheckbox() {
+    const EC = protractor.ExpectedConditions;
+    const elem = element(by.id('driver-input'));
+    browser.wait(EC.elementToBeClickable(elem), 10000);
+
+    return element(by.id('driver-input'));
+  }
+
+  selectPassengerValue(val: string) {
+    const EC = protractor.ExpectedConditions;
+    const elem = element(by.id('requirement-select'));
+    browser.wait(EC.elementToBeClickable(elem), 10000);
+    elem.click();
+
+    const elem2 = element(by.cssContainingText('.mat-option-text', val));
+    browser.wait(EC.visibilityOf(elem2), 10000);
+
+    return elem2.click();
+  }
+
+  passengerFormExists() {
+    const until = protractor.ExpectedConditions;
+    const elm = element(by.id('passenger-form-wrapper'));
+    browser.wait(until.presenceOf(elm), 10000);
+
+    return elm.isPresent();
+  }
+
+  driverFormExists() {
+    const until = protractor.ExpectedConditions;
+    const elm = element(by.id('driver-form-wrapper'));
+    browser.wait(until.presenceOf(elm), 10000);
+
+    return elm.isPresent();
+  }
+
+  async selectDriver() {
+    const elm = this.getDriverCheckbox();
+    if ((await elm.isSelected() === false)) {
+      return browser.executeScript('arguments[0].click();', elm.getWebElement());
+    }
+
+    return Promise.resolve();
+  }
+
+  setSeats(val: number) {
+    const ref = this.getSeats();
+    const EC2 = protractor.ExpectedConditions;
+    browser.wait(EC2.elementToBeClickable(ref), 10000, 'Element taking too long to be clickable');
+
+    return ref.clear().then(async () => {
+      await ref.sendKeys(val);
+    });
+  }
+
+  driverIconExists() {
+    const until = protractor.ExpectedConditions;
+    const elm = element(by.css('.isDriver-icon'));
+    browser.wait(until.presenceOf(elm), 10000);
+
+    return elm.isPresent();
+  }
+
+  getDriverService() {
+    return element(by.css('.mat-select-value-text span'));
+  }
+
+  getPassengerRequirement() {
+    return element(by.css('.mat-select-value-text span'));
+  }
+
+  selectDriverValue(val: string) {
+    const EC = protractor.ExpectedConditions;
+    const elem = element(by.id('service-select'));
+    browser.wait(EC.elementToBeClickable(elem), 10000);
+    elem.click();
+
+    const elem2 = element(by.cssContainingText('.mat-option-text', val));
+    browser.wait(EC.visibilityOf(elem2), 10000);
+
+    return elem2.click();
   }
 }
