@@ -2,29 +2,17 @@
 
 .driver-wrapper {
   display: block;
-  margin: 15px auto 35px;
+  margin: 50px auto;
 
   .driver-block {
-    position: relative;
-    text-align: center;
-    display: inline-block;
-    width: calc(100% - 60px); // 2*20 padding +2* 10 margin
-    max-width: 300px;
-    margin: 10px;
-    border-radius: 10px;
-    padding: 10px 20px;
-    box-shadow: 5px 5px 9px #d9d9d9,
-    -5px -5px 9px #fcfcfc;
-    font-size: 1.125em;
+    display: grid;
+    grid-template-columns: minmax(30px, auto) 3fr 1fr;
+    align-items: center;
+    margin: 0 0 auto;
 
     span {
-      width: 50%;
-      display: inline-block;
-      vertical-align: baseline;
-
-      &.name {
-        text-align: left;
-      }
+      width: 100%;
+      text-align: left;
 
       &.space {
         color: gray;
@@ -69,35 +57,132 @@
 }
 
 .analysis-block-wrapper {
-  text-align: center;
+  width: 100%;
+  text-align: left;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
 
-  .title {
-    color: $secondary;
-    font-size: 1.125em;
-    font-weight: normal;
+  &.same {
+    grid-template-columns: 1fr;
+
+    .seats {
+      &:before {
+        transform: translateX(-15%) scale(var(--sacle)) !important;
+      }
+
+      &:after {
+        background-image: url("/assets/icons/double_arrow.svg");
+        background-repeat: no-repeat;
+        background-size: auto 100%;
+        background-position: center;
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        opacity: 0.125;
+        -webkit-transform: scale(var(--sacle)) rotate(180deg) translateX(-15%);
+        -moz-transform: scale(var(--sacle)) rotate(180deg) translateX(-15%);
+        -ms-transform: scale(var(--sacle)) rotate(180deg) translateX(-15%);
+        -o-transform: scale(var(--sacle)) rotate(180deg) translateX(-15%);
+        transform: scale(var(--sacle)) rotate(180deg) translateX(-15%);
+      }
+    }
   }
 
   .analysis-block {
-    padding: 10px;
-    display: inline-block;
-    width: calc(100% - 20px);
-    margin-top: 15px;
-    vertical-align: top;
+    text-align: left;
+    position: relative;
 
-    .title {
+    .direction {
       color: $secondary;
       font-weight: bolder;
-      font-size: 1.25em;
+      font-size: 2em;
+      display: block;
+      width: fit-content;
+    }
 
-      spna {
+    .seats {
+      display: grid;
+      grid-template-rows: 1fr;
+      align-items: center;
+      padding: 40px 0;
+      position: relative;
+
+      --sacle: 1.25;
+
+      &:before {
+        background-image: url("/assets/icons/double_arrow.svg");
+        background-repeat: no-repeat;
+        background-size: auto 100%;
+        background-position: center;
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        opacity: 0.125;
+        transform: scale(var(--sacle));
+      }
+
+      &.back {
+        &:before {
+          -webkit-transform: scale(var(--sacle)) rotate(180deg);
+          -moz-transform: scale(var(--sacle)) rotate(180deg);
+          -ms-transform: scale(var(--sacle)) rotate(180deg);
+          -o-transform: scale(var(--sacle)) rotate(180deg);
+          transform: scale(var(--sacle)) rotate(180deg);
+        }
+      }
+
+      &.both {
+        &:before {
+
+        }
+      }
+
+      .total-seats {
+        display: block;
+        margin: 0 auto;
+        font-size: 2em;
+        text-align: center;
         font-style: italic;
+        font-weight: bold;
+
+        & > span {
+          font-size: 0.5em;
+        }
+      }
+    }
+
+
+    .case-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 15px;
+
+      .case-block {
+        text-align: center;
+
+        .direction {
+          margin: 0 auto;
+          font-size: 1.25em;
+        }
       }
     }
 
     .case {
-      font-size: 1em;
+      font-size: 1.125em;
       width: 100%;
       display: block;
+      margin: 0 auto;
+      text-align: center;
+
+      span {
+        vertical-align: middle;
+      }
 
       .positive {
         color: green;
@@ -107,5 +192,15 @@
         color: red;
       }
     }
+  }
+}
+
+mat-card-actions {
+  margin: 0 auto;
+  text-align: left;
+
+  button {
+    padding: 0;
+    text-align: left;
   }
 }
