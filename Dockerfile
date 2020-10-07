@@ -31,7 +31,7 @@ ENV BACKEND_URL=$BACKEND_URL
 RUN sed -i "s|http://localhost:3000|$BACKEND_URL|g" ./src/assets/env.js
 
 RUN npm run-script build:prod
-#RUN npm run e2e
+RUN npm run e2e
 ## STAGE 2
 
 FROM nginx:1.17.1-alpine
