@@ -10,7 +10,11 @@
       <div class="driver-wrapper">
         <ng-container *ngFor="let driver of drivers">
           <div class="driver-block">
-            <mat-icon>double_arrow</mat-icon>
+            <ng-container [ngSwitch]="driver.driver.service">
+              <mat-icon *ngSwitchCase="3">compare_arrows</mat-icon>
+              <mat-icon *ngSwitchCase="2" class="back">double_arrow</mat-icon>
+              <mat-icon *ngSwitchCase="1" class>double_arrow</mat-icon>
+            </ng-container>
             <span *ngIf="driver.creator"
                   class="user-information">
               <span>{{driver.creator.name}}</span>
@@ -21,17 +25,6 @@
               <span>{{driver.name}}</span>
             </span>
             <span class="space">{{driver.driver.seats}}<span>Plätze</span></span>
-            <!--            <ng-container [ngSwitch]="driver.driver.service">-->
-            <!--                <span *ngSwitchCase="3" class='service'>-->
-            <!--                  <mat-icon>compare_arrows</mat-icon>-->
-            <!--                </span>-->
-            <!--              <span *ngSwitchCase="2" class='service negative'>-->
-            <!--                  <mat-icon>arrow_back</mat-icon>-->
-            <!--                </span>-->
-            <!--              <span *ngSwitchCase="1" class='service negative'>-->
-            <!--                  <mat-icon>arrow_forward</mat-icon>-->
-            <!--                </span>-->
-            <!--            </ng-container>-->
           </div>
         </ng-container>
       </div>

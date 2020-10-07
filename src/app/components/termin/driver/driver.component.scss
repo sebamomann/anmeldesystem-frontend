@@ -10,6 +10,12 @@
     align-items: center;
     margin: 0 0 auto;
 
+    mat-icon {
+      &.back {
+        transform: rotate(180deg);
+      }
+    }
+
     span {
       width: 100%;
       text-align: left;
