@@ -44,7 +44,7 @@ describe('Enrollment Page - Logged in', () => {
       });
 
       it('correct form values', () => {
-        expect(page.getName().getText()).toBe(user.name);
+        expect(page.getName().getAttribute('value')).toBe(user.name);
       });
 
       describe('fill form', () => {
