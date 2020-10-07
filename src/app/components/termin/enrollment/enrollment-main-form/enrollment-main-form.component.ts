@@ -121,6 +121,9 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   }
 
   private fillFormValues() {
+    this.isSelfEnrollment = this.enrollment.selfEnrollment ? this.enrollment.selfEnrollment : this.userIsLoggedIn;
+    this.getSelfEnrollment().setValue(this.isSelfEnrollment ? this.isSelfEnrollment : this.userIsLoggedIn);
+
     if (JSON.stringify(new EnrollmentModel()) !== JSON.stringify(this.enrollment)) {
       if (this.enrollment.creator) {
         this.getFormControl('name').setValue(this.enrollment.creator.name);
