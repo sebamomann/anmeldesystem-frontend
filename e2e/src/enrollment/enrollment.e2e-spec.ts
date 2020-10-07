@@ -48,6 +48,10 @@ describe('Enrollment Page - Unknown user', () => {
       const __name = 'Unknown Enroll';
       const __comment = 'unknown enroll comment';
 
+      it('correct form values', () => {
+        expect(page.getName().getText()).toBe('');
+      });
+
       describe('fill form', () => {
         beforeEach(() => {
           page.setName(__name);

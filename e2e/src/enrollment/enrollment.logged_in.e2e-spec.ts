@@ -43,6 +43,10 @@ describe('Enrollment Page - Logged in', () => {
         expect(page.getSelfEnrollment().isSelected()).toBe(true);
       });
 
+      it('correct form values', () => {
+        expect(page.getName().getText()).toBe(user.name);
+      });
+
       describe('fill form', () => {
         beforeEach(() => {
           page.setComment(__comment);

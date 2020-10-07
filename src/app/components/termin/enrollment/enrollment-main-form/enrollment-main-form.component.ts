@@ -3,6 +3,7 @@ import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import {AuthenticationService} from '../../../../services/authentication.service';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
 import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
+import {EnrollmentModel} from '../../../../models/EnrollmentModel.model';
 
 @Component({
   selector: 'app-enrollment-main-form',
@@ -120,7 +121,7 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   }
 
   private fillFormValues() {
-    if (this.enrollment) {
+    if (this.enrollment !== new EnrollmentModel()) {
       if (this.enrollment.creator) {
         this.getFormControl('name').setValue(this.enrollment.creator.name);
         this.disableNameInput();
