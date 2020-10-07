@@ -181,7 +181,9 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
   public mainFormDone($event: any) {
     this.doneForms.overall = true;
 
-    this.enrollmentOutput = {...$event, ...this.enrollmentOutput};
+    this.enrollmentOutput = {...this.enrollmentOutput, ...$event};
+
+    console.log(this.enrollmentOutput);
 
     setTimeout(() => this.stepper.next());
   }
@@ -195,7 +197,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
   public driverFormDone($event) {
     this.doneForms.driver = true;
 
-    this.enrollmentOutput = {...$event, ...this.enrollmentOutput};
+    this.enrollmentOutput = {...this.enrollmentOutput, ...$event};
 
     setTimeout(() => this.stepper.next());
   }
