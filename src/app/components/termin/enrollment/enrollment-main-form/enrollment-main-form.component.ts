@@ -121,7 +121,7 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   }
 
   private fillFormValues() {
-    if (this.enrollment !== new EnrollmentModel()) {
+    if (JSON.stringify(new EnrollmentModel()) !== JSON.stringify(this.enrollment)) {
       if (this.enrollment.creator) {
         this.getFormControl('name').setValue(this.enrollment.creator.name);
         this.disableNameInput();
