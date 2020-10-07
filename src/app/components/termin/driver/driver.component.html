@@ -11,9 +11,10 @@
         <ng-container *ngFor="let driver of drivers">
           <div class="driver-block">
             <ng-container [ngSwitch]="driver.driver.service">
-              <mat-icon *ngSwitchCase="3">compare_arrows</mat-icon>
+              <mat-icon *ngSwitchCase="3" class="unfold">unfold_less</mat-icon>
               <mat-icon *ngSwitchCase="2" class="back">double_arrow</mat-icon>
-              <mat-icon *ngSwitchCase="1" class>double_arrow</mat-icon>
+              <mat-icon *ngSwitchCase="1">double_arrow</mat-icon>
+
             </ng-container>
             <span *ngIf="driver.creator"
                   class="user-information">
@@ -29,6 +30,21 @@
         </ng-container>
       </div>
     </mat-card-content>
+
+    <div class="icon-legend">
+      <div>
+        <mat-icon>double_arrow</mat-icon>
+        <span>Hinfahrt</span>
+      </div>
+      <div>
+        <mat-icon class="back">double_arrow</mat-icon>
+        <span>Rückfahrt</span>
+      </div>
+      <div>
+        <mat-icon class="unfold">unfold_less</mat-icon>
+        <span>Hin u. Rück</span>
+      </div>
+    </div>
 
     <mat-card-actions>
       <div>
