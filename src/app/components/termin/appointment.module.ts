@@ -9,6 +9,7 @@ import {AuthGuard} from '../../_helper/auth.guard';
 import {FetchAppointmentModule} from './html-template/fetch-appointment/fetch-appointment.module';
 import {LoadingModule} from '../html-template/loading/loading.module';
 import {AutoLoadOnWsCallModule} from '../settings/auto-load-on-ws-call/auto-load-on-ws-call.module';
+import {ServiceWorkerModule} from '@angular/service-worker';
 
 const routes: Routes = [
   {path: '', component: AppointmentComponent},
@@ -27,6 +28,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: true, registrationStrategy: 'registerImmediately'}),
     AppointmentDataModule,
     EnrollmentListModule,
     MatIconModule,

@@ -7,6 +7,7 @@ import {environment} from '../../../../environments/environment';
 import {AppointmentService} from '../../../services/appointment.service';
 import {AppointmentUtil} from '../../../_util/appointmentUtil.util';
 import {AuthenticationService} from '../../../services/authentication.service';
+import {PushService} from '../../../services/push.service';
 
 @Component({
   selector: 'app-appointment-data',
@@ -25,7 +26,8 @@ export class AppointmentDataComponent implements OnInit {
   public isPinned = false;
 
   constructor(private snackBar: MatSnackBar, private router: Router, @Inject(WINDOW) public window: Window,
-              private appointmentService: AppointmentService, private authenticationService: AuthenticationService) {
+              private appointmentService: AppointmentService, private authenticationService: AuthenticationService,
+              private pushService: PushService) {
     if (!this.preview) {
       this.type = '';
     }
@@ -95,5 +97,9 @@ export class AppointmentDataComponent implements OnInit {
         duration: 2000,
         panelClass: 'snackbar-default'
       });
+  }
+
+  activateNotifications() {
+    this.pushService.subscribeTo(this.appointment.link);
   }
 }
