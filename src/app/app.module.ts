@@ -55,8 +55,11 @@ registerLocaleData(localeDe);
 })
 export class AppModule {
   constructor(swUpdate: SwUpdate, snackbar: MatSnackBar) {
+    const version = require('package.json').version;
+
     swUpdate.available.pipe(
-      switchMap(() => snackbar.open('Neue Version verfügbar', 'Neu laden').onAction())
+      // tslint:disable-next-line
+      switchMap((notes) => snackbar.open('Neue Version verfügbar - ' + version, 'Neu laden').onAction())
     ).subscribe(() => window.location.reload());
   }
 }
