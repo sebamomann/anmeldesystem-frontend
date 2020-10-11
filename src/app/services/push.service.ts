@@ -39,7 +39,7 @@ export class PushService {
 
   subscribeTo(link: string) {
     return this.swPush.requestSubscription({
-      serverPublicKey: 'BKEcHfrBBEI416Dl0rJa-f5ctf_jvZ9zbBSzkGMKwpH7P4a62_ScOPjzbAE11zIsrBmVNOJ-CuX6fR7PtrkpAZM'
+      serverPublicKey: this.VAPID_PUBLIC_KEY
     })
       .then(sub => this
         .subscribeToAppointment(sub, link)
