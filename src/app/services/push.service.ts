@@ -94,32 +94,6 @@ export class PushService {
     });
   }
 
-  public async unsubscribeFrom(link: string) {
-    if (this.swPush.isEnabled) {
-      return this.swPush.requestSubscription({
-        serverPublicKey: 'BKEcHfrBBEI416Dl0rJa-f5ctf_jvZ9zbBSzkGMKwpH7P4a62_ScOPjzbAE11zIsrBmVNOJ-CuX6fR7PtrkpAZM'
-      })
-        .then(sub => {
-            const req = new HttpRequest('POST', `${environment.API_URL}push/unsubscribe`,
-              {
-                subscription: sub,
-                appointment: {
-                  link
-                }
-              },
-              {
-                reportProgress: true,
-              });
-
-            return this.httpClient.request(req);
-          }
-        )
-        .catch(err => {
-          throw err;
-        });
-    }
-  }
-
   private subscribeToAppointment(sub: PushSubscription, link: string) {
     const req = new HttpRequest('POST', `${environment.API_URL}push/subscribe`,
       {
