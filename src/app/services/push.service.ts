@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {HttpClient, HttpRequest} from '@angular/common/http';
 import {SwPush} from '@angular/service-worker';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,18 @@ import {SwPush} from '@angular/service-worker';
 export class PushService {
   readonly VAPID_PUBLIC_KEY = environment.VAPID_KEY;
 
-  constructor(private httpClient: HttpClient, private swPush: SwPush) {
+  constructor(private httpClient: HttpClient, private swPush: SwPush,
+              private router: Router) {
+    this.swPush.notificationClicks.subscribe(
+      (val) => {
+        if (val.action === 'openAppointment' || !val.action) {
+          this.router.navigate(['/enroll'], {
+            queryParams: {
+              a: val.notification.data.link
+            }
+          }).then(() => '');
+        }
+      });
   }
 
   subscribe(sub: PushSubscription) {
@@ -23,7 +35,7 @@ export class PushService {
 
   subscribeTo(link: string) {
     this.swPush.requestSubscription({
-      serverPublicKey: 'BKEcHfrBBEI416Dl0rJa-f5ctf_jvZ9zbBSzkGMKwpH7P4a62_ScOPjzbAE11zIsrBmVNOJ-CuX6fR7PtrkpAZM'
+      serverPublicKey: this.VAPID_PUBLIC_KEY
     })
       .then(sub => this
         .subscribeToAppointment(sub, link)
