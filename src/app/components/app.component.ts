@@ -1,9 +1,7 @@
-import {Component, Inject} from '@angular/core';
+import {Component} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {WINDOW} from '../provider/window.provider';
 import {IUserModel} from '../models/IUserModel.model';
 import {AuthenticationService} from '../services/authentication.service';
-import {PwaService} from '../services/pwa-service.service';
 import {PwaDialogComponent} from './dialogs/pwa-dialog/pwa-dialog.component';
 import {MatDialog} from '@angular/material';
 import {animate, query, stagger, style, transition, trigger} from '@angular/animations';
@@ -59,13 +57,9 @@ export class AppComponent {
   public now: string;
   public currentUser: IUserModel;
   public version: string = version;
-  // refresh token
-  public refreshingDone = true;
-  public refreshing = false;
-  private showPWADialog = true;
 
-  constructor(private router: Router, @Inject(WINDOW) private window: Window,
-              private authenticationService: AuthenticationService, public pwa: PwaService, public dialog: MatDialog,
+  constructor(private router: Router,
+              private authenticationService: AuthenticationService, public dialog: MatDialog,
               private monthnamePipe: MonthnamePipe, private loadingService: LoadingService) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -79,18 +73,6 @@ export class AppComponent {
       && this.authenticationService.currentUserValue.exp !== null) {
       this.authenticationService.logout();
     }
-
-    this.pwa.checkForUpdates();
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      this.pwa.setDeferredPrompt(e);
-      if (this.showPWADialog) {
-        this.openPwaDialog();
-      }
-
-      this.showPWADialog = false;
-    });
 
     const date = new Date();
     this.now = `${this.monthnamePipe.transform(date.getMonth())} ${date.getFullYear()}`;
@@ -125,10 +107,6 @@ export class AppComponent {
     dialogRef.afterClosed().subscribe(result => {
     });
   };
-
-  getHostname(): string {
-    return this.window.location.hostname;
-  }
 
   buildNav() {
     this.items = [];
