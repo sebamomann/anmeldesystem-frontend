@@ -85,9 +85,16 @@
         <span>Einstellungen</span>
       </button>
       <button (click)="activateNotifications()"
+              *ngIf="!appointmentNotificationSubscribed"
               mat-menu-item>
         <mat-icon>notifications_active</mat-icon>
-        <span>Benachrichtigungen</span>
+        <span>Benachrichtigungen aktivieren</span>
+      </button>
+      <button (click)="deactivateNotifications()"
+              *ngIf="appointmentNotificationSubscribed"
+              mat-menu-item>
+        <mat-icon>notifications_off</mat-icon>
+        <span>Benachrichtigungen deaktivieren</span>
       </button>
     </mat-menu>
   </mat-card>

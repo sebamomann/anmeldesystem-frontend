@@ -25,6 +25,8 @@ export class AppointmentDataComponent implements OnInit {
   public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
   public isPinned = false;
 
+  public appointmentNotificationSubscribed: boolean;
+
   constructor(private snackBar: MatSnackBar, private router: Router, @Inject(WINDOW) public window: Window,
               private appointmentService: AppointmentService, private authenticationService: AuthenticationService,
               private pushService: PushService) {
@@ -33,7 +35,17 @@ export class AppointmentDataComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    (await this.pushService
+      .isSubscribed(this.appointment.link))
+      .subscribe(() => {
+        console.log(1);
+        this.appointmentNotificationSubscribed = true;
+      }, (err) => {
+        console.log(2);
+        this.appointmentNotificationSubscribed = false;
+      });
+
     this.isPinned = this.appointment.reference.includes('PINNED')
       || (localStorage.getItem('appointment-pins') !== null && localStorage.getItem('appointment-pins').includes(this.appointment.link));
 
@@ -41,6 +53,7 @@ export class AppointmentDataComponent implements OnInit {
     if (this.isPinned) {
       AppointmentUtil.pin(this.appointment.link);
     }
+
   }
 
   redirectToAppointment(appointment: IAppointmentModel) {
@@ -100,6 +113,36 @@ export class AppointmentDataComponent implements OnInit {
   }
 
   activateNotifications() {
-    this.pushService.subscribeTo(this.appointment.link);
+    this.pushService
+      .subscribeTo(this.appointment.link)
+      .then(() => {
+        this.appointmentNotificationSubscribed = true;
+        this.snackBar.open('Benachrichtigungen aktiviert', 'OK', {
+            duration: 1500
+          }
+        );
+      })
+      .catch(() => {
+        this.snackBar.open('Benachrichtigungen konnten nicht aktiviert werden', 'OK', {
+          duration: 1500
+        });
+      });
+  }
+
+  async deactivateNotifications() {
+    (await this.pushService
+      .unsubscribeFromAppointment(this.appointment.link))
+      .subscribe(() => {
+          this.appointmentNotificationSubscribed = false;
+          this.snackBar.open('Benachrichtigungen deaktiviert', 'OK', {
+              duration: 1500
+            }
+          );
+        },
+        () => {
+          this.snackBar.open('Benachrichtigungen konnten nicht deaktiviert werden', 'OK', {
+            duration: 2500
+          });
+        });
   }
 }
