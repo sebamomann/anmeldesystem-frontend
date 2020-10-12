@@ -39,10 +39,8 @@ export class AppointmentDataComponent implements OnInit {
     (await this.pushService
       .isSubscribed(this.appointment.link))
       .subscribe(() => {
-        console.log(1);
         this.appointmentNotificationSubscribed = true;
       }, (err) => {
-        console.log(2);
         this.appointmentNotificationSubscribed = false;
       });
 

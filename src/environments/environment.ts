@@ -6,7 +6,7 @@
 export const environment = {
   production: false,
   API_URL: window['env']['API_URL'] || 'http://localhost:3000/',
-  VAPID_KEY: window['env']['VAPID_KEY'] || 'BKEcHfrBBEI416Dl0rJa-f5ctf_jvZ9zbBSzkGMKwpH7P4a62_ScOPjzbAE11zIsrBmVNOJ-CuX6fR7PtrkpAZM'
+  VAPID_KEY: window['env']['VAPID_KEY'] || 'BMqkFS2ITWunnQCLC8nmJVdhSeJDmw1paOe7XK99dHsSxsCqPp-s1AnQm8ByltY1JFEtW2eZqac6PaXB103Ov2k'
 };
 
 /*
