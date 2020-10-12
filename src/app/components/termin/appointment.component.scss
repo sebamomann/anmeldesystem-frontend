@@ -119,12 +119,12 @@
   }
 }
 
+.information-wrapper {
+  width: 500px;
+  margin: 0 auto;
+}
 
 @media all and (min-width: 1024px) {
-  .information-wrapper {
-    width: 500px;
-  }
-
   .wrapper {
     display: flex;
     flex-wrap: wrap;
