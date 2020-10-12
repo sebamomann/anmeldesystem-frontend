@@ -1,8 +1,7 @@
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
 import {SwPush} from '@angular/service-worker';
-import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
 
 @Injectable({
@@ -11,20 +10,11 @@ import {Observable} from 'rxjs';
 export class PushService {
   readonly VAPID_PUBLIC_KEY = environment.VAPID_KEY;
 
-  constructor(private httpClient: HttpClient, private swPush: SwPush,
-              private router: Router, private ngZone: NgZone) {
-    console.log(this.VAPID_PUBLIC_KEY);
-
+  constructor(private httpClient: HttpClient, private swPush: SwPush) {
     this.swPush.notificationClicks.subscribe(
       (val) => {
         if (val.action === 'openAppointment' || !val.action) {
-          this.ngZone.run(() => {
-            this.router.navigate(['/enroll'], {
-              queryParams: {
-                a: val.notification.data.link
-              }
-            }).then(() => '');
-          });
+          window.open(`${environment.BASE_URL}enroll?a=${val.notification.data.link}`);
         }
       });
   }

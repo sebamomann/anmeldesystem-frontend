@@ -6,6 +6,7 @@
 export const environment = {
   production: false,
   API_URL: window['env']['API_URL'] || 'http://localhost:3000/',
+  BASE_URL: window['env']['BASE_URL'] || 'http://localhost:4200/',
   VAPID_KEY: window['env']['VAPID_KEY'] || 'BMqkFS2ITWunnQCLC8nmJVdhSeJDmw1paOe7XK99dHsSxsCqPp-s1AnQm8ByltY1JFEtW2eZqac6PaXB103Ov2k'
 };
 
