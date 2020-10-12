@@ -13,6 +13,8 @@ export class PushService {
 
   constructor(private httpClient: HttpClient, private swPush: SwPush,
               private router: Router, private ngZone: NgZone) {
+    console.log(this.VAPID_PUBLIC_KEY);
+
     this.swPush.notificationClicks.subscribe(
       (val) => {
         if (val.action === 'openAppointment' || !val.action) {
@@ -50,9 +52,13 @@ export class PushService {
   }
 
   async unsubscribeFromAppointment(link: string): Promise<Observable<HttpEvent<any>>> {
-    const prom = new Promise(resolve => {
+    const prom = new Promise((resolve, reject) => {
       this.swPush.subscription.subscribe(res => {
-        resolve(res.endpoint);
+        if (res) {
+          resolve(res.endpoint);
+        } else {
+          reject();
+        }
       });
     });
 
@@ -77,9 +83,13 @@ export class PushService {
   }
 
   async isSubscribed(link: string): Promise<Observable<HttpEvent<any>>> {
-    const prom = new Promise(resolve => {
+    const prom = new Promise((resolve, reject) => {
       this.swPush.subscription.subscribe(res => {
-        resolve(res.endpoint);
+        if (res) {
+          resolve(res.endpoint);
+        } else {
+          reject();
+        }
       });
     });
 
