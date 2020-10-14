@@ -102,6 +102,35 @@ describe('Appointment Overview Page', () => {
     });
   });
 
+  describe('Navigation', () => {
+    beforeEach(async () => {
+      page = new AppointmentOverviewPage(appointmentLink);
+      browser.ignoreSynchronization = true;
+
+      browser.executeScript('window.localStorage.clear();');
+      browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' + JSON.stringify([appointmentLink]) + '\');');
+
+      await page.navigateTo();
+    });
+
+    describe('click enroll navigation', () => {
+      beforeEach(() => {
+        page.clickEnrollActionButton();
+      });
+
+      it('should redirect to enroll page', () => {
+        it('should redirect to edit page', () => {
+          expect(
+            browser.wait(protractor.ExpectedConditions.urlContains('/enrollment/add?a=' + appointmentLink), 5000)
+              .catch(() => {
+                return false;
+              })
+          ).toBeTruthy(`Url match could not succeed`);
+        });
+      });
+    });
+  });
+
 
   describe('Manipulate Enrollment', () => {
     describe('as appointment creator', () => {

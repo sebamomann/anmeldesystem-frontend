@@ -352,4 +352,13 @@ export class AppointmentOverviewPage {
 
     return elem.click();
   }
+
+  clickEnrollActionButton() {
+    const elem = element(by.id('enroll_action_button'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
+
+    return elem.click();
+  }
 }
