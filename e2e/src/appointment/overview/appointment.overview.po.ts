@@ -334,13 +334,14 @@ export class AppointmentOverviewPage {
     return elem;
   }
 
-  getConfirmationDialogMessage() {
+  async getConfirmationDialogMessageText() {
     const elem = element(by.css('.confirmation-dialog .message'));
 
     const EC = protractor.ExpectedConditions;
     browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
+    await browser.wait(this.textNotToBePresentInElement(elem, ''), 5000, 'Element taking too long to appear in the DOM');
 
-    return elem;
+    return elem.getText();
   }
 
   confirm() {

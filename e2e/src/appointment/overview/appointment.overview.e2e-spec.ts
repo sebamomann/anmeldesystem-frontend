@@ -1,4 +1,4 @@
-import {browser} from 'protractor';
+import {browser, protractor} from 'protractor';
 import {AppointmentOverviewPage} from './appointment.overview.po';
 
 const crypto = require('crypto');
@@ -17,8 +17,6 @@ describe('Appointment Overview Page', () => {
   // TODO
   // split into multiple?
   // layout
-  // edit
-  // delete
   // appointment-details
 
   describe('Faulty navigation', () => {
@@ -141,6 +139,21 @@ describe('Appointment Overview Page', () => {
             expect(page.enrollmentExpanded(user_appointment_overview_creator_enrollment.id)).toBeTruthy();
           });
 
+          describe('click edit', () => {
+            beforeEach(() => {
+              page.clickEnrollmentEdit(user_appointment_overview_creator_enrollment.id);
+            });
+
+            it('should redirect to edit page', () => {
+              expect(
+                browser.wait(protractor.ExpectedConditions.urlContains('/enrollment/edit?a=' + appointmentLink + '&e=' + user_appointment_overview_creator_enrollment.id), 5000)
+                  .catch(() => {
+                    return false;
+                  })
+              ).toBeTruthy(`Url match could not succeed`);
+            });
+          });
+
           describe('click delete', () => {
             beforeEach(() => {
               page.clickEnrollmentDelete(user_appointment_overview_creator_enrollment.id);
@@ -150,8 +163,8 @@ describe('Appointment Overview Page', () => {
               expect(page.confirmationDialogOpened()).toBeTruthy();
             });
 
-            it('should show correct message', () => {
-              expect(page.getConfirmationDialogMessage().getText())
+            it('should show correct message', async () => {
+              await expect(await page.getConfirmationDialogMessageText())
                 .toEqual(`Bist du sicher, dass du "${user_appointment_overview_creator_enrollment.name}" löschen möchtest?`);
             });
 
@@ -182,6 +195,21 @@ describe('Appointment Overview Page', () => {
             expect(page.enrollmentExpanded(unknown_appointment_overview_creator_enrollment.id)).toBeTruthy();
           });
 
+          describe('click edit', () => {
+            beforeEach(() => {
+              page.clickEnrollmentEdit(unknown_appointment_overview_creator_enrollment.id);
+            });
+
+            it('should redirect to edit page', () => {
+              expect(
+                browser.wait(protractor.ExpectedConditions.urlContains('/enrollment/edit?a=' + appointmentLink + '&e=' + unknown_appointment_overview_creator_enrollment.id), 5000)
+                  .catch(() => {
+                    return false;
+                  })
+              ).toBeTruthy(`Url match could not succeed`);
+            });
+          });
+
           describe('click delete', () => {
             beforeEach(() => {
               page.clickEnrollmentDelete(unknown_appointment_overview_creator_enrollment.id);
@@ -191,8 +219,8 @@ describe('Appointment Overview Page', () => {
               expect(page.confirmationDialogOpened()).toBeTruthy();
             });
 
-            it('should show correct message', () => {
-              expect(page.getConfirmationDialogMessage().getText())
+            it('should show correct message', async () => {
+              await expect(await page.getConfirmationDialogMessageText())
                 .toEqual(`Bist du sicher, dass du "${unknown_appointment_overview_creator_enrollment.name}" löschen möchtest?`);
             });
 
@@ -247,6 +275,21 @@ describe('Appointment Overview Page', () => {
               expect(page.enrollmentExpanded(user_appointment_overview_self_enrollment.id)).toBeTruthy();
             });
 
+            describe('click edit', () => {
+              beforeEach(() => {
+                page.clickEnrollmentEdit(user_appointment_overview_self_enrollment.id);
+              });
+
+              it('should redirect to edit page', () => {
+                expect(
+                  browser.wait(protractor.ExpectedConditions.urlContains('/enrollment/edit?a=' + appointmentLink + '&e=' + user_appointment_overview_self_enrollment.id), 5000)
+                    .catch(() => {
+                      return false;
+                    })
+                ).toBeTruthy(`Url match could not succeed`);
+              });
+            });
+
             describe('click delete', () => {
               beforeEach(() => {
                 page.clickEnrollmentDelete(user_appointment_overview_self_enrollment.id);
@@ -256,8 +299,8 @@ describe('Appointment Overview Page', () => {
                 expect(page.confirmationDialogOpened()).toBeTruthy();
               });
 
-              it('should show correct message', () => {
-                expect(page.getConfirmationDialogMessage().getText())
+              it('should show correct message', async () => {
+                await expect(await page.getConfirmationDialogMessageText())
                   .toEqual(`Bist du sicher, dass du "${user_appointment_overview_self_enrollment.name}" löschen möchtest?`);
               });
 
@@ -292,6 +335,16 @@ describe('Appointment Overview Page', () => {
             describe('click delete', () => {
               beforeEach(() => {
                 page.clickEnrollmentDelete(unknown_appointment_overview_no_permission.id);
+              });
+
+              it('should show missing permission snackbar', () => {
+                expect(page.getSnackbar().getText()).toEqual('Fehlende Berechtigungen');
+              });
+            });
+
+            describe('click edit', () => {
+              beforeEach(() => {
+                page.clickEnrollmentEdit(unknown_appointment_overview_no_permission.id);
               });
 
               it('should show missing permission snackbar', () => {
@@ -344,8 +397,8 @@ describe('Appointment Overview Page', () => {
                 expect(page.confirmationDialogOpened()).toBeTruthy();
               });
 
-              it('should show correct message', () => {
-                expect(page.getConfirmationDialogMessage().getText())
+              it('should show correct message', async () => {
+                await expect(await page.getConfirmationDialogMessageText())
                   .toEqual(`Bist du sicher, dass du "${unknown_appointment_overview_self_enrollment.name}" löschen möchtest?`);
               });
 
