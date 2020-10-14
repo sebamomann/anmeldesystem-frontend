@@ -281,7 +281,7 @@ export class AppointmentOverviewPage {
     return elem.click();
   }
 
-  enrollmentExpanded(id: string) {
+  enrollmentPanelExpanded(id: string) {
     const elem = element(by.css('[enrollment-id="' + id + '"].enrollment-additions'));
     return elem.isPresent();
   }
@@ -360,5 +360,31 @@ export class AppointmentOverviewPage {
     browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
 
     return elem.click();
+  }
+
+  async localStorage_preventEnrollmentHint(appointmentLink: string) {
+    browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' +
+      JSON.stringify([appointmentLink]) + '\');');
+  }
+
+  async localStorage_pinAppointment(appointmentLink: string) {
+    browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' +
+      JSON.stringify([appointmentLink]) + '\');');
+  }
+
+  async localStorage_clear() {
+    browser.executeScript('window.localStorage.clear();');
+  }
+
+  public async redirectedToUrl(url: string) {
+    return browser.wait(protractor.ExpectedConditions
+      .urlContains(url), 5000)
+      .catch(() => {
+        return false;
+      });
+  }
+
+  async localStorage_setPermissions(permissions: { link: string; enrollments: { id: string; token: string }[] }[]) {
+    browser.executeScript('return window.localStorage.setItem(\'permissions\', \'' + JSON.stringify(permissions) + '\');');
   }
 }

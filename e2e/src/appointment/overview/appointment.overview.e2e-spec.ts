@@ -1,4 +1,4 @@
-import {browser, protractor} from 'protractor';
+import {browser} from 'protractor';
 import {AppointmentOverviewPage} from './appointment.overview.po';
 
 const crypto = require('crypto');
@@ -26,8 +26,9 @@ describe('Appointment Overview Page', () => {
 
       await page.navigateTo();
 
-      browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' + JSON.stringify([appointmentLink]) + '\');');
-      browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
+      await page.localStorage_clear();
+      await page.localStorage_preventEnrollmentHint(appointmentLink);
+      await page.localStorage_pinAppointment(appointmentLink);
 
       expect(await page.appointmentNotFoundCardExists()).toBeTruthy();
     });
@@ -41,8 +42,8 @@ describe('Appointment Overview Page', () => {
       page = new AppointmentOverviewPage(appointmentLink);
       browser.ignoreSynchronization = true;
 
-      browser.executeScript('window.localStorage.clear();');
-      browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' + JSON.stringify([appointmentLink]) + '\');');
+      await page.localStorage_clear();
+      await page.localStorage_preventEnrollmentHint(appointmentLink);
 
       await page.navigateTo();
     });
@@ -53,50 +54,68 @@ describe('Appointment Overview Page', () => {
       });
 
       it('should show 3 creator enrollments', () => {
-        expect(page.getEnrollments()
-          .filter(async (e) => (await e.getAttribute('class')).includes('creator')).count()).toBe(3);
+        const enrollments = page.getEnrollments();
+        const creatorEnrollments = enrollments.filter(async (e) =>
+          (await e.getAttribute('class')).includes('creator'));
+        const nrOfCreatorEnrollments = creatorEnrollments.count();
+
+        expect(nrOfCreatorEnrollments).toBe(3);
       });
 
       it('should show 5 unknown enrollments', () => {
-        expect(page.getEnrollments()
-          .filter(async (e) => (await e.getAttribute('class')).includes('unknown')).count()).toBe(5);
+        const enrollments = page.getEnrollments();
+        const unknownEnrollments = enrollments.filter(async (e) =>
+          (await e.getAttribute('class')).includes('unknown'));
+        const nrOfCreatorEnrollments = unknownEnrollments.count();
+
+        expect(nrOfCreatorEnrollments).toBe(5);
       });
     });
 
     describe('user enrollment', () => {
       it('should have correct name', async () => {
-        await expect((await page.getEnrollmentName('c3a780d6-dc1b-42b1-87e4-46d133447620')).getText())
-          .toEqual('User Appointment Overview');
+        const name = await (await page.getEnrollmentName('c3a780d6-dc1b-42b1-87e4-46d133447620')).getText();
+
+        expect(name).toEqual('User Appointment Overview');
       });
 
       it('should have correct username', async () => {
-        await expect((await page.getEnrollmentUsername('c3a780d6-dc1b-42b1-87e4-46d133447620')).getText())
-          .toEqual('@user_appointment_overview');
+        const username = await (await page.getEnrollmentUsername('c3a780d6-dc1b-42b1-87e4-46d133447620')).getText();
+
+        expect(username).toEqual('@user_appointment_overview');
       });
     });
 
     describe('unknown enrollment', () => {
       describe('comment', () => {
         it('should have correct name', async () => {
-          await expect((await page.getEnrollmentName('0363fbc6-88ad-41c7-979b-2fc65c3c1e45')).getText())
-            .toEqual('Unknown Appointment Overview');
+          const name = await (await page.getEnrollmentName('0363fbc6-88ad-41c7-979b-2fc65c3c1e45')).getText();
+
+          expect(name).toEqual('Unknown Appointment Overview');
         });
 
         it('should have no username', () => {
-          expect(page.enrollmentUsernamePresent('0363fbc6-88ad-41c7-979b-2fc65c3c1e45')).toBeFalsy();
+          const usernamePresent = page.enrollmentUsernamePresent('0363fbc6-88ad-41c7-979b-2fc65c3c1e45');
+
+          expect(usernamePresent).toBeFalsy();
         });
 
         it('should have comment', async () => {
-          await expect((await page.getEnrollmentComment('0363fbc6-88ad-41c7-979b-2fc65c3c1e45')).getText())
-            .toEqual('my comment');
-          expect(page.enrollmentCommentSeparatorPresent('0363fbc6-88ad-41c7-979b-2fc65c3c1e45')).toBeTruthy();
+          const comment = await (await page.getEnrollmentComment('0363fbc6-88ad-41c7-979b-2fc65c3c1e45')).getText();
+          const commentSeparatorPresent = page.enrollmentCommentSeparatorPresent('0363fbc6-88ad-41c7-979b-2fc65c3c1e45');
+
+          expect(comment).toEqual('my comment');
+          expect(commentSeparatorPresent).toBeTruthy();
         });
       });
 
       describe('no comment', () => {
         it('should have no comment', () => {
-          expect(page.enrollmentCommentSeparatorPresent('09d06299-90b6-4247-8707-49901641ea0c')).toBeFalsy();
-          expect(page.enrollmentCommentPresent('09d06299-90b6-4247-8707-49901641ea0c')).toBeFalsy();
+          const enrollmentCommentPresent = page.enrollmentCommentPresent('09d06299-90b6-4247-8707-49901641ea0c');
+          const commentSeparatorPresent = page.enrollmentCommentSeparatorPresent('09d06299-90b6-4247-8707-49901641ea0c');
+
+          expect(enrollmentCommentPresent).toBeFalsy();
+          expect(commentSeparatorPresent).toBeFalsy();
         });
       });
     });
@@ -107,8 +126,8 @@ describe('Appointment Overview Page', () => {
       page = new AppointmentOverviewPage(appointmentLink);
       browser.ignoreSynchronization = true;
 
-      browser.executeScript('window.localStorage.clear();');
-      browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' + JSON.stringify([appointmentLink]) + '\');');
+      await page.localStorage_clear();
+      await page.localStorage_preventEnrollmentHint(appointmentLink);
 
       await page.navigateTo();
     });
@@ -118,15 +137,11 @@ describe('Appointment Overview Page', () => {
         page.clickEnrollActionButton();
       });
 
-      it('should redirect to enroll page', () => {
-        it('should redirect to edit page', () => {
-          expect(
-            browser.wait(protractor.ExpectedConditions.urlContains('/enrollment/add?a=' + appointmentLink), 5000)
-              .catch(() => {
-                return false;
-              })
-          ).toBeTruthy(`Url match could not succeed`);
-        });
+      it('should redirect to edit page', () => {
+        const url = '/enrollment/add?a=' + appointmentLink;
+        const pageRedirected = page.redirectedToUrl(url);
+
+        expect(pageRedirected).toBeTruthy(`Url match could not succeed`);
       });
     });
   });
@@ -146,8 +161,8 @@ describe('Appointment Overview Page', () => {
         await page.logout();
         await page.login(user_appointment_creator.username);
 
-        browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
-        browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' + JSON.stringify([appointmentLink]) + '\');');
+        await page.localStorage_pinAppointment(appointmentLink);
+        await page.localStorage_preventEnrollmentHint(appointmentLink);
 
         await page.navigateTo();
       });
@@ -165,7 +180,9 @@ describe('Appointment Overview Page', () => {
           });
 
           it('should open expansion body', () => {
-            expect(page.enrollmentExpanded(user_appointment_overview_creator_enrollment.id)).toBeTruthy();
+            const enrollmentPanelIsExpanded = page.enrollmentPanelExpanded(user_appointment_overview_creator_enrollment.id);
+
+            expect(enrollmentPanelIsExpanded).toBeTruthy();
           });
 
           describe('click edit', () => {
@@ -174,12 +191,12 @@ describe('Appointment Overview Page', () => {
             });
 
             it('should redirect to edit page', () => {
-              expect(
-                browser.wait(protractor.ExpectedConditions.urlContains('/enrollment/edit?a=' + appointmentLink + '&e=' + user_appointment_overview_creator_enrollment.id), 5000)
-                  .catch(() => {
-                    return false;
-                  })
-              ).toBeTruthy(`Url match could not succeed`);
+              const url = '/enrollment/edit'
+                + '?a=' + appointmentLink
+                + '&e=' + user_appointment_overview_creator_enrollment.id;
+              const pageRedirected = page.redirectedToUrl(url);
+
+              expect(pageRedirected).toBeTruthy(`Url match could not succeed`);
             });
           });
 
@@ -189,12 +206,17 @@ describe('Appointment Overview Page', () => {
             });
 
             it('should show confirmation dialog', () => {
-              expect(page.confirmationDialogOpened()).toBeTruthy();
+              const confirmationDialogOpened = page.confirmationDialogOpened();
+
+              expect(confirmationDialogOpened).toBeTruthy();
             });
 
             it('should show correct message', async () => {
-              await expect(await page.getConfirmationDialogMessageText())
-                .toEqual(`Bist du sicher, dass du "${user_appointment_overview_creator_enrollment.name}" löschen möchtest?`);
+              const pageDialogText = await page.getConfirmationDialogMessageText();
+
+              const expected = `Bist du sicher, dass du "${user_appointment_overview_creator_enrollment.name}" löschen möchtest?`;
+
+              expect(pageDialogText).toEqual(expected);
             });
 
             describe('confirm', () => {
@@ -203,8 +225,11 @@ describe('Appointment Overview Page', () => {
               });
 
               it('should show correct snackbar', () => {
-                expect(page.getSnackbar().getText())
-                  .toEqual(`"${user_appointment_overview_creator_enrollment.name}" gelöscht`);
+                const snackBarText = page.getSnackbar().getText();
+
+                const expected = `"${user_appointment_overview_creator_enrollment.name}" gelöscht`;
+
+                expect(snackBarText).toEqual(expected);
               });
             });
           });
@@ -216,12 +241,15 @@ describe('Appointment Overview Page', () => {
             name: 'Unknown Appointment Overview Creator',
             comment: 'my comment'
           };
+
           beforeEach(() => {
             page.clickEnrollment(unknown_appointment_overview_creator_enrollment.id);
           });
 
           it('should open expansion body', () => {
-            expect(page.enrollmentExpanded(unknown_appointment_overview_creator_enrollment.id)).toBeTruthy();
+            const enrollmentPanelExpanded = page.enrollmentPanelExpanded(unknown_appointment_overview_creator_enrollment.id);
+
+            expect(enrollmentPanelExpanded).toBeTruthy();
           });
 
           describe('click edit', () => {
@@ -230,12 +258,12 @@ describe('Appointment Overview Page', () => {
             });
 
             it('should redirect to edit page', () => {
-              expect(
-                browser.wait(protractor.ExpectedConditions.urlContains('/enrollment/edit?a=' + appointmentLink + '&e=' + unknown_appointment_overview_creator_enrollment.id), 5000)
-                  .catch(() => {
-                    return false;
-                  })
-              ).toBeTruthy(`Url match could not succeed`);
+              const url = '/enrollment/edit'
+                + '?a=' + appointmentLink
+                + '&e=' + unknown_appointment_overview_creator_enrollment.id;
+              const pageRedirected = page.redirectedToUrl(url);
+
+              expect(pageRedirected).toBeTruthy(`Url match could not succeed`);
             });
           });
 
@@ -245,12 +273,17 @@ describe('Appointment Overview Page', () => {
             });
 
             it('should show confirmation dialog', () => {
-              expect(page.confirmationDialogOpened()).toBeTruthy();
+              const confirmationDialogOpened = page.confirmationDialogOpened();
+
+              expect(confirmationDialogOpened).toBeTruthy();
             });
 
             it('should show correct message', async () => {
-              await expect(await page.getConfirmationDialogMessageText())
-                .toEqual(`Bist du sicher, dass du "${unknown_appointment_overview_creator_enrollment.name}" löschen möchtest?`);
+              const confirmationDialogText = await page.getConfirmationDialogMessageText();
+
+              const expected = `Bist du sicher, dass du "${unknown_appointment_overview_creator_enrollment.name}" löschen möchtest?`;
+
+              expect(confirmationDialogText).toEqual(expected);
             });
 
             describe('confirm', () => {
@@ -259,8 +292,11 @@ describe('Appointment Overview Page', () => {
               });
 
               it('should show correct snackbar', () => {
-                expect(page.getSnackbar().getText())
-                  .toEqual(`"${unknown_appointment_overview_creator_enrollment.name}" gelöscht`);
+                const snackBarText = page.getSnackbar().getText();
+
+                const expected = `"${unknown_appointment_overview_creator_enrollment.name}" gelöscht`;
+
+                expect(snackBarText).toEqual(expected);
               });
             });
           });
@@ -282,8 +318,8 @@ describe('Appointment Overview Page', () => {
           await page.logout();
           await page.login(user_appointment_overview_self.username);
 
-          browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
-          browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' + JSON.stringify([appointmentLink]) + '\');');
+          await page.localStorage_pinAppointment(appointmentLink);
+          await page.localStorage_preventEnrollmentHint(appointmentLink);
 
           await page.navigateTo();
         });
@@ -301,7 +337,9 @@ describe('Appointment Overview Page', () => {
             });
 
             it('should open expansion body', () => {
-              expect(page.enrollmentExpanded(user_appointment_overview_self_enrollment.id)).toBeTruthy();
+              const panelExpanded = page.enrollmentPanelExpanded(user_appointment_overview_self_enrollment.id);
+
+              expect(panelExpanded).toBeTruthy();
             });
 
             describe('click edit', () => {
@@ -310,12 +348,10 @@ describe('Appointment Overview Page', () => {
               });
 
               it('should redirect to edit page', () => {
-                expect(
-                  browser.wait(protractor.ExpectedConditions.urlContains('/enrollment/edit?a=' + appointmentLink + '&e=' + user_appointment_overview_self_enrollment.id), 5000)
-                    .catch(() => {
-                      return false;
-                    })
-                ).toBeTruthy(`Url match could not succeed`);
+                const url = '/enrollment/edit?a=' + appointmentLink + '&e=' + user_appointment_overview_self_enrollment.id;
+                const pageRedirected = page.redirectedToUrl(url);
+
+                expect(pageRedirected).toBeTruthy(`Url match could not succeed`);
               });
             });
 
@@ -325,12 +361,17 @@ describe('Appointment Overview Page', () => {
               });
 
               it('should show confirmation dialog', () => {
-                expect(page.confirmationDialogOpened()).toBeTruthy();
+                const confirmationDialogOpened = page.confirmationDialogOpened();
+
+                expect(confirmationDialogOpened).toBeTruthy();
               });
 
               it('should show correct message', async () => {
-                await expect(await page.getConfirmationDialogMessageText())
-                  .toEqual(`Bist du sicher, dass du "${user_appointment_overview_self_enrollment.name}" löschen möchtest?`);
+                const confirmationDialogText = await page.getConfirmationDialogMessageText();
+
+                const expected = `Bist du sicher, dass du "${user_appointment_overview_self_enrollment.name}" löschen möchtest?`;
+
+                expect(confirmationDialogText).toEqual(expected);
               });
 
               describe('confirm', () => {
@@ -339,8 +380,11 @@ describe('Appointment Overview Page', () => {
                 });
 
                 it('should show correct snackbar', () => {
-                  expect(page.getSnackbar().getText())
-                    .toEqual(`"${user_appointment_overview_self_enrollment.name}" gelöscht`);
+                  const snackbarText = page.getSnackbar().getText();
+
+                  const expected = `"${user_appointment_overview_self_enrollment.name}" gelöscht`;
+
+                  expect(snackbarText).toEqual(expected);
                 });
               });
             });
@@ -358,7 +402,9 @@ describe('Appointment Overview Page', () => {
             });
 
             it('should open expansion body', () => {
-              expect(page.enrollmentExpanded(unknown_appointment_overview_no_permission.id)).toBeTruthy();
+              const panelExpanded = page.enrollmentPanelExpanded(unknown_appointment_overview_no_permission.id);
+
+              expect(panelExpanded).toBeTruthy();
             });
 
             describe('click delete', () => {
@@ -367,7 +413,11 @@ describe('Appointment Overview Page', () => {
               });
 
               it('should show missing permission snackbar', () => {
-                expect(page.getSnackbar().getText()).toEqual('Fehlende Berechtigungen');
+                const snackbarText = page.getSnackbar().getText();
+
+                const expected = 'Fehlende Berechtigungen';
+
+                expect(snackbarText).toEqual(expected);
               });
             });
 
@@ -377,7 +427,11 @@ describe('Appointment Overview Page', () => {
               });
 
               it('should show missing permission snackbar', () => {
-                expect(page.getSnackbar().getText()).toEqual('Fehlende Berechtigungen');
+                const snackbarText = page.getSnackbar().getText();
+
+                const expected = 'Fehlende Berechtigungen';
+
+                expect(snackbarText).toEqual(expected);
               });
             });
           });
@@ -400,9 +454,9 @@ describe('Appointment Overview Page', () => {
           const token = crypto.createHash('sha256').update(unknown_appointment_overview_self_enrollment.id + salt).digest('hex');
           const permissions = [{link: appointmentLink, enrollments: [{id: unknown_appointment_overview_self_enrollment.id, token}]}];
 
-          browser.executeScript('return window.localStorage.setItem(\'permissions\', \'' + JSON.stringify(permissions) + '\');');
-          browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' + JSON.stringify([appointmentLink]) + '\');');
-          browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' + JSON.stringify([appointmentLink]) + '\');');
+          await page.localStorage_setPermissions(permissions);
+          await page.localStorage_pinAppointment(appointmentLink);
+          await page.localStorage_preventEnrollmentHint(appointmentLink);
 
           await page.navigateTo();
         });
@@ -414,7 +468,9 @@ describe('Appointment Overview Page', () => {
             });
 
             it('should open expansion body', () => {
-              expect(page.enrollmentExpanded(unknown_appointment_overview_self_enrollment.id)).toBeTruthy();
+              const panelExpanded = page.enrollmentPanelExpanded(unknown_appointment_overview_self_enrollment.id);
+
+              expect(panelExpanded).toBeTruthy();
             });
 
             describe('click delete', () => {
@@ -423,12 +479,17 @@ describe('Appointment Overview Page', () => {
               });
 
               it('should show confirmation dialog', () => {
-                expect(page.confirmationDialogOpened()).toBeTruthy();
+                const confirmationDialogOpened = page.confirmationDialogOpened();
+
+                expect(confirmationDialogOpened).toBeTruthy();
               });
 
               it('should show correct message', async () => {
-                await expect(await page.getConfirmationDialogMessageText())
-                  .toEqual(`Bist du sicher, dass du "${unknown_appointment_overview_self_enrollment.name}" löschen möchtest?`);
+                const confirmationDialogText = await page.getConfirmationDialogMessageText();
+
+                const expected = `Bist du sicher, dass du "${unknown_appointment_overview_self_enrollment.name}" löschen möchtest?`;
+
+                expect(confirmationDialogText).toEqual(expected);
               });
 
               describe('confirm', () => {
@@ -437,8 +498,11 @@ describe('Appointment Overview Page', () => {
                 });
 
                 it('should show correct snackbar', () => {
-                  expect(page.getSnackbar().getText())
-                    .toEqual(`"${unknown_appointment_overview_self_enrollment.name}" gelöscht`);
+                  const snackbarText = page.getSnackbar().getText();
+
+                  const expected = `"${unknown_appointment_overview_self_enrollment.name}" gelöscht`;
+
+                  expect(snackbarText).toEqual(expected);
                 });
               });
             });
@@ -456,7 +520,9 @@ describe('Appointment Overview Page', () => {
             });
 
             it('should open expansion body', () => {
-              expect(page.enrollmentExpanded(unknown_appointment_overview_no_permission.id)).toBeTruthy();
+              const panelExpanded = page.enrollmentPanelExpanded(unknown_appointment_overview_no_permission.id);
+
+              expect(panelExpanded).toBeTruthy();
             });
 
             describe('click delete', () => {
@@ -465,7 +531,9 @@ describe('Appointment Overview Page', () => {
               });
 
               it('should show missing permission dialog', () => {
-                expect(page.missingPermissionDialogOpened()).toBeTruthy();
+                const missingPermissionDialogOpened = page.missingPermissionDialogOpened();
+
+                expect(missingPermissionDialogOpened).toBeTruthy();
               });
             });
           });
