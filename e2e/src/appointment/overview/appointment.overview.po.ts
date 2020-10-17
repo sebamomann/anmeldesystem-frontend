@@ -363,17 +363,17 @@ export class AppointmentOverviewPage {
   }
 
   async localStorage_preventEnrollmentHint(appointmentLink: string) {
-    browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' +
+    await browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' +
       JSON.stringify([appointmentLink]) + '\');');
   }
 
   async localStorage_pinAppointment(appointmentLink: string) {
-    browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' +
+    await browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' +
       JSON.stringify([appointmentLink]) + '\');');
   }
 
   async localStorage_clear() {
-    browser.executeScript('window.localStorage.clear();');
+    await browser.executeScript('window.localStorage.clear();');
   }
 
   public async redirectedToUrl(url: string) {
@@ -387,4 +387,41 @@ export class AppointmentOverviewPage {
   async localStorage_setPermissions(permissions: { link: string; enrollments: { id: string; token: string }[] }[]) {
     browser.executeScript('return window.localStorage.setItem(\'permissions\', \'' + JSON.stringify(permissions) + '\');');
   }
+
+  public openAppointmentMenu() {
+    const elem = element(by.id('appointment_menu'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
+
+    return elem.click();
+  }
+
+  menuOpened() {
+    const elem = element(by.css('.mat-menu-content'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.presenceOf(elem), 5000, 'Element taking too long to be present');
+
+    return elem.isPresent();
+  }
+
+  getMenuItems() {
+    const EC = protractor.ExpectedConditions;
+    const elem = element.all(by.css('.mat-menu-item'));
+
+    browser.wait(EC.presenceOf(elem.get(0)), 10000, 'Element taking too long to be present');
+
+    return elem;
+  }
+
+  getMenuItemsNames() {
+    const EC = protractor.ExpectedConditions;
+    const elem = element.all(by.css('.mat-menu-item span'));
+
+    browser.wait(EC.presenceOf(elem.get(0)), 10000, 'Element taking too long to be present');
+
+    return elem.map(val => val.getText());
+  }
 }
+

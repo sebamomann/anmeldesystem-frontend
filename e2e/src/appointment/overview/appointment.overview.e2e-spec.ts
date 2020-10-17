@@ -146,6 +146,44 @@ describe('Appointment Overview Page', () => {
     });
   });
 
+  describe('Menu', () => {
+    beforeEach(async () => {
+      page = new AppointmentOverviewPage(appointmentLink);
+      browser.ignoreSynchronization = true;
+
+      await page.localStorage_clear();
+      await page.localStorage_pinAppointment(appointmentLink);
+      await page.localStorage_preventEnrollmentHint(appointmentLink);
+
+      await browser.sleep(10000);
+
+      await page.navigateTo();
+    });
+
+    describe('click menu', () => {
+      beforeEach(() => {
+        page.openAppointmentMenu();
+      });
+
+      it('should open menu', () => {
+        const menuOpened = page.menuOpened();
+
+        expect(menuOpened).toBeTruthy(`Url match could not succeed`);
+      });
+
+      it('should have 3 menu items', () => {
+        const items = page.getMenuItems();
+
+        expect(items.count()).toBe(3);
+      });
+
+      it('menu items should have properties', () => {
+        const items = page.getMenuItemsNames();
+
+        expect(items).toEqual(['Teilen', 'Entfernen', 'Benachrichtigungen aktivieren']);
+      });
+    });
+  });
 
   describe('Manipulate Enrollment', () => {
     describe('as appointment creator', () => {

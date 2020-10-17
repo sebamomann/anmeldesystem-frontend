@@ -56,12 +56,15 @@
 
     <button [matMenuTriggerFor]="menu"
             *ngIf="!preview"
-            aria-label="Menu icon for this appointment"
             class="share"
+            id="appointment_menu"
+            aria-label="Menu icon for this appointment"
             mat-icon-button>
       <mat-icon>more_vert</mat-icon>
     </button>
-    <mat-menu #menu="matMenu">
+
+    <mat-menu #menu="matMenu"
+              id="menu_content">
       <button (click)="copyLink()"
               mat-menu-item>
         <mat-icon>share</mat-icon>

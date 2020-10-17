@@ -36,12 +36,13 @@ export class AppointmentDataComponent implements OnInit {
   }
 
   async ngOnInit() {
-    (await this.pushService
-      .isSubscribed(this.appointment.link))
-      .subscribe(() => {
-        this.appointmentNotificationSubscribed = true;
-      }, (err) => {
-        this.appointmentNotificationSubscribed = false;
+    this.pushService.isSubscribed(this.appointment.link)
+      .then((val) => {
+        val.subscribe(() => {
+          this.appointmentNotificationSubscribed = true;
+        }, (err) => {
+          this.appointmentNotificationSubscribed = false;
+        });
       });
 
     this.isPinned = this.appointment.reference.includes('PINNED')
@@ -51,7 +52,6 @@ export class AppointmentDataComponent implements OnInit {
     if (this.isPinned) {
       AppointmentUtil.pin(this.appointment.link);
     }
-
   }
 
   redirectToAppointment(appointment: IAppointmentModel) {
