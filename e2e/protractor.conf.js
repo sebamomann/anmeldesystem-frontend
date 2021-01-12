@@ -15,7 +15,7 @@ exports.config = {
   capabilities: {
     chromeOptions: {
       args: [
-        '--headless',
+        // '--headless',
         '--no-sandbox',
         '--disable-gpu',
         '--disable-dev-shm-usage'
@@ -23,7 +23,7 @@ exports.config = {
     },
     browserName: "chrome",
   },
-  chromeDriver: '../node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_85.0.4183.121', // make sure to unzip if local
+  chromeDriver: '../node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_85.0.4183.87', // make sure to unzip if local
   directConnect: true,
   baseUrl: "http://localhost:4200",
   framework: "jasmine",
