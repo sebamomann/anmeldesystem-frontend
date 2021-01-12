@@ -76,6 +76,24 @@ export class AppointmentDataComponent implements OnInit {
     });
   }
 
+  share() {
+    let newVariable: any;
+
+    newVariable = window.navigator;
+
+    if (newVariable && newVariable.share) {
+      newVariable.share({
+        title: this.appointment.title,
+        text: this.appointment.description,
+        url: window.location.protocol + '//' + window.location.hostname + '/' + this.appointment.link
+      })
+        .then(() => console.log('Successful share'))
+        .catch((error) => this.copyLink());
+    } else {
+      this.copyLink();
+    }
+  }
+
   settings() {
     this.router.navigate(['appointment/settings'], {queryParamsHandling: 'merge'});
   }

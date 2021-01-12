@@ -367,6 +367,11 @@ export class AppointmentOverviewPage {
       JSON.stringify([appointmentLink]) + '\');');
   }
 
+  async localStorage_setAutoPin(value: boolean) {
+    await browser.executeScript('return window.localStorage.setItem(\'settings\', \'' +
+      JSON.stringify({autoPinAppointment: value}) + '\');');
+  }
+
   async localStorage_pinAppointment(appointmentLink: string) {
     await browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' +
       JSON.stringify([appointmentLink]) + '\');');
@@ -423,5 +428,6 @@ export class AppointmentOverviewPage {
 
     return elem.map(val => val.getText());
   }
+
 }
 

@@ -147,40 +147,77 @@ describe('Appointment Overview Page', () => {
   });
 
   describe('Menu', () => {
-    beforeEach(async () => {
-      page = new AppointmentOverviewPage(appointmentLink);
-      browser.ignoreSynchronization = true;
+    describe('pin appointment local_storage', () => {
+      beforeEach(async () => {
+        page = new AppointmentOverviewPage(appointmentLink);
+        browser.ignoreSynchronization = true;
 
-      await page.localStorage_clear();
-      await page.localStorage_pinAppointment(appointmentLink);
-      await page.localStorage_preventEnrollmentHint(appointmentLink);
+        await page.localStorage_clear();
+        await page.localStorage_pinAppointment(appointmentLink);
+        await page.localStorage_preventEnrollmentHint(appointmentLink);
 
-      await browser.sleep(10000);
+        await page.navigateTo();
+      });
 
-      await page.navigateTo();
+      describe('click menu', () => {
+        beforeEach(() => {
+          page.openAppointmentMenu();
+        });
+
+        it('should open menu', () => {
+          const menuOpened = page.menuOpened();
+
+          expect(menuOpened).toBeTruthy(`Url match could not succeed`);
+        });
+
+        it('should have 3 menu items', () => {
+          const items = page.getMenuItems();
+
+          expect(items.count()).toBe(3);
+        });
+
+        it('menu items should have properties', () => {
+          const items = page.getMenuItemsNames();
+
+          expect(items).toEqual(['Teilen', 'Entfernen', 'Benachrichtigungen aktivieren']);
+        });
+      });
     });
 
-    describe('click menu', () => {
-      beforeEach(() => {
-        page.openAppointmentMenu();
+    describe('no pin appointment local_storage (set auto-pin = false)', () => {
+      beforeEach(async () => {
+        page = new AppointmentOverviewPage(appointmentLink);
+        browser.ignoreSynchronization = true;
+
+        await page.localStorage_clear();
+        await page.localStorage_setAutoPin(false);
+        await page.localStorage_preventEnrollmentHint(appointmentLink);
+
+        await page.navigateTo();
       });
 
-      it('should open menu', () => {
-        const menuOpened = page.menuOpened();
+      describe('click menu', () => {
+        beforeEach(() => {
+          page.openAppointmentMenu();
+        });
 
-        expect(menuOpened).toBeTruthy(`Url match could not succeed`);
-      });
+        it('should open menu', () => {
+          const menuOpened = page.menuOpened();
 
-      it('should have 3 menu items', () => {
-        const items = page.getMenuItems();
+          expect(menuOpened).toBeTruthy(`Url match could not succeed`);
+        });
 
-        expect(items.count()).toBe(3);
-      });
+        it('should have 3 menu items', () => {
+          const items = page.getMenuItems();
 
-      it('menu items should have properties', () => {
-        const items = page.getMenuItemsNames();
+          expect(items.count()).toBe(3);
+        });
 
-        expect(items).toEqual(['Teilen', 'Entfernen', 'Benachrichtigungen aktivieren']);
+        it('menu items should have properties', () => {
+          const items = page.getMenuItemsNames();
+
+          expect(items).toEqual(['Teilen', 'Anpinnen', 'Benachrichtigungen aktivieren']);
+        });
       });
     });
   });
