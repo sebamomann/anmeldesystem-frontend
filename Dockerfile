@@ -21,7 +21,7 @@ COPY package*.json ./
 RUN npm install
 
 # Download the chrome binaries
-RUN ./node_modules/.bin/webdriver-manager update --versions.chrome 85.0.4183.87
+RUN ./node_modules/.bin/webdriver-manager update --versions.chrome 87.0.4280.141
 
 COPY . .
 

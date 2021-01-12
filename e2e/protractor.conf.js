@@ -23,7 +23,7 @@ exports.config = {
     },
     browserName: "chrome",
   },
-  chromeDriver: '../node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_85.0.4183.87', // make sure to unzip if local
+  chromeDriver: '../node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_87.0.4280.141', // make sure to unzip if local
   directConnect: true,
   baseUrl: "http://localhost:4200",
   framework: "jasmine",
