@@ -84,7 +84,7 @@ export class AppointmentDataComponent implements OnInit {
     if (newVariable && newVariable.share) {
       newVariable.share({
         title: this.appointment.title,
-        text: this.appointment.description,
+        text: this.appointment.title + ' - ' + this.appointment.description,
         url: window.location.protocol + '//' + window.location.hostname + '/' + this.appointment.link
       })
         .then(() => console.log('Successful share'))
