@@ -23,7 +23,7 @@ export class AppointmentService {
   public getAppointment(link: string, slim: boolean): Observable<IAppointmentModel> {
     this.appointmentStatus.updating = true;
 
-    let url = `${environment.API_URL}appointment/${link}`;
+    let url = `${environment.API_URL}appointments/${link}`;
 
     if (slim) {
       url = url + '?slim=true';
@@ -66,7 +66,7 @@ export class AppointmentService {
   }
 
   public getAppointments(slim: boolean, before, limit, archive = false): Observable<IAppointmentModel[]> {
-    let url = `${environment.API_URL}appointment/`;
+    let url = `${environment.API_URL}appointments/`;
 
     if (archive) {
       url = `${url}archive`;
@@ -101,7 +101,7 @@ export class AppointmentService {
 
   updateValues(toChange: {}, {link}): Observable<HttpEvent<IAppointmentModel>> {
     console.log('update appointment', toChange);
-    const req = new HttpRequest('PUT', `${environment.API_URL}appointment/${link}`, toChange, {
+    const req = new HttpRequest('PUT', `${environment.API_URL}appointments/${link}`, toChange, {
       reportProgress: true,
     });
     return this.httpClient.request(req);
@@ -129,7 +129,7 @@ export class AppointmentService {
   }
 
   create(appointment: CreateAppointmentModel): Observable<HttpEvent<IAppointmentModel>> {
-    const req = new HttpRequest('POST', `${environment.API_URL}appointment`, appointment, {
+    const req = new HttpRequest('POST', `${environment.API_URL}appointments`, appointment, {
       reportProgress: true,
     });
     return this.httpClient.request(req);
@@ -150,7 +150,7 @@ export class AppointmentService {
   //   // return this.httpClient.post<any>(url, enrollment, {observe: 'response'});
   // }
   addAdministrator(adminUsername: string, appointment: IAppointmentModel): Observable<HttpEvent<void>> {
-    const req = new HttpRequest('POST', `${environment.API_URL}appointment/${appointment.link}/administrator`,
+    const req = new HttpRequest('POST', `${environment.API_URL}appointments/${appointment.link}/administrator`,
       {username: adminUsername},
       {
         reportProgress: true,
@@ -160,7 +160,7 @@ export class AppointmentService {
 
   removeAdministration(admin: any, appointment: IAppointmentModel): Observable<HttpEvent<void>> {
     const req = new HttpRequest('DELETE',
-      `${environment.API_URL}appointment/${appointment.link}/administrator/${admin.username}`,
+      `${environment.API_URL}appointments/${appointment.link}/administrator/${admin.username}`,
       {
         reportProgress: true,
       });
@@ -169,7 +169,7 @@ export class AppointmentService {
 
   addFile(data: any, appointment: IAppointmentModel) {
     const req = new HttpRequest('POST',
-      `${environment.API_URL}appointment/${appointment.link}/file`,
+      `${environment.API_URL}appointments/${appointment.link}/file`,
       data,
       {
         reportProgress: true,
@@ -179,7 +179,7 @@ export class AppointmentService {
 
   removeFile(fileId: string, appointment: IAppointmentModel) {
     const req = new HttpRequest('DELETE',
-      `${environment.API_URL}appointment/${appointment.link}/file/${fileId}`,
+      `${environment.API_URL}appointments/${appointment.link}/file/${fileId}`,
       {
         reportProgress: true,
       });
@@ -188,7 +188,7 @@ export class AppointmentService {
 
   async hasPermission(link: any) {
     const req = new HttpRequest('GET',
-      `${environment.API_URL}appointment/${link}/permission/`,
+      `${environment.API_URL}appointments/${link}/permission/`,
       {
         reportProgress: true,
       });
@@ -196,7 +196,7 @@ export class AppointmentService {
   }
 
   pin(link: string) {
-    const url = `${environment.API_URL}appointment/${link}/pin`;
+    const url = `${environment.API_URL}appointments/${link}/pin`;
     const req = new HttpRequest('GET', url, {
       observe: 'response',
       reportProgress: true,
