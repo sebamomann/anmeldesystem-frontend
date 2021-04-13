@@ -11,9 +11,9 @@ import {Globals} from './globals';
 import localeDe from '@angular/common/locales/de';
 import {AppRoutingModule} from './app-routing.module';
 import {MonthnamePipe} from './pipes/monthname.pipe';
-import {AuthenticationService} from './services/authentication.service';
 import {LoadingModule} from './components/html-template/loading/loading.module';
 import {UpdateService} from './services/update.service';
+import {AuthConfigModule} from './auth-config/auth-config.module';
 
 registerLocaleData(localeDe);
 
@@ -32,15 +32,25 @@ registerLocaleData(localeDe);
     MatDialogModule,
     MatButtonModule,
     LoadingModule,
+    AuthConfigModule
   ],
-  providers: [WINDOW_PROVIDERS,
-    AuthenticationService,
-    MonthnamePipe, Globals,
-    {provide: LocationStrategy, useClass: PathLocationStrategy},
-    {provide: LOCALE_ID, useValue: 'de-DE'},
+  providers: [
+    WINDOW_PROVIDERS,
+    MonthnamePipe,
+    Globals,
+    {
+      provide: LocationStrategy,
+      useClass: PathLocationStrategy
+    },
+    {
+      provide: LOCALE_ID,
+      useValue: 'de-DE'
+    },
     UpdateService
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [
+    AppComponent
+  ],
   exports: [
     DatePipe,
     PwaDialogComponent,

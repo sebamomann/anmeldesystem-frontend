@@ -250,6 +250,10 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     return count;
   }
 
+  login() {
+    this.authenticationService.login();
+  }
+
   private splitEnrollments(appointment: IAppointmentModel) {
     let enrollments_correct = [];
     let enrollments_waiting = [];

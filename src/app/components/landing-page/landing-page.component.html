@@ -25,7 +25,9 @@
     <div class="lading-account-option-wrapper">
       <div class="landing-account-options-container">
         <button *ngIf="!userIsLoggedIn"
-                [routerLink]="['/account/login']" color="primary" mat-raised-button>Login
+                (click)="login()"
+                color="primary" mat-raised-button>
+          Login
         </button>
         <button *ngIf="userIsLoggedIn"
                 [routerLink]="['/dashboard']" color="primary" mat-raised-button>Dashboard

@@ -31,7 +31,8 @@
               "src/sitemap.xml",
               "src/manifest.webmanifest",
               "src/ngsw-worker.js",
-              "src/ngsw.json"
+              "src/ngsw.json",
+              "src/silent-refresh.html"
             ],
             "styles": [
               "src/styles.scss",

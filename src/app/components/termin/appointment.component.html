@@ -9,8 +9,7 @@
                 class="split slim">
         <span>Dir fehlen möglicherweise Berechtigungen für diesen Termin</span>
 
-        <button [queryParams]="{returnUrl: router.routerState.snapshot.url}"
-                [routerLink]="['/account/login']"
+        <button (click)="login()"
                 color="primary" mat-raised-button>
           Login
         </button>

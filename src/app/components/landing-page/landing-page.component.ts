@@ -15,4 +15,7 @@ export class LandingPageComponent implements OnInit {
   ngOnInit() {
   }
 
+  login() {
+    this.authenticationService.login();
+  }
 }
