@@ -288,7 +288,8 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
         () => {
           this.sendingRequestEmitEdit.emit(false);
           this.sendingRequestEmitDelete.emit(false);
-          if (this.authenticationService.currentUserValue !== null) {
+
+          if (this.authenticationService.userIsLoggedIn()) {
             this.snackBar.open('Fehlende Berechtigungen',
               '',
               {

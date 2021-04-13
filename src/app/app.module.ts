@@ -1,20 +1,19 @@
 import {LOCALE_ID, NgModule} from '@angular/core';
 import {AppComponent} from './components/app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatButtonModule, MatDialogModule, MatProgressSpinnerModule, MatSnackBar, MatSnackBarModule} from '@angular/material';
+import {MatButtonModule, MatDialogModule, MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
 import {WINDOW_PROVIDERS} from './provider/window.provider';
 import {DatePipe, LocationStrategy, PathLocationStrategy, registerLocaleData} from '@angular/common';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {ServiceWorkerModule, SwUpdate} from '@angular/service-worker';
+import {HttpClientModule} from '@angular/common/http';
+import {ServiceWorkerModule} from '@angular/service-worker';
 import {PwaDialogComponent} from './components/dialogs/pwa-dialog/pwa-dialog.component';
 import {Globals} from './globals';
 import localeDe from '@angular/common/locales/de';
 import {AppRoutingModule} from './app-routing.module';
 import {MonthnamePipe} from './pipes/monthname.pipe';
 import {AuthenticationService} from './services/authentication.service';
-import {AuthInterceptor} from './_helper/interceptor/refreshToken.interceptor';
 import {LoadingModule} from './components/html-template/loading/loading.module';
-import {switchMap} from 'rxjs/operators';
+import {UpdateService} from './services/update.service';
 
 registerLocaleData(localeDe);
 
@@ -38,12 +37,9 @@ registerLocaleData(localeDe);
     AuthenticationService,
     MonthnamePipe, Globals,
     {provide: LocationStrategy, useClass: PathLocationStrategy},
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    },
-    {provide: LOCALE_ID, useValue: 'de-DE'}],
+    {provide: LOCALE_ID, useValue: 'de-DE'},
+    UpdateService
+  ],
   bootstrap: [AppComponent],
   exports: [
     DatePipe,
@@ -54,12 +50,6 @@ registerLocaleData(localeDe);
   ],
 })
 export class AppModule {
-  constructor(swUpdate: SwUpdate, snackbar: MatSnackBar) {
-    const version = require('package.json').version;
-
-    swUpdate.available.pipe(
-      // tslint:disable-next-line
-      switchMap((notes) => snackbar.open('Neue Version verfügbar - ' + version, 'Neu laden').onAction())
-    ).subscribe(() => window.location.reload());
+  constructor() {
   }
 }

@@ -21,7 +21,7 @@
 
   <div *ngIf="userIsLoggedIn" mat-dialog-content>
     <span>
-      Sorry <b>{{ this.authenticationService.currentUserValue.name }}</b>. Du hast keine Berechtigung für diese Anmeldung.
+      Sorry <b>{{ this.authenticationValuesService.currentUserSubject$.getValue().given_name }}</b>. Du hast keine Berechtigung für diese Anmeldung.
     </span>
   </div>
 

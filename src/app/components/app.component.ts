@@ -1,12 +1,12 @@
 import {Component} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 import {IUserModel} from '../models/IUserModel.model';
-import {AuthenticationService} from '../services/authentication.service';
-import {PwaDialogComponent} from './dialogs/pwa-dialog/pwa-dialog.component';
 import {MatDialog} from '@angular/material';
 import {animate, query, stagger, style, transition, trigger} from '@angular/animations';
 import {MonthnamePipe} from '../pipes/monthname.pipe';
-import {LoadingService} from '../services/loading.service';
+import {AuthenticationValuesService} from '../services/authentication.values.service';
+import {interval} from 'rxjs';
+import {UpdateService} from '../services/update.service';
 
 const version = require('../../../package.json').version;
 
@@ -59,8 +59,18 @@ export class AppComponent {
   public version: string = version;
 
   constructor(private router: Router,
-              private authenticationService: AuthenticationService, public dialog: MatDialog,
-              private monthnamePipe: MonthnamePipe, private loadingService: LoadingService) {
+              public dialog: MatDialog,
+              private monthnamePipe: MonthnamePipe,
+              private authenticationValuesService: AuthenticationValuesService,
+              private update: UpdateService) {
+    const source = interval(1000 * 60);
+
+    source.subscribe(
+      () => {
+        this.update.checkForUpdate();
+      }
+    );
+
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         (window as any).ga('set', 'page', event.urlAfterRedirects);
@@ -68,45 +78,17 @@ export class AppComponent {
       }
     });
 
-    if (this.authenticationService.currentUserValue !== null
-      && this.authenticationService.currentUserValue.exp !== undefined
-      && this.authenticationService.currentUserValue.exp !== null) {
-      this.authenticationService.logout();
-    }
-
     const date = new Date();
     this.now = `${this.monthnamePipe.transform(date.getMonth())} ${date.getFullYear()}`;
 
     particlesJS.load('particles-js', './assets/particlesjs-config.json', null);
 
-    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
-
     this.buildNav();
-
-    this.authenticationService
-      .refreshing$
-      .subscribe((val) => {
-        if (val) {
-          this.loadingService.messageSec = 'Deine Authentifizierung wird automatisch erneuert. Das kann einen Moment dauern.';
-        } else {
-          this.loadingService.messageSec = undefined;
-        }
-      });
   }
 
   public toggleMenu() {
     this.menu = !this.menu;
   }
-
-  public openPwaDialog: () => void = () => {
-    const dialogRef = this.dialog.open(PwaDialogComponent, {
-      width: '90%',
-      maxWidth: '500px'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-    });
-  };
 
   buildNav() {
     this.items = [];
@@ -114,7 +96,7 @@ export class AppComponent {
     const group1 = [];
     group1.push({name: 'dashboard', redirect: '/dashboard'});
 
-    this.authenticationService
+    this.authenticationValuesService
       .loginStatus$
       .subscribe((val) => {
         const toRemove = group1.find((fGroup) => fGroup.name === 'account' || fGroup.name === 'login');
@@ -126,7 +108,7 @@ export class AppComponent {
         if (val) {
           group1.push({name: 'account', redirect: '/account'});
         } else {
-          group1.push({name: 'login', redirect: '/account/login'}); //
+          group1.push({name: 'login', redirect: '/account/login'});
         }
       });
 

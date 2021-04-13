@@ -12,6 +12,7 @@ import {SEOService} from '../../../../_helper/_seo.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {AppointmentUtil} from '../../../../_util/appointmentUtil.util';
 import {EnrollmentService} from '../../../../services/enrollment.service';
+import {AuthenticationValuesService} from '../../../../services/authentication.values.service';
 
 const HttpStatus = require('http-status-codes');
 
@@ -51,7 +52,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
   constructor(public authenticationService: AuthenticationService, private route: ActivatedRoute,
               private appointmentProvider: AppointmentProvider, private _seoService: SEOService,
               private enrollmentService: EnrollmentService, private snackBar: MatSnackBar,
-              private router: Router) {
+              private router: Router, private authenticationValuesService: AuthenticationValuesService) {
     this.route.queryParams.subscribe(params => {
       this.linkFromURL = params.a;
 
@@ -90,8 +91,13 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
 
   public main() {
     if (this.userIsLoggedIn) {
-      this.isEnrolledAsCreator = this.appointment.enrollments.some(sEnrollment =>
-        sEnrollment.creator && sEnrollment.creator.username === this.authenticationService.currentUserValue.username);
+      this.isEnrolledAsCreator = this.appointment.enrollments
+        .some(
+          sEnrollment => {
+            return sEnrollment.creator
+              && sEnrollment.creator.username === this.authenticationValuesService.currentUserSubject$.getValue().preferred_username;
+          }
+        );
       this.creatorError = this.isEnrolledAsCreator;
     }
 

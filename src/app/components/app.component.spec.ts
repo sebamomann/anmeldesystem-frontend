@@ -1,10 +1,8 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {AppComponent} from './app.component';
-import {WINDOW_PROVIDERS} from '../provider/window.provider';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {PwaService} from '../services/pwa-service.service';
-import {ServiceWorkerModule, SwUpdate} from '@angular/service-worker';
+import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../../environments/environment';
 import {MatDialogModule} from '@angular/material';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -23,10 +21,6 @@ describe('AppComponent', () => {
       ],
       declarations: [
         AppComponent
-      ],
-      providers: [WINDOW_PROVIDERS,
-        {provide: PwaService, useClass: PwaService},
-        SwUpdate,
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();

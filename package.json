@@ -32,6 +32,7 @@
     "@angular/service-worker": "~8.2.12",
     "@babel/compat-data": "^7.9.0",
     "@babel/core": "^7.9.0",
+    "angular-oauth2-oidc": "^10.0.3",
     "atob": "^2.1.2",
     "babel-loader": "^8.1.0",
     "btoa": "^1.2.1",

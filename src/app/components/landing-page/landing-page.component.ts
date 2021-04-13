@@ -7,7 +7,7 @@ import {AuthenticationService} from '../../services/authentication.service';
   styleUrls: ['./landing-page.component.scss']
 })
 export class LandingPageComponent implements OnInit {
-  public userIsLoggedIn: boolean = this.authenticationService.currentUserValue !== null;
+  public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
 
   constructor(private authenticationService: AuthenticationService) {
   }

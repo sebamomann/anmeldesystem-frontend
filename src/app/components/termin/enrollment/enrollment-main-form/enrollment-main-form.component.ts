@@ -4,6 +4,7 @@ import {AuthenticationService} from '../../../../services/authentication.service
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
 import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
 import {EnrollmentModel} from '../../../../models/EnrollmentModel.model';
+import {AuthenticationValuesService} from '../../../../services/authentication.values.service';
 
 @Component({
   selector: 'app-enrollment-main-form',
@@ -40,7 +41,8 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   // SELF ENROLLMENT VARS
   private oldNameValue: string = undefined;
 
-  constructor(private formBuilder: FormBuilder, private authenticationService: AuthenticationService) {
+  constructor(private formBuilder: FormBuilder, private authenticationService: AuthenticationService,
+              private authenticationValuesService: AuthenticationValuesService) {
   }
 
   ngOnInit() {
@@ -54,7 +56,7 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
       this.creatorError = this.isEnrolledAsCreator;
       this.oldNameValue = this.getFormControl('name').value;
       this.disableNameInput();
-      this.getFormControl('name').setValue(this.authenticationService.currentUserValue.name);
+      this.getFormControl('name').setValue(this.authenticationValuesService.currentUserSubject$.getValue().name);
     } else {
       if (this.oldNameValue) {
         this.getFormControl('name').setValue(this.oldNameValue);
@@ -76,8 +78,8 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
     if (this.form.valid) {
       if (this.isSelfEnrollment) {
         creator = {} as any;
-        creator.name = this.authenticationService.currentUserValue.name;
-        creator.username = this.authenticationService.currentUserValue.username;
+        creator.name = this.authenticationValuesService.currentUserSubject$.getValue().name;
+        creator.username = this.authenticationValuesService.currentUserSubject$.getValue().preferred_username;
       }
 
       this.done.emit({
@@ -129,7 +131,7 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
         this.getFormControl('name').setValue(this.enrollment.creator.name);
         this.disableNameInput();
       } else if (this.directSend) {
-        this.getFormControl('name').setValue(this.authenticationService.currentUserValue.name);
+        this.getFormControl('name').setValue(this.authenticationValuesService.currentUserSubject$.getValue().name);
       } else {
         if (this.isEdit) {
           this.enableNameInput();
@@ -141,7 +143,7 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
       this.getFormControl('comment').setValue(this.enrollment.comment);
     } else {
       if (this.userIsLoggedIn && this.isSelfEnrollment) {
-        this.getFormControl('name').setValue(this.authenticationService.currentUserValue.name);
+        this.getFormControl('name').setValue(this.authenticationValuesService.currentUserSubject$.getValue().name);
         this.disableNameInput();
       }
     }
