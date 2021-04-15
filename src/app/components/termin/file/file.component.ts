@@ -7,6 +7,7 @@ import {MatSnackBar} from '@angular/material';
   templateUrl: './file.component.html',
   styleUrls: ['./file.component.scss']
 })
+// TODO File upload adapt to formData
 export class FileComponent implements OnInit {
 
   @Output()
