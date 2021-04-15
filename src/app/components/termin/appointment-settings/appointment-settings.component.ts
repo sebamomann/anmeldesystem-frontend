@@ -52,7 +52,7 @@ export class AppointmentSettingsComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.appointment$ = this.appointmentProvider.appointment$;
 
-    (await this.appointmentService.hasPermission(this.link))
+    (await this.appointmentService.getAppointmentManagementRelations(this.link))
       .subscribe((res) => {
         if (res.type === HttpEventType.Response) {
           this.permission = true;
@@ -185,10 +185,10 @@ export class AppointmentSettingsComponent implements OnInit, OnDestroy {
           res => {
             if (res.type === HttpEventType.Response) {
               if (res.status <= 299) {
-                if (this.link !== res.body.link) {
-                  this.appointment.link = res.body.link;
+                if (data.link && this.link !== data.link) {
+                  this.appointment.link = data.link ? data.link : this.link;
                   this.router.navigate(['/appointment/settings'], {
-                    queryParams: {a: res.body.link},
+                    queryParams: {a: this.link},
                     queryParamsHandling: 'merge'
                   });
                 }

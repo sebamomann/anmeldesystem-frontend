@@ -92,12 +92,13 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
   public main() {
     if (this.userIsLoggedIn) {
       this.isEnrolledAsCreator = this.appointment.enrollments
-        .some(
-          sEnrollment => {
-            return sEnrollment.creator
-              && sEnrollment.creator.username === this.authenticationValuesService.currentUserSubject$.getValue().preferred_username;
-          }
-        );
+        && this.appointment.enrollments
+          .some(
+            sEnrollment => {
+              return sEnrollment.creator
+                && sEnrollment.creator.username === this.authenticationValuesService.currentUserSubject$.getValue().preferred_username;
+            }
+          );
       this.creatorError = this.isEnrolledAsCreator;
     }
 
@@ -189,8 +190,6 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
 
     this.enrollmentOutput = {...this.enrollmentOutput, ...$event};
 
-    console.log(this.enrollmentOutput);
-
     setTimeout(() => this.stepper.next());
   }
 
@@ -225,7 +224,6 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
     this.appointmentService$$ = this.enrollmentService.create(enrollment, this.appointment)
       .subscribe(
         result => {
-          this.appointment.enrollments.push(result);
           this.appointmentProvider.update(this.appointment);
 
           if (result.token) {

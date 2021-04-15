@@ -65,27 +65,32 @@ export class AppointmentService {
     );
   }
 
-  public getAppointments(slim: boolean, before, limit, archive = false): Observable<IAppointmentModel[]> {
+  public getAppointments(slim: boolean, before: Date, after: Date, limit: number): Observable<IAppointmentModel[]> {
     let url = `${environment.API_URL}appointments/`;
 
-    if (archive) {
-      url = `${url}archive`;
+    const params = new URLSearchParams({
+      slim: slim ? 'true' : 'false'
+    });
+
+    if (before) {
+      params.append('before', before.toISOString());
     }
 
-    url = `${url}?slim=${slim}&before=${before}&limit=${limit}`;
+    if (after) {
+      params.append('after', after.toISOString());
+    }
+
+    if (limit) {
+      params.append('limit', `${limit}`);
+    }
 
     const pinned = AppointmentUtil.getPinned();
-    let pinnedQueryParam = '?';
-    if (slim) {
-      pinnedQueryParam = '&';
-    }
 
     pinned.forEach((fPin, i) => {
-      pinnedQueryParam += 'pin' + (i + 1) + '=' + fPin + '&';
+      params.append('pin' + (i + 1), fPin);
     });
-    url += pinnedQueryParam;
 
-    const res = this.httpClient.get(url, {observe: 'response', reportProgress: true});
+    const res = this.httpClient.get(url + '?' + params.toString(), {observe: 'response', reportProgress: true});
 
     return res.pipe(
       map(response => {
@@ -150,8 +155,13 @@ export class AppointmentService {
   //   // return this.httpClient.post<any>(url, enrollment, {observe: 'response'});
   // }
   addAdministrator(adminUsername: string, appointment: IAppointmentModel): Observable<HttpEvent<void>> {
-    const req = new HttpRequest('POST', `${environment.API_URL}appointments/${appointment.link}/administrator`,
-      {username: adminUsername},
+    const req = new HttpRequest('POST', `${environment.API_URL}administrators`,
+      {
+        username: adminUsername,
+        appointment: {
+          link: appointment.link
+        }
+      },
       {
         reportProgress: true,
       });
@@ -160,16 +170,18 @@ export class AppointmentService {
 
   removeAdministration(admin: any, appointment: IAppointmentModel): Observable<HttpEvent<void>> {
     const req = new HttpRequest('DELETE',
-      `${environment.API_URL}appointments/${appointment.link}/administrator/${admin.username}`,
+      `${environment.API_URL}administrators/${admin.username}?appointment=${appointment.link}`,
       {
         reportProgress: true,
       });
     return this.httpClient.request(req);
   }
 
+  // appointments/${appointment.link}
+
   addFile(data: any, appointment: IAppointmentModel) {
     const req = new HttpRequest('POST',
-      `${environment.API_URL}appointments/${appointment.link}/file`,
+      `${environment.API_URL}files`,
       data,
       {
         reportProgress: true,
@@ -186,9 +198,9 @@ export class AppointmentService {
     return this.httpClient.request(req);
   }
 
-  async hasPermission(link: any) {
+  async getAppointmentManagementRelations(link: any) {
     const req = new HttpRequest('GET',
-      `${environment.API_URL}appointments/${link}/permission/`,
+      `${environment.API_URL}appointments/${link}/management-relations/`,
       {
         reportProgress: true,
       });
@@ -196,12 +208,21 @@ export class AppointmentService {
   }
 
   pin(link: string) {
-    const url = `${environment.API_URL}appointments/${link}/pin`;
-    const req = new HttpRequest('GET', url, {
-      observe: 'response',
-      reportProgress: true,
-    });
+    const req = new HttpRequest('POST',
+      `${environment.API_URL}pins`,
+      {appointment: {link}},
+      {
+        reportProgress: true,
+      });
+    return this.httpClient.request(req);
+  }
 
+  unpin(link: string) {
+    const req = new HttpRequest('DELETE',
+      `${environment.API_URL}pins?appointment=${link}`,
+      {
+        reportProgress: true,
+      });
     return this.httpClient.request(req);
   }
 

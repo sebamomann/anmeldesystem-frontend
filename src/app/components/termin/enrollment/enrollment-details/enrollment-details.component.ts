@@ -26,11 +26,11 @@ export class EnrollmentDetailsComponent implements OnInit, OnChanges {
    * Check if id of addition is checked by enrollment.
    *
    * @param enrollment IEnrollmentModel Enrollment to search in
-   * @param id string ID of addition to check for
+   * @param name string name of addition to check for
    */
-  public enrollmentCheckedAddition: (enrollment: IEnrollmentModel, id: string) => boolean
-    = (enrollment: IEnrollmentModel, id: string): boolean => {
-    return enrollment.additions.findIndex(add => add.id === id) !== -1;
+  public enrollmentCheckedAddition: (enrollment: IEnrollmentModel, name: string) => boolean
+    = (enrollment: IEnrollmentModel, name: string): boolean => {
+    return enrollment.additions.findIndex(add => add.name === name) !== -1;
   };
 
 }

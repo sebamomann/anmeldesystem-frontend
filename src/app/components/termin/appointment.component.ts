@@ -160,9 +160,10 @@ export class AppointmentComponent implements OnInit, OnDestroy {
             this.loadingService.message = undefined;
           } else if (sAppointment !== undefined) {
             // TODO could be cleaner ...
-            if (sAppointment.reference.indexOf('ENROLLED') === -1
-              && sAppointment.reference.indexOf('CREATOR') === -1
-              && sAppointment.reference.indexOf('ADMIN') === -1
+            if (sAppointment.relations
+              && sAppointment.relations.indexOf('ENROLLED') === -1
+              && sAppointment.relations.indexOf('CREATOR') === -1
+              && sAppointment.relations.indexOf('ADMIN') === -1
               && !this.showEnrollmentHintForceHide
               && !this.appointmentService.hasCloseEnrollmentHint(this.link)) {
               setTimeout(() => {
@@ -171,7 +172,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
             }
 
 
-            if ((sAppointment.reference.indexOf('PINNED') === -1 && !AppointmentUtil.isPinned(this.link))
+            if ((sAppointment.relations && sAppointment.relations.indexOf('PINNED') === -1 && !AppointmentUtil.isPinned(this.link))
               && this.settingsService.autoPinAppointment) {
               AppointmentUtil.pin(sAppointment.link);
               if (this.authenticationService.userIsLoggedIn()) {
@@ -182,7 +183,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
                   });
               }
 
-              sAppointment.reference.push('PINNED');
+              sAppointment.relations.push('PINNED');
 
               this.snackBar.open('Angepinnt',
                 '',
@@ -258,6 +259,10 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     let enrollments_correct = [];
     let enrollments_waiting = [];
     let enrollments_late;
+
+    if (!appointment.enrollments) {
+      appointment.enrollments = [];
+    }
 
     appointment.enrollments.sort((a, b) => {
       return a.iat > b.iat ? 1 : -1;

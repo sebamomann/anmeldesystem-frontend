@@ -1,11 +1,10 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
-import {AppointmentComponent} from '../termin/appointment.component';
 import {AccountComponent} from './account.component';
 
 const routes: Routes = [
-  {path: '', component: AppointmentComponent},
+  {path: '', component: AccountComponent},
   {
     path: 'login',
     loadChildren: './login/login.module#LoginModule'

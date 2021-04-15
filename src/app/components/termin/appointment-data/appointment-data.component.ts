@@ -45,8 +45,7 @@ export class AppointmentDataComponent implements OnInit {
         });
       });
 
-    this.isPinned = this.appointment.reference.includes('PINNED')
-      || (localStorage.getItem('appointment-pins') !== null && localStorage.getItem('appointment-pins').includes(this.appointment.link));
+    this.isPinned = (this.appointment.relations && this.appointment.relations.includes('PINNED'));
 
     // PIN TO LOCAL IN CASE IT WAS ONLY PINNED ON ACCOUNT
     if (this.isPinned) {
@@ -99,33 +98,46 @@ export class AppointmentDataComponent implements OnInit {
   }
 
   pin() {
-    if (this.userIsLoggedIn) {
-      this.appointmentService
-        .pin(this.appointment.link)
-        .toPromise()
-        .then(() => {
-        });
-    }
-
     let msg = '';
     if (this.isPinned) {
-      msg = 'Pin entfernt';
-      this.isPinned = false;
-      const index = this.appointment.reference.indexOf('PINNED');
-      this.appointment.reference.splice(index, 1);
-      AppointmentUtil.unpin(this.appointment.link);
-    } else {
-      msg = 'Angepinnt';
-      this.isPinned = true;
-      AppointmentUtil.pin(this.appointment.link);
-    }
+      if (this.userIsLoggedIn) {
+        this.appointmentService
+          .unpin(this.appointment.link)
+          .toPromise()
+          .then(() => {
+            msg = 'Pin entfernt';
+            this.isPinned = false;
+            const index = this.appointment.relations.indexOf('PINNED');
+            this.appointment.relations.splice(index, 1);
+            AppointmentUtil.unpin(this.appointment.link);
 
-    this.snackBar.open(msg,
-      '',
-      {
-        duration: 2000,
-        panelClass: 'snackbar-default'
-      });
+            this.snackBar.open(msg,
+              '',
+              {
+                duration: 2000,
+                panelClass: 'snackbar-default'
+              });
+          });
+      }
+    } else {
+      if (this.userIsLoggedIn) {
+        this.appointmentService
+          .pin(this.appointment.link)
+          .toPromise()
+          .then(() => {
+            msg = 'Angepinnt';
+            this.isPinned = true;
+            AppointmentUtil.pin(this.appointment.link);
+
+            this.snackBar.open(msg,
+              '',
+              {
+                duration: 2000,
+                panelClass: 'snackbar-default'
+              });
+          });
+      }
+    }
   }
 
   activateNotifications() {

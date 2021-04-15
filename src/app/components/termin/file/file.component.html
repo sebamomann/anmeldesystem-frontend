@@ -42,7 +42,7 @@
     </div>
   </ng-container>
 
-  <ng-container *ngIf="files.length > 0">
+  <ng-container *ngIf="files && files.length > 0">
     <span class="form-component-title">Aktuelle Dateien</span>
     <div class="file-wrapper">
       <app-file-delete

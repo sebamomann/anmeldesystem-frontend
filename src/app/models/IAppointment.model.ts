@@ -13,11 +13,11 @@ export interface IAppointmentModel {
   link: string;
   maxEnrollments: number | null;
   hidden: boolean;
-  additions: IAdditionModel[];
-  administrators: { username: string }[];
+  additions?: IAdditionModel[];
+  administrators?: { username: string }[];
   driverAddition: boolean;
-  enrollments: IEnrollmentModel[];
-  files: IFileModel[];
-  reference?: any;
+  enrollments?: IEnrollmentModel[];
+  files?: IFileModel[];
+  relations?: ('CREATOR' | 'ADMIN' | 'ENROLLED' | 'PINNED')[];
   numberOfEnrollments?: number;
 }

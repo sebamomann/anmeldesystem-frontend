@@ -5,7 +5,7 @@
     "ng": "ng",
     "clean": "rimraf ./dist",
     "start": "ng serve",
-    "start:ssl": "ng serve --ssl --ssl-cert \"D:\\Webpages\\__certificates\\localhost.crt\" --ssl-key \"D:\\Webpages\\__certificates\\localhost.key\"",
+    "start:ssl": "ng serve --ssl --ssl-cert \"D:\\Webpages\\__certificates\\localhost.crt\" --ssl-key \"D:\\Webpages\\__certificates\\localhost.key\" --watch",
     "build": "ng build",
     "build:prod": "ng build --prod",
     "test": "ng test --watch=true --browsers=ChromeHeadless",

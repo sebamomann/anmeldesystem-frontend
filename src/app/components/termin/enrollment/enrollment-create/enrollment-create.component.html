@@ -31,7 +31,7 @@
       <ng-template matStepperIcon="additions">
         <mat-icon>check_box</mat-icon>
       </ng-template>
-      <mat-step *ngIf="appointment.additions.length > 0"
+      <mat-step *ngIf="appointment.additions?.length > 0"
                 [completed]="doneForms['additions']"
                 [optional]="true"
                 state="additions">

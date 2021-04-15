@@ -1,6 +1,6 @@
 <div class="appointment-data-wrapper">
   <mat-card (click)="preview ? redirectToAppointment(appointment) : ''" class="appointment-data">
-    <app-bookmark *ngIf="preview" [classes]="appointment.reference"></app-bookmark>
+    <app-bookmark *ngIf="preview" [classes]="appointment.relations"></app-bookmark>
 
     <mat-card-title class="headline">
       {{appointment.title | uppercase}}
@@ -38,7 +38,7 @@
         <p>{{appointment.description}}</p>
       </ng-container>
 
-      <ng-container *ngIf="!preview && appointment.files.length > 0">
+      <ng-container *ngIf="!preview && appointment.files?.length > 0">
         <span class="separator small light tall center brighter"> </span>
         <div class="files-wrapper">
           <div *ngFor="let file of appointment.files" class="file">
@@ -46,7 +46,7 @@
               attach_file
             </mat-icon>
             <!--suppress TypeScriptUnresolvedVariable -->
-            <a [href]="apiUrl + 'file/' + file.id">
+            <a [href]="file.url">
               {{file.name}}
             </a>
           </div>

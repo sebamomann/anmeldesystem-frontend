@@ -7,7 +7,7 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class BookmarkComponent implements OnInit {
 
-  @Input() classes: ('creator' | 'admin' | 'enrolled' | 'pinned')[];
+  @Input() classes: ('CREATOR' | 'ADMIN' | 'ENROLLED' | 'PINNED')[];
 
   constructor() {
   }

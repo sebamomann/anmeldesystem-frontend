@@ -325,6 +325,9 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
   private initializeFilterObject: (appointment: IAppointmentModel) => any
     = (appointment: IAppointmentModel): any => {
     const additions = [];
+    if (!appointment.additions) {
+      appointment.additions = [];
+    }
     appointment.additions.forEach(value => additions.push({id: value.id, name: value.name, active: false}));
     return {additions, explicitly: 'dynamic', driverPassenger: ''};
   };

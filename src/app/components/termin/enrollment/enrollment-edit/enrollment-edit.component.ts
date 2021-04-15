@@ -181,7 +181,8 @@ export class EnrollmentEditComponent implements OnInit, OnDestroy {
     this.appointmentService$$ = this._enrollmentService.update(data, this.appointment)
       .subscribe(
         result => {
-          this.appointment.enrollments.map((mEnrollment) => mEnrollment.id === result.id ? result : mEnrollment);
+          // this.appointment.enrollments.map((mEnrollment) => mEnrollment.id === data.id ? data : mEnrollment);
+// TODO UPDATE ELEMENT ()
 
           this.request_success_finalize();
         }, (err: HttpErrorResponse) => {

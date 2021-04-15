@@ -106,7 +106,7 @@ export class AppComponent {
         }
 
         if (val) {
-          group1.push({name: 'account', redirect: '/account'});
+          group1.push({name: 'account', redirect: '/account/profile'});
         } else {
           group1.push({name: 'login', redirect: '/account/login'});
         }

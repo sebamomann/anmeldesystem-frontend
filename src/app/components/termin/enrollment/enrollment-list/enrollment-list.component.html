@@ -6,8 +6,8 @@
       <mat-card class="title-bar slim">
         {{subListTitle}}
         <ng-container *ngIf="!appointment.hidden">
-          [{{ this.enrollments$.getValue().length }}{{ appointment.maxEnrollments !== null
-        && isMain ? '/' + appointment.maxEnrollments : '' }}]
+          [{{ this.enrollments$.getValue().length }}<!--
+          -->{{ appointment.maxEnrollments && isMain ? '/' + appointment.maxEnrollments : '' }}]
         </ng-container>
         <span *ngIf="getNumberOfActiveFilter(true) > 0">
           [<mat-icon>filter_list</mat-icon>:{{ this._enrollments.length }}]

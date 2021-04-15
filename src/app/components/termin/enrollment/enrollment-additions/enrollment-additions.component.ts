@@ -46,7 +46,7 @@ export class EnrollmentAdditionsComponent implements OnInit {
       // if output has addition with this id then set to true
       let selected = false;
       if (this.enrollment) {
-        selected = this.enrollment.additions.some(iAddition => iAddition.id === o.id);
+        selected = this.enrollment.additions.some(iAddition => iAddition.name === o.name);
       }
       const control = new FormControl(selected);
       (this.form.controls.additions as FormArray).push(control);

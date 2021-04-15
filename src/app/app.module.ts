@@ -4,7 +4,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule, MatDialogModule, MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
 import {WINDOW_PROVIDERS} from './provider/window.provider';
 import {DatePipe, LocationStrategy, PathLocationStrategy, registerLocaleData} from '@angular/common';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {PwaDialogComponent} from './components/dialogs/pwa-dialog/pwa-dialog.component';
 import {Globals} from './globals';
@@ -14,6 +14,7 @@ import {MonthnamePipe} from './pipes/monthname.pipe';
 import {LoadingModule} from './components/html-template/loading/loading.module';
 import {UpdateService} from './services/update.service';
 import {AuthConfigModule} from './auth-config/auth-config.module';
+import {AuthInterceptor} from './interceptor/authentication.interceptor';
 
 registerLocaleData(localeDe);
 
@@ -36,6 +37,11 @@ registerLocaleData(localeDe);
   ],
   providers: [
     WINDOW_PROVIDERS,
+    {
+      multi: true,
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+    },
     MonthnamePipe,
     Globals,
     {

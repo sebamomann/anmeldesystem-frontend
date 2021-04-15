@@ -26,7 +26,7 @@
       </div>
     </ng-container>
 
-    <ng-container *ngIf="administrators.length > 0">
+    <ng-container *ngIf="administrators && administrators.length > 0">
       <span class="form-component-title">Aktuelle Admins</span>
       <div class="administrator-wrapper">
         <app-administrator-delete

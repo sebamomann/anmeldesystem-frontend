@@ -50,7 +50,7 @@ export class AppointmentProvider {
 
   public loadAppointments() {
     this.appointmentService
-      .getAppointments(true, null, null)
+      .getAppointments(true, null, new Date(), null)
       .subscribe(
         (result: IAppointmentModel[]) => {
           this._appointments$.next(result);
@@ -60,7 +60,7 @@ export class AppointmentProvider {
 
   public loadAppointmentsArchive(before, limit) {
     this.appointmentService
-      .getAppointments(true, before, limit, true)
+      .getAppointments(true, new Date(), null, limit)
       .subscribe(
         async (result: IAppointmentModel[]) => {
           if (result) {

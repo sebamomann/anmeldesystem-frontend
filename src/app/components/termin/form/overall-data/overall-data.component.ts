@@ -91,7 +91,7 @@ export class OverallDataComponent implements OnInit {
       date,
       deadline,
       location: this.appointment.location,
-      maxEnrollments: this.appointment.maxEnrollments
+      maxEnrollments: this.appointment.maxEnrollments ? this.appointment.maxEnrollments : ''
     });
 
     const eventSnapshot = this.event.value;

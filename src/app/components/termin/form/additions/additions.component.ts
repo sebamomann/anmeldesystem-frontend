@@ -74,6 +74,10 @@ export class AdditionsComponent implements OnInit {
   }
 
   private parseIntoForm() {
+    if (!this.appointment.additions) {
+      this.appointment.additions = [];
+    }
+
     this.appointment.additions.forEach(fAddition => {
       this.addAddition(fAddition.name);
     });
