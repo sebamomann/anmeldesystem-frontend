@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from '../../../services/authentication.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -8,8 +9,22 @@ import {AuthenticationService} from '../../../services/authentication.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private authenticationService: AuthenticationService) {
-    this.authenticationService.login();
+  constructor(private authenticationService: AuthenticationService,
+              private router: Router, private route: ActivatedRoute) {
+    if (!this.authenticationService.userIsLoggedIn()) {
+      this.authenticationService.login();
+    }
+
+    let returnUrl = '';
+    this.route.queryParams.subscribe(params => {
+      returnUrl = params.returnUrl;
+    });
+
+    returnUrl = decodeURIComponent(returnUrl);
+
+    console.log(returnUrl);
+
+    this.router.navigateByUrl(returnUrl ? returnUrl : '/dashboard');
   }
 
   ngOnInit() {
