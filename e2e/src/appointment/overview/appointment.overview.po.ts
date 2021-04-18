@@ -2,28 +2,39 @@ import {browser, by, element, protractor} from 'protractor';
 import {HttpClient} from 'protractor-http-client/dist/http-client';
 
 export class AppointmentOverviewPage {
-  constructor(private appointmentLink: string) {
+  constructor() {
   }
 
-  public async navigateTo() {
-    return browser.get('/enroll?a=' + this.appointmentLink)
-      .then(() => {
-        return this.spinnerGone();
-      })
-      .catch(() => {
-      });
+  public async navigateToAppointment(link: string) {
+    return new Promise((resolve, reject) => {
+        browser.get('/enroll?a=' + link)
+          .then(
+            _ => {
+              this.waitForLoadingSpinnerToBeGone();
+
+              resolve();
+            })
+          .catch(
+            _ => {
+              reject();
+            }
+          );
+      }
+    );
+  }
+
+  public waitForLoadingSpinnerToBeGone() {
+    const loader = element(by.css('#loading-overlay'));
+    const EC = protractor.ExpectedConditions;
+
+    browser.wait(EC.visibilityOf(loader), 5000, 'Loading Spinner did not appear');
+    browser.wait(EC.invisibilityOf(loader), 5000, 'Loading Spinner did not disappear');
   }
 
   public getMatCardTitle() {
     return element(by.css('#title')).getText();
   }
 
-  public spinnerGone() {
-    const loader = element(by.css('#loading-overlay'));
-    const EC = protractor.ExpectedConditions;
-
-    return browser.wait(EC.invisibilityOf(loader), 10000);
-  }
 
   public getName() {
     return element(by.id('name'));
@@ -80,12 +91,9 @@ export class AppointmentOverviewPage {
     return element(by.tagName('simple-snack-bar'));
   }
 
-  public appointmentNotFoundCardExists() {
-    const until = protractor.ExpectedConditions;
-    const elm = element(by.id('appointment-not-found'));
-    browser.wait(until.presenceOf(elm), 10000);
-
-    return element(by.id('appointment-not-found')).isPresent();
+  public isAppointmentNotFoundCardPresent() {
+    const elem = element(by.id('appointment-not-found'));
+    return elem.isPresent();
   }
 
   public enrollmentNotFoundCardExists() {
@@ -94,38 +102,6 @@ export class AppointmentOverviewPage {
     browser.wait(until.presenceOf(elm), 10000);
 
     return element(by.id('enrollment-not-found')).isPresent();
-  }
-
-  public loginAndMailFormExists() {
-    return element(by.id('login-mail-form')).isPresent();
-  }
-
-  public loginAndMailFormLoginContentExists() {
-    return element(by.id('login-content')).isPresent();
-  }
-
-  public loginAndMailFormLoginContentAltExists() {
-    return element(by.id('login-content-alt')).isPresent();
-  }
-
-  public async getNameError() {
-    const elem = element(by.id('name-error'));
-    const until = protractor.ExpectedConditions;
-    await browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
-    await browser.wait(this.textNotToBePresentInElement(elem, ''), 5000, 'Element taking too long to appear in the DOM');
-    return elem;
-  }
-
-  public async getCreatorError() {
-    const elem = element(by.id('creator-error'));
-    const until = protractor.ExpectedConditions;
-    await browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
-    await browser.wait(this.textNotToBePresentInElement(elem, ''), 5000, 'Element taking too long to appear in the DOM');
-    return elem;
-  }
-
-  public async creatorErrorExists() {
-    return element(by.id('creator-error')).isPresent();
   }
 
   public async login(val: string) {
@@ -171,10 +147,6 @@ export class AppointmentOverviewPage {
     await this.submit();
   }
 
-  public async logout() {
-    await browser.executeScript('window.localStorage.clear();');
-  }
-
   public waitForFormBuild() {
     const EC = protractor.ExpectedConditions;
     const e = this.getName();
@@ -218,58 +190,51 @@ export class AppointmentOverviewPage {
     return elm.click();
   }
 
-  getEnrollments() {
-    const EC = protractor.ExpectedConditions;
-    const elem = element.all(by.css('.enrollment'));
-
-    browser.wait(EC.presenceOf(elem.get(0)), 10000, 'Element taking too long to be present');
-
-    return elem;
+  public getEnrollmentBlocks() {
+    return element.all(by.css('.enrollment'));
   }
 
-  async getEnrollmentUsername(id: string) {
-    const elem = element(by.css('[enrollment-id=' + id + '] .user-information .username'));
-
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
-    await browser.wait(this.textNotToBePresentInElement(elem, ''), 5000, 'Element taking too long to appear in the DOM');
-
-    return elem;
+  public getEnrollmentBlocksCreatedByUser() {
+    return element.all(by.css('.enrollment.creator'));
   }
 
-  async getEnrollmentName(id: string) {
+  public getEnrollmentBlocksCreatedByUnknown() {
+    return element.all(by.css('.enrollment.unknown'));
+  }
+
+  public getEnrollmentUsernameById(id: string) {
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment .user-information .username'));
+    return elem.getText();
+  }
+
+  public getEnrollmentNameById(id: string) {
     const elem = element(by.css('[enrollment-id="' + id + '"].enrollment .user-information .name'));
-
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
-    await browser.wait(this.textNotToBePresentInElement(elem, ''), 5000, 'Element taking too long to appear in the DOM');
-
-    return elem;
+    return elem.getText();
   }
 
-  enrollmentUsernamePresent(id: string) {
+  public getEnrollmentComment(id: string) {
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment .comment'));
+    return elem.getText();
+  }
+
+  public isEnrollmentPresent(id: string) {
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment'));
+    return elem.isPresent();
+  }
+
+  public isEnrollmentUsernamePresent(id: string) {
     const elem = element(by.css('[enrollment-id="' + id + '"].enrollment .user-information .username'));
     return elem.isPresent();
   }
 
-  enrollmentCommentPresent(id: string) {
+  public isEnrollmentCommentPresent(id: string) {
     const elem = element(by.css('[enrollment-id="' + id + '"].enrollment .comment'));
     return elem.isPresent();
   }
 
-  enrollmentCommentSeparatorPresent(id: string) {
+  public isEnrollmentCommentSeparatorPresent(id: string) {
     const elem = element(by.css('[enrollment-id="' + id + '"].enrollment .comment-separator'));
     return elem.isPresent();
-  }
-
-  async getEnrollmentComment(id: string) {
-    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment .comment'));
-
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
-    await browser.wait(this.textNotToBePresentInElement(elem, ''), 5000, 'Element taking too long to appear in the DOM');
-
-    return elem;
   }
 
   clickEnrollment(id: string) {
@@ -353,81 +318,54 @@ export class AppointmentOverviewPage {
     return elem.click();
   }
 
-  clickEnrollActionButton() {
-    const elem = element(by.id('enroll_action_button'));
+  public isDriverOverviewButtonPresent() {
+    const elem = element(by.id('driver_overview_action_button'));
+    return elem.isPresent();
+  }
 
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
-
+  public clickDriverOverviewButton() {
+    const elem = element(by.id('driver_overview_action_button'));
     return elem.click();
   }
 
-  async localStorage_preventEnrollmentHint(appointmentLink: string) {
-    await browser.executeScript('return window.localStorage.setItem(\'enrollmentHintCloses\', \'' +
-      JSON.stringify([appointmentLink]) + '\');');
+  public isCreationEnrollmentButtonPresent() {
+    const elem = element(by.id('enroll_action_button'));
+    return elem.isPresent();
   }
 
-  async localStorage_setAutoPin(value: boolean) {
-    await browser.executeScript('return window.localStorage.setItem(\'settings\', \'' +
-      JSON.stringify({autoPinAppointment: value}) + '\');');
+  public clickEnrollCreationButton() {
+    const elem = element(by.id('enroll_action_button'));
+    return elem.click();
   }
 
-  async localStorage_pinAppointment(appointmentLink: string) {
-    await browser.executeScript('return window.localStorage.setItem(\'appointment-pins\', \'' +
-      JSON.stringify([appointmentLink]) + '\');');
-  }
-
-  async localStorage_clear() {
-    await browser.executeScript('window.localStorage.clear();');
-  }
-
-  public async redirectedToUrl(url: string) {
-    return browser.wait(protractor.ExpectedConditions
-      .urlContains(url), 5000)
-      .catch(() => {
-        return false;
-      });
-  }
-
-  async localStorage_setPermissions(permissions: { link: string; enrollments: { id: string; token: string }[] }[]) {
-    browser.executeScript('return window.localStorage.setItem(\'permissions\', \'' + JSON.stringify(permissions) + '\');');
+  public pageRedirectedToUrl(url: string) {
+    return browser.wait(protractor.ExpectedConditions.urlContains(url), 5000);
   }
 
   public openAppointmentMenu() {
     const elem = element(by.id('appointment_menu'));
-
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
-
     return elem.click();
   }
 
-  menuOpened() {
+  public isMenuOpened() {
     const elem = element(by.css('.mat-menu-content'));
-
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.presenceOf(elem), 5000, 'Element taking too long to be present');
-
     return elem.isPresent();
   }
 
-  getMenuItems() {
-    const EC = protractor.ExpectedConditions;
-    const elem = element.all(by.css('.mat-menu-item'));
+  public clickLoginHintLoginButton() {
+    const elem = this.getElementLoginHint();
+    const button = elem.element(by.tagName('button'));
 
-    browser.wait(EC.presenceOf(elem.get(0)), 10000, 'Element taking too long to be present');
-
-    return elem;
+    return button.click();
   }
 
-  getMenuItemsNames() {
-    const EC = protractor.ExpectedConditions;
-    const elem = element.all(by.css('.mat-menu-item span'));
-
-    browser.wait(EC.presenceOf(elem.get(0)), 10000, 'Element taking too long to be present');
-
-    return elem.map(val => val.getText());
+  public isLoginHintPresent() {
+    const elem = this.getElementLoginHint();
+    return elem.isPresent();
   }
 
+  public getElementLoginHint() {
+    return element(by.css('#login_hint'));
+  }
 }
 

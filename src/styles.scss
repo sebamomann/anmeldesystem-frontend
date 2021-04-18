@@ -87,11 +87,18 @@ html, body {
   transition: none !important;
 }
 
+.notransition * {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+  -ms-transition: none !important;
+  transition: none !important;
+}
+
 body {
   margin: 0;
   font-family: "Nunito", "Helvetica Neue", sans-serif;
 
-  a
   h1, h2, h3, h4 {
     font-family: "Montserrat", "Helvetica Neue", sans-serif;
   }

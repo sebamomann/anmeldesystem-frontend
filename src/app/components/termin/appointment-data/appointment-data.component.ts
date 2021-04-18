@@ -45,11 +45,16 @@ export class AppointmentDataComponent implements OnInit {
         });
       });
 
-    this.isPinned = (this.appointment.relations && this.appointment.relations.includes('PINNED'));
+    const isPinnedAsUser = (this.appointment.relations && this.appointment.relations.includes('PINNED'));
+    const isPinnedInLocalStorage = AppointmentUtil.isPinned(this.appointment.link);
+
+    this.isPinned = isPinnedAsUser || isPinnedInLocalStorage;
 
     // PIN TO LOCAL IN CASE IT WAS ONLY PINNED ON ACCOUNT
-    if (this.isPinned) {
+    if (isPinnedAsUser && !isPinnedInLocalStorage) {
       AppointmentUtil.pin(this.appointment.link);
+    } else if (isPinnedInLocalStorage && !isPinnedAsUser) {
+      this.pin();
     }
   }
 

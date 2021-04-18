@@ -1,4 +1,4 @@
-<ng-container *ngIf="appointment$ | async as appointment; else loadingTemplate">
+<ng-container *ngIf="appointment$ | async as appointment">
   <div class="wrapper">
     <app-appointment-data [appointment]="appointment"
                           class="masonry-item">
@@ -6,10 +6,12 @@
 
     <div class="information-wrapper masonry-item">
       <mat-card *ngIf="!authenticationService.userIsLoggedIn()"
-                class="split slim">
+                class="split slim"
+                id="login_hint">
         <span>Dir fehlen möglicherweise Berechtigungen für diesen Termin</span>
 
         <button (click)="login()"
+                id="login_hint_action"
                 color="primary" mat-raised-button>
           Login
         </button>
@@ -186,7 +188,8 @@
   <div *ngIf="appointment.driverAddition"
        [queryParams]="{a: link}"
        [routerLink]="['/appointment/driver']"
-       class="floating-button left hex-button">
+       class="floating-button left hex-button"
+       id="driver_overview_action_button">
     <div class="hex">
       <div></div>
       <div></div>
@@ -203,6 +206,4 @@
   </div>
 </ng-container>
 
-<ng-template #loadingTemplate>
-  <app-fetch-appointment [done]="loaded"></app-fetch-appointment>
-</ng-template>
+<app-fetch-appointment [done]="loaded"></app-fetch-appointment>

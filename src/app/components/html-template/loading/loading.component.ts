@@ -8,7 +8,7 @@ import {LoadingService} from '../../../services/loading.service';
 })
 export class LoadingComponent implements OnInit {
   public message: string = undefined;
-  public show = false;
+  public show = true;
   private customMessage = '';
   private messages = [
     'Sekunde ...',
