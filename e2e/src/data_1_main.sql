@@ -19,6 +19,14 @@ VALUES ('167c7f28-8028-4c48-bc1e-8b1f2c885d7d', 'test-protractor-appointment-tit
        ('3b47df3e-9e2d-4516-a895-5c6aa6811fb7', 'test-protractor-appointment-driver-title',
         'test-protractor-appointment-driver-description', 'test-protractor-appointment-driver-link',
         'test-protractor-appointment-driver-location', '2021-03-01 10:05:29', '2021-01-01 20:05:23', NULL, '0', '1',
+        'f67e953d-cb85-4f41-b077-4a0bf8485bc5', '2021-03-14 20:05:28.000000', '2021-03-14 20:05:23.000000'),
+       ('b63114c9-563e-4571-b909-de109e084753', 'test-protractor-appointment-no_deadline-title',
+        'test-protractor-appointment-no_deadline-description', 'test-protractor-appointment-no_deadline-link',
+        'test-protractor-appointment-no_deadline-location', '2021-03-01 10:05:29', NULL, NULL, '0', '0',
+        'f67e953d-cb85-4f41-b077-4a0bf8485bc5', '2021-03-14 20:05:28.000000', '2021-03-14 20:05:23.000000'),
+       ('0569af4b-3947-4eb7-b16d-5ffa1a5a137e', 'test-protractor-appointment-no_description-title',
+        NULL, 'test-protractor-appointment-no_description-link',
+        'test-protractor-appointment-no_description-location', '2021-03-01 10:05:29', NULL, NULL, '0', '0',
         'f67e953d-cb85-4f41-b077-4a0bf8485bc5', '2021-03-14 20:05:28.000000', '2021-03-14 20:05:23.000000');
 COMMIT;
 
