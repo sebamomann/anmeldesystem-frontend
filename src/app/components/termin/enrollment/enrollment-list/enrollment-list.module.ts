@@ -19,7 +19,7 @@ import {FilterDialogComponent} from '../../../dialogs/filter/filterDialog.compon
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommentDialogComponent} from '../../../dialogs/comment/commentDialog.component';
 import {ConfirmationDialogComponent} from '../../../dialogs/confirmation-dialog/confirmation-dialog.component';
-import {ResendEnrollmentPermissionComponent} from '../../../dialogs/key-dialog/resend-enrollment-permission.component';
+import {EnrollmentMissingPermissionDialogComponent} from '../../../dialogs/enrollment-missing-permission-dialog/enrollment-missing-permission.dialog.component';
 import {RouterModule} from '@angular/router';
 import {LoadingDisableModule} from '../../../../directives/loading-disable/loading-disable.module';
 import {EnrollmentDetailsModule} from '../enrollment-details/enrollment-details.module';
@@ -31,14 +31,14 @@ import {EnrollmentDetailsModule} from '../enrollment-details/enrollment-details.
     FilterDialogComponent,
     CommentDialogComponent,
     ConfirmationDialogComponent,
-    ResendEnrollmentPermissionComponent,
+    EnrollmentMissingPermissionDialogComponent,
   ],
   exports: [
     EnrollmentListComponent,
     FilterDialogComponent,
     CommentDialogComponent,
     ConfirmationDialogComponent,
-    ResendEnrollmentPermissionComponent,
+    EnrollmentMissingPermissionDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -64,7 +64,7 @@ import {EnrollmentDetailsModule} from '../enrollment-details/enrollment-details.
     FilterDialogComponent,
     CommentDialogComponent,
     ConfirmationDialogComponent,
-    ResendEnrollmentPermissionComponent,
+    EnrollmentMissingPermissionDialogComponent,
   ]
 })
 export class EnrollmentListModule {

@@ -9,7 +9,7 @@ import {ConfirmationDialogComponent} from '../../../dialogs/confirmation-dialog/
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../../../../services/authentication.service';
 import {EnrollmentService} from '../../../../services/enrollment.service';
-import {ResendEnrollmentPermissionComponent} from '../../../dialogs/key-dialog/resend-enrollment-permission.component';
+import {EnrollmentMissingPermissionDialogComponent} from '../../../dialogs/enrollment-missing-permission-dialog/enrollment-missing-permission.dialog.component';
 import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {AppointmentProvider} from '../../appointment.provider';
@@ -222,9 +222,9 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
   };
 
   public openPermissionResendDialog = (enrollment: IEnrollmentModel, operation: string) => {
-    const dialogRef = this.dialog.open(ResendEnrollmentPermissionComponent, {
+    const dialogRef = this.dialog.open(EnrollmentMissingPermissionDialogComponent, {
       width: '90%',
-      maxWidth: 'initial',
+      maxWidth: '500px',
       height: 'auto',
       maxHeight: '80vh',
       data: {
@@ -293,9 +293,10 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
             this.snackBar.open('Fehlende Berechtigungen',
               '',
               {
-                duration: 2000,
-                panelClass: 'snackbar-error'
-              });
+                duration: 4000,
+                panelClass: ['snackbar-error', 'snackbar_missing_permissions'],
+              },
+            );
           } else {
             this.openPermissionResendDialog(enrollment, operation);
           }

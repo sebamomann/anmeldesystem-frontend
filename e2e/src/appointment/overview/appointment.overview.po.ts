@@ -414,22 +414,36 @@ export class AppointmentOverviewPage {
     return deadlineElement.isPresent();
   }
 
-  public isAppointmentDataDescriptionPresent() {
-    const appointmentDataElement = this.getElementAppointmentData();
-    const deadlineElement = appointmentDataElement.element(by.css('.appointment_description'));
-
-    return deadlineElement.isPresent();
-  }
-
-  public isAppointmentDataDescriptionSeparatorPresent() {
-    const appointmentDataElement = this.getElementAppointmentData();
-    const appointmentDescriptionSeparatorElement = appointmentDataElement.element(by.css('.appointment_description_separator'));
-
-    return appointmentDescriptionSeparatorElement.isPresent();
-  }
-
   public getFileBlocks() {
     return element.all(by.css('.file'));
+  }
+
+  public toggleEnrollmentCard(id: string) {
+    const elem = element(by.css('[enrollment-id=\"' + id + '\"].enrollment'));
+    return elem.click();
+  }
+
+  public clickEnrollmentEditButton(id) {
+    const elem = element(by.css('[enrollment-id=\"' + id + '\"].enrollment-additions .edit'));
+    return elem.click();
+  }
+
+  public isMissingPermissionSnackbarPresent() {
+    const elem = element(by.css('.snackbar_missing_permissions'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.presenceOf(elem), 20000, 'Element taking too long to be present');
+
+    return elem.isPresent();
+  }
+
+  public isMissingPermissionDialogPresent() {
+    const elem = element(by.css('#missing-permission-dialog'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.presenceOf(elem), 20000, 'Element taking too long to be present');
+
+    return elem.isPresent();
   }
 }
 

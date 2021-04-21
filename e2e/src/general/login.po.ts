@@ -2,7 +2,6 @@ import {IUserDataProviderModel} from '../IUserDataProviderModel';
 import {HttpClient} from 'protractor-http-client';
 import {EnvironmentPage} from './environment.po';
 import {LocalStoragePage} from './localStorage.po';
-import {browser} from 'protractor';
 
 export class LoginPage {
   constructor() {
@@ -11,8 +10,6 @@ export class LoginPage {
   async loginViaApi(user: IUserDataProviderModel) {
     const environmentPage = new EnvironmentPage();
     const localStoragePage = new LocalStoragePage();
-
-    console.log(await browser.executeScript('return window.env.KEYCLOAK_URL;'));
 
     const server = await environmentPage.getEnvironmentVariable('keycloak_url');
     const realm = await environmentPage.getEnvironmentVariable('keycloak_realm');
@@ -32,14 +29,16 @@ export class LoginPage {
 
     const http = new HttpClient(server);
 
-    const res = await http.post(url,
+    let res = await http.post(url,
       body.toString(),
       {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     );
 
-    await localStoragePage.set('access_token', res.access_token);
-    await localStoragePage.set('id_token', res.id_token);
+    res = JSON.parse(res.body);
+
+    await localStoragePage.setString('access_token', res.access_token);
+    await localStoragePage.setString('id_token', res.id_token);
   }
 }

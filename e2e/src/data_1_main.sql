@@ -27,10 +27,13 @@ VALUES ('167c7f28-8028-4c48-bc1e-8b1f2c885d7d', 'test-protractor-appointment-tit
        ('0569af4b-3947-4eb7-b16d-5ffa1a5a137e', 'test-protractor-appointment-file-title',
         'test-protractor-appointment-file-description', 'test-protractor-appointment-file-link',
         'test-protractor-appointment-file-location', '2021-03-01 10:05:29', NULL, NULL, '0', '0',
+        'f67e953d-cb85-4f41-b077-4a0bf8485bc5', '2021-03-14 20:05:28.000000', '2021-03-14 20:05:23.000000'),
+       ('282a5305-07f0-4c75-b870-1e6ddf8e72c0', 'test-protractor-appointment-enrollment-list-title',
+        'test-protractor-appointment-enrollment-list-description', 'test-protractor-appointment-enrollment-list-link',
+        'test-protractor-appointment-enrollment-list-location', '2021-03-01 10:05:29', NULL, NULL, '0', '0',
         'f67e953d-cb85-4f41-b077-4a0bf8485bc5', '2021-03-14 20:05:28.000000', '2021-03-14 20:05:23.000000');
 COMMIT;
 
--- 3 by user, 5 by any
 INSERT INTO `enrollment` (`id`, `name`, `comment`, `creatorId`, `iat`, `lud`, `appointmentId`)
 VALUES ('0614b2e5-d283-41fe-bc54-ce2527bfd308', NULL, 'test-protractor-appointment-comment-creator-1',
         'bcf27563-e7b0-4334-ab91-d35bbb5e63f2', '2021-01-01 05:01:23', '2021-03-01 05:05:23',
@@ -54,7 +57,14 @@ VALUES ('0614b2e5-d283-41fe-bc54-ce2527bfd308', NULL, 'test-protractor-appointme
         'test-protractor-appointment-comment-4', NULL, '2021-01-01 05:06:23', '2021-03-01 05:05:23',
         '167c7f28-8028-4c48-bc1e-8b1f2c885d7d'),
        ('ead32e43-f6f2-4a23-b6c1-f73b49ccf348', 'test-protractor-appointment-name-5', NULL, NULL, '2021-01-01 05:07:23',
-        '2021-03-01 05:05:23', '167c7f28-8028-4c48-bc1e-8b1f2c885d7d');
+        '2021-03-01 05:05:23', '167c7f28-8028-4c48-bc1e-8b1f2c885d7d'),
+       ('624ddcfb-5f59-4a10-b5c5-1664e20e917e', NULL, 'test-protractor-appointment-enrollment-list-regularuser-comment',
+        'bcf27563-e7b0-4334-ab91-d35bbb5e63f2', '2021-01-01 05:01:23', '2021-03-01 05:05:23',
+        '282a5305-07f0-4c75-b870-1e6ddf8e72c0'),
+       ('055981d2-c49a-4070-9bcc-1a8688e2b381', 'test-protractor-appointment-enrollment-list-unknown-name',
+        'test-protractor-appointment-enrollment-list-unknown-comment',
+        NULL, '2021-01-01 05:01:23', '2021-03-01 05:05:23',
+        '282a5305-07f0-4c75-b870-1e6ddf8e72c0');
 COMMIT;
 
 INSERT INTO `file` (`id`, `name`, `data`, `appointmentId`)

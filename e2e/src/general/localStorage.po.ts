@@ -39,4 +39,8 @@ export class LocalStoragePage {
   public async set(key: string, value: any): Promise<void> {
     await browser.executeScript(`return window.localStorage.setItem('${key}', '${JSON.stringify(value)}')`);
   }
+
+  async setString(key: string, value: string) {
+    await browser.executeScript(`return window.localStorage.setItem('${key}', '${value}')`);
+  }
 }

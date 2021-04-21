@@ -64,6 +64,21 @@ export class AppointmentDataProvider {
       files: [
         {name: 'testfile-1.pdf'}
       ]
+    } as IAppointmentDataProviderModel,
+    'test-protractor-appointment-enrollment-list-title': {
+      id: '282a5305-07f0-4c75-b870-1e6ddf8e72c0',
+      title: 'test-protractor-appointment-enrollment-list-title',
+      description: 'test-protractor-appointment-enrollment-list-description',
+      link: 'test-protractor-appointment-enrollment-list-link',
+      location: 'test-protractor-appointment-enrollment-list-location',
+      date: '2021-03-01 10:05:29',
+      deadline: '2021-01-01 20:05:23',
+      maxEnrollments: null,
+      hidden: false,
+      driverAddition: true,
+      creatorId: 'f67e953d-cb85-4f41-b077-4a0bf8485bc5',
+      iat: '2021-03-14 20:05:28.000000',
+      lud: '2021-03-14 20:05:23.000000',
     } as IAppointmentDataProviderModel
   };
 

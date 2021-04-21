@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {ResendEnrollmentPermissionComponent} from './resend-enrollment-permission.component';
+import {EnrollmentMissingPermissionDialogComponent} from './enrollment-missing-permission.dialog.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule} from '@angular/material';
@@ -9,8 +9,8 @@ import {MatDialogRef} from '@angular/material/dialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('KeyDialogComponent', () => {
-  let component: ResendEnrollmentPermissionComponent;
-  let fixture: ComponentFixture<ResendEnrollmentPermissionComponent>;
+  let component: EnrollmentMissingPermissionDialogComponent;
+  let fixture: ComponentFixture<EnrollmentMissingPermissionDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -21,7 +21,7 @@ describe('KeyDialogComponent', () => {
         MatSelectModule, HttpClientTestingModule,
         BrowserAnimationsModule
       ],
-      declarations: [ResendEnrollmentPermissionComponent],
+      declarations: [EnrollmentMissingPermissionDialogComponent],
       providers: [{
         provide: MatDialogRef, useValue: {}
       }, {
@@ -35,7 +35,7 @@ describe('KeyDialogComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ResendEnrollmentPermissionComponent);
+    fixture = TestBed.createComponent(EnrollmentMissingPermissionDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
