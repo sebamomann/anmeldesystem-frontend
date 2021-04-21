@@ -47,12 +47,12 @@ export class AppointmentDataProvider {
       iat: '2021-03-14 20:05:28.000000',
       lud: '2021-03-14 20:05:23.000000'
     } as IAppointmentDataProviderModel,
-    'test-protractor-appointment-no_description-title': {
+    'test-protractor-appointment-file-title': {
       id: '0569af4b-3947-4eb7-b16d-5ffa1a5a137e',
-      title: 'test-protractor-appointment-no_description-title',
-      description: null,
-      link: 'test-protractor-appointment-no_description-link',
-      location: 'test-protractor-appointment-no_description-location',
+      title: 'test-protractor-appointment-file-title',
+      description: 'test-protractor-appointment-file-description',
+      link: 'test-protractor-appointment-file-link',
+      location: 'test-protractor-appointment-file-location',
       date: '2021-03-01 10:05:29',
       deadline: '2021-01-01 20:05:23',
       maxEnrollments: null,
@@ -60,7 +60,10 @@ export class AppointmentDataProvider {
       driverAddition: true,
       creatorId: 'f67e953d-cb85-4f41-b077-4a0bf8485bc5',
       iat: '2021-03-14 20:05:28.000000',
-      lud: '2021-03-14 20:05:23.000000'
+      lud: '2021-03-14 20:05:23.000000',
+      files: [
+        {name: 'testfile-1.pdf'}
+      ]
     } as IAppointmentDataProviderModel
   };
 

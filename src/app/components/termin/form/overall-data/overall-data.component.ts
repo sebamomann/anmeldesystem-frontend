@@ -20,6 +20,8 @@ import {DatePipe} from '@angular/common';
 })
 export class OverallDataComponent implements OnInit {
 
+  // TODO Must supply a value for form control with name: 'description'
+
   @Output()
   save = new EventEmitter<any>();
   @Output()

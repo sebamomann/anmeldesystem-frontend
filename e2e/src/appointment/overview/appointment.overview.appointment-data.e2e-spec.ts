@@ -1,4 +1,4 @@
-import {browser} from 'protractor';
+import {browser, by} from 'protractor';
 import {AppointmentOverviewPage} from './appointment.overview.po';
 import {LocalStoragePage} from '../../general/localStorage.po';
 // import {LoginPage} from '../../general/login.po';
@@ -33,7 +33,7 @@ describe('Appointment Data', () => {
    * TODO with files
    */
 
-  describe('with deadline', () => {
+  describe('default', () => {
     let appointment;
 
     beforeAll(async () => {
@@ -101,9 +101,11 @@ describe('Appointment Data', () => {
     });
   });
 
-  describe('without description', () => {
+  describe('with files', () => {
+    const appointment = AppointmentDataProvider.getAppointment('test-protractor-appointment-file-title');
+
     beforeAll(async () => {
-      appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-no_description-title').link;
+      appointmentLink = appointment.link;
 
       await localStoragePage.clear();
       await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
@@ -112,14 +114,19 @@ describe('Appointment Data', () => {
       await appointmentPage.navigateToAppointment(appointmentLink);
     });
 
-    it('description should not be present', () => {
-      const isCommentPresent = appointmentPage.isAppointmentDataDescriptionPresent();
-      expect(isCommentPresent).toBeFalsy('Description is present');
+    it('should show 1 file', () => {
+      const getFilesElements = appointmentPage.getFileBlocks();
+      const numberOfFiles = getFilesElements.count();
+
+      expect(numberOfFiles).toBe(1);
     });
 
-    it('description separator should not be present', () => {
-      const isDescriptionSeparatorPresent = appointmentPage.isAppointmentDataDescriptionSeparatorPresent();
-      expect(isDescriptionSeparatorPresent).toBeFalsy('Description is present');
+    it('correct file name', () => {
+      const getFilesElements = appointmentPage.getFileBlocks();
+      const fileElement = getFilesElements.first().element(by.css('a'));
+      const fileName = fileElement.getText();
+
+      expect(fileName).toBe(appointment.files[0].name);
     });
   });
 

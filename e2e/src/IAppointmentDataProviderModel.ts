@@ -1,3 +1,5 @@
+import {IFileDataProviderModel} from './IFileDataProviderModel';
+
 export interface IAppointmentDataProviderModel {
   id: string;
   title: string;
@@ -12,4 +14,5 @@ export interface IAppointmentDataProviderModel {
   creatorId: string;
   iat: string;
   lud: string;
+  files: IFileDataProviderModel[]
 }

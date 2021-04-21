@@ -427,5 +427,9 @@ export class AppointmentOverviewPage {
 
     return appointmentDescriptionSeparatorElement.isPresent();
   }
+
+  public getFileBlocks() {
+    return element.all(by.css('.file'));
+  }
 }
 

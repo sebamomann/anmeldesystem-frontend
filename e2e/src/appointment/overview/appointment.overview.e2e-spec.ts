@@ -28,17 +28,28 @@ beforeAll(async () => {
 });
 
 describe('Appointment Overview Page', () => {
-  describe('Faulty navigation', () => {
-    beforeAll(async () => {
-      await localStoragePage.clear();
+  describe('not found card', () => {
+    describe('faulty navigation', () => {
+      beforeAll(async () => {
+        await page.navigateToAppointment('INVALID_APPOINTMENT');
+      });
 
-      await page.navigateToAppointment('INVALID_APPOINTMENT');
+      it('appointment not found', () => {
+        const isAppointmentNotFoundCardPresent = page.isAppointmentNotFoundCardPresent();
+        expect(isAppointmentNotFoundCardPresent).toBeTruthy('Appointment not found card not present');
+      });
     });
 
-    it('appointment not found', () => {
-      const isAppointmentNotFoundCardPresent = page.isAppointmentNotFoundCardPresent();
+    describe('correct navigation', () => {
+      beforeAll(async () => {
+        appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-title').link;
+        await page.navigateToAppointment(appointmentLink);
+      });
 
-      expect(isAppointmentNotFoundCardPresent).toBeTruthy('Appointment not found card not present');
+      it('not found card hidden', () => {
+        const isAppointmentNotFoundCardPresent = page.isAppointmentNotFoundCardPresent();
+        expect(isAppointmentNotFoundCardPresent).toBeFalsy('Appointment not found card is present');
+      });
     });
   });
 

@@ -23,6 +23,11 @@ beforeAll(async () => {
 });
 
 describe('enrollment list', () => {
+
+  /**
+   * TODO empty list
+   */
+
   describe('correctly display enrollments', () => {
     beforeAll(async () => {
       appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-title').link;

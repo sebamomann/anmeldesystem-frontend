@@ -1,4 +1,4 @@
-<ng-container *ngIf="appointment$ | async as appointment">
+<ng-container *ngIf="appointment$ | async as appointment; else loadingTemplate">
   <div class="wrapper">
     <app-appointment-data [appointment]="appointment"
                           class="masonry-item">
@@ -206,4 +206,6 @@
   </div>
 </ng-container>
 
-<app-fetch-appointment [done]="loaded"></app-fetch-appointment>
+<ng-template #loadingTemplate>
+  <app-fetch-appointment [done]="loaded"></app-fetch-appointment>
+</ng-template>

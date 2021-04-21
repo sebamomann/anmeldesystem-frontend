@@ -39,18 +39,16 @@
         </ng-container>
       </div>
 
-      <ng-container *ngIf="appointment.description">
 
-        <span class="appointment_description_separator separator small light tall center brighter"></span>
+      <span class="appointment_description_separator separator small light tall center brighter"></span>
 
-        <p class="appointment_description">
-          {{appointment.description}}
-        </p>
-      </ng-container>
+      <p class="appointment_description">
+        {{appointment.description}}
+      </p>
 
       <ng-container *ngIf="!preview && appointment.files?.length > 0">
 
-        <span class="separator small light tall center brighter"> </span>
+        <span class="files_separator separator small light tall center brighter"> </span>
 
         <div class="files-wrapper">
           <div *ngFor="let file of appointment.files" class="file">
