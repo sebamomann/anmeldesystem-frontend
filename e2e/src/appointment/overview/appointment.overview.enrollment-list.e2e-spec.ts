@@ -28,16 +28,16 @@ describe('enrollment list', () => {
    * TODO empty list
    */
 
+  beforeAll(async () => {
+    appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-title').link;
+
+    await localStoragePage.clear();
+    await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
+
+    await page.navigateToAppointment(appointmentLink);
+  });
+
   describe('correctly display enrollments', () => {
-    beforeAll(async () => {
-      appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-title').link;
-
-      await localStoragePage.clear();
-      await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
-
-      await page.navigateToAppointment(appointmentLink);
-    });
-
     describe('correct number of Enrollments', () => {
       it('should show 8 in total enrollments', () => {
         const enrollments = page.getEnrollmentBlocks();
@@ -118,6 +118,30 @@ describe('enrollment list', () => {
           expect(enrollmentCommentPresent).toBeFalsy('Enrollment comment is present');
           expect(commentSeparatorPresent).toBeFalsy('Enrollment comment separator is present');
         });
+      });
+    });
+  });
+
+  describe('click enrollment', () => {
+    const enrollmentId = '0614b2e5-d283-41fe-bc54-ce2527bfd308';
+
+    beforeEach(() => {
+      page.clickEnrollment(enrollmentId);
+    });
+
+    it('should expand panel', () => {
+      const isEnrollmentPanelExpanded = page.isEnrollmentPanelExpanded(enrollmentId);
+      expect(isEnrollmentPanelExpanded).toBeTruthy('Panel not expanded');
+    });
+
+    describe('click enrollment again', () => {
+      beforeEach(() => {
+        page.clickEnrollment(enrollmentId);
+      });
+
+      it('should collapse panel', () => {
+        const isEnrollmentPanelCollapsed = page.isEnrollmentPanelCollapsed(enrollmentId);
+        expect(isEnrollmentPanelCollapsed).toBeTruthy('Panel not collapsed');
       });
     });
   });

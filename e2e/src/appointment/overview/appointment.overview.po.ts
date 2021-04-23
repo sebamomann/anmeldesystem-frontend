@@ -477,5 +477,19 @@ export class AppointmentOverviewPage {
 
     return elem.isPresent();
   }
+
+  public isEnrollmentPanelExpanded(id: string) {
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment-additions'));
+    return elem.isPresent();
+  }
+
+  public isEnrollmentPanelCollapsed(id: string) {
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment-additions'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.invisibilityOf(elem), 20000, 'Element taking too long to disappear');
+
+    return elem.isPresent();
+  }
 }
 
