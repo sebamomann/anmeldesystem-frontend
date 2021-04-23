@@ -25,7 +25,7 @@ beforeAll(async () => {
   browser.waitForAngularEnabled(false);
 });
 
-describe('enrollment list', () => {
+describe('enrollment list - permission', () => {
   describe('valid permission (as appointment creator)', () => {
     const appointmentCreator = UsersDataProvider.getUser('f67e953d-cb85-4f41-b077-4a0bf8485bc5'); // REGULAR USER 1
     appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-enrollment-list-title').link;
@@ -43,10 +43,10 @@ describe('enrollment list', () => {
       await page.navigateToAppointment(appointmentLink);
     });
 
-    describe('edit', () => {
-      describe('enrollment of any user', () => {
-        enrollment = EnrollmentDataProvider.getEnrollment('624ddcfb-5f59-4a10-b5c5-1664e20e917e');
+    describe('enrollment of any user', () => {
+      enrollment = EnrollmentDataProvider.getEnrollment('624ddcfb-5f59-4a10-b5c5-1664e20e917e');
 
+      describe('edit', () => {
         beforeEach(() => {
           page.toggleEnrollmentCard(enrollment.id);
           page.clickEnrollmentEditButton(enrollment.id);
@@ -57,6 +57,29 @@ describe('enrollment list', () => {
           const pageRedirected = page.pageRedirectedToUrl(url);
 
           expect(pageRedirected).toBeTruthy('Could not match URL');
+        });
+      });
+
+      describe('delete', () => {
+        beforeEach(() => {
+          page.toggleEnrollmentCard(enrollment.id);
+          page.clickEnrollmentDeleteButton(enrollment.id);
+        });
+
+        it('should prompt delete dialog', () => {
+          const isEnrollmentDeletionConfirmationDialogPresent = page.isEnrollmentDeletionConfirmationDialogPresent();
+          expect(isEnrollmentDeletionConfirmationDialogPresent).toBeTruthy('Dialog not present');
+        });
+
+        describe('click cancel', () => {
+          beforeEach(() => {
+            page.cancelEnrollmentDeletion();
+          });
+
+          it('should hide delete dialog', () => {
+            const isEnrollmentDeletionConfirmationDialogPresent = page.isEnrollmentDeletionConfirmationDialogGone();
+            expect(!isEnrollmentDeletionConfirmationDialogPresent).toBeFalsy('Dialog is present');
+          });
         });
       });
     });
@@ -78,13 +101,25 @@ describe('enrollment list', () => {
       await page.navigateToAppointment(appointmentLink);
     });
 
-    describe('edit', () => {
-      describe('enrollment of any user', () => {
-        enrollment = EnrollmentDataProvider.getEnrollment('624ddcfb-5f59-4a10-b5c5-1664e20e917e');
+    describe('enrollment of any user', () => {
+      enrollment = EnrollmentDataProvider.getEnrollment('624ddcfb-5f59-4a10-b5c5-1664e20e917e');
 
+      describe('edit', () => {
         beforeEach(() => {
           page.toggleEnrollmentCard(enrollment.id);
           page.clickEnrollmentEditButton(enrollment.id);
+        });
+
+        it('should show missing permission snackbar', () => {
+          const isMissingPermissionSnackbarPresent = page.isMissingPermissionSnackbarPresent();
+          expect(isMissingPermissionSnackbarPresent).toBeTruthy('Snackbar not present');
+        });
+      });
+
+      describe('delete', () => {
+        beforeEach(() => {
+          page.toggleEnrollmentCard(enrollment.id);
+          page.clickEnrollmentDeleteButton(enrollment.id);
         });
 
         it('should show missing permission snackbar', () => {
@@ -108,13 +143,26 @@ describe('enrollment list', () => {
       await page.navigateToAppointment(appointmentLink);
     });
 
-    describe('edit', () => {
-      describe('enrollment of any user', () => {
-        enrollment = EnrollmentDataProvider.getEnrollment('624ddcfb-5f59-4a10-b5c5-1664e20e917e');
 
+    describe('enrollment of any user', () => {
+      enrollment = EnrollmentDataProvider.getEnrollment('624ddcfb-5f59-4a10-b5c5-1664e20e917e');
+
+      describe('edit', () => {
         beforeEach(() => {
           page.toggleEnrollmentCard(enrollment.id);
           page.clickEnrollmentEditButton(enrollment.id);
+        });
+
+        it('should show missing permission dialog', () => {
+          const isMissingPermissionSnackbarPresent = page.isMissingPermissionDialogPresent();
+          expect(isMissingPermissionSnackbarPresent).toBeTruthy('Dialog not present');
+        });
+      });
+
+      describe('delete', () => {
+        beforeEach(() => {
+          page.toggleEnrollmentCard(enrollment.id);
+          page.clickEnrollmentDeleteButton(enrollment.id);
         });
 
         it('should show missing permission dialog', () => {
@@ -136,4 +184,5 @@ describe('enrollment list', () => {
       });
     });
   });
-});
+})
+;

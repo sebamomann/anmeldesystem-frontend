@@ -428,6 +428,11 @@ export class AppointmentOverviewPage {
     return elem.click();
   }
 
+  public clickEnrollmentDeleteButton(id) {
+    const elem = element(by.css('[enrollment-id=\"' + id + '\"].enrollment-additions .delete'));
+    return elem.click();
+  }
+
   public isMissingPermissionSnackbarPresent() {
     const elem = element(by.css('.snackbar_missing_permissions'));
 
@@ -435,6 +440,33 @@ export class AppointmentOverviewPage {
     browser.wait(EC.presenceOf(elem), 20000, 'Element taking too long to be present');
 
     return elem.isPresent();
+  }
+
+  public isEnrollmentDeletionConfirmationDialogPresent() {
+    const elem = element(by.css('#enrollment-deletion-confirmation-dialog'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.presenceOf(elem), 20000, 'Element taking too long to be present');
+
+    return elem.isPresent();
+  }
+
+  public isEnrollmentDeletionConfirmationDialogGone() {
+    const elem = element(by.css('#enrollment-deletion-confirmation-dialog'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.invisibilityOf(elem), 20000, 'Element taking too long to disappear');
+
+    return elem.isPresent();
+  }
+
+  public cancelEnrollmentDeletion() {
+    const elem = element(by.css('#cancel'));
+
+    const EC = protractor.ExpectedConditions; // because its a dialog
+    browser.wait(EC.presenceOf(elem), 20000, 'Element taking too long to be present');
+
+    return elem.click();
   }
 
   public isMissingPermissionDialogPresent() {
