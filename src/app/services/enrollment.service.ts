@@ -27,22 +27,22 @@ export class EnrollmentService {
   update(enrollment: IEnrollmentModel, appointment: IAppointmentModel): Observable<IEnrollmentModel> {
     const token = TokenUtil.getTokenForEnrollment(enrollment.id, appointment.link);
 
-    const headers = {};
+    let headers;
     if (token) {
-      headers['x-enrollment-token'] = token;
+      headers = {'x-enrollment-token': token};
     }
 
     const url = `${environment.API_URL}enrollments/${enrollment.id}`;
 
-    return this.httpClient.put<IEnrollmentModel>(url, enrollment, headers);
+    return this.httpClient.put<IEnrollmentModel>(url, enrollment, {headers});
   }
 
   delete(enrollment: IEnrollmentModel, link) {
     const token = TokenUtil.getTokenForEnrollment(enrollment.id, link);
 
-    const headers = {};
+    let headers;
     if (token) {
-      headers['x-enrollment-token'] = token;
+      headers = {'x-enrollment-token': token};
     }
 
     return this.httpClient.delete<void>(`${environment.API_URL}enrollments/${enrollment.id}`, {
@@ -55,9 +55,9 @@ export class EnrollmentService {
   checkPermission(enrollment: IEnrollmentModel, link: string = '') {
     const token = TokenUtil.getTokenForEnrollment(enrollment.id, link);
     const url = `${environment.API_URL}enrollments/${enrollment.id}/check-permission`;
-    const headers = {};
+    let headers;
     if (token) {
-      headers['x-enrollment-token'] = token;
+      headers = {'x-enrollment-token': token};
     }
     return this.httpClient.get<void>(url, {observe: 'response', reportProgress: true, headers});
   }
