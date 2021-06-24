@@ -1,4 +1,4 @@
-import {IEnrollmentDataProviderModel} from '../../IEnrollmentDataProviderModel';
+import {IEnrollmentDataProviderModel} from '../../../IEnrollmentDataProviderModel';
 
 export class EnrollmentDataProvider {
   private static ENROLLMENTS = {

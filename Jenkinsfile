@@ -41,55 +41,55 @@ pipeline {
       }
     }
 
-    stage('e2e prepare') {
-      steps {
-        script {
-          try {
-            sh 'docker network create ' + netName
-          } catch (err) {
-            echo err.getMessage()
-          }
-
-          sh 'docker run -d ' +
-            '--name ' + dbName + ' ' +
-            '--env MYSQL_ROOT_PASSWORD=password ' +
-            '--env MYSQL_DATABASE=anmeldesystem-api-protractor ' +
-            '--env MYSQL_USER=user ' +
-            '--env MYSQL_PASSWORD=password ' +
-            '--network ' + netName + ' ' +
-            '--health-cmd=\'mysqladmin ping --silent\' ' +
-            'mysql ' +
-            'mysqld --default-authentication-plugin=mysql_native_password'
-
-          waitUntil {
-            "healthy" == sh(returnStdout: true,
-              script: "docker inspect " + dbName + " --format=\"{{ .State.Health.Status }}\"").trim()
-          }
-
-          sh 'docker run -d ' +
-            '--name ' + apiName + ' ' +
-            '--env DB_USERNAME=root ' +
-            '--env DB_PASSWORD=password ' +
-            '--env DB_HOST=' + dbName + ' ' +
-            '--env DB_PORT=3306 ' +
-            '--env DB_DATABASE=anmeldesystem-api-protractor ' +
-            '--env SALT_JWT=mysalt ' +
-            '--env SALT_MAIL=mysalt ' +
-            '--env SALT_ENROLLMENT=mysalt ' +
-            '--env DOMAIN=go-join.me ' +
-            '--env NODE_ENV=protractor ' +
-            '--network ' + netName + ' ' +
-            '--health-cmd=\'curl localhost:3000/healthcheck || exit 1 \' ' +
-            '--health-interval=2s ' +
-            'localhost:34015/anmeldesystem/anmeldesystem-backend:latest'
-
-          waitUntil {
-            "healthy" == sh(returnStdout: true,
-              script: "docker inspect " + apiName + " --format=\"{{ .State.Health.Status }}\"").trim()
-          }
-        }
-      }
-    }
+//    stage('e2e prepare') {
+//      steps {
+//        script {
+//          try {
+//            sh 'docker network create ' + netName
+//          } catch (err) {
+//            echo err.getMessage()
+//          }
+//
+//          sh 'docker run -d ' +
+//            '--name ' + dbName + ' ' +
+//            '--env MYSQL_ROOT_PASSWORD=password ' +
+//            '--env MYSQL_DATABASE=anmeldesystem-api-protractor ' +
+//            '--env MYSQL_USER=user ' +
+//            '--env MYSQL_PASSWORD=password ' +
+//            '--network ' + netName + ' ' +
+//            '--health-cmd=\'mysqladmin ping --silent\' ' +
+//            'mysql ' +
+//            'mysqld --default-authentication-plugin=mysql_native_password'
+//
+//          waitUntil {
+//            "healthy" == sh(returnStdout: true,
+//              script: "docker inspect " + dbName + " --format=\"{{ .State.Health.Status }}\"").trim()
+//          }
+//
+//          sh 'docker run -d ' +
+//            '--name ' + apiName + ' ' +
+//            '--env DB_USERNAME=root ' +
+//            '--env DB_PASSWORD=password ' +
+//            '--env DB_HOST=' + dbName + ' ' +
+//            '--env DB_PORT=3306 ' +
+//            '--env DB_DATABASE=anmeldesystem-api-protractor ' +
+//            '--env SALT_JWT=mysalt ' +
+//            '--env SALT_MAIL=mysalt ' +
+//            '--env SALT_ENROLLMENT=mysalt ' +
+//            '--env DOMAIN=go-join.me ' +
+//            '--env NODE_ENV=protractor ' +
+//            '--network ' + netName + ' ' +
+//            '--health-cmd=\'curl localhost:3000/healthcheck || exit 1 \' ' +
+//            '--health-interval=2s ' +
+//            'localhost:34015/anmeldesystem/anmeldesystem-backend:latest'
+//
+//          waitUntil {
+//            "healthy" == sh(returnStdout: true,
+//              script: "docker inspect " + apiName + " --format=\"{{ .State.Health.Status }}\"").trim()
+//          }
+//        }
+//      }
+//    }
 
     stage('Build Docker image') {
       steps {

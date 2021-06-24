@@ -1,4 +1,4 @@
-import {IUserDataProviderModel} from '../../IUserDataProviderModel';
+import {IUserDataProviderModel} from '../../../IUserDataProviderModel';
 
 export class UsersDataProvider {
   private static USERS = {
@@ -25,6 +25,14 @@ export class UsersDataProvider {
       firstName: 'GJM-TestUser-Protractor',
       lastName: 'General-EnrollmentCreator-2',
       password: 'mWZWxOaEDFXZNwOzaGhANXjzEhlXZSKsgRLM',
+    },
+    'daf0610f-f71a-451a-8d2b-a3854f80daba': {
+      id: 'daf0610f-f71a-451a-8d2b-a3854f80daba',
+      username: 'gjm-test-protractor-general-regularuser-user-1',
+      mail: 'gjm-test-protractor-general-regularuser-user-1@testing.go-join.me',
+      firstName: 'GJM-TestUser-Protractor',
+      lastName: 'General-RegularUser-1',
+      password: 'ITDpsInGsubbjUkRFWulKJmVFOCfqWcweqBF',
     }
   };
 

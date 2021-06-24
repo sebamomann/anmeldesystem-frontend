@@ -59,7 +59,6 @@ $anmeldesystem-theme: mat-light-theme($anmeldesystem-primary, $anmeldesystem-acc
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include angular-material-theme($anmeldesystem-theme);
-
 @import url('https://fonts.googleapis.com/css?family=Nunito:300,400,600,700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Changa&display=swap');

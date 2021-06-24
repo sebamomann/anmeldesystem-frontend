@@ -1,10 +1,11 @@
 import {browser} from 'protractor';
-import {AppointmentOverviewPage} from './appointment.overview.po';
-import {AppointmentDataProvider} from './appointment.data-provider';
-import {EnrollmentDataProvider} from './enrollment.data-provider';
-import {UsersDataProvider} from './users.data-provider';
+import {AppointmentOverviewPage} from './po/appointment.overview.po';
+import {AppointmentDataProvider} from './providers/appointment.data-provider';
+import {EnrollmentDataProvider} from './providers/enrollment.data-provider';
+import {UsersDataProvider} from './po/users.data-provider';
 import {LocalStoragePage} from '../../general/localStorage.po';
 import {LoginPage} from '../../general/login.po';
+import {AppointmentOverviewEnrollmentListPage} from './po/appointment.overview.enrollment-list.po';
 
 // const crypto = require('crypto');
 //
@@ -12,6 +13,7 @@ import {LoginPage} from '../../general/login.po';
 
 let appointmentLink;
 let page: AppointmentOverviewPage;
+let enrollmentListPage: AppointmentOverviewEnrollmentListPage;
 let localStoragePage: LocalStoragePage;
 let loginPage: LoginPage;
 
@@ -19,6 +21,7 @@ beforeAll(async () => {
   await browser.get('/'); // needed to be able to clear localStorage
 
   page = new AppointmentOverviewPage();
+  enrollmentListPage = new AppointmentOverviewEnrollmentListPage();
   localStoragePage = new LocalStoragePage();
   loginPage = new LoginPage();
 
@@ -27,7 +30,7 @@ beforeAll(async () => {
 
 describe('enrollment list - permission', () => {
   describe('valid permission (as appointment creator)', () => {
-    const appointmentCreator = UsersDataProvider.getUser('f67e953d-cb85-4f41-b077-4a0bf8485bc5'); // REGULAR USER 1
+    const appointmentCreator = UsersDataProvider.getUser('f67e953d-cb85-4f41-b077-4a0bf8485bc5'); // APPOINTMENT CREATOR
     appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-enrollment-list-title').link;
 
     let enrollment;
@@ -44,12 +47,12 @@ describe('enrollment list - permission', () => {
     });
 
     describe('enrollment of any user', () => {
-      enrollment = EnrollmentDataProvider.getEnrollment('624ddcfb-5f59-4a10-b5c5-1664e20e917e');
+      enrollment = EnrollmentDataProvider.getEnrollment('0614b2e5-d283-41fe-bc54-ce2527bfd308');
 
       describe('edit', () => {
         beforeEach(() => {
-          page.toggleEnrollmentCard(enrollment.id);
-          page.clickEnrollmentEditButton(enrollment.id);
+          enrollmentListPage.toggleEnrollmentPanel(enrollment.id);
+          enrollmentListPage.clickEnrollmentEditButton(enrollment.id);
         });
 
         it('should redirect to edit page', () => {
@@ -62,22 +65,22 @@ describe('enrollment list - permission', () => {
 
       describe('delete', () => {
         beforeEach(() => {
-          page.toggleEnrollmentCard(enrollment.id);
-          page.clickEnrollmentDeleteButton(enrollment.id);
+          enrollmentListPage.toggleEnrollmentPanel(enrollment.id);
+          enrollmentListPage.clickEnrollmentDeleteButton(enrollment.id);
         });
 
         it('should prompt delete dialog', () => {
-          const isEnrollmentDeletionConfirmationDialogPresent = page.isEnrollmentDeletionConfirmationDialogPresent();
+          const isEnrollmentDeletionConfirmationDialogPresent = enrollmentListPage.isEnrollmentDeletionConfirmationDialogPresent();
           expect(isEnrollmentDeletionConfirmationDialogPresent).toBeTruthy('Dialog not present');
         });
 
         describe('click cancel', () => {
           beforeEach(() => {
-            page.cancelEnrollmentDeletion();
+            enrollmentListPage.cancelEnrollmentDeletion();
           });
 
           it('should hide delete dialog', () => {
-            const isEnrollmentDeletionConfirmationDialogPresent = page.isEnrollmentDeletionConfirmationDialogGone();
+            const isEnrollmentDeletionConfirmationDialogPresent = enrollmentListPage.isEnrollmentDeletionConfirmationDialogGone();
             expect(!isEnrollmentDeletionConfirmationDialogPresent).toBeFalsy('Dialog is present');
           });
         });
@@ -86,7 +89,7 @@ describe('enrollment list - permission', () => {
   });
 
   describe('invalid permission (logged in)', () => {
-    const anyUser = UsersDataProvider.getUser('295f2461-5964-4981-bbcd-5e8f667a3b9a'); // REGULAR USER 2 - not enrollment creator
+    const anyUser = UsersDataProvider.getUser('daf0610f-f71a-451a-8d2b-a3854f80daba'); // REGULAR USER 1
     appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-enrollment-list-title').link;
     let enrollment;
 
@@ -102,28 +105,28 @@ describe('enrollment list - permission', () => {
     });
 
     describe('enrollment of any user', () => {
-      enrollment = EnrollmentDataProvider.getEnrollment('624ddcfb-5f59-4a10-b5c5-1664e20e917e');
+      enrollment = EnrollmentDataProvider.getEnrollment('0614b2e5-d283-41fe-bc54-ce2527bfd308');
 
       describe('edit', () => {
         beforeEach(() => {
-          page.toggleEnrollmentCard(enrollment.id);
-          page.clickEnrollmentEditButton(enrollment.id);
+          enrollmentListPage.toggleEnrollmentPanel(enrollment.id);
+          enrollmentListPage.clickEnrollmentEditButton(enrollment.id);
         });
 
         it('should show missing permission snackbar', () => {
-          const isMissingPermissionSnackbarPresent = page.isMissingPermissionSnackbarPresent();
+          const isMissingPermissionSnackbarPresent = enrollmentListPage.isMissingPermissionSnackbarPresent();
           expect(isMissingPermissionSnackbarPresent).toBeTruthy('Snackbar not present');
         });
       });
 
       describe('delete', () => {
         beforeEach(() => {
-          page.toggleEnrollmentCard(enrollment.id);
-          page.clickEnrollmentDeleteButton(enrollment.id);
+          enrollmentListPage.toggleEnrollmentPanel(enrollment.id);
+          enrollmentListPage.clickEnrollmentDeleteButton(enrollment.id);
         });
 
         it('should show missing permission snackbar', () => {
-          const isMissingPermissionSnackbarPresent = page.isMissingPermissionSnackbarPresent();
+          const isMissingPermissionSnackbarPresent = enrollmentListPage.isMissingPermissionSnackbarPresent();
           expect(isMissingPermissionSnackbarPresent).toBeTruthy('Snackbar not present');
         });
       });
@@ -145,28 +148,28 @@ describe('enrollment list - permission', () => {
 
 
     describe('enrollment of any user', () => {
-      enrollment = EnrollmentDataProvider.getEnrollment('624ddcfb-5f59-4a10-b5c5-1664e20e917e');
+      enrollment = EnrollmentDataProvider.getEnrollment('0614b2e5-d283-41fe-bc54-ce2527bfd308');
 
       describe('edit', () => {
         beforeEach(() => {
-          page.toggleEnrollmentCard(enrollment.id);
-          page.clickEnrollmentEditButton(enrollment.id);
+          enrollmentListPage.toggleEnrollmentPanel(enrollment.id);
+          enrollmentListPage.clickEnrollmentEditButton(enrollment.id);
         });
 
         it('should show missing permission dialog', () => {
-          const isMissingPermissionSnackbarPresent = page.isMissingPermissionDialogPresent();
+          const isMissingPermissionSnackbarPresent = enrollmentListPage.isMissingPermissionDialogPresent();
           expect(isMissingPermissionSnackbarPresent).toBeTruthy('Dialog not present');
         });
       });
 
       describe('delete', () => {
         beforeEach(() => {
-          page.toggleEnrollmentCard(enrollment.id);
-          page.clickEnrollmentDeleteButton(enrollment.id);
+          enrollmentListPage.toggleEnrollmentPanel(enrollment.id);
+          enrollmentListPage.clickEnrollmentDeleteButton(enrollment.id);
         });
 
         it('should show missing permission dialog', () => {
-          const isMissingPermissionSnackbarPresent = page.isMissingPermissionDialogPresent();
+          const isMissingPermissionSnackbarPresent = enrollmentListPage.isMissingPermissionDialogPresent();
           expect(isMissingPermissionSnackbarPresent).toBeTruthy('Dialog not present');
         });
       });

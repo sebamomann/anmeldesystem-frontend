@@ -4,17 +4,18 @@ import {EnvironmentPage} from './environment.po';
 import {LocalStoragePage} from './localStorage.po';
 
 export class LoginPage {
+  private environmentPage = new EnvironmentPage();
+
   constructor() {
   }
 
   async loginViaApi(user: IUserDataProviderModel) {
-    const environmentPage = new EnvironmentPage();
     const localStoragePage = new LocalStoragePage();
 
-    const server = await environmentPage.getEnvironmentVariable('keycloak_url');
-    const realm = await environmentPage.getEnvironmentVariable('keycloak_realm');
+    const server = await this.environmentPage.getEnvironmentVariable('keycloak_url');
+    const realm = await this.environmentPage.getEnvironmentVariable('keycloak_realm');
     const grantType = 'password';
-    const clientId: string = await environmentPage.getEnvironmentVariable('keycloak_client_id');
+    const clientId: string = await this.environmentPage.getEnvironmentVariable('keycloak_client_id');
     const clientSecret = '';
 
     const url = `realms/${realm}/protocol/openid-connect/token`;
@@ -40,5 +41,12 @@ export class LoginPage {
 
     await localStoragePage.setString('access_token', res.access_token);
     await localStoragePage.setString('id_token', res.id_token);
+  }
+
+  async getURLOfLogin() {
+    const url = await this.environmentPage.getEnvironmentVariable('keycloak_url');
+    const realm = await this.environmentPage.getEnvironmentVariable('keycloak_realm');
+
+    return `${url}realms/${realm}/protocol/openid-connect/auth`;
   }
 }

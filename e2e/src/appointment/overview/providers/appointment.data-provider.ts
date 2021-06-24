@@ -1,4 +1,4 @@
-import {IAppointmentDataProviderModel} from '../../IAppointmentDataProviderModel';
+import {IAppointmentDataProviderModel} from '../../../IAppointmentDataProviderModel';
 
 export class AppointmentDataProvider {
   private static APPOINTMENTS = {

@@ -1,10 +1,11 @@
 import {browser, by} from 'protractor';
-import {AppointmentOverviewPage} from './appointment.overview.po';
+import {AppointmentOverviewPage} from './po/appointment.overview.po';
 import {LocalStoragePage} from '../../general/localStorage.po';
 // import {LoginPage} from '../../general/login.po';
 // import {EnvironmentPage} from '../../general/environment.po';
-import {AppointmentDataProvider} from './appointment.data-provider';
-import {UsersDataProvider} from './users.data-provider';
+import {AppointmentDataProvider} from './providers/appointment.data-provider';
+import {UsersDataProvider} from './po/users.data-provider';
+import {AppointmentOverviewDataPage} from './po/appointment.overview.data.po';
 
 // const crypto = require('crypto');
 //
@@ -12,6 +13,7 @@ import {UsersDataProvider} from './users.data-provider';
 
 let appointmentLink;
 let appointmentPage: AppointmentOverviewPage;
+let appointmentDataPage: AppointmentOverviewDataPage;
 let localStoragePage: LocalStoragePage;
 // let loginPage: LoginPage;
 // let environmentPage: EnvironmentPage;
@@ -20,6 +22,7 @@ beforeAll(async () => {
   await browser.get('/'); // needed to be able to clear localStorage
 
   appointmentPage = new AppointmentOverviewPage();
+  appointmentDataPage = new AppointmentOverviewDataPage();
   // loginPage = new LoginPage();
   localStoragePage = new LocalStoragePage();
   // environmentPage = new EnvironmentPage();
@@ -49,7 +52,7 @@ describe('Appointment Data', () => {
     });
 
     it('location should be correct', () => {
-      const location = appointmentPage.getAppointmentDataLocation();
+      const location = appointmentDataPage.getAppointmentDataLocation();
       expect(location).toBe(appointment.location);
     });
 
@@ -68,7 +71,7 @@ describe('Appointment Data', () => {
     // });
 
     it('creator name should be correct', () => {
-      const creatorName = appointmentPage.getAppointmentDataCreatorName();
+      const creatorName = appointmentDataPage.getAppointmentDataCreatorName();
 
       const creator = UsersDataProvider.getUser(appointment.creatorId);
 
@@ -76,7 +79,7 @@ describe('Appointment Data', () => {
     });
 
     it('creator username should be present', () => {
-      const creatorUsername = appointmentPage.getAppointmentDataCreatorUsername();
+      const creatorUsername = appointmentDataPage.getAppointmentDataCreatorUsername();
 
       const creator = UsersDataProvider.getUser(appointment.creatorId);
 
@@ -96,7 +99,7 @@ describe('Appointment Data', () => {
     });
 
     it('deadline should not be present', () => {
-      const isDeadlinePresent = appointmentPage.isAppointmentDataDeadlinePresent();
+      const isDeadlinePresent = appointmentDataPage.isAppointmentDataDeadlinePresent();
       expect(isDeadlinePresent).toBeFalsy('Deadline is present');
     });
   });
@@ -115,14 +118,14 @@ describe('Appointment Data', () => {
     });
 
     it('should show 1 file', () => {
-      const getFilesElements = appointmentPage.getFileBlocks();
+      const getFilesElements = appointmentDataPage.getFileBlocks();
       const numberOfFiles = getFilesElements.count();
 
       expect(numberOfFiles).toBe(1);
     });
 
     it('correct file name', () => {
-      const getFilesElements = appointmentPage.getFileBlocks();
+      const getFilesElements = appointmentDataPage.getFileBlocks();
       const fileElement = getFilesElements.first().element(by.css('a'));
       const fileName = fileElement.getText();
 

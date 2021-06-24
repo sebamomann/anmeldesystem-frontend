@@ -1,10 +1,11 @@
 import {browser} from 'protractor';
-import {AppointmentOverviewPage} from './appointment.overview.po';
-import {AppointmentDataProvider} from './appointment.data-provider';
-import {UsersDataProvider} from './users.data-provider';
-import {AppointmentOverviewMenuPage} from './appointment.overview.menu.po';
+import {AppointmentOverviewPage} from './po/appointment.overview.po';
+import {AppointmentDataProvider} from './providers/appointment.data-provider';
+import {UsersDataProvider} from './po/users.data-provider';
+import {AppointmentOverviewMenuPage} from './po/appointment.overview.menu.po';
 import {LocalStoragePage} from '../../general/localStorage.po';
 import {LoginPage} from '../../general/login.po';
+import {AppointmentOverviewDataPage} from './po/appointment.overview.data.po';
 
 // const crypto = require('crypto');
 //
@@ -12,6 +13,7 @@ import {LoginPage} from '../../general/login.po';
 
 let appointmentLink;
 let appointmentPage: AppointmentOverviewPage;
+let appointmentDataPage: AppointmentOverviewDataPage;
 let menuPage: AppointmentOverviewMenuPage;
 let localStoragePage: LocalStoragePage;
 let loginPage: LoginPage;
@@ -20,6 +22,7 @@ beforeAll(async () => {
   await browser.get('/');
 
   appointmentPage = new AppointmentOverviewPage();
+  appointmentDataPage = new AppointmentOverviewDataPage();
   menuPage = new AppointmentOverviewMenuPage();
   localStoragePage = new LocalStoragePage();
   loginPage = new LoginPage();
@@ -41,8 +44,8 @@ describe('Appointment Overview Menu Page', () => {
       });
 
       it('click menu should open menu', () => {
-        appointmentPage.openAppointmentMenu();
-        const isMenuOpened = appointmentPage.isMenuOpened();
+        appointmentDataPage.openAppointmentMenu();
+        const isMenuOpened = appointmentDataPage.isMenuOpened();
 
         expect(isMenuOpened).toBeTruthy(`Menu did not open`);
       });

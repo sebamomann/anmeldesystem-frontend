@@ -1,9 +1,10 @@
 import {browser} from 'protractor';
-import {AppointmentOverviewPage} from './appointment.overview.po';
-import {AppointmentDataProvider} from './appointment.data-provider';
-import {EnrollmentDataProvider} from './enrollment.data-provider';
-import {UsersDataProvider} from './users.data-provider';
+import {AppointmentOverviewPage} from './po/appointment.overview.po';
+import {AppointmentDataProvider} from './providers/appointment.data-provider';
+import {EnrollmentDataProvider} from './providers/enrollment.data-provider';
+import {UsersDataProvider} from './po/users.data-provider';
 import {LocalStoragePage} from '../../general/localStorage.po';
+import {AppointmentOverviewEnrollmentListPage} from './po/appointment.overview.enrollment-list.po';
 
 // const crypto = require('crypto');
 //
@@ -11,12 +12,14 @@ import {LocalStoragePage} from '../../general/localStorage.po';
 
 let appointmentLink;
 let page: AppointmentOverviewPage;
+let enrollmentListPage: AppointmentOverviewEnrollmentListPage;
 let localStoragePage: LocalStoragePage;
 
 beforeAll(async () => {
   await browser.get('/'); // needed to be able to clear localStorage
 
   page = new AppointmentOverviewPage();
+  enrollmentListPage = new AppointmentOverviewEnrollmentListPage();
   localStoragePage = new LocalStoragePage();
 
   browser.waitForAngularEnabled(false);
@@ -29,7 +32,7 @@ describe('enrollment list', () => {
    */
 
   beforeAll(async () => {
-    appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-title').link;
+    appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-enrollment-list-title').link;
 
     await localStoragePage.clear();
     await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
@@ -40,21 +43,21 @@ describe('enrollment list', () => {
   describe('correctly display enrollments', () => {
     describe('correct number of Enrollments', () => {
       it('should show 8 in total enrollments', () => {
-        const enrollments = page.getEnrollmentBlocks();
+        const enrollments = enrollmentListPage.getEnrollmentBlocks();
         const nrOfEnrollments = enrollments.count();
 
         expect(nrOfEnrollments).toBe(8);
       });
 
       it('should show 3 creator enrollments', () => {
-        const enrollments = page.getEnrollmentBlocksCreatedByUser();
+        const enrollments = enrollmentListPage.getEnrollmentBlocksCreatedByUser();
         const nrOfEnrollments = enrollments.count();
 
         expect(nrOfEnrollments).toBe(3);
       });
 
       it('should show 5 unknown enrollments', () => {
-        const enrollments = page.getEnrollmentBlocksCreatedByUnknown();
+        const enrollments = enrollmentListPage.getEnrollmentBlocksCreatedByUnknown();
         const nrOfEnrollments = enrollments.count();
 
         expect(nrOfEnrollments).toBe(5);
@@ -65,7 +68,7 @@ describe('enrollment list', () => {
       const enrollment = EnrollmentDataProvider.getEnrollment('0614b2e5-d283-41fe-bc54-ce2527bfd308');
 
       it('should have correct name', () => {
-        const actual_name = page.getEnrollmentNameById(enrollment.id);
+        const actual_name = enrollmentListPage.getEnrollmentNameById(enrollment.id);
 
         const user = UsersDataProvider.getUser(enrollment.creatorId);
 
@@ -73,7 +76,7 @@ describe('enrollment list', () => {
       });
 
       it('should have correct username', () => {
-        const actual_username = page.getEnrollmentUsernameById(enrollment.id);
+        const actual_username = enrollmentListPage.getEnrollmentUsernameById(enrollment.id);
 
         const user = UsersDataProvider.getUser(enrollment.creatorId);
 
@@ -86,20 +89,18 @@ describe('enrollment list', () => {
 
       describe('comment', () => {
         it('should have correct name', () => {
-          const name = page.getEnrollmentNameById(enrollment.id);
-
+          const name = enrollmentListPage.getEnrollmentNameById(enrollment.id);
           expect(name).toEqual(enrollment.name);
         });
 
         it('should have no username', () => {
-          const usernameIsPresent = page.isEnrollmentUsernamePresent(enrollment.id);
-
+          const usernameIsPresent = enrollmentListPage.isEnrollmentUsernamePresent(enrollment.id);
           expect(usernameIsPresent).toBeFalsy();
         });
 
         it('should have correct comment with separator', () => {
-          const commentSeparatorPresent = page.isEnrollmentCommentSeparatorPresent(enrollment.id);
-          const comment = page.getEnrollmentComment(enrollment.id);
+          const commentSeparatorPresent = enrollmentListPage.isEnrollmentCommentSeparatorPresent(enrollment.id);
+          const comment = enrollmentListPage.getEnrollmentComment(enrollment.id);
 
           expect(comment).toEqual(enrollment.comment);
           expect(commentSeparatorPresent).toBeTruthy('Comment separator not present');
@@ -110,9 +111,9 @@ describe('enrollment list', () => {
         const enrollmentId = 'ead32e43-f6f2-4a23-b6c1-f73b49ccf348';
 
         it('should have no comment', () => {
-          const enrollmentIsPresent = page.isEnrollmentPresent(enrollmentId);
-          const enrollmentCommentPresent = page.isEnrollmentCommentPresent(enrollmentId);
-          const commentSeparatorPresent = page.isEnrollmentCommentSeparatorPresent(enrollmentId);
+          const enrollmentIsPresent = enrollmentListPage.isEnrollmentPresent(enrollmentId);
+          const enrollmentCommentPresent = enrollmentListPage.isEnrollmentCommentPresent(enrollmentId);
+          const commentSeparatorPresent = enrollmentListPage.isEnrollmentCommentSeparatorPresent(enrollmentId);
 
           expect(enrollmentIsPresent).toBeTruthy('Enrollment is not present');
           expect(enrollmentCommentPresent).toBeFalsy('Enrollment comment is present');
@@ -126,21 +127,21 @@ describe('enrollment list', () => {
     const enrollmentId = '0614b2e5-d283-41fe-bc54-ce2527bfd308';
 
     beforeEach(() => {
-      page.clickEnrollment(enrollmentId);
+      enrollmentListPage.toggleEnrollmentPanel(enrollmentId);
     });
 
     it('should expand panel', () => {
-      const isEnrollmentPanelExpanded = page.isEnrollmentPanelExpanded(enrollmentId);
+      const isEnrollmentPanelExpanded = enrollmentListPage.isEnrollmentPanelExpanded(enrollmentId);
       expect(isEnrollmentPanelExpanded).toBeTruthy('Panel not expanded');
     });
 
     describe('click enrollment again', () => {
       beforeEach(() => {
-        page.clickEnrollment(enrollmentId);
+        enrollmentListPage.toggleEnrollmentPanel(enrollmentId);
       });
 
       it('should collapse panel', () => {
-        const isEnrollmentPanelCollapsed = page.isEnrollmentPanelCollapsed(enrollmentId);
+        const isEnrollmentPanelCollapsed = enrollmentListPage.isEnrollmentPanelCollapsed(enrollmentId);
         expect(isEnrollmentPanelCollapsed).toBeTruthy('Panel not collapsed');
       });
     });
@@ -157,5 +158,4 @@ describe('enrollment list', () => {
       });
     });
   });
-})
-;
+});
