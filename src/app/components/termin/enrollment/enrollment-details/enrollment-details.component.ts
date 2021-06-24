@@ -30,7 +30,7 @@ export class EnrollmentDetailsComponent implements OnInit, OnChanges {
    */
   public enrollmentCheckedAddition: (enrollment: IEnrollmentModel, name: string) => boolean
     = (enrollment: IEnrollmentModel, name: string): boolean => {
-    return enrollment.additions.findIndex(add => add.name === name) !== -1;
+    return enrollment.additions && enrollment.additions.findIndex(add => add.name === name) !== -1;
   };
 
 }
