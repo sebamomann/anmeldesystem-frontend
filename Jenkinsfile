@@ -30,16 +30,16 @@ pipeline {
       }
     }
 
-    stage('pull required images') {
-      steps {
-        script {
-          docker.withRegistry('http://localhost:34015') {
-            backendImageLatest = docker.image('anmeldesystem/anmeldesystem-backend:latest')
-            backendImageLatest.pull()
-          }
-        }
-      }
-    }
+//    stage('pull required images') {
+//      steps {
+//        script {
+//          docker.withRegistry('http://localhost:34015') {
+//            backendImageLatest = docker.image('anmeldesystem/anmeldesystem-backend:latest')
+//            backendImageLatest.pull()
+//          }
+//        }
+//      }
+//    }
 
 //    stage('e2e prepare') {
 //      steps {
@@ -96,7 +96,7 @@ pipeline {
         script {
           image = docker.build("anmeldesystem/anmeldesystem-ui:" + tagName,
             "--build-arg BACKEND_URL=http://" + apiName + ":3000 " +
-              "--network " + netName + " " +
+//              "--network " + netName + " " +
               "-f Dockerfile .")
         }
       }
