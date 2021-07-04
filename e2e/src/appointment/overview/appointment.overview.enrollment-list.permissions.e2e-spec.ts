@@ -1,21 +1,17 @@
 import {browser} from 'protractor';
 import {AppointmentOverviewPage} from './po/appointment.overview.po';
-import {AppointmentDataProvider} from './providers/appointment.data-provider';
 import {EnrollmentDataProvider} from './providers/enrollment.data-provider';
 import {UsersDataProvider} from './po/users.data-provider';
 import {LocalStoragePage} from '../../general/localStorage.po';
 import {LoginPage} from '../../general/login.po';
 import {AppointmentOverviewEnrollmentListPage} from './po/appointment.overview.enrollment-list.po';
 
-// const crypto = require('crypto');
-//
-// const salt = 'mysalt';
-
-let appointmentLink;
 let page: AppointmentOverviewPage;
 let enrollmentListPage: AppointmentOverviewEnrollmentListPage;
 let localStoragePage: LocalStoragePage;
 let loginPage: LoginPage;
+
+const appointmentLink = 'valid';
 
 beforeAll(async () => {
   await browser.get('/'); // needed to be able to clear localStorage
@@ -31,9 +27,6 @@ beforeAll(async () => {
 describe('enrollment list - permission', () => {
   describe('valid permission (as appointment creator)', () => {
     const appointmentCreator = UsersDataProvider.getUser('f67e953d-cb85-4f41-b077-4a0bf8485bc5'); // APPOINTMENT CREATOR
-    appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-enrollment-list-title').link;
-
-    let enrollment;
 
     beforeAll(async () => {
       await localStoragePage.clear();
@@ -47,7 +40,7 @@ describe('enrollment list - permission', () => {
     });
 
     describe('enrollment of any user', () => {
-      enrollment = EnrollmentDataProvider.getEnrollment('0614b2e5-d283-41fe-bc54-ce2527bfd308');
+      const enrollment = EnrollmentDataProvider.getEnrollment('0614b2e5-d283-41fe-bc54-ce2527bfd308');
 
       describe('edit', () => {
         beforeEach(() => {
@@ -59,7 +52,7 @@ describe('enrollment list - permission', () => {
           const url = '/enrollment/edit?a=' + appointmentLink + '&e=' + enrollment.id;
           const pageRedirected = page.pageRedirectedToUrl(url);
 
-          expect(pageRedirected).toBeTruthy('Could not match URL');
+          expect(pageRedirected).toBeTruthy('Not redirected to enrollment edit');
         });
       });
 
@@ -71,7 +64,7 @@ describe('enrollment list - permission', () => {
 
         it('should prompt delete dialog', () => {
           const isEnrollmentDeletionConfirmationDialogPresent = enrollmentListPage.isEnrollmentDeletionConfirmationDialogPresent();
-          expect(isEnrollmentDeletionConfirmationDialogPresent).toBeTruthy('Dialog not present');
+          expect(isEnrollmentDeletionConfirmationDialogPresent).toBeTruthy('Dialog should be present but isn\'t');
         });
 
         describe('click cancel', () => {
@@ -81,7 +74,7 @@ describe('enrollment list - permission', () => {
 
           it('should hide delete dialog', () => {
             const isEnrollmentDeletionConfirmationDialogPresent = enrollmentListPage.isEnrollmentDeletionConfirmationDialogGone();
-            expect(!isEnrollmentDeletionConfirmationDialogPresent).toBeFalsy('Dialog is present');
+            expect(!isEnrollmentDeletionConfirmationDialogPresent).toBeFalsy('Dialog should be not present but is');
           });
         });
       });
@@ -90,8 +83,6 @@ describe('enrollment list - permission', () => {
 
   describe('invalid permission (logged in)', () => {
     const anyUser = UsersDataProvider.getUser('daf0610f-f71a-451a-8d2b-a3854f80daba'); // REGULAR USER 1
-    appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-enrollment-list-title').link;
-    let enrollment;
 
     beforeAll(async () => {
       await localStoragePage.clear();
@@ -105,7 +96,7 @@ describe('enrollment list - permission', () => {
     });
 
     describe('enrollment of any user', () => {
-      enrollment = EnrollmentDataProvider.getEnrollment('0614b2e5-d283-41fe-bc54-ce2527bfd308');
+      const enrollment = EnrollmentDataProvider.getEnrollment('4190a4d4-b8a1-4843-9717-a04ffa7b2dbb');
 
       describe('edit', () => {
         beforeEach(() => {
@@ -115,7 +106,7 @@ describe('enrollment list - permission', () => {
 
         it('should show missing permission snackbar', () => {
           const isMissingPermissionSnackbarPresent = enrollmentListPage.isMissingPermissionSnackbarPresent();
-          expect(isMissingPermissionSnackbarPresent).toBeTruthy('Snackbar not present');
+          expect(isMissingPermissionSnackbarPresent).toBeTruthy('Snackbar should be present but isn\'t');
         });
       });
 
@@ -127,16 +118,13 @@ describe('enrollment list - permission', () => {
 
         it('should show missing permission snackbar', () => {
           const isMissingPermissionSnackbarPresent = enrollmentListPage.isMissingPermissionSnackbarPresent();
-          expect(isMissingPermissionSnackbarPresent).toBeTruthy('Snackbar not present');
+          expect(isMissingPermissionSnackbarPresent).toBeTruthy('Snackbar should be present but isn\'t');
         });
       });
     });
   });
 
   describe('invalid permission (not logged in)', () => {
-    appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-enrollment-list-title').link;
-    let enrollment;
-
     beforeAll(async () => {
       await localStoragePage.clear();
       await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
@@ -148,7 +136,7 @@ describe('enrollment list - permission', () => {
 
 
     describe('enrollment of any user', () => {
-      enrollment = EnrollmentDataProvider.getEnrollment('0614b2e5-d283-41fe-bc54-ce2527bfd308');
+      const enrollment = EnrollmentDataProvider.getEnrollment('4190a4d4-b8a1-4843-9717-a04ffa7b2dbb');
 
       describe('edit', () => {
         beforeEach(() => {
@@ -158,7 +146,7 @@ describe('enrollment list - permission', () => {
 
         it('should show missing permission dialog', () => {
           const isMissingPermissionSnackbarPresent = enrollmentListPage.isMissingPermissionDialogPresent();
-          expect(isMissingPermissionSnackbarPresent).toBeTruthy('Dialog not present');
+          expect(isMissingPermissionSnackbarPresent).toBeTruthy('Dialog should be present but isn\'t');
         });
       });
 
@@ -170,7 +158,7 @@ describe('enrollment list - permission', () => {
 
         it('should show missing permission dialog', () => {
           const isMissingPermissionSnackbarPresent = enrollmentListPage.isMissingPermissionDialogPresent();
-          expect(isMissingPermissionSnackbarPresent).toBeTruthy('Dialog not present');
+          expect(isMissingPermissionSnackbarPresent).toBeTruthy('Dialog should be present but isn\'t');
         });
       });
     });
@@ -187,5 +175,4 @@ describe('enrollment list - permission', () => {
       });
     });
   });
-})
-;
+});

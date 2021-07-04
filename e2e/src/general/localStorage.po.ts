@@ -18,7 +18,7 @@ export class LocalStoragePage {
    */
   async setSettingsObject(settings: any) {
     await browser.executeScript('return window.localStorage.setItem(\'settings\', \'' +
-      JSON.stringify([settings]) + '\');');
+      JSON.stringify(settings) + '\');');
   }
 
   /**

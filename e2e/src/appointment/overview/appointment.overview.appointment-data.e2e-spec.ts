@@ -1,46 +1,30 @@
 import {browser, by} from 'protractor';
 import {AppointmentOverviewPage} from './po/appointment.overview.po';
 import {LocalStoragePage} from '../../general/localStorage.po';
-// import {LoginPage} from '../../general/login.po';
-// import {EnvironmentPage} from '../../general/environment.po';
 import {AppointmentDataProvider} from './providers/appointment.data-provider';
-import {UsersDataProvider} from './po/users.data-provider';
 import {AppointmentOverviewDataPage} from './po/appointment.overview.data.po';
-
-// const crypto = require('crypto');
-//
-// const salt = 'mysalt';
 
 let appointmentLink;
 let appointmentPage: AppointmentOverviewPage;
 let appointmentDataPage: AppointmentOverviewDataPage;
 let localStoragePage: LocalStoragePage;
-// let loginPage: LoginPage;
-// let environmentPage: EnvironmentPage;
 
 beforeAll(async () => {
   await browser.get('/'); // needed to be able to clear localStorage
 
   appointmentPage = new AppointmentOverviewPage();
   appointmentDataPage = new AppointmentOverviewDataPage();
-  // loginPage = new LoginPage();
   localStoragePage = new LocalStoragePage();
-  // environmentPage = new EnvironmentPage();
 
   browser.waitForAngularEnabled(false);
 });
 
-describe('Appointment Data', () => {
-
-  /**
-   * TODO with files
-   */
-
+describe('appointment overview appointment data', () => {
   describe('default', () => {
     let appointment;
 
     beforeAll(async () => {
-      appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-title').link;
+      appointmentLink = 'valid';
 
       await localStoragePage.clear();
       await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
@@ -48,7 +32,7 @@ describe('Appointment Data', () => {
 
       await appointmentPage.navigateToAppointment(appointmentLink);
 
-      appointment = AppointmentDataProvider.getAppointment('test-protractor-appointment-title');
+      appointment = AppointmentDataProvider.getAppointment(appointmentLink);
     });
 
     it('location should be correct', () => {
@@ -56,6 +40,8 @@ describe('Appointment Data', () => {
       expect(location).toBe(appointment.location);
     });
 
+    // TOODO
+    // PARSING
     // it('date should be correct', () => {
     //   const date = appointmentPage.getAppointmentDataDate();
     //
@@ -72,24 +58,18 @@ describe('Appointment Data', () => {
 
     it('creator name should be correct', () => {
       const creatorName = appointmentDataPage.getAppointmentDataCreatorName();
-
-      const creator = UsersDataProvider.getUser(appointment.creatorId);
-
-      expect(creatorName).toBe(creator.firstName + ' ' + creator.lastName);
+      expect(creatorName).toBe(appointment.creator.name);
     });
 
-    it('creator username should be present', () => {
+    it('creator username should be correct', () => {
       const creatorUsername = appointmentDataPage.getAppointmentDataCreatorUsername();
-
-      const creator = UsersDataProvider.getUser(appointment.creatorId);
-
-      expect(creatorUsername).toBe('@' + creator.username);
+      expect(creatorUsername).toBe('@' + appointment.creator.username);
     });
   });
 
   describe('without deadline', () => {
     beforeAll(async () => {
-      appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-no_deadline-title').link;
+      appointmentLink = 'no-deadline';
 
       await localStoragePage.clear();
       await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
@@ -100,15 +80,13 @@ describe('Appointment Data', () => {
 
     it('deadline should not be present', () => {
       const isDeadlinePresent = appointmentDataPage.isAppointmentDataDeadlinePresent();
-      expect(isDeadlinePresent).toBeFalsy('Deadline is present');
+      expect(isDeadlinePresent).toBeFalsy('Deadline should not be present but is');
     });
   });
 
   describe('with files', () => {
-    const appointment = AppointmentDataProvider.getAppointment('test-protractor-appointment-file-title');
-
     beforeAll(async () => {
-      appointmentLink = appointment.link;
+      appointmentLink = 'with-files';
 
       await localStoragePage.clear();
       await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
@@ -125,11 +103,22 @@ describe('Appointment Data', () => {
     });
 
     it('correct file name', () => {
-      const getFilesElements = appointmentDataPage.getFileBlocks();
-      const fileElement = getFilesElements.first().element(by.css('a'));
+      const filesElements = appointmentDataPage.getFileBlocks();
+      const fileElement = filesElements.first().element(by.css('a'));
       const fileName = fileElement.getText();
 
-      expect(fileName).toBe(appointment.files[0].name);
+      expect(fileName).toBe('testfile-1.pdf');
+    });
+
+    describe('click', () => {
+      it('correct file name', () => {
+        appointmentDataPage.clickFirstFile();
+
+        const url = 'https://localhost:3000/files/2e57b350-78fa-472b-b42f-b1de84dac157';
+        const pageRedirected = appointmentPage.pageRedirectedToUrl(url);
+
+        expect(pageRedirected).toBeTruthy('Not redirected to file download');
+      });
     });
   });
 

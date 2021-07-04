@@ -21,9 +21,13 @@ exports.config = {
         '--disable-dev-shm-usage'
       ]
     },
+    chromeDriver: "./node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_91.0.4472.101",
     browserName: "chrome",
   },
-  chromeDriver: '../node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_87.0.4280.141', // make sure to unzip if local
+  mocks: {
+    default: [], // default value: []
+    dir: 'mocks' // default value: 'mocks'
+  },
   directConnect: true,
   baseUrl: "https://localhost:4200",
   framework: "jasmine",

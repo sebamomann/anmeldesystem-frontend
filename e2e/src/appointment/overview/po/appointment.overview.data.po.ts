@@ -63,5 +63,10 @@ export class AppointmentOverviewDataPage {
   public getFileBlocks() {
     return element.all(by.css('.file'));
   }
+
+  public clickFirstFile() {
+    const elements = element.all(by.css('.file'));
+    elements.first().click();
+  }
 }
 

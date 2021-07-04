@@ -4,20 +4,8 @@ export class AppointmentOverviewEnrollmentListPage {
   constructor() {
   }
 
-  private static getElementLoginHint() {
+  public static getElementLoginHint() {
     return element(by.css('#login_hint'));
-  }
-
-  public clickLoginHintLoginButton() {
-    const elem = AppointmentOverviewEnrollmentListPage.getElementLoginHint();
-    const button = elem.element(by.tagName('button'));
-
-    return button.click();
-  }
-
-  public isLoginHintPresent() {
-    const elem = AppointmentOverviewEnrollmentListPage.getElementLoginHint();
-    return elem.isPresent();
   }
 
   public getEnrollmentBlocks() {
@@ -86,16 +74,25 @@ export class AppointmentOverviewEnrollmentListPage {
     const elem = element(by.css('#cancel'));
 
     const EC = protractor.ExpectedConditions; // because its a dialog
-    browser.wait(EC.presenceOf(elem), 20000, 'Element taking too long to be present');
+    browser.wait(EC.presenceOf(elem), 2000, 'Element taking too long to be present');
 
     return elem.click();
+  }
+
+  public isEmptyEnrollmentListHintPresent() {
+    const elem = element(by.css('#empty-enrollment-list-hint'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.presenceOf(elem), 2000, 'Element taking too long to be present');
+
+    return elem.isPresent();
   }
 
   public isMissingPermissionSnackbarPresent() {
     const elem = element(by.css('.snackbar_missing_permissions'));
 
     const EC = protractor.ExpectedConditions;
-    browser.wait(EC.presenceOf(elem), 20000, 'Element taking too long to be present');
+    browser.wait(EC.presenceOf(elem), 2000, 'Element taking too long to be present');
 
     return elem.isPresent();
   }
@@ -104,7 +101,7 @@ export class AppointmentOverviewEnrollmentListPage {
     const elem = element(by.css('#enrollment-deletion-confirmation-dialog'));
 
     const EC = protractor.ExpectedConditions;
-    browser.wait(EC.presenceOf(elem), 20000, 'Element taking too long to be present');
+    browser.wait(EC.presenceOf(elem), 2000, 'Element taking too long to be present');
 
     return elem.isPresent();
   }
@@ -113,7 +110,7 @@ export class AppointmentOverviewEnrollmentListPage {
     const elem = element(by.css('#enrollment-deletion-confirmation-dialog'));
 
     const EC = protractor.ExpectedConditions;
-    browser.wait(EC.invisibilityOf(elem), 20000, 'Element taking too long to disappear');
+    browser.wait(EC.invisibilityOf(elem), 2000, 'Element taking too long to disappear');
 
     return elem.isPresent();
   }
@@ -122,7 +119,7 @@ export class AppointmentOverviewEnrollmentListPage {
     const elem = element(by.css('#missing-permission-dialog'));
 
     const EC = protractor.ExpectedConditions;
-    browser.wait(EC.presenceOf(elem), 20000, 'Element taking too long to be present');
+    browser.wait(EC.presenceOf(elem), 2000, 'Element taking too long to be present');
 
     return elem.isPresent();
   }
@@ -136,9 +133,18 @@ export class AppointmentOverviewEnrollmentListPage {
     const elem = element(by.css('[enrollment-id="' + id + '"].enrollment-additions'));
 
     const EC = protractor.ExpectedConditions;
-    browser.wait(EC.invisibilityOf(elem), 20000, 'Element taking too long to disappear');
+    browser.wait(EC.invisibilityOf(elem), 2000, 'Element taking too long to disappear');
 
     return elem.isPresent();
+  }
+
+  public async waitForEnrollmentPanelToBeExpanded(id: string): Promise<void> {
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment-additions'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.visibilityOf(elem), 2000, 'Element taking too long to be present');
+
+    return;
   }
 }
 

@@ -1,17 +1,13 @@
 import {browser} from 'protractor';
 import {AppointmentOverviewPage} from './po/appointment.overview.po';
-import {AppointmentDataProvider} from './providers/appointment.data-provider';
 import {UsersDataProvider} from './po/users.data-provider';
 import {AppointmentOverviewMenuPage} from './po/appointment.overview.menu.po';
 import {LocalStoragePage} from '../../general/localStorage.po';
 import {LoginPage} from '../../general/login.po';
 import {AppointmentOverviewDataPage} from './po/appointment.overview.data.po';
 
-// const crypto = require('crypto');
-//
-// const salt = 'mysalt';
+const appointmentLink = 'valid';
 
-let appointmentLink;
 let appointmentPage: AppointmentOverviewPage;
 let appointmentDataPage: AppointmentOverviewDataPage;
 let menuPage: AppointmentOverviewMenuPage;
@@ -30,34 +26,105 @@ beforeAll(async () => {
   browser.waitForAngularEnabled(false);
 });
 
-describe('Appointment Overview Menu Page', () => {
-  describe('Menu', () => {
-    describe('general', () => {
-      beforeAll(async () => {
-        appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-title').link;
+describe('appointment overview menu', () => {
+  describe('general', () => {
+    beforeAll(async () => {
+      await localStoragePage.clear();
+      await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
+      await localStoragePage.pinAppointment(appointmentLink);
 
-        await localStoragePage.clear();
-        await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
-        await localStoragePage.pinAppointment(appointmentLink);
-
-        await appointmentPage.navigateToAppointment(appointmentLink);
-      });
-
-      it('click menu should open menu', () => {
-        appointmentDataPage.openAppointmentMenu();
-        const isMenuOpened = appointmentDataPage.isMenuOpened();
-
-        expect(isMenuOpened).toBeTruthy(`Menu did not open`);
-      });
+      await appointmentPage.navigateToAppointment(appointmentLink);
     });
 
-    describe('not logged in', () => {
-      beforeAll(async () => {
-        appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-title').link;
+    it('click should open menu', () => {
+      appointmentDataPage.openAppointmentMenu();
+      const isMenuOpened = appointmentDataPage.isMenuOpened();
 
+      expect(isMenuOpened).toBeTruthy(`Menu did not open`);
+    });
+  });
+
+  describe('not logged in', () => {
+    beforeAll(async () => {
+      await localStoragePage.clear();
+      await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
+      await localStoragePage.setSettingsObject({});
+
+      await appointmentPage.navigateToAppointment(appointmentLink);
+    });
+
+    describe('click', () => {
+      beforeAll(() => {
+        menuPage.openAppointmentMenu();
+      });
+
+      it('should have 3 menu items', () => {
+        const menuItems = menuPage.getMenuItems();
+        const nrOfMenuItems = menuItems.count();
+
+        expect(nrOfMenuItems).toBe(3);
+      });
+
+      it('menu items should have correct names', async () => {
+        const items = await menuPage.getMenuItemsNames();
+
+        const isItemValid = items[1] === 'Anpinnen' || items[1] === 'Entfernen';
+
+        expect(items[0]).toEqual('Teilen');
+        expect(isItemValid).toBeTruthy();
+        expect(items[2]).toEqual('Benachrichtigungen aktivieren');
+      });
+    });
+  });
+
+  describe('logged in', () => {
+    beforeAll(async () => {
+      await localStoragePage.clear();
+      await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
+      await localStoragePage.pinAppointment(appointmentLink);
+
+      await loginPage.loginViaApi(UsersDataProvider.getUser('f67e953d-cb85-4f41-b077-4a0bf8485bc5'));
+
+      await appointmentPage.navigateToAppointment(appointmentLink);
+    });
+
+    describe('click', () => {
+      beforeAll(() => {
+        menuPage.openAppointmentMenu();
+      });
+
+      it('should open menu', () => {
+        const isMenuOpened = menuPage.isMenuOpened();
+
+        expect(isMenuOpened).toBe(true);
+      });
+
+      it('should have 4 menu items', () => {
+        const menuItems = menuPage.getMenuItems();
+        const nrOfMenuItems = menuItems.count();
+
+        expect(nrOfMenuItems).toBe(4);
+      });
+
+      it('menu items should have correct name', async () => {
+        const items = await menuPage.getMenuItemsNames();
+
+        const isItemValid = items[1] === 'Anpinnen' || items[1] === 'Entfernen';
+
+        expect(items[0]).toEqual('Teilen');
+        expect(isItemValid).toBeTruthy();
+        expect(items[2]).toEqual('Einstellungen');
+        expect(items[3]).toEqual('Benachrichtigungen aktivieren');
+      });
+    });
+  });
+
+  describe('pin check', () => {
+    describe('not pinned', () => {
+      beforeAll(async () => {
         await localStoragePage.clear();
         await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
-        await localStoragePage.setSettingsObject({});
+        await localStoragePage.setSettingsObject({autoPinAppointment: false}); // make sure autopin is disabled
 
         await appointmentPage.navigateToAppointment(appointmentLink);
       });
@@ -65,118 +132,35 @@ describe('Appointment Overview Menu Page', () => {
       describe('click menu', () => {
         beforeAll(() => {
           menuPage.openAppointmentMenu();
-        });
-
-        it('should have 3 menu items', () => {
-          const menuItems = menuPage.getMenuItems();
-          const nrOfMenuItems = menuItems.count();
-
-          expect(nrOfMenuItems).toBe(3);
-        });
-
-        it('menu items should have correct names', async () => {
-          const items = await menuPage.getMenuItemsNames();
-
-          const isItemValid = items[1] === 'Anpinnen' || items[1] === 'Entfernen';
-
-          expect(items[0]).toEqual('Teilen');
-          expect(isItemValid).toBeTruthy();
-          expect(items[2]).toEqual('Benachrichtigungen aktivieren');
-        });
-      });
-    });
-
-    describe('logged In', () => {
-      beforeAll(async () => {
-        appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-title').link;
-
-        await localStoragePage.clear();
-        await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
-        await localStoragePage.pinAppointment(appointmentLink);
-
-        await loginPage.loginViaApi(UsersDataProvider.getUser('f67e953d-cb85-4f41-b077-4a0bf8485bc5'));
-
-        await appointmentPage.navigateToAppointment(appointmentLink);
-      });
-
-      describe('click menu', () => {
-        beforeAll(() => {
-          menuPage.openAppointmentMenu();
-        });
-
-        it('should open menu', () => {
-          const isMenuOpened = menuPage.isMenuOpened();
-
-          expect(isMenuOpened).toBe(true);
-        });
-
-        it('should have 4 menu items', () => {
-          const menuItems = menuPage.getMenuItems();
-          const nrOfMenuItems = menuItems.count();
-
-          expect(nrOfMenuItems).toBe(4);
         });
 
         it('menu items should have correct name', async () => {
           const items = await menuPage.getMenuItemsNames();
 
-          const isItemValid = items[1] === 'Anpinnen' || items[1] === 'Entfernen';
-
-          expect(items[0]).toEqual('Teilen');
-          expect(isItemValid).toBeTruthy();
-          expect(items[2]).toEqual('Einstellungen');
-          expect(items[3]).toEqual('Benachrichtigungen aktivieren');
+          expect(items[1]).toEqual('Anpinnen');
         });
       });
     });
 
-    describe('pin check', () => {
-      describe('not pinned', () => {
-        beforeAll(async () => {
-          appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-title').link;
+    describe('pinned', () => {
+      beforeAll(async () => {
+        await localStoragePage.clear();
+        await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
+        await localStoragePage.setSettingsObject({autoPinAppointment: false}); // make sure autopin is disabled
+        await localStoragePage.pinAppointment(appointmentLink);
 
-          await localStoragePage.clear();
-          await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
-          await localStoragePage.setSettingsObject({autoPinAppointment: false}); // make sure autopin is disabled
-
-          await appointmentPage.navigateToAppointment(appointmentLink);
-        });
-
-        describe('click menu', () => {
-          beforeAll(() => {
-            menuPage.openAppointmentMenu();
-          });
-
-          it('menu items should have correct name', async () => {
-            const items = await menuPage.getMenuItemsNames();
-
-            expect(items[1]).toEqual('Anpinnen');
-          });
-        });
+        await appointmentPage.navigateToAppointment(appointmentLink);
       });
 
-      describe('pinned', () => {
-        beforeAll(async () => {
-          appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-title').link;
-
-          await localStoragePage.clear();
-          await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
-          await localStoragePage.setSettingsObject({autoPinAppointment: false}); // make sure autopin is disabled
-          await localStoragePage.pinAppointment(appointmentLink);
-
-          await appointmentPage.navigateToAppointment(appointmentLink);
+      describe('click menu', () => {
+        beforeAll(() => {
+          menuPage.openAppointmentMenu();
         });
 
-        describe('click menu', () => {
-          beforeAll(() => {
-            menuPage.openAppointmentMenu();
-          });
+        it('menu items should have correct name', async () => {
+          const items = await menuPage.getMenuItemsNames();
 
-          it('menu items should have correct name', async () => {
-            const items = await menuPage.getMenuItemsNames();
-
-            expect(items[1]).toEqual('Entfernen');
-          });
+          expect(items[1]).toEqual('Entfernen');
         });
       });
     });

@@ -1,5 +1,6 @@
 import {browser, by, element, protractor} from 'protractor';
 import {HttpClient} from 'protractor-http-client/dist/http-client';
+import {AppointmentOverviewEnrollmentListPage} from './appointment.overview.enrollment-list.po';
 
 export class AppointmentOverviewPage {
   constructor() {
@@ -141,6 +142,18 @@ export class AppointmentOverviewPage {
     ref.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, 'a'));
     ref.sendKeys(protractor.Key.BACK_SPACE);
     return ref.clear();
+  }
+
+  public isLoginHintPresent() {
+    const elem = AppointmentOverviewEnrollmentListPage.getElementLoginHint();
+    return elem.isPresent();
+  }
+
+  public clickLoginHintLoginButton() {
+    const elem = AppointmentOverviewEnrollmentListPage.getElementLoginHint();
+    const button = elem.element(by.tagName('button'));
+
+    return button.click();
   }
 
   public async deselectSelfEnrollment() {

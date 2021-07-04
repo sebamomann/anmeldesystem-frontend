@@ -1,14 +1,8 @@
 import {browser} from 'protractor';
 import {AppointmentOverviewPage} from './po/appointment.overview.po';
-import {AppointmentDataProvider} from './providers/appointment.data-provider';
 import {EnrollmentDataProvider} from './providers/enrollment.data-provider';
-import {UsersDataProvider} from './po/users.data-provider';
 import {LocalStoragePage} from '../../general/localStorage.po';
 import {AppointmentOverviewEnrollmentListPage} from './po/appointment.overview.enrollment-list.po';
-
-// const crypto = require('crypto');
-//
-// const salt = 'mysalt';
 
 let appointmentLink;
 let page: AppointmentOverviewPage;
@@ -26,41 +20,62 @@ beforeAll(async () => {
 });
 
 describe('enrollment list', () => {
+  describe('empty list', () => {
+    beforeAll(async () => {
+      appointmentLink = 'empty';
 
-  /**
-   * TODO empty list
-   */
+      await localStoragePage.clear();
+      await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
 
-  beforeAll(async () => {
-    appointmentLink = AppointmentDataProvider.getAppointment('test-protractor-appointment-enrollment-list-title').link;
+      await page.navigateToAppointment(appointmentLink);
+    });
 
-    await localStoragePage.clear();
-    await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
+    it('should not show any enrollments', () => {
+      const enrollments = enrollmentListPage.getEnrollmentBlocks();
+      const nrOfEnrollments = enrollments.count();
 
-    await page.navigateToAppointment(appointmentLink);
+      expect(nrOfEnrollments).toBe(0);
+    });
+
+    it('should show 2 creator enrollments', () => {
+      const isEmptyEnrollmentListHintPresent = enrollmentListPage.isEmptyEnrollmentListHintPresent();
+
+      expect(isEmptyEnrollmentListHintPresent).toBeTruthy();
+    });
   });
 
+  // TODO
+  // additions
   describe('correctly display enrollments', () => {
+    beforeAll(async () => {
+      appointmentLink = 'valid';
+
+      await localStoragePage.clear();
+      await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
+
+      await page.navigateToAppointment(appointmentLink);
+    });
+
     describe('correct number of Enrollments', () => {
-      it('should show 8 in total enrollments', () => {
+      it('should show 4 in total enrollments', () => {
         const enrollments = enrollmentListPage.getEnrollmentBlocks();
         const nrOfEnrollments = enrollments.count();
 
-        expect(nrOfEnrollments).toBe(8);
+        expect(nrOfEnrollments).toBe(4);
       });
 
-      it('should show 3 creator enrollments', () => {
+      it('should show 2 creator enrollments', () => {
         const enrollments = enrollmentListPage.getEnrollmentBlocksCreatedByUser();
         const nrOfEnrollments = enrollments.count();
 
-        expect(nrOfEnrollments).toBe(3);
+        expect(nrOfEnrollments).toBe(2);
       });
 
-      it('should show 5 unknown enrollments', () => {
+      it('should show 2 unknown enrollments', () => {
         const enrollments = enrollmentListPage.getEnrollmentBlocksCreatedByUnknown();
         const nrOfEnrollments = enrollments.count();
 
-        expect(nrOfEnrollments).toBe(5);
+        expect(nrOfEnrollments).toBe(2);
       });
     });
 
@@ -69,23 +84,17 @@ describe('enrollment list', () => {
 
       it('should have correct name', () => {
         const actual_name = enrollmentListPage.getEnrollmentNameById(enrollment.id);
-
-        const user = UsersDataProvider.getUser(enrollment.creatorId);
-
-        expect(actual_name).toEqual(`${user.firstName} ${user.lastName}`);
+        expect(actual_name).toEqual(`User Enrollment One`);
       });
 
       it('should have correct username', () => {
         const actual_username = enrollmentListPage.getEnrollmentUsernameById(enrollment.id);
-
-        const user = UsersDataProvider.getUser(enrollment.creatorId);
-
-        expect(actual_username).toEqual(`@${user.username}`);
+        expect(actual_username).toEqual(`@userenrollmentone`);
       });
     });
 
     describe('unknown enrollment', () => {
-      const enrollment = EnrollmentDataProvider.getEnrollment('c36b8c96-db97-4869-8bd6-35f0acbd96f1');
+      const enrollment = EnrollmentDataProvider.getEnrollment('c7a18228-9dc5-46f0-9366-def497121ddc');
 
       describe('comment', () => {
         it('should have correct name', () => {
@@ -103,46 +112,46 @@ describe('enrollment list', () => {
           const comment = enrollmentListPage.getEnrollmentComment(enrollment.id);
 
           expect(comment).toEqual(enrollment.comment);
-          expect(commentSeparatorPresent).toBeTruthy('Comment separator not present');
+          expect(commentSeparatorPresent).toBeTruthy('Comment separator should be present but isn\'t');
         });
       });
 
       describe('no comment', () => {
-        const enrollmentId = 'ead32e43-f6f2-4a23-b6c1-f73b49ccf348';
+        const enrollmentId = 'dd5837e5-1f1d-4a2d-85e1-7dcb77e8ab2a';
 
         it('should have no comment', () => {
           const enrollmentIsPresent = enrollmentListPage.isEnrollmentPresent(enrollmentId);
           const enrollmentCommentPresent = enrollmentListPage.isEnrollmentCommentPresent(enrollmentId);
           const commentSeparatorPresent = enrollmentListPage.isEnrollmentCommentSeparatorPresent(enrollmentId);
 
-          expect(enrollmentIsPresent).toBeTruthy('Enrollment is not present');
-          expect(enrollmentCommentPresent).toBeFalsy('Enrollment comment is present');
-          expect(commentSeparatorPresent).toBeFalsy('Enrollment comment separator is present');
+          expect(enrollmentIsPresent).toBeTruthy('Enrollment should be present but isn\'t');
+          expect(enrollmentCommentPresent).toBeFalsy('Enrollment comment should not be present but is');
+          expect(commentSeparatorPresent).toBeFalsy('Enrollment comment separator should not be present but is');
         });
       });
     });
-  });
 
-  describe('click enrollment', () => {
-    const enrollmentId = '0614b2e5-d283-41fe-bc54-ce2527bfd308';
+    describe('click enrollment', () => {
+      const enrollmentId = '0614b2e5-d283-41fe-bc54-ce2527bfd308';
 
-    beforeEach(() => {
-      enrollmentListPage.toggleEnrollmentPanel(enrollmentId);
-    });
-
-    it('should expand panel', () => {
-      const isEnrollmentPanelExpanded = enrollmentListPage.isEnrollmentPanelExpanded(enrollmentId);
-      expect(isEnrollmentPanelExpanded).toBeTruthy('Panel not expanded');
-    });
-
-    describe('click enrollment again', () => {
-      beforeEach(() => {
-        enrollmentListPage.toggleEnrollmentPanel(enrollmentId);
+      beforeAll(() => {
+        enrollmentListPage.toggleEnrollmentPanel(enrollmentId); // expand
       });
 
-      it('should collapse panel', () => {
-        const isEnrollmentPanelCollapsed = enrollmentListPage.isEnrollmentPanelCollapsed(enrollmentId);
-        expect(isEnrollmentPanelCollapsed).toBeTruthy('Panel not collapsed');
+      it('should expand panel', () => {
+        const isEnrollmentPanelExpanded = enrollmentListPage.isEnrollmentPanelExpanded(enrollmentId);
+        expect(isEnrollmentPanelExpanded).toBeTruthy('Panel should be expanded but isn\'t');
+      });
+
+      describe('click enrollment again', () => {
+        beforeAll(async () => {
+          enrollmentListPage.toggleEnrollmentPanel(enrollmentId); // collapse
+        });
+
+        it('should collapse panel', () => {
+          const isEnrollmentPanelCollapsed = enrollmentListPage.isEnrollmentPanelCollapsed(enrollmentId);
+          expect(isEnrollmentPanelCollapsed).toBeTruthy('Panel should be collapsed but isn\'t');
+        });
       });
     });
   });

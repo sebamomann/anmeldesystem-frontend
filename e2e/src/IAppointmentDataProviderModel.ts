@@ -11,7 +11,10 @@ export interface IAppointmentDataProviderModel {
   maxEnrollments: number;
   hidden: boolean;
   driverAddition: boolean;
-  creatorId: string;
+  creator: {
+    name: string,
+    username: string,
+  };
   iat: string;
   lud: string;
   files: IFileDataProviderModel[]
