@@ -10,9 +10,9 @@ import {Observable, Subscription} from 'rxjs';
 import {AppointmentProvider} from '../../appointment.provider';
 import {SEOService} from '../../../../_helper/_seo.service';
 import {HttpErrorResponse} from '@angular/common/http';
-import {AppointmentUtil} from '../../../../_util/appointmentUtil.util';
 import {EnrollmentService} from '../../../../services/enrollment.service';
 import {AuthenticationValuesService} from '../../../../services/authentication.values.service';
+import {AppointmentUtil} from '../../../../_util/appointmentUtil.util';
 
 const HttpStatus = require('http-status-codes');
 
@@ -61,21 +61,22 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
 
     this.appointment$ = this.appointmentProvider.appointment$;
     this.appointment$$ = this.appointment$
-      .subscribe((sAppointment) => {
-        if (sAppointment !== undefined && !this.loaded) { // CAN BE NULL !!!
-          this.appointment = sAppointment;
-          this.loaded = true;
-          this.main();
+      .subscribe(
+        (sAppointment) => {
+          if (sAppointment !== undefined && !this.loaded) { // CAN BE NULL !!!
+            this.appointment = sAppointment;
+            this.loaded = true;
+            this.main();
 
-          if (this.appointment) {
-            this.__SEO();
+            if (this.appointment) {
+              this.__SEO();
+            }
+          } else if (!this.loaded) {
+            this.appointmentProvider.loadAppointment(this.linkFromURL);
+          } else {
+            // IGNORE FURTHER UPDATES
           }
-        } else if (!this.loaded) {
-          this.appointmentProvider.loadAppointment(this.linkFromURL);
-        } else {
-          // IGNORE FURTHER UPDATES
-        }
-      });
+        });
   }
 
   ngOnInit() {
@@ -107,6 +108,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
     this.directSend = this.triggerDirectSend && this.userIsLoggedIn;
 
     if (this.triggerDirectSend && !this.creatorError) {
+      console.log('direct');
       this.initializeEnrollmentSend();
       this.stepper.selectedIndex = this.stepper.steps.length - 1;
       return;
@@ -149,8 +151,9 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
     return this.enrollmentOutput.selfEnrollment;
   }
 
-  public inUseError(fColumn: any) {
-    const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
+  public inUseError(data: any) {
+    const attr = data.attribute;
+    const uppercaseName = attr.charAt(0).toUpperCase() + attr.substring(1);
     const fnName: string = 'set' + uppercaseName + 'Error';
 
     this[fnName]();
@@ -177,6 +180,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
     } else {
       // not logged
       // tmp store item for possible login redirect
+      console.log('set storage');
       localStorage.setItem(EnrollmentCreateComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY, JSON.stringify(this.enrollmentOutput));
 
       this.showLoginAndMailForm = true;
@@ -215,6 +219,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
    * Eventually send enrollment request, depending on edit or no edit;
    */
   public sendEnrollmentRequest() {
+    console.log(this.enrollmentOutput);
     const enrollment = this.enrollmentOutput;
 
     setTimeout(() => { // needed so loading directive triggers again after login or sth
@@ -232,9 +237,11 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
 
           this.request_success_finalize();
         }, (err: HttpErrorResponse) => {
+          console.log(err);
+          console.log('LOL');
           this.sendingRequestEmit.emit(false);
 
-          if (err.status === HttpStatus.BAD_REQUEST && err.error.code === 'DUPLICATE_ENTRY') {
+          if (err.status === HttpStatus.CONFLICT && err.error.code === 'DUPLICATE_VALUES') {
             this.request_error_handleDuplicateValues(err);
           }
         }
@@ -257,16 +264,21 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
     this.enrollmentOutput = JSON.parse(localStorage.getItem(EnrollmentCreateComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY));
 
     if (!this.enrollmentOutput) {
+      console.log('NOT FROM STORAGE');
       this.enrollmentOutput = new EnrollmentModel();
     }
+
+    console.log('get storage');
+    console.log(this.enrollmentOutput);
   }
 
   private request_error_handleDuplicateValues(err: HttpErrorResponse) {
-    err.error.data.forEach(fColumn => {
-      if (fColumn === 'creator') {
+    err.error.data.forEach(dataElement => {
+      console.log(dataElement);
+      if (dataElement.object === 'user') {
         this.setCreatorError();
       } else {
-        this.inUseError(fColumn);
+        this.inUseError(dataElement);
       }
     });
   }

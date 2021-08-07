@@ -78,6 +78,13 @@ export class AppointmentSocketioService {
         this.websocketSubscriptionRetryCount$.next(0);
 
         this.socket.on('update', (_link: any) => {
+          console.log('SOCKET UPDATE');
+          console.log('SOCKET UPDATE');
+          console.log('SOCKET UPDATE');
+          console.log('SOCKET UPDATE');
+          console.log('SOCKET UPDATE');
+          console.log('SOCKET UPDATE');
+          console.log('SOCKET UPDATE');
           if (this.subscription === _link) {
             // If automatic update is allowed
             if (this.settingsService.autoLoadOnWsCall

@@ -22,10 +22,11 @@ export class AuthInterceptor implements HttpInterceptor {
     if (authHeader) {
       return request.clone({
         setHeaders: {
-          Authorization: 'Bearer ' + authHeader
+          Authorization: 'Bearer ' + authHeader,
         }
       });
     }
+
     return request;
   }
 

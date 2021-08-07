@@ -4,7 +4,7 @@
   window["env"]["production"] = true;
 
   // window["env"]["API_URL"] = "http://localhost:3000/";
-  window["env"]["API_URL"] = 'https://35d5e98a-8202-4b10-8e4c-328978662b1d.mock.pstmn.io/';
+  window["env"]["API_URL"] = 'http://localhost:3001/';
   window["env"]["BASE_URL"] = "http://localhost:4200/";
 
   window["env"]["VAPID_KEY"] = 'BMqkFS2ITWunnQCLC8nmJVdhSeJDmw1paOe7XK99dHsSxsCqPp-s1AnQm8ByltY1JFEtW2eZqac6PaXB103Ov2k';

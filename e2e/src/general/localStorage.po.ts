@@ -43,4 +43,24 @@ export class LocalStoragePage {
   async setString(key: string, value: string) {
     await browser.executeScript(`return window.localStorage.setItem('${key}', '${value}')`);
   }
+
+  async getObject(key: string) {
+    let obj;
+    let retry = 20;
+
+    while (retry > 0) {
+      retry--;
+      obj = JSON.parse(await browser.executeScript(`return window.localStorage.getItem('${key}')`));
+      if (obj !== null) {
+        return obj;
+      }
+
+      await browser.sleep(100);
+    }
+    throw new Error('object not found');
+  }
+
+  public async getString(key: string): Promise<string> {
+    return browser.executeScript(`return window.localStorage.getItem('${key}')`);
+  }
 }

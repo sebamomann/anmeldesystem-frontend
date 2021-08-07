@@ -26,6 +26,14 @@ export class UsersDataProvider {
       lastName: 'General-EnrollmentCreator-2',
       password: 'mWZWxOaEDFXZNwOzaGhANXjzEhlXZSKsgRLM',
     },
+    '0ab80f61-b3c3-49d6-b18f-efdb2723f217': {
+      id: '0ab80f61-b3c3-49d6-b18f-efdb2723f217',
+      username: 'gjm-test-protractor-general-enrollmentcreator-user-3',
+      mail: 'gjm-test-protractor-general-enrollmentcreator-user-3@testing.go-join.me',
+      firstName: 'GJM-TestUser-Protractor',
+      lastName: 'General-EnrollmentCreator-3',
+      password: 'JPITMveeslcojAuhzOGVGagLFYeZAHutcJgr',
+    },
     'daf0610f-f71a-451a-8d2b-a3854f80daba': {
       id: 'daf0610f-f71a-451a-8d2b-a3854f80daba',
       username: 'gjm-test-protractor-general-regularuser-user-1',

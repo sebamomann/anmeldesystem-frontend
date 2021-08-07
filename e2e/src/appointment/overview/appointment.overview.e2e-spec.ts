@@ -21,7 +21,7 @@ beforeAll(async () => {
     // @ts-ignore
     console.log(window.env);
     // @ts-ignore
-    window.env.API_URL = 'https://2ca53d01-df10-47b3-9375-658631ee71fe.mock.pstmn.io/';
+    window.env.API_URL = 'http://localhost:3001/';
   };
   browser.executeScript(localStorageSetter);
 
@@ -53,7 +53,7 @@ describe('appointment overview', () => {
 
       it('not found card hidden', () => {
         const isAppointmentNotFoundCardPresent = page.isAppointmentNotFoundCardPresent();
-        expect(isAppointmentNotFoundCardPresent).toBeFalsy('Appointment not found card is present');
+        expect(isAppointmentNotFoundCardPresent).toBeFalsy('Appointment not found card should not be present but is');
       });
     });
   });

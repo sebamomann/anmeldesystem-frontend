@@ -39,6 +39,8 @@ export class EnrollmentLoginMailComponent implements OnInit {
   }
 
   public save() {
+    console.log('SAVVEEEE');
+
     if (this.form_mail.valid) {
       this.done__.emit(this.getMail().value);
     }

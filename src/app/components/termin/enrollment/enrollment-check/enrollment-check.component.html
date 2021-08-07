@@ -1,37 +1,39 @@
-<span class="form-component-title"> Fertig? </span>
+<div id="enrollment-check-card">
+  <span class="form-component-title"> Fertig? </span>
 
-<mat-card-content>
-  <app-enrollment-details
-    [appointment]="appointment"
-    [enrollment]="enrollment">
-  </app-enrollment-details>
-</mat-card-content>
+  <mat-card-content>
+    <app-enrollment-details
+      [appointment]="appointment"
+      [enrollment]="enrollment">
+    </app-enrollment-details>
+  </mat-card-content>
 
-<mat-divider></mat-divider>
+  <!--  <mat-divider></mat-divider>-->
 
-<div class="info">
-  Sind alle Daten korrekt?
-</div>
-
-<mat-card-actions class="double">
-  <div>
-    <button (click)="cancel()"
-            class="left"
-            color="primary"
-            id="back_check"
-            mat-button
-            type="button">
-      Zurück
-    </button>
+  <div class="info">
+    Sind alle Daten korrekt?
   </div>
-  <button (click)="save()"
-          [active]="sendingRequestEmit"
-          [innerValue]="'Anmelden'"
-          appLoadingDisable
-          color="primary"
-          id="next_check"
-          mat-raised-button
-          type="submit">
-    Anmelden
-  </button>
-</mat-card-actions>
+
+  <mat-card-actions class="double">
+    <div>
+      <button (click)="cancel()"
+              class="left"
+              color="primary"
+              id="back_check"
+              mat-button
+              type="button">
+        Zurück
+      </button>
+    </div>
+    <button (click)="save()"
+            [active]="sendingRequestEmit"
+            [innerValue]="'Anmelden'"
+            appLoadingDisable
+            color="primary"
+            id="next_check"
+            mat-raised-button
+            type="submit">
+      Anmelden
+    </button>
+  </mat-card-actions>
+</div>

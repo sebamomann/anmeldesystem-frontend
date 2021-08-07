@@ -185,6 +185,10 @@ export class AppointmentOverviewPage {
     return elem.click();
   }
 
+  /**
+   * @deprecated
+   * centralize
+   */
   public pageRedirectedToUrl(url: string) {
     return browser.wait(protractor.ExpectedConditions.urlContains(url), 5000);
   }

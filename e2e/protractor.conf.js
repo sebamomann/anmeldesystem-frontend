@@ -15,14 +15,15 @@ exports.config = {
   capabilities: {
     chromeOptions: {
       args: [
-        // '--headless',
-        '--no-sandbox',
+        '--headless',
+        '--no-sandbox ',
         '--disable-gpu',
         '--disable-dev-shm-usage'
       ]
     },
     chromeDriver: "./node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_91.0.4472.101",
     browserName: "chrome",
+    maxInstances: 3
   },
   mocks: {
     default: [], // default value: []

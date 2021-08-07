@@ -1,22 +1,39 @@
 import {browser, by, element, protractor} from 'protractor';
-import {HttpClient} from 'protractor-http-client/dist/http-client';
 
 // const request = require('request');
 
-export class EnrollmentPage {
-  constructor(private appointmentLink: string) {
+export class EnrollmentCreationPage {
+  constructor() {
   }
 
-  public navigateTo() {
-    return browser.get('/enrollment/add?a=' + this.appointmentLink);
+  public async navigateToEnrollmentCreation(link: string) {
+    return new Promise((resolve, reject) => {
+        browser.get('/enrollment/add?a=' + link)
+          .then(
+            _ => {
+              this.waitForLoadingSpinnerToBeGone();
+
+              resolve();
+            })
+          .catch(
+            _ => {
+              reject();
+            }
+          );
+      }
+    );
+  }
+
+  public waitForLoadingSpinnerToBeGone() {
+    const loader = element(by.css('#loading-overlay'));
+    const EC = protractor.ExpectedConditions;
+
+    browser.wait(EC.visibilityOf(loader), 5000, 'Loading Spinner did not appear');
+    browser.wait(EC.invisibilityOf(loader), 5000, 'Loading Spinner did not disappear');
   }
 
   public getMatCardTitle() {
-    const EC = protractor.ExpectedConditions;
-    const elem = element(by.id('title'));
-    browser.wait(EC.visibilityOf(elem), 10000);
-
-    return elem;
+    return element(by.id('title')).getText();
   }
 
   public spinnerGone() {
@@ -27,11 +44,11 @@ export class EnrollmentPage {
   }
 
   public getName() {
-    const EC = protractor.ExpectedConditions;
-    const elem = element(by.id('name'));
-    browser.wait(EC.visibilityOf(elem), 10000);
+    return element(by.id('name'));
+  }
 
-    return elem;
+  public async getNameValue() {
+    return this.getName().getAttribute('value');
   }
 
   public getSeats() {
@@ -51,11 +68,11 @@ export class EnrollmentPage {
   }
 
   public getComment() {
-    const EC = protractor.ExpectedConditions;
-    const elem = element(by.id('comment'));
-    browser.wait(EC.visibilityOf(elem), 10000);
+    return element(by.id('comment'));
+  }
 
-    return elem;
+  public async getCommentValue() {
+    return this.getComment().getAttribute('value');
   }
 
   public getSubmit() {
@@ -70,20 +87,20 @@ export class EnrollmentPage {
     return elem;
   }
 
-  public setName(value: string) {
+  public async setName(value: string) {
     const ref = this.getName();
-    const EC2 = protractor.ExpectedConditions;
-    browser.wait(EC2.elementToBeClickable(ref), 10000, 'Element taking too long to be clickable');
+    // const EC2 = protractor.ExpectedConditions;
+    // browser.wait(EC2.elementToBeClickable(ref), 2000, 'Element taking too long to be clickable');
 
     return ref.clear().then(async () => {
       await ref.sendKeys(value);
     });
   }
 
-  public setEmail(value: string) {
-    const ref = element(by.id('mail'));
+  public async setEmail(value: string) {
+    const ref = this.getMail();
     const EC2 = protractor.ExpectedConditions;
-    browser.wait(EC2.elementToBeClickable(ref), 10000, 'Element taking too long to be clickable');
+    browser.wait(EC2.elementToBeClickable(ref), 2000, 'Element taking too long to be clickable');
     return ref.clear().then(async () => {
       await ref.sendKeys(value);
     });
@@ -91,7 +108,12 @@ export class EnrollmentPage {
 
   public async setComment(value: string) {
     const ref = this.getComment();
-    return await ref.clear().then(() => ref.sendKeys(value));
+    const EC2 = protractor.ExpectedConditions;
+    browser.wait(EC2.elementToBeClickable(ref), 2000, 'Element taking too long to be clickable');
+
+    return ref.clear().then(async () => {
+      await ref.sendKeys(value);
+    });
   }
 
   public submit() {
@@ -123,9 +145,9 @@ export class EnrollmentPage {
   }
 
   public loginAndMailFormExists() {
-    const until = protractor.ExpectedConditions;
+    // const until = protractor.ExpectedConditions;
     const elm = element(by.id('login-mail-form'));
-    browser.wait(until.presenceOf(elm), 10000);
+    // browser.wait(until.presenceOf(elm), 10000);
 
     return elm.isPresent();
   }
@@ -136,6 +158,11 @@ export class EnrollmentPage {
 
   public loginAndMailFormLoginContentAltExists() {
     return element(by.id('login-content-alt')).isPresent();
+  }
+
+  public getNameErrorValue() {
+    const elm = element(by.id('name-error'));
+    return elm.getText();
   }
 
   public async getNameError() {
@@ -162,19 +189,6 @@ export class EnrollmentPage {
     return elem;
   }
 
-  public async login(val: string) {
-    const data = {
-      username: val,
-      password: '123',
-    };
-    // @ts-ignore
-
-    const http = new HttpClient(await browser.executeScript('return window.env.API_URL;') ? await browser.executeScript('return window.env.API_URL;') : 'http://localhost:3000');
-
-    const res = await http.post('/auth/login', data);
-    await browser.executeScript('return window.localStorage.setItem(\'currentUser\', \'' + JSON.stringify(res.body) + '\');');
-  }
-
   public getSelfEnrollment() {
     const EC = protractor.ExpectedConditions;
     const elem = element(by.id('selfEnrollment-input'));
@@ -192,19 +206,12 @@ export class EnrollmentPage {
   }
 
   public goBack() {
-    browser.sleep(100); // TODO ???????? thats dumb, but doesnt work otherwise somehow ....
     const elm = element(by.id('back'));
-    const EC2 = protractor.ExpectedConditions;
-    browser.wait(EC2.visibilityOf(elm) && EC2.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
-
     return elm.click();
   }
 
   public goBackCheck() {
     const elm = element(by.id('back_check'));
-    const EC2 = protractor.ExpectedConditions;
-    browser.wait(EC2.visibilityOf(elm) && EC2.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
-
     return elm.click();
   }
 
@@ -247,10 +254,17 @@ export class EnrollmentPage {
     return browser.wait(EC.presenceOf(e), 10000, 'Form could not be loaded');
   }
 
-  public clearName() {
+  public isMainFormPresent() {
+    const elem = element(by.id('main-form'));
+    return elem.isPresent();
+  }
+
+  public async causeEmptyErrorName() {
     const ref = this.getName();
+
     ref.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, 'a'));
     ref.sendKeys(protractor.Key.BACK_SPACE);
+
     return ref.clear();
   }
 
@@ -263,12 +277,13 @@ export class EnrollmentPage {
     return Promise.resolve();
   }
 
-  async closeLoginSnackbar() {
-    browser.driver.wait(() =>
-      browser.driver.getCurrentUrl().then(url => /enrollment\/add\?a=url/.test(url.replace(this.appointmentLink, 'url'))), 10000);
-
-    await browser.executeScript('document.getElementsByClassName(\'login-snackbar\')[0].remove();');
-  }
+  //
+  // async closeLoginSnackbar() {
+  //   browser.driver.wait(() =>
+  //     browser.driver.getCurrentUrl().then(url => /enrollment\/add\?a=url/.test(url.replace(this.appointmentLink, 'url'))), 10000);
+  //
+  //   await browser.executeScript('document.getElementsByClassName(\'login-snackbar\')[0].remove();');
+  // }
 
   public textNotToBePresentInElement(elem, text) {
     return async () => {
@@ -318,31 +333,19 @@ export class EnrollmentPage {
     return elm.click();
   }
 
-  public async getCheckName() {
-    const until = protractor.ExpectedConditions;
+  public getCheckNameValue() {
     const elm = element(by.css('.enrollment .user-information .name'));
-    browser.wait(until.presenceOf(elm), 10000);
-    await browser.wait(this.textNotToBePresentInElement(elm, ''), 5000, 'Element taking too long to appear in the DOM');
-
-    return element(by.css('.enrollment .user-information .name'));
+    return elm.getText();
   }
 
-  public async getCheckUsername() {
-    const until = protractor.ExpectedConditions;
-    const elm = element(by.css('.enrollment .user-information .username'));
-    browser.wait(until.presenceOf(elm), 10000);
-    await browser.wait(this.textNotToBePresentInElement(elm, ''), 5000, 'Element taking too long to appear in the DOM');
-
-    return element(by.css('.enrollment .user-information .username'));
-  }
-
-  public async getCheckComment() {
-    const until = protractor.ExpectedConditions;
+  public getCheckCommentValue() {
     const elm = element(by.css('.enrollment .comment'));
-    browser.wait(until.presenceOf(elm), 10000);
-    await browser.wait(this.textNotToBePresentInElement(elm, ''), 5000, 'Element taking too long to appear in the DOM');
+    return elm.getText();
+  }
 
-    return element(by.css('.enrollment .comment'));
+  public getCheckUsername() {
+    const elm = element(by.css('.enrollment .user-information .username'));
+    return elm.getText();
   }
 
   getCheckboxes() {
@@ -469,5 +472,23 @@ export class EnrollmentPage {
     browser.wait(EC.visibilityOf(elem2), 10000);
 
     return elem2.click();
+  }
+
+  public isAppointmentNotFoundCardPresent() {
+    const elem = element(by.id('appointment-not-found'));
+    return elem.isPresent();
+  }
+
+  public isEnrollmentCheckCardPreset() {
+    const elem = element(by.id('enrollment-check-card'));
+    return elem.isPresent();
+  }
+
+  public getMail() {
+    return element(by.id('mail'));
+  }
+
+  public isNameEnabled() {
+    return this.getName().isEnabled();
   }
 }
