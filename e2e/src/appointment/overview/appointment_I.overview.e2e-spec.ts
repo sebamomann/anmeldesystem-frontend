@@ -5,10 +5,6 @@ import {LoginPage} from '../../general/login.po';
 import {EnvironmentPage} from '../../general/environment.po';
 import {UsersDataProvider} from './po/users.data-provider';
 
-// const crypto = require('crypto');
-
-// const salt = 'mysalt';
-
 let page: AppointmentOverviewPage;
 let localStoragePage: LocalStoragePage;
 let loginPage: LoginPage;
@@ -106,7 +102,7 @@ describe('appointment overview', () => {
       });
 
       describe('at appointment with driver addition', () => {
-        const appointmentLink = 'appointment-driver-addition';
+        const appointmentLink = 'valid-driver';
 
         beforeAll(async () => {
           await localStoragePage.clear();

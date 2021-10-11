@@ -59,6 +59,7 @@ export class EnrollmentAdditionsComponent implements OnInit {
       .filter(v => v !== null);
 
     const additionList = [];
+
     additionListRaw.forEach(fAddition => {
       const addition = {id: fAddition};
       additionList.push(addition);

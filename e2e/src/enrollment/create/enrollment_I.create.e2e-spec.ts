@@ -1,9 +1,9 @@
-import {browser} from 'protractor';
-import {EnrollmentCreationPage} from './po/enrollment.po';
-import {LocalStoragePage} from '../general/localStorage.po';
-import {AppointmentOverviewPage} from '../appointment/overview/po/appointment.overview.po';
-import {LoginPage} from '../general/login.po';
-import {UsersDataProvider} from '../appointment/overview/po/users.data-provider';
+import { browser } from 'protractor';
+import { EnrollmentCreationPage } from '../po/enrollment.po';
+import { LocalStoragePage } from '../../general/localStorage.po';
+import { AppointmentOverviewPage } from '../../appointment/overview/po/appointment.overview.po';
+import { LoginPage } from '../../general/login.po';
+import { UsersDataProvider } from '../../appointment/overview/po/users.data-provider';
 
 let page: EnrollmentCreationPage;
 let appointmentPage: AppointmentOverviewPage;
@@ -19,6 +19,7 @@ beforeAll(async () => {
     // @ts-ignore
     window.env.API_URL = '';
   };
+
   browser.executeScript(localStorageSetter);
 
   page = new EnrollmentCreationPage();
@@ -50,7 +51,7 @@ describe('enrollment creation page - unknown user', () => {
       });
 
       it('should show not found card', async () => {
-        const isAppointmentNotFoundCardPresent = page.isAppointmentNotFoundCardPresent();
+        const isAppointmentNotFoundCardPresent = page.isEnrollmentNotFoundCardPresent();
         expect(isAppointmentNotFoundCardPresent).toBeTruthy('Appointment not found card should be present but isn\'t');
       });
     });
@@ -61,7 +62,7 @@ describe('enrollment creation page - unknown user', () => {
       });
 
       it('not found card hidden', () => {
-        const isAppointmentNotFoundCardPresent = page.isAppointmentNotFoundCardPresent();
+        const isAppointmentNotFoundCardPresent = page.isEnrollmentNotFoundCardPresent();
         expect(isAppointmentNotFoundCardPresent).toBeFalsy('Appointment not found card should not be present but is');
       });
     });
@@ -233,7 +234,7 @@ describe('enrollment creation page - unknown user', () => {
 
         await page.navigateToEnrollmentCreation(appointmentLink);
 
-        await fillForm({name: 'Unknown Enrollment', comment: 'unknown enrollment comment'});
+        await fillForm({ name: 'Unknown Enrollment', comment: 'unknown enrollment comment' });
       });
 
       describe('insert mail', () => {
@@ -303,7 +304,7 @@ describe('enrollment creation page - unknown user', () => {
 
           await page.navigateToEnrollmentCreation(appointmentLink);
 
-          await fillForm({name: 'Unknown Enrollment', comment: 'unknown enrollment comment'});
+          await fillForm({ name: 'Unknown Enrollment', comment: 'unknown enrollment comment' });
 
           page.clickLogin();
           loginPage.waitForFormBuild();
@@ -350,7 +351,7 @@ describe('enrollment creation page - unknown user', () => {
 
           await page.navigateToEnrollmentCreation(appointmentLink);
 
-          await fillForm({name: 'Unknown Enrollment', comment});
+          await fillForm({ name: 'Unknown Enrollment', comment });
 
           page.clickLogin();
           loginPage.waitForFormBuild();
@@ -384,7 +385,7 @@ describe('enrollment creation page - unknown user', () => {
 
         await page.navigateToEnrollmentCreation(appointmentLink);
 
-        await fillForm({name, comment});
+        await fillForm({ name, comment });
         await page.setEmail('mail@example.com');
         page.submit();
       });

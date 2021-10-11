@@ -1,9 +1,9 @@
 import {browser} from 'protractor';
-import {EnrollmentCreationPage} from './po/enrollment.po';
-import {LocalStoragePage} from '../general/localStorage.po';
-import {UsersDataProvider} from '../appointment/overview/po/users.data-provider';
-import {LoginPage} from '../general/login.po';
-import {AppointmentOverviewPage} from '../appointment/overview/po/appointment.overview.po';
+import {EnrollmentCreationPage} from '../po/enrollment.po';
+import {LocalStoragePage} from '../../general/localStorage.po';
+import {UsersDataProvider} from '../../appointment/overview/po/users.data-provider';
+import {LoginPage} from '../../general/login.po';
+import {AppointmentOverviewPage} from '../../appointment/overview/po/appointment.overview.po';
 
 let page: EnrollmentCreationPage;
 let appointmentPage: AppointmentOverviewPage;
@@ -320,55 +320,37 @@ describe('enrollment creation page - logged in', () => {
     });
 
     describe('insert mail', () => {
-      describe('invalid', () => {
-        beforeAll(() => {
-          page.setEmail('mail');
-        });
-
-        describe('send', () => {
-          beforeAll(() => {
-            page.submit();
-          });
-
-          it('should show mail error', async () => {
-            await expect((await page.getMailError()).getText()).toEqual('Bitte gebe eine gültige E-Mail Adresse an');
-          });
-        });
+      beforeAll(() => {
+        page.setEmail('mail@example.com');
       });
 
-      describe('valid', () => {
+      describe('send', () => {
         beforeAll(() => {
-          page.setEmail('mail@example.com');
+          page.submit();
         });
 
-        describe('send', () => {
-          beforeAll(() => {
-            page.submit();
-          });
+        // TODO
+        // TOO FAST I GUESS
+        // it('should swap to start', () => {
+        //   const isMainFormPresent = page.isMainFormPresent();
+        //   expect(isMainFormPresent).toBeTruthy('Main form should be present but isn\'t');
+        // });
 
-          // TODO
-          // TOO FAST I GUESS
-          // it('should swap to start', () => {
-          //   const isMainFormPresent = page.isMainFormPresent();
-          //   expect(isMainFormPresent).toBeTruthy('Main form should be present but isn\'t');
-          // });
+        it('should complete enrollment', () => {
+          appointmentPage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
+          expect(page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
+        });
 
-          it('should complete enrollment', () => {
-            appointmentPage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
-            expect(page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
-          });
+        it('should store enrollment information', async () => {
+          const storedEnrollmentValues = await localStoragePage.getObject('permissions');
 
-          it('should store enrollment information', async () => {
-            const storedEnrollmentValues = await localStoragePage.getObject('permissions');
+          const id = storedEnrollmentValues[0].enrollments[0].id;
+          const token = storedEnrollmentValues[0].enrollments[0].token;
+          const link = storedEnrollmentValues[0].link;
 
-            const id = storedEnrollmentValues[0].enrollments[0].id;
-            const token = storedEnrollmentValues[0].enrollments[0].token;
-            const link = storedEnrollmentValues[0].link;
-
-            expect(id).toEqual('ad654b76-df9a-4974-bbc4-d8652a9cd403');
-            expect(token).toEqual('mytoken');
-            expect(link).toEqual(appointmentLink);
-          });
+          expect(id).toEqual('ad654b76-df9a-4974-bbc4-d8652a9cd403');
+          expect(token).toEqual('mytoken');
+          expect(link).toEqual(appointmentLink);
         });
       });
     });

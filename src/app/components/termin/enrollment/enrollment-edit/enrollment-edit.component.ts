@@ -175,9 +175,6 @@ export class EnrollmentEditComponent implements OnInit, OnDestroy {
       this.sendingRequestEmit.emit(true);
     });
 
-    // fetch permission token if existing
-    data.token = TokenUtil.getTokenForEnrollment(this.enrollmentId, this.linkFromURL);
-
     this.appointmentService$$ = this._enrollmentService.update(data, this.appointment)
       .subscribe(
         result => {

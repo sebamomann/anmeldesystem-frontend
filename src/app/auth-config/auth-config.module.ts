@@ -27,4 +27,7 @@ export function init_app(authConfigService: AuthConfigService) {
   ]
 })
 export class AuthConfigModule {
+  constructor() {
+    console.log(authConfig);
+  }
 }

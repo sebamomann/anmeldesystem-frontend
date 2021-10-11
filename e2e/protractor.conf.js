@@ -13,24 +13,21 @@ exports.config = {
     "./src/**/*.e2e-spec.ts",
   ],
   capabilities: {
+    acceptInsecureCerts: true,
     chromeOptions: {
       args: [
-        '--headless',
+        // '--headless',
         '--no-sandbox ',
         '--disable-gpu',
-        '--disable-dev-shm-usage'
+        '--disable-dev-shm-usage',
+        "--allow-insecure-localhost"
       ]
     },
     chromeDriver: "./node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_91.0.4472.101",
     browserName: "chrome",
-    maxInstances: 3
-  },
-  mocks: {
-    default: [], // default value: []
-    dir: 'mocks' // default value: 'mocks'
   },
   directConnect: true,
-  baseUrl: "https://localhost:4200",
+  baseUrl: "http://localhost:4200",
   framework: "jasmine",
   jasmineNodeOpts: {
     showColors: true,

@@ -197,8 +197,9 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
     setTimeout(() => this.stepper.next());
   }
 
-  public additionsFormDone(val) {
-    this.enrollmentOutput.additions = val;
+  public additionsFormDone($event: any) {
+    this.enrollmentOutput = {...this.enrollmentOutput, additions: [...$event]};
+    console.log(this.enrollmentOutput);
 
     setTimeout(() => this.stepper.next());
   }

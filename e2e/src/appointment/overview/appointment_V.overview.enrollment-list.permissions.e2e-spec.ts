@@ -13,6 +13,8 @@ let loginPage: LoginPage;
 
 const appointmentLink = 'valid';
 
+// TODO RECHECK DUE TO NEW MOCK MECHANIC
+
 beforeAll(async () => {
   await browser.get('/'); // needed to be able to clear localStorage
 

@@ -37,7 +37,7 @@ describe('enrollment list', () => {
       expect(nrOfEnrollments).toBe(0);
     });
 
-    it('should show 2 creator enrollments', () => {
+    it('should show empty enrollment hint', () => {
       const isEmptyEnrollmentListHintPresent = enrollmentListPage.isEmptyEnrollmentListHintPresent();
 
       expect(isEmptyEnrollmentListHintPresent).toBeTruthy();
@@ -46,6 +46,8 @@ describe('enrollment list', () => {
 
   // TODO
   // additions
+  // driver
+  // hidden
   describe('correctly display enrollments', () => {
     beforeAll(async () => {
       appointmentLink = 'valid';
@@ -57,18 +59,18 @@ describe('enrollment list', () => {
     });
 
     describe('correct number of Enrollments', () => {
-      it('should show 4 in total enrollments', () => {
+      it('should show 5 in total enrollments', () => {
         const enrollments = enrollmentListPage.getEnrollmentBlocks();
         const nrOfEnrollments = enrollments.count();
 
-        expect(nrOfEnrollments).toBe(4);
+        expect(nrOfEnrollments).toBe(5);
       });
 
-      it('should show 2 creator enrollments', () => {
+      it('should show 3 creator enrollments', () => {
         const enrollments = enrollmentListPage.getEnrollmentBlocksCreatedByUser();
         const nrOfEnrollments = enrollments.count();
 
-        expect(nrOfEnrollments).toBe(2);
+        expect(nrOfEnrollments).toBe(3);
       });
 
       it('should show 2 unknown enrollments', () => {

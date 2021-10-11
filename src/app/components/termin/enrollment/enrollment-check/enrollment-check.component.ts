@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {IAppointmentModel} from '../../../../models/IAppointment.model';
 import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
 
@@ -7,7 +7,7 @@ import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
   templateUrl: './enrollment-check.component.html',
   styleUrls: ['./enrollment-check.component.scss']
 })
-export class EnrollmentCheckComponent implements OnInit {
+export class EnrollmentCheckComponent implements OnInit, AfterViewInit {
 
   @Output('done') done__ = new EventEmitter();
   @Output('cancel') cancel__ = new EventEmitter();
@@ -20,6 +20,13 @@ export class EnrollmentCheckComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('lollllll1');
+    console.log(this.enrollment);
+  }
+
+  ngAfterViewInit() {
+    console.log('lolllllll2');
+    console.log(this.enrollment);
   }
 
   public save() {

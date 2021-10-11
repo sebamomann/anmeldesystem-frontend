@@ -1,9 +1,11 @@
 import {browser, by, element, protractor} from 'protractor';
+import { EnrollmentBasePage } from './enrollment.base.po';
 
 // const request = require('request');
 
-export class EnrollmentCreationPage {
+export class EnrollmentCreationPage extends EnrollmentBasePage {
   constructor() {
+    super();
   }
 
   public async navigateToEnrollmentCreation(link: string) {
@@ -24,18 +26,6 @@ export class EnrollmentCreationPage {
     );
   }
 
-  public waitForLoadingSpinnerToBeGone() {
-    const loader = element(by.css('#loading-overlay'));
-    const EC = protractor.ExpectedConditions;
-
-    browser.wait(EC.visibilityOf(loader), 5000, 'Loading Spinner did not appear');
-    browser.wait(EC.invisibilityOf(loader), 5000, 'Loading Spinner did not disappear');
-  }
-
-  public getMatCardTitle() {
-    return element(by.id('title')).getText();
-  }
-
   public spinnerGone() {
     const loader = element(by.css('#loading-overlay'));
     const EC = protractor.ExpectedConditions;
@@ -43,20 +33,14 @@ export class EnrollmentCreationPage {
     return browser.wait(EC.invisibilityOf(loader), 10000);
   }
 
-  public getName() {
-    return element(by.id('name'));
-  }
 
-  public async getNameValue() {
-    return this.getName().getAttribute('value');
-  }
 
   public getSeats() {
-    const EC = protractor.ExpectedConditions;
-    const elem = element(by.id('seats'));
-    browser.wait(EC.visibilityOf(elem), 10000);
+    return element(by.id('seats'));
+  }
 
-    return elem;
+  public async getSeatsValue() {
+    return this.getSeats().getAttribute('value');
   }
 
   public getUsername() {
@@ -65,14 +49,6 @@ export class EnrollmentCreationPage {
     browser.wait(EC.visibilityOf(elem), 10000);
 
     return elem;
-  }
-
-  public getComment() {
-    return element(by.id('comment'));
-  }
-
-  public async getCommentValue() {
-    return this.getComment().getAttribute('value');
   }
 
   public getSubmit() {
@@ -87,30 +63,11 @@ export class EnrollmentCreationPage {
     return elem;
   }
 
-  public async setName(value: string) {
-    const ref = this.getName();
-    // const EC2 = protractor.ExpectedConditions;
-    // browser.wait(EC2.elementToBeClickable(ref), 2000, 'Element taking too long to be clickable');
-
-    return ref.clear().then(async () => {
-      await ref.sendKeys(value);
-    });
-  }
 
   public async setEmail(value: string) {
     const ref = this.getMail();
     const EC2 = protractor.ExpectedConditions;
     browser.wait(EC2.elementToBeClickable(ref), 2000, 'Element taking too long to be clickable');
-    return ref.clear().then(async () => {
-      await ref.sendKeys(value);
-    });
-  }
-
-  public async setComment(value: string) {
-    const ref = this.getComment();
-    const EC2 = protractor.ExpectedConditions;
-    browser.wait(EC2.elementToBeClickable(ref), 2000, 'Element taking too long to be clickable');
-
     return ref.clear().then(async () => {
       await ref.sendKeys(value);
     });
@@ -215,6 +172,11 @@ export class EnrollmentCreationPage {
     return elm.click();
   }
 
+  public goBackAdditions() {
+    const elm = element(by.id('back_additions'));
+    return elm.click();
+  }
+
   public clickLogin() {
     const elm = element(by.id('login'));
     const EC2 = protractor.ExpectedConditions;
@@ -245,13 +207,6 @@ export class EnrollmentCreationPage {
 
   public async logout() {
     await browser.executeScript('window.localStorage.clear();');
-  }
-
-  public waitForFormBuild() {
-    const EC = protractor.ExpectedConditions;
-    const e = this.getName();
-
-    return browser.wait(EC.presenceOf(e), 10000, 'Form could not be loaded');
   }
 
   public isMainFormPresent() {
@@ -301,14 +256,6 @@ export class EnrollmentCreationPage {
     return elm.click();
   }
 
-  public nextMain() {
-    const elm = element(by.id('next_main'));
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
-
-    return elm.click();
-  }
-
   public nextCheck() {
     const elm = element(by.id('next_check'));
     const EC = protractor.ExpectedConditions;
@@ -348,6 +295,13 @@ export class EnrollmentCreationPage {
     return elm.getText();
   }
 
+  public waitForDriverPassengerFormToBePresent(): void {
+    const EC = protractor.ExpectedConditions;
+    const elem = element(by.css('app-enrollment-driver-passenger'));
+
+    browser.wait(EC.presenceOf(elem), 10000, 'Element taking too long to be present');
+  }
+
   getCheckboxes() {
     const EC = protractor.ExpectedConditions;
     const elem = element.all(by.css('.addition-checkbox'));
@@ -374,29 +328,25 @@ export class EnrollmentCreationPage {
     return elem;
   }
 
-  getAdditionCheckSelected(s: string) {
-    const elm = element(by.css('.addition-list .addition-index-' + s + ' .checkbox_selected'));
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.visibilityOf(elm), 10000);
-
+  isAdditionChecked(s: string) {
+    const elm = element(by.css('[addition-index="' + s + '"] .mat-checkbox-checked'));
     return elm.isPresent();
   }
 
-
-  getAdditionCheckDeselected(s: string) {
-    const elm = element(by.css('.addition-list .addition-index-' + s + ' .checkbox_blank'));
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.visibilityOf(elm), 10000);
-
+  /**
+   * @deprecated isSelected() // needs to be created
+   */
+  isAdditionUnchecked(s: string) {
+    const elm = element(by.css('[addition-index="' + s + '"] .mat-checkbox'));
     return elm.isPresent();
   }
 
   getDriverCheckbox() {
+    const elem = element(by.css('#driver-input'));
     const EC = protractor.ExpectedConditions;
-    const elem = element(by.id('driver-input'));
-    browser.wait(EC.elementToBeClickable(elem), 10000);
+    browser.wait(EC.visibilityOf(elem), 10000);
 
-    return element(by.id('driver-input'));
+    return elem;
   }
 
   selectPassengerValue(val: string) {
@@ -474,11 +424,6 @@ export class EnrollmentCreationPage {
     return elem2.click();
   }
 
-  public isAppointmentNotFoundCardPresent() {
-    const elem = element(by.id('appointment-not-found'));
-    return elem.isPresent();
-  }
-
   public isEnrollmentCheckCardPreset() {
     const elem = element(by.id('enrollment-check-card'));
     return elem.isPresent();
@@ -490,5 +435,54 @@ export class EnrollmentCreationPage {
 
   public isNameEnabled() {
     return this.getName().isEnabled();
+  }
+
+  public getAdditionCheckSelected(id: string) {
+    const elm = element(by.css('.addition-list .addition-index-' + id + ' .checkbox_selected'));
+    return elm.isPresent();
+  }
+
+  public async isDriverCheckboxChecked() {
+    const elm = element(by.css('#driver.mat-checkbox-checked'));
+    return elm.isPresent();
+  }
+
+  // TODO
+  // ADAPT THIS SO THAT ADDITION CHECK GETS MADE LIKE THIS
+  /**
+   * @deprecated isSelected() // needs to be created
+   */
+  public async isDriverCheckboxUnchecked() {
+    const elm = element(by.css('#driver.mat-checkbox'));
+    const exists: boolean = await elm.isPresent();
+
+    const elm2 = element(by.css('#driver.mat-checkbox-checked'));
+    const isChecked: boolean = await elm2.isPresent();
+
+    return exists && !isChecked;
+  }
+
+  public getRequirementSelectValue() {
+    const elm = element(by.css('#requirement-select .mat-select-value-text'));
+    return elm.getText();
+  }
+
+  public isRequirementSelectEmpty() {
+    const elm = element(by.css('#requirement-select .mat-select-placeholder'));
+    return elm.isPresent();
+  }
+
+  public async selectDriverCheckbox() {
+    const elm = this.getDriverCheckbox();
+    if ((await elm.isSelected() === false)) {
+      return browser.executeScript('arguments[0].click();', elm.getWebElement());
+    }
+
+    return Promise.resolve();
+  }
+
+  public isServiceSelectEmpty() {
+    const elm = element(by.css('#service-select .mat-select-placeholder'));
+    return elm.isPresent();
   }
 }
