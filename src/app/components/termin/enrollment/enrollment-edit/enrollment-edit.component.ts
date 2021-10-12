@@ -1,18 +1,18 @@
-import {Component, EventEmitter, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IAppointmentModel} from '../../../../models/IAppointment.model';
-import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
-import {EnrollmentModel} from '../../../../models/EnrollmentModel.model';
-import {AuthenticationService} from '../../../../services/authentication.service';
-import {EnrollmentMainFormComponent} from '../enrollment-main-form/enrollment-main-form.component';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AppointmentUtil} from '../../../../_util/appointmentUtil.util';
-import {Observable, Subscription} from 'rxjs';
-import {AppointmentProvider} from '../../appointment.provider';
-import {SEOService} from '../../../../_helper/_seo.service';
-import {TokenUtil} from '../../../../_util/tokenUtil.util';
-import {HttpErrorResponse} from '@angular/common/http';
-import {EnrollmentService} from '../../../../services/enrollment.service';
-import {MatSnackBar} from '@angular/material';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IAppointmentModel } from '../../../../models/IAppointment.model';
+import { IEnrollmentModel } from '../../../../models/IEnrollment.model';
+import { EnrollmentModel } from '../../../../models/EnrollmentModel.model';
+import { AuthenticationService } from '../../../../services/authentication.service';
+import { EnrollmentMainFormComponent } from '../enrollment-main-form/enrollment-main-form.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AppointmentUtil } from '../../../../_util/appointmentUtil.util';
+import { Observable, Subscription } from 'rxjs';
+import { AppointmentProvider } from '../../appointment.provider';
+import { SEOService } from '../../../../_helper/_seo.service';
+import { TokenUtil } from '../../../../_util/tokenUtil.util';
+import { HttpErrorResponse } from '@angular/common/http';
+import { EnrollmentService } from '../../../../services/enrollment.service';
+import { MatSnackBar } from '@angular/material';
 
 const HttpStatus = require('http-status-codes');
 
@@ -22,7 +22,7 @@ const HttpStatus = require('http-status-codes');
   styleUrls: ['./enrollment-edit.component.scss']
 })
 export class EnrollmentEditComponent implements OnInit, OnDestroy {
-  @ViewChild('mainForm', {static: true}) mainFormRef: EnrollmentMainFormComponent;
+  @ViewChild('mainForm', { static: false }) mainFormRef: EnrollmentMainFormComponent;
 
   public appointment$: Observable<IAppointmentModel>;
   public appointment: IAppointmentModel;
@@ -46,10 +46,12 @@ export class EnrollmentEditComponent implements OnInit, OnDestroy {
   private appointment$$: Subscription;
   private appointmentService$$: Subscription;
 
+  // TODO
+  // check permission first, allowed to edit?
   constructor(private _authenticationService: AuthenticationService, private _router: Router,
-              private _route: ActivatedRoute, private _appointmentProvider: AppointmentProvider,
-              private _seoService: SEOService, private _enrollmentService: EnrollmentService,
-              private _snackBar: MatSnackBar) {
+    private _route: ActivatedRoute, private _appointmentProvider: AppointmentProvider,
+    private _seoService: SEOService, private _enrollmentService: EnrollmentService,
+    private _snackBar: MatSnackBar) {
     this._route.queryParams.subscribe(params => {
       this.linkFromURL = params.a;
       this.enrollmentId = params.e;
@@ -179,12 +181,13 @@ export class EnrollmentEditComponent implements OnInit, OnDestroy {
       .subscribe(
         result => {
           // this.appointment.enrollments.map((mEnrollment) => mEnrollment.id === data.id ? data : mEnrollment);
-// TODO UPDATE ELEMENT ()
+          // TODO UPDATE ELEMENT ()
+          console.log(result);
 
           this.request_success_finalize();
         }, (err: HttpErrorResponse) => {
           this.sendingRequestEmit.emit(false);
-
+          console.log(err);
           if (err.status === HttpStatus.BAD_REQUEST) {
             if (err.error.code === 'DUPLICATE_ENTRY') {
               this.request_error_handleDuplicateValues(err);
@@ -225,7 +228,7 @@ export class EnrollmentEditComponent implements OnInit, OnDestroy {
   }
 
   private redirect(message: string, error = false) {
-    this._router.navigate([`enroll`], {queryParams: {a: this.appointment.link}})
+    this._router.navigate([`enroll`], { queryParams: { a: this.appointment.link } })
       .then(() => {
         this.sendingRequestEmit.emit(false);
 
@@ -241,9 +244,12 @@ export class EnrollmentEditComponent implements OnInit, OnDestroy {
   }
 
   private request_error_handleDuplicateValues(err: HttpErrorResponse) {
-    err.error.data.forEach(fColumn => {
-      this.inUseError(fColumn);
-    });
+    err.error.data
+      .forEach(
+        (fColumn: any) => { // TODO TYPE
+          this.inUseError(fColumn.attribute);
+        }
+      );
   }
 
   private __SEO() {

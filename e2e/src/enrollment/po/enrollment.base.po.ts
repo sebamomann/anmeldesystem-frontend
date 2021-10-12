@@ -54,6 +54,19 @@ export class EnrollmentBasePage {
     });
   }
 
+  public async getNameErrorValue() {
+    const elm = await this.getNameError();
+    return elm.getText();
+  }
+
+  public async getNameError() {
+    const elem = element(by.id('name-error'));
+    const until = protractor.ExpectedConditions;
+    browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
+    await browser.wait(this.textNotToBePresentInElement(elem, ''), 5000, 'Element taking too long to appear in the DOM');
+    return elem;
+  }
+
   public getComment() {
     return element(by.id('comment'));
   }
@@ -96,5 +109,34 @@ export class EnrollmentBasePage {
     browser.wait(EC.visibilityOf(snackBar), 10000);
 
     return element(by.tagName('simple-snack-bar'));
+  }
+
+  public getErrorSnackbar() { // TODO EC NEEDED?
+    const EC = protractor.ExpectedConditions;
+    const snackBar = element(by.className('snackbar-error'));
+    browser.wait(EC.visibilityOf(snackBar), 10000);
+
+    return element(by.className('snackbar-error'));
+  }
+
+
+
+  public textNotToBePresentInElement(elem, text) {
+    return async () => {
+      const textreceived = await elem.getText();
+      const bool = textreceived === text;
+      return !(bool);
+    };
+  };
+
+  public async causeEmptyErrorName() {
+    const ref = this.getName();
+
+    ref.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, 'a'));
+    ref.sendKeys(protractor.Key.BACK_SPACE);
+
+    ref.clear();
+
+    element(by.id('title')).click();
   }
 }

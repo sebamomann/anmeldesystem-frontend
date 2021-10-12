@@ -196,8 +196,8 @@ describe('enrollment creation page - unknown user', () => {
               page.nextMain();
             });
 
-            it('correct error message', async () => {
-              await expect((await page.getNameError()).getText()).toEqual('Bitte gebe einen Namen an');
+            it('correct error message', () => {
+              expect(page.getNameErrorValue()).toEqual('Bitte gebe einen Namen an');
             });
           });
         });
@@ -216,8 +216,8 @@ describe('enrollment creation page - unknown user', () => {
               page.nextMain();
             });
 
-            it('correct error message', async () => {
-              await expect((await page.getNameError()).getText()).toEqual('Bitte gebe einen Namen an');
+            it('correct error message', () => {
+              expect(page.getNameErrorValue()).toEqual('Bitte gebe einen Namen an');
             });
           });
         });

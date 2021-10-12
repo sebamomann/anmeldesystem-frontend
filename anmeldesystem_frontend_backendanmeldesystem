@@ -1,0 +1,29 @@
+[33mcommit 2c46c478b18212630ff78bf5c2d93b7903694e40[m[33m ([m[1;36mHEAD -> [m[1;32mprotractor-cleanup[m[33m)[m
+Author: sebamomann <github@sebamomann.de>
+Date:   Mon Oct 11 21:39:00 2021 +0200
+
+    .
+
+[33mcommit 93fda3e00ac7e8c49593599f0c6bce8b61a25246[m
+Author: sebamomann <github@sebamomann.de>
+Date:   Mon Oct 11 21:38:47 2021 +0200
+
+    more e2e tests (first edit tests)
+
+[33mcommit 73eb7215de98f0b2d5365286d4a8bc1ab2dfce4b[m[33m ([m[1;32mmaster[m[33m)[m
+Author: sebamomann <github@sebamomann.de>
+Date:   Sat Aug 7 10:19:48 2021 +0200
+
+    enrollment and enrollment login tests
+
+[33mcommit 5095a26c08ec073623a92bb0e584e64b2ba287f2[m
+Author: sebamomann <github@sebamomann.de>
+Date:   Sun Jul 4 10:22:55 2021 +0200
+
+    appointment (overview) tests
+
+[33mcommit a66cabe5440a5f2ffc5b61ceadc6ee099606a1fa[m[33m ([m[1;32mpush-notifications[m[33m)[m
+Author: sebamomann <github@sebamomann.de>
+Date:   Sun Oct 11 23:29:28 2020 +0200
+
+    check if not null

@@ -117,19 +117,6 @@ export class EnrollmentCreationPage extends EnrollmentBasePage {
     return element(by.id('login-content-alt')).isPresent();
   }
 
-  public getNameErrorValue() {
-    const elm = element(by.id('name-error'));
-    return elm.getText();
-  }
-
-  public async getNameError() {
-    const elem = element(by.id('name-error'));
-    const until = protractor.ExpectedConditions;
-    browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
-    await browser.wait(this.textNotToBePresentInElement(elem, ''), 5000, 'Element taking too long to appear in the DOM');
-    return elem;
-  }
-
   public async getMailError() {
     const elem = element(by.id('mail-error'));
     const until = protractor.ExpectedConditions;
@@ -214,14 +201,7 @@ export class EnrollmentCreationPage extends EnrollmentBasePage {
     return elem.isPresent();
   }
 
-  public async causeEmptyErrorName() {
-    const ref = this.getName();
 
-    ref.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, 'a'));
-    ref.sendKeys(protractor.Key.BACK_SPACE);
-
-    return ref.clear();
-  }
 
   public async deselectSelfEnrollment() {
     const elm = this.getSelfEnrollment();

@@ -29,6 +29,21 @@ beforeAll(async () => {
   browser.waitForAngularEnabled(false);
 });
 
+const fillMainForm = async (data) => {
+  const nameToSet = data.name;
+  const commentToSet = data.comment;
+
+  page.waitForFormBuild();
+
+  await page.setName(nameToSet);
+
+  if (commentToSet) {
+    await page.setComment(commentToSet);
+  }
+
+  page.nextMain();
+};
+
 describe("enrollment edit page - unknown user", () => {
   describe("not found card", () => {
     describe("faulty navigation", () => {
@@ -194,6 +209,97 @@ describe("enrollment edit page - unknown user", () => {
             expect(page.getSnackbar().getText()).toEqual('Erfolgreich bearbeitet');
           });
         });
+      });
+    });
+
+    describe('edit values (form vlaidation) - error', () => {
+      const appointmentLink = 'valid-enrollments-edit';
+      const enrollmentId = "1ff2e7e7-9048-46b2-b02b-fe95b874ef6d";
+
+      beforeAll(async () => {
+        await localStoragePage.clear();
+        await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
+        await localStoragePage.pinAppointment(appointmentLink);
+
+        await page.navigateToEnrollmentEdit(appointmentLink, enrollmentId);
+      });
+
+      describe('empty name', () => {
+        beforeAll(async () => {
+          page.waitForFormBuild();
+
+          await page.causeEmptyErrorName();
+        });
+
+        it('should show correct error message', () => {
+          expect(page.getNameErrorValue()).toBe("Bitte gebe einen Namen an");
+        });
+      });
+    });
+
+    describe('edit values - duplicate name', () => {
+      const appointmentLink = 'valid-enrollments-edit';
+      const enrollmentId = "1ff2e7e7-9048-46b2-b02b-fe95b874ef6d";
+      const nameToSet = 'Unknown Enrollment One - Name in use';
+
+      beforeAll(async () => {
+        const enrollmentEditToken = "valid-enrollment-edit-token";
+        const permissions = [
+          {
+            "link": appointmentLink,
+            enrollments: [
+              {
+                'id': enrollmentId,
+                'token': enrollmentEditToken
+              }
+            ]
+          }
+        ]
+
+        await localStoragePage.clear();
+        await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
+        await localStoragePage.pinAppointment(appointmentLink);
+        await localStoragePage.set("permissions", permissions);
+
+        await page.navigateToEnrollmentEdit(appointmentLink, enrollmentId);
+        await fillMainForm({ name: nameToSet, comment: undefined });
+      });
+
+      it('should show correct error message', () => {
+        expect(page.getNameErrorValue()).toEqual('Es besteht bereits eine Anmeldung mit diesem Namen');
+      });
+    });
+
+    describe('edit values - invalid permission token', () => {
+      const appointmentLink = 'valid-enrollments-edit';
+      const enrollmentId = "1ff2e7e7-9048-46b2-b02b-fe95b874ef6d";
+      const nameToSet = 'Unknown Enrollment One - Updated';
+
+      beforeAll(async () => {
+        const enrollmentEditToken = "invalid-enrollment-edit-token";
+        const permissions = [
+          {
+            "link": appointmentLink,
+            enrollments: [
+              {
+                'id': enrollmentId,
+                'token': enrollmentEditToken
+              }
+            ]
+          }
+        ]
+
+        await localStoragePage.clear();
+        await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
+        await localStoragePage.pinAppointment(appointmentLink);
+        await localStoragePage.set("permissions", permissions);
+
+        await page.navigateToEnrollmentEdit(appointmentLink, enrollmentId);
+        await fillMainForm({ name: nameToSet, comment: undefined });
+      });
+
+      it('should show correct error message', () => {
+        expect(page.getErrorSnackbar().getText()).toEqual('Sorry, du hast keine Berechtigung diesen Teilnehmer zu bearbeiten.');
       });
     });
   });
