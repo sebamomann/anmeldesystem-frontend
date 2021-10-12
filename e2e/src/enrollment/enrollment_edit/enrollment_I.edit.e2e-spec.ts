@@ -29,6 +29,22 @@ beforeAll(async () => {
   browser.waitForAngularEnabled(false);
 });
 
+const setPermissionTokenForEnrollment = async (appointmentLink: string, enrollmentId: string, enrollmentEditToken: string) => {
+  const permissions = [
+    {
+      link: appointmentLink,
+      enrollments: [
+        {
+          'id': enrollmentId,
+          'token': enrollmentEditToken
+        }
+      ]
+    }
+  ];
+
+  await localStoragePage.set("permissions", permissions);
+}
+
 const fillMainForm = async (data) => {
   const nameToSet = data.name;
   const commentToSet = data.comment;
@@ -118,26 +134,14 @@ describe("enrollment edit page - unknown user", () => {
     describe('edit values - default', () => {
       const appointmentLink = 'valid-enrollments-edit';
       const enrollmentId = "1ff2e7e7-9048-46b2-b02b-fe95b874ef6d";
+      const enrollmentEditToken = "valid-enrollment-edit-token";
 
       describe('update name', () => {
         beforeAll(async () => {
-          const enrollmentEditToken = "valid-enrollment-edit-token";
-          const permissions = [
-            {
-              "link": appointmentLink,
-              enrollments: [
-                {
-                  'id': enrollmentId,
-                  'token': enrollmentEditToken
-                }
-              ]
-            }
-          ]
-
           await localStoragePage.clear();
           await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
           await localStoragePage.pinAppointment(appointmentLink);
-          await localStoragePage.set("permissions", permissions);
+          await setPermissionTokenForEnrollment(appointmentLink, enrollmentId, enrollmentEditToken);
 
           await page.navigateToEnrollmentEdit(appointmentLink, enrollmentId);
         });
@@ -167,23 +171,10 @@ describe("enrollment edit page - unknown user", () => {
 
       describe('update comment', () => {
         beforeAll(async () => {
-          const enrollmentEditToken = "valid-enrollment-edit-token";
-          const permissions = [
-            {
-              "link": appointmentLink,
-              enrollments: [
-                {
-                  'id': enrollmentId,
-                  'token': enrollmentEditToken
-                }
-              ]
-            }
-          ]
-
           await localStoragePage.clear();
           await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
           await localStoragePage.pinAppointment(appointmentLink);
-          await localStoragePage.set("permissions", permissions);
+          await setPermissionTokenForEnrollment(appointmentLink, enrollmentId, enrollmentEditToken);
 
           await page.navigateToEnrollmentEdit(appointmentLink, enrollmentId);
         });
@@ -240,26 +231,14 @@ describe("enrollment edit page - unknown user", () => {
     describe('edit values - duplicate name', () => {
       const appointmentLink = 'valid-enrollments-edit';
       const enrollmentId = "1ff2e7e7-9048-46b2-b02b-fe95b874ef6d";
+      const enrollmentEditToken = "valid-enrollment-edit-token";
       const nameToSet = 'Unknown Enrollment One - Name in use';
 
       beforeAll(async () => {
-        const enrollmentEditToken = "valid-enrollment-edit-token";
-        const permissions = [
-          {
-            "link": appointmentLink,
-            enrollments: [
-              {
-                'id': enrollmentId,
-                'token': enrollmentEditToken
-              }
-            ]
-          }
-        ]
-
         await localStoragePage.clear();
         await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
         await localStoragePage.pinAppointment(appointmentLink);
-        await localStoragePage.set("permissions", permissions);
+        await setPermissionTokenForEnrollment(appointmentLink, enrollmentId, enrollmentEditToken);
 
         await page.navigateToEnrollmentEdit(appointmentLink, enrollmentId);
         await fillMainForm({ name: nameToSet, comment: undefined });
@@ -273,26 +252,14 @@ describe("enrollment edit page - unknown user", () => {
     describe('edit values - invalid permission token', () => {
       const appointmentLink = 'valid-enrollments-edit';
       const enrollmentId = "1ff2e7e7-9048-46b2-b02b-fe95b874ef6d";
+      const enrollmentEditToken = "invalid-enrollment-edit-token";
       const nameToSet = 'Unknown Enrollment One - Updated';
 
       beforeAll(async () => {
-        const enrollmentEditToken = "invalid-enrollment-edit-token";
-        const permissions = [
-          {
-            "link": appointmentLink,
-            enrollments: [
-              {
-                'id': enrollmentId,
-                'token': enrollmentEditToken
-              }
-            ]
-          }
-        ]
-
         await localStoragePage.clear();
         await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
         await localStoragePage.pinAppointment(appointmentLink);
-        await localStoragePage.set("permissions", permissions);
+        await setPermissionTokenForEnrollment(appointmentLink, enrollmentId, enrollmentEditToken);
 
         await page.navigateToEnrollmentEdit(appointmentLink, enrollmentId);
         await fillMainForm({ name: nameToSet, comment: undefined });
