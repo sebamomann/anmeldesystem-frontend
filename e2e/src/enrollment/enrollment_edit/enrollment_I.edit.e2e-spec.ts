@@ -1,13 +1,14 @@
+import { UsersDataProvider } from "../../appointment/overview/po/users.data-provider";
 import { browser } from "protractor";
 import { LocalStoragePage } from "../../general/localStorage.po";
 // import { AppointmentOverviewPage } from "../../appointment/overview/po/appointment.overview.po";
-// import { LoginPage } from "../../general/login.po";
+import { LoginPage } from "../../general/login.po";
 import { EnrollmentEditPage } from "../po/enrollment.edit.po";
 
 let page: EnrollmentEditPage;
 // let appointmentPage: AppointmentOverviewPage;
 let localStoragePage: LocalStoragePage;
-// let loginPage: LoginPage;
+let loginPage: LoginPage;
 
 beforeAll(async () => {
   await browser.get("/"); // needed to be able to clear localStorage
@@ -24,7 +25,7 @@ beforeAll(async () => {
   page = new EnrollmentEditPage();
   localStoragePage = new LocalStoragePage();
   // appointmentPage = new AppointmentOverviewPage();
-  // loginPage = new LoginPage();
+  loginPage = new LoginPage();
 
   browser.waitForAngularEnabled(false);
 });
@@ -60,7 +61,7 @@ const fillMainForm = async (data) => {
   page.nextMain();
 };
 
-describe("enrollment edit page - unknown user", () => {
+describe("enrollment edit page - general", () => {
   describe("not found card", () => {
     describe("faulty navigation", () => {
       describe("invalid appointment", () => {
@@ -103,7 +104,10 @@ describe("enrollment edit page - unknown user", () => {
     });
   });
 
-  describe('edit', () => {
+});
+
+describe("enrollment edit page - edit", () => {
+  describe('edit - unknown user', () => {
     describe('correct form', () => {
       beforeAll(async () => {
         const appointmentLink = "valid-enrollments-edit";
@@ -260,6 +264,98 @@ describe("enrollment edit page - unknown user", () => {
         await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
         await localStoragePage.pinAppointment(appointmentLink);
         await setPermissionTokenForEnrollment(appointmentLink, enrollmentId, enrollmentEditToken);
+
+        await page.navigateToEnrollmentEdit(appointmentLink, enrollmentId);
+        await fillMainForm({ name: nameToSet, comment: undefined });
+      });
+
+      it('should show correct error message', () => {
+        expect(page.getErrorSnackbar().getText()).toEqual('Sorry, du hast keine Berechtigung diesen Teilnehmer zu bearbeiten.');
+      });
+    });
+  });
+
+  describe('edit - unknown user - as logged in user', () => {
+    describe('correct form', () => {
+      beforeAll(async () => {
+        const appointmentLink = "valid-enrollments-edit";
+        const enrollmentId = "1ff2e7e7-9048-46b2-b02b-fe95b874ef6d";
+        const user = UsersDataProvider.getUser('bcf27563-e7b0-4334-ab91-d35bbb5e63f2');
+
+        await localStoragePage.clear();
+        await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
+        await localStoragePage.pinAppointment(appointmentLink);
+        await loginPage.loginViaApi(user);
+
+        await page.navigateToEnrollmentEdit(appointmentLink, enrollmentId);
+      });
+
+      it('should display form with title "Bearbeiten"', () => {
+        expect(page.getMatCardTitle()).toEqual('Bearbeiten');
+      });
+
+      describe('correct form values', () => {
+        it('correct name', async () => {
+          expect(await page.getNameValue()).toBe('Unknown Enrollment One');
+        });
+
+        it('correct comment', async () => {
+          expect(await page.getCommentValue()).toBe('Comment One');
+        });
+      });
+    });
+
+    describe('edit values', () => {
+      const appointmentLink = 'valid-enrollments-edit';
+      const enrollmentId = "1ff2e7e7-9048-46b2-b02b-fe95b874ef6d";
+      const user = UsersDataProvider.getUser('bcf27563-e7b0-4334-ab91-d35bbb5e63f2');
+
+      describe('update name', () => {
+        beforeAll(async () => {
+          await localStoragePage.clear();
+          await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
+          await localStoragePage.pinAppointment(appointmentLink);
+          await loginPage.loginViaApi(user);
+
+          await page.navigateToEnrollmentEdit(appointmentLink, enrollmentId);
+        });
+
+        const nameToSet = 'Unknown Enrollment One - Updated - Logged in';
+
+        beforeAll(async () => {
+          page.waitForFormBuild();
+
+          await page.setName(nameToSet);
+        });
+
+        describe('submit', () => {
+          beforeAll(() => {
+            page.nextMain();
+          });
+
+          it('should correctly redirect', () => {
+            page.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
+          });
+
+          it('should show correct snackbar', () => {
+            expect(page.getSnackbar().getText()).toEqual('Erfolgreich bearbeitet');
+          });
+        });
+      });
+    });
+
+    describe('edit values - invalid permissions', () => {
+      const appointmentLink = 'valid-enrollments-edit';
+      const enrollmentId = "1ff2e7e7-9048-46b2-b02b-fe95b874ef6d";
+      const user = UsersDataProvider.getUser('bcf27563-e7b0-4334-ab91-d35bbb5e63f2');
+
+      const nameToSet = 'Unknown Enrollment One - Updated - Logged in - Invalid permissions';
+
+      beforeAll(async () => {
+        await localStoragePage.clear();
+        await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
+        await localStoragePage.pinAppointment(appointmentLink);
+        await loginPage.loginViaApi(user);
 
         await page.navigateToEnrollmentEdit(appointmentLink, enrollmentId);
         await fillMainForm({ name: nameToSet, comment: undefined });

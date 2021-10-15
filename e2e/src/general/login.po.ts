@@ -1,9 +1,9 @@
 import jwt_decode from 'jwt-decode';
-import {IUserDataProviderModel} from '../IUserDataProviderModel';
-import {HttpClient} from 'protractor-http-client';
-import {EnvironmentPage} from './environment.po';
-import {LocalStoragePage} from './localStorage.po';
-import {browser, by, element, protractor} from 'protractor';
+import { IUserDataProviderModel } from '../IUserDataProviderModel';
+import { HttpClient } from 'protractor-http-client';
+import { EnvironmentPage } from './environment.po';
+import { LocalStoragePage } from './localStorage.po';
+import { browser, by, element, protractor } from 'protractor';
 
 export class LoginPage {
   private environmentPage = new EnvironmentPage();
@@ -11,6 +11,12 @@ export class LoginPage {
   constructor() {
   }
 
+  /**
+   * @deprecated
+   * TODO
+   * Is login actually needed when using mocked backend?
+   * @param user
+   */
   async loginViaApi(user: IUserDataProviderModel) {
     const localStoragePage = new LocalStoragePage();
 
