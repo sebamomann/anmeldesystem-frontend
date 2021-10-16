@@ -7,7 +7,7 @@ export class EnrollmentEditPage extends EnrollmentBasePage {
   }
 
   public async navigateToEnrollmentEdit(link: string, enrollmentId: string) {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       browser
         .get(`/enrollment/edit?a=${link}&e=${enrollmentId}`)
         .then((_) => {

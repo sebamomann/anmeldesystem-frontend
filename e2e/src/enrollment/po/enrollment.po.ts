@@ -413,9 +413,6 @@ export class EnrollmentCreationPage extends EnrollmentBasePage {
     return element(by.id('mail'));
   }
 
-  public isNameEnabled() {
-    return this.getName().isEnabled();
-  }
 
   public getAdditionCheckSelected(id: string) {
     const elm = element(by.css('.addition-list .addition-index-' + id + ' .checkbox_selected'));

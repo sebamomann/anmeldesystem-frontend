@@ -236,7 +236,7 @@ export class EnrollmentEditComponent implements OnInit, OnDestroy {
           .open(message,
             '',
             {
-              duration: error ? 4000 : 2000,
+              duration: 4000,
               panelClass: `snackbar-${error ? 'error' : 'default'}`
             }
           );

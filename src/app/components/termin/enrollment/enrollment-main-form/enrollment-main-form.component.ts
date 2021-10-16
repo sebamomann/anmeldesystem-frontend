@@ -76,7 +76,7 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
     let creator;
 
     if (this.form.valid) {
-      if (this.isSelfEnrollment) {
+      if (this.isSelfEnrollment && !this.isEdit) {
         creator = {} as any;
         creator.name = this.authenticationValuesService.currentUserSubject$.getValue().name;
         creator.username = this.authenticationValuesService.currentUserSubject$.getValue().preferred_username;

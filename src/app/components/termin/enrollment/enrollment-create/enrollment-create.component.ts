@@ -1,18 +1,18 @@
-import {Component, EventEmitter, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {AuthenticationService} from '../../../../services/authentication.service';
-import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
-import {EnrollmentModel} from '../../../../models/EnrollmentModel.model';
-import {IAppointmentModel} from '../../../../models/IAppointment.model';
-import {MatSnackBar, MatStepper} from '@angular/material';
-import {EnrollmentMainFormComponent} from '../enrollment-main-form/enrollment-main-form.component';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, Subscription} from 'rxjs';
-import {AppointmentProvider} from '../../appointment.provider';
-import {SEOService} from '../../../../_helper/_seo.service';
-import {HttpErrorResponse} from '@angular/common/http';
-import {EnrollmentService} from '../../../../services/enrollment.service';
-import {AuthenticationValuesService} from '../../../../services/authentication.values.service';
-import {AppointmentUtil} from '../../../../_util/appointmentUtil.util';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AuthenticationService } from '../../../../services/authentication.service';
+import { IEnrollmentModel } from '../../../../models/IEnrollment.model';
+import { EnrollmentModel } from '../../../../models/EnrollmentModel.model';
+import { IAppointmentModel } from '../../../../models/IAppointment.model';
+import { MatSnackBar, MatStepper } from '@angular/material';
+import { EnrollmentMainFormComponent } from '../enrollment-main-form/enrollment-main-form.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { AppointmentProvider } from '../../appointment.provider';
+import { SEOService } from '../../../../_helper/_seo.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { EnrollmentService } from '../../../../services/enrollment.service';
+import { AuthenticationValuesService } from '../../../../services/authentication.values.service';
+import { AppointmentUtil } from '../../../../_util/appointmentUtil.util';
 
 const HttpStatus = require('http-status-codes');
 
@@ -24,8 +24,8 @@ const HttpStatus = require('http-status-codes');
 export class EnrollmentCreateComponent implements OnInit, OnDestroy {
   static LOCAL_STORAGE_ENROLLMENT_TMP_KEY = 'enrollmentOutput';
 
-  @ViewChild('stepper', {static: false}) stepper: MatStepper;
-  @ViewChild('mainForm', {static: false}) mainFormRef: EnrollmentMainFormComponent;
+  @ViewChild('stepper', { static: false }) stepper: MatStepper;
+  @ViewChild('mainForm', { static: false }) mainFormRef: EnrollmentMainFormComponent;
 
   public appointment$: Observable<IAppointmentModel>;
   public appointment: IAppointmentModel;
@@ -37,7 +37,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
 
   public enrollmentOutput: IEnrollmentModel = new EnrollmentModel();
 
-  public doneForms = {overall: false, additions: false, driver: false};
+  public doneForms = { overall: false, additions: false, driver: false };
 
   public triggerDirectSend = false;
   public sendingRequestEmit = new EventEmitter();
@@ -50,9 +50,9 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
   private appointmentService$$: Subscription;
 
   constructor(public authenticationService: AuthenticationService, private route: ActivatedRoute,
-              private appointmentProvider: AppointmentProvider, private _seoService: SEOService,
-              private enrollmentService: EnrollmentService, private snackBar: MatSnackBar,
-              private router: Router, private authenticationValuesService: AuthenticationValuesService) {
+    private appointmentProvider: AppointmentProvider, private _seoService: SEOService,
+    private enrollmentService: EnrollmentService, private snackBar: MatSnackBar,
+    private router: Router, private authenticationValuesService: AuthenticationValuesService) {
     this.route.queryParams.subscribe(params => {
       this.linkFromURL = params.a;
 
@@ -192,13 +192,13 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
   public mainFormDone($event: any) {
     this.doneForms.overall = true;
 
-    this.enrollmentOutput = {...this.enrollmentOutput, ...$event};
+    this.enrollmentOutput = { ...this.enrollmentOutput, ...$event };
 
     setTimeout(() => this.stepper.next());
   }
 
   public additionsFormDone($event: any) {
-    this.enrollmentOutput = {...this.enrollmentOutput, additions: [...$event]};
+    this.enrollmentOutput = { ...this.enrollmentOutput, additions: [...$event] };
     console.log(this.enrollmentOutput);
 
     setTimeout(() => this.stepper.next());
@@ -207,7 +207,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
   public driverFormDone($event) {
     this.doneForms.driver = true;
 
-    this.enrollmentOutput = {...this.enrollmentOutput, ...$event};
+    this.enrollmentOutput = { ...this.enrollmentOutput, ...$event };
 
     setTimeout(() => this.stepper.next());
   }
@@ -233,7 +233,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
           this.appointmentProvider.update(this.appointment);
 
           if (result.token) {
-            AppointmentUtil.storeEnrollmentPermissions(this.linkFromURL, {id: result.id, token: result.token});
+            AppointmentUtil.storeEnrollmentPermissions(this.linkFromURL, { id: result.id, token: result.token });
           }
 
           this.request_success_finalize();
@@ -294,7 +294,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
   }
 
   private redirect(message: string, error = false) {
-    this.router.navigate([`enroll`], {queryParams: {a: this.appointment.link}})
+    this.router.navigate([`enroll`], { queryParams: { a: this.appointment.link } })
       .then(() => {
         this.sendingRequestEmit.emit(false);
 
@@ -302,7 +302,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
           .open(message,
             '',
             {
-              duration: error ? 4000 : 2000,
+              duration: 4000,
               panelClass: `snackbar-${error ? 'error' : 'default'}`
             }
           );

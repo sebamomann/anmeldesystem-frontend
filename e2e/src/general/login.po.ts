@@ -11,12 +11,6 @@ export class LoginPage {
   constructor() {
   }
 
-  /**
-   * @deprecated
-   * TODO
-   * Is login actually needed when using mocked backend?
-   * @param user
-   */
   async loginViaApi(user: IUserDataProviderModel) {
     const localStoragePage = new LocalStoragePage();
 

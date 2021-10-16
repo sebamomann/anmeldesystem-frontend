@@ -67,6 +67,10 @@ export class EnrollmentBasePage {
     return elem;
   }
 
+  public isNameEnabled() {
+    return this.getName().isEnabled();
+  }
+
   public getComment() {
     return element(by.id('comment'));
   }
@@ -105,10 +109,10 @@ export class EnrollmentBasePage {
 
   public getSnackbar() { // TODO EC NEEDED?
     const EC = protractor.ExpectedConditions;
-    const snackBar = element(by.tagName('simple-snack-bar'));
+    const snackBar = element(by.className('snackbar-default'));
     browser.wait(EC.visibilityOf(snackBar), 10000);
 
-    return element(by.tagName('simple-snack-bar'));
+    return element(by.className('snackbar-default'));
   }
 
   public getErrorSnackbar() { // TODO EC NEEDED?
