@@ -90,6 +90,14 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * TODO
+   * When submitting enrollment, and after check loggin into an account
+   * go back to first stepper and ask if user wants to enroll HIMSELF or the name that is already inside the name field
+   * if himself, then initiate normal self login
+   * if not himself, correctly adapt form fields
+   * @returns
+   */
   public main() {
     if (this.userIsLoggedIn) {
       this.isEnrolledAsCreator = this.appointment.enrollments
@@ -109,8 +117,11 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
 
     if (this.triggerDirectSend && !this.creatorError) {
       console.log('direct');
+      this.enrollmentOutput.selfEnrollment = true;
+      // set to true because autosend is olny possible when user makes login action
+      delete this.enrollmentOutput.name;
       this.initializeEnrollmentSend();
-      this.stepper.selectedIndex = this.stepper.steps.length - 1;
+      // this.stepper.selectedIndex = this.stepper.steps.length - 1;
       return;
     }
   }
@@ -221,11 +232,19 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
    */
   public sendEnrollmentRequest() {
     console.log(this.enrollmentOutput);
-    const enrollment = this.enrollmentOutput;
+    let enrollment = this.enrollmentOutput;
 
+    /**
+     * TODO
+     * Does not work after mail send enrollment
+     */
     setTimeout(() => { // needed so loading directive triggers again after login or sth
       this.sendingRequestEmit.emit(true);
     });
+
+    delete enrollment.creator;
+    // remove empty fields
+    Object.keys(enrollment).forEach((k) => (enrollment[k] === null || enrollment[k] === undefined || enrollment[k].length === 0) && delete enrollment[k]);
 
     this.appointmentService$$ = this.enrollmentService.create(enrollment, this.appointment)
       .subscribe(

@@ -1,9 +1,9 @@
 import {browser} from 'protractor';
-import {EnrollmentCreationPage} from '../po/enrollment.po';
+import {EnrollmentCreatePage} from '../po/enrollment.create.po';
 import {LocalStoragePage} from '../../general/localStorage.po';
 import {AppointmentOverviewPage} from '../../appointment/overview/po/appointment.overview.po';
 
-let page: EnrollmentCreationPage;
+let page: EnrollmentCreatePage;
 let appointmentPage: AppointmentOverviewPage;
 let localStoragePage: LocalStoragePage;
 // let loginPage: LoginPage;
@@ -19,7 +19,7 @@ beforeAll(async () => {
   };
   browser.executeScript(localStorageSetter);
 
-  page = new EnrollmentCreationPage();
+  page = new EnrollmentCreatePage();
   localStoragePage = new LocalStoragePage();
   appointmentPage = new AppointmentOverviewPage();
   // loginPage = new LoginPage();

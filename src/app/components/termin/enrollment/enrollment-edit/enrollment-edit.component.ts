@@ -9,7 +9,6 @@ import { AppointmentUtil } from '../../../../_util/appointmentUtil.util';
 import { Observable, Subscription } from 'rxjs';
 import { AppointmentProvider } from '../../appointment.provider';
 import { SEOService } from '../../../../_helper/_seo.service';
-import { TokenUtil } from '../../../../_util/tokenUtil.util';
 import { HttpErrorResponse } from '@angular/common/http';
 import { EnrollmentService } from '../../../../services/enrollment.service';
 import { MatSnackBar } from '@angular/material';

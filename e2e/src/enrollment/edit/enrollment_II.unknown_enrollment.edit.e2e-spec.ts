@@ -39,29 +39,29 @@ beforeAll(async () => {
 });
 
 const appointmentLink = "valid-enrollments-edit";
-const enrollmentId = "7af393c1-bdc5-4245-86f0-9fec44133775";
+const enrollmentId = "1ff2e7e7-9048-46b2-b02b-fe95b874ef6d";
 const enrollmentEditTokenValid = "valid-enrollment-edit-token";
 const enrollmentEditTokenInvalid = "invalid-enrollment-edit-token";
 // general enrollment creator 1
 const user = UsersDataProvider.getUser('bcf27563-e7b0-4334-ab91-d35bbb5e63f2');
 
 const enrollment = {
-  name: "User Enrollment One",
+  name: "Unknown Enrollment One",
   comment: "Comment One"
 }
 
-describe('enrollment edit page - edit', () => {
+describe(' * enrollment edit page - edit', () => {
   describe(' * as unknown user', () => {
     describe(' * form', () => {
       beforeAll(async () => {
         await enrollmentEditPreparationUtil.loadPage(appointmentLink, enrollmentId);
       });
 
-      it(' ~ should display form with title "Bearbeiten"', () => {
+      it(' ~ should have title "Bearbeiten"', () => {
         expect(enrollmentEditPage.getMatCardTitle()).toEqual('Bearbeiten');
       });
 
-      describe(' * should have correct form values', () => {
+      describe(' * should have correct values', () => {
         it(' ~ name', async () => {
           expect(await enrollmentEditPage.getNameValue()).toBe(enrollment.name);
         });
@@ -73,10 +73,25 @@ describe('enrollment edit page - edit', () => {
     });
 
     describe(' * edit values', () => {
-      // Name update not possible
+      describe(' * name', () => {
+        const nameToSet = `${enrollment.name} - Updated`;
+
+        beforeAll(async () => {
+          await enrollmentEditPreparationUtil.loadPageWithPermissionToken(appointmentLink, enrollmentId, enrollmentEditTokenValid);
+          await enrollmentEditTestUtil.fillMainForm({ name: nameToSet, comment: undefined });
+        });
+
+        it(' ~ should correctly redirect', () => {
+          enrollmentEditPage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
+        });
+
+        it(' ~ should show correct snackbar', () => {
+          expect(enrollmentEditPage.getSnackbar().getText()).toEqual('Erfolgreich bearbeitet');
+        });
+      });
 
       describe(' * comment', () => {
-        const commentToSet = `${enrollment.comment} - Updated`;
+        const commentToSet = `${enrollment.comment} - Updated`
 
         beforeAll(async () => {
           await enrollmentEditPreparationUtil.loadPageWithPermissionToken(appointmentLink, enrollmentId, enrollmentEditTokenValid);
@@ -94,11 +109,11 @@ describe('enrollment edit page - edit', () => {
     });
 
     describe(' * edit values - invalid permission token', () => {
-      const commentToSet = `${enrollment.comment} - Updated - Invalid permissions`;
+      const nameToSet = `${enrollment.name} - Updated`
 
       beforeAll(async () => {
         await enrollmentEditPreparationUtil.loadPageWithPermissionToken(appointmentLink, enrollmentId, enrollmentEditTokenInvalid);
-        await enrollmentEditTestUtil.fillMainForm({ name: undefined, comment: commentToSet });
+        await enrollmentEditTestUtil.fillMainForm({ name: nameToSet, comment: undefined });
       });
 
       it(' ~ should show correct error message', () => {
@@ -113,7 +128,7 @@ describe('enrollment edit page - edit', () => {
         await enrollmentEditPreparationUtil.loadPageWithLogin(appointmentLink, enrollmentId, user);
       });
 
-      it(' ~ should display form with title "Bearbeiten"', () => {
+      it(' ~ should have title "Bearbeiten"', () => {
         expect(enrollmentEditPage.getMatCardTitle()).toEqual('Bearbeiten');
       });
 
@@ -126,23 +141,16 @@ describe('enrollment edit page - edit', () => {
           expect(await enrollmentEditPage.getCommentValue()).toBe(enrollment.comment);
         });
       });
-
-      describe(' * should have correct form attributes', () => {
-        it(' ~ name disabled', () => {
-          expect(enrollmentEditPage.isNameEnabled()).toBe(false);
-        });
-      });
     });
 
     describe(' * edit values', () => {
-      // Name update not possible
 
-      describe(' * update comment', () => {
-        const commentToSet = `${enrollment.comment} - Updated - Logged in`;
+      describe(' * update name', () => {
+        const nameToSet = `${enrollment.name} - Updated - Logged in`;
 
         beforeAll(async () => {
           await enrollmentEditPreparationUtil.loadPageWithLogin(appointmentLink, enrollmentId, user);
-          await enrollmentEditTestUtil.fillMainForm({ name: undefined, comment: commentToSet });
+          await enrollmentEditTestUtil.fillMainForm({ name: nameToSet, comment: undefined });
         });
 
         it(' ~ should correctly redirect', () => {
@@ -156,11 +164,11 @@ describe('enrollment edit page - edit', () => {
     });
 
     describe(' * edit values - invalid permissions', () => {
-      const commentToSet = `${enrollment.comment} - Updated - Logged in - Invalid permissions`;
+      const nameToSet = 'Unknown Enrollment One - Updated - Logged in - Invalid permissions';
 
       beforeAll(async () => {
         await enrollmentEditPreparationUtil.loadPageWithLogin(appointmentLink, enrollmentId, user);
-        await enrollmentEditTestUtil.fillMainForm({ name: undefined, comment: commentToSet });
+        await enrollmentEditTestUtil.fillMainForm({ name: nameToSet, comment: undefined });
       });
 
       it(' ~ should show correct error message', () => {

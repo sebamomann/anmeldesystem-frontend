@@ -9,12 +9,14 @@ export class EnrollmentEditPreparationUtil {
   public loginPage: LoginPage;
 
   public async loadPage(appointmentLink: string, enrollmentId: string): Promise<void> {
+    await this.loginPage.logout();
     await this.localStoragePage.clear();
     await this.localStoragePage.set("appointment-pins", [appointmentLink]);
     await this.enrollmentEditPage.navigateToEnrollmentEdit(appointmentLink, enrollmentId);
   }
 
   public async loadPageWithLogin(appointmentLink: string, enrollmentId: string, user: IUserDataProviderModel): Promise<void> {
+    await this.loginPage.logout();
     await this.localStoragePage.clear();
     await this.localStoragePage.set("appointment-pins", [appointmentLink]);
     await this.loginPage.loginViaApi(user);
@@ -22,6 +24,7 @@ export class EnrollmentEditPreparationUtil {
   }
 
   public async loadPageWithPermissionToken(appointmentLink: string, enrollmentId: string, enrollmentEditToken: string): Promise<void> {
+    await this.loginPage.logout();
     await this.localStoragePage.clear();
     await this.localStoragePage.set("appointment-pins", [appointmentLink]);
     await this.setPermissionTokenForEnrollment(appointmentLink, enrollmentId, enrollmentEditToken);

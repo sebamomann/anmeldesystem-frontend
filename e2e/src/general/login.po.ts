@@ -49,10 +49,12 @@ export class LoginPage {
   }
 
   async loginViaUI(user: IUserDataProviderModel) {
+    this.waitForFormBuild();
+
     await this.setUsername(user.username);
     await this.setPassword(user.password);
 
-    this.getSubmit().click();
+    await this.getSubmit().click();
   }
 
   public setUsername(value: string) {

@@ -88,15 +88,8 @@ export class EnrollmentBasePage {
     });
   }
 
-  /**
-   * Submit Buttons (next_buttons)
-   */
-  public nextMain() { // TODO EC NEEDED?
-    const elm = element(by.id('next_main'));
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
-
-    return elm.click();
+  public async nextMain() {
+    return this.buttonClick('next_main')
   }
 
   /**
@@ -107,7 +100,7 @@ export class EnrollmentBasePage {
     return browser.wait(protractor.ExpectedConditions.urlContains(url), 5000);
   }
 
-  public getSnackbar() { // TODO EC NEEDED?
+  public getSnackbar() {
     const EC = protractor.ExpectedConditions;
     const snackBar = element(by.className('snackbar-default'));
     browser.wait(EC.visibilityOf(snackBar), 10000);
@@ -133,7 +126,7 @@ export class EnrollmentBasePage {
     };
   };
 
-  public async causeEmptyErrorName() {
+  public causeEmptyErrorName() {
     const ref = this.getName();
 
     ref.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, 'a'));
@@ -142,5 +135,14 @@ export class EnrollmentBasePage {
     ref.clear();
 
     element(by.id('title')).click();
+  }
+
+  public buttonClick(id: string) {
+    const elm = element(by.id(id));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.elementToBeClickable(elm), 10000, `Button with ID '${id}' taking too long to be clickable`);
+
+    return elm.click();
   }
 }

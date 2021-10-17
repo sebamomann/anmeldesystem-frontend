@@ -1,28 +1,28 @@
-import {browser, by, element, protractor} from 'protractor';
+import { browser, by, element, protractor } from 'protractor';
 import { EnrollmentBasePage } from './enrollment.base.po';
 
 // const request = require('request');
 
-export class EnrollmentCreationPage extends EnrollmentBasePage {
+export class EnrollmentCreatePage extends EnrollmentBasePage {
   constructor() {
     super();
   }
 
   public async navigateToEnrollmentCreation(link: string) {
-    return new Promise((resolve, reject) => {
-        browser.get('/enrollment/add?a=' + link)
-          .then(
-            _ => {
-              this.waitForLoadingSpinnerToBeGone();
+    return new Promise<void>((resolve, reject) => {
+      browser.get('/enrollment/add?a=' + link)
+        .then(
+          _ => {
+            this.waitForLoadingSpinnerToBeGone();
 
-              resolve();
-            })
-          .catch(
-            _ => {
-              reject();
-            }
-          );
-      }
+            resolve();
+          })
+        .catch(
+          _ => {
+            reject();
+          }
+        );
+    }
     );
   }
 
@@ -73,6 +73,10 @@ export class EnrollmentCreationPage extends EnrollmentBasePage {
     });
   }
 
+  /**
+   * @todo mail_submit?
+   * @returns
+   */
   public submit() {
     const elm = element(by.id('submit'));
     const EC = protractor.ExpectedConditions;
@@ -83,14 +87,6 @@ export class EnrollmentCreationPage extends EnrollmentBasePage {
 
   public getUrl() {
     return browser.driver.getCurrentUrl();
-  }
-
-  public getSnackbar() {
-    const EC = protractor.ExpectedConditions;
-    const snackBar = element(by.tagName('simple-snack-bar'));
-    browser.wait(EC.visibilityOf(snackBar), 10000);
-
-    return element(by.tagName('simple-snack-bar'));
   }
 
   public appointmentNotFoundCardExists() {
@@ -117,6 +113,11 @@ export class EnrollmentCreationPage extends EnrollmentBasePage {
     return element(by.id('login-content-alt')).isPresent();
   }
 
+  public async getMailErrorValue() {
+    const elm = await this.getMailError();
+    return elm.getText();
+  };
+
   public async getMailError() {
     const elem = element(by.id('mail-error'));
     const until = protractor.ExpectedConditions;
@@ -125,13 +126,25 @@ export class EnrollmentCreationPage extends EnrollmentBasePage {
     return elem;
   }
 
+  public getCreatorErrorValue() {
+    const elem = element(by.id('creator-error'));
+    return elem.getText();
+  }
+
   public async getCreatorError() {
     const elem = element(by.id('creator-error'));
     const until = protractor.ExpectedConditions;
     await browser.wait(until.presenceOf(elem), 5000, 'Element taking too long to appear in the DOM');
     await browser.wait(this.textNotToBePresentInElement(elem, ''), 5000, 'Element taking too long to appear in the DOM');
+
     return elem;
   }
+
+  public isSelfEnrollmentSelected() {
+    const elem = this.getSelfEnrollment();
+    return elem.isSelected();
+  }
+
 
   public getSelfEnrollment() {
     const EC = protractor.ExpectedConditions;
@@ -149,6 +162,10 @@ export class EnrollmentCreationPage extends EnrollmentBasePage {
     return elem;
   }
 
+  /**
+   * @todo back_mail?
+   * @returns
+   */
   public goBack() {
     const elm = element(by.id('back'));
     return elm.click();
@@ -201,11 +218,18 @@ export class EnrollmentCreationPage extends EnrollmentBasePage {
     return elem.isPresent();
   }
 
-
-
   public async deselectSelfEnrollment() {
     const elm = this.getSelfEnrollment();
     if ((await elm.isSelected() === true)) {
+      return browser.executeScript('arguments[0].click();', elm.getWebElement());
+    }
+
+    return Promise.resolve();
+  }
+
+  public async selectSelfEnrollment() {
+    const elm = this.getSelfEnrollment();
+    if ((await elm.isSelected() === false)) {
       return browser.executeScript('arguments[0].click();', elm.getWebElement());
     }
 
@@ -229,35 +253,19 @@ export class EnrollmentCreationPage extends EnrollmentBasePage {
   };
 
   public next() {
-    const elm = element(by.id('next'));
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
-
-    return elm.click();
+    return this.buttonClick('next')
   }
 
   public nextCheck() {
-    const elm = element(by.id('next_check'));
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
-
-    return elm.click();
+    return this.buttonClick('next_check')
   }
 
   public nextAdditions() {
-    const elm = element(by.id('next_additions'));
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
-
-    return elm.click();
+    return this.buttonClick('next_additions')
   }
 
   public nextDriver() {
-    const elm = element(by.id('next_driver'));
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.elementToBeClickable(elm), 10000, 'Element taking too long to be clickable');
-
-    return elm.click();
+    return this.buttonClick('next_driver')
   }
 
   public getCheckNameValue() {
@@ -404,11 +412,6 @@ export class EnrollmentCreationPage extends EnrollmentBasePage {
     return elem2.click();
   }
 
-  public isEnrollmentCheckCardPreset() {
-    const elem = element(by.id('enrollment-check-card'));
-    return elem.isPresent();
-  }
-
   public getMail() {
     return element(by.id('mail'));
   }
@@ -461,5 +464,10 @@ export class EnrollmentCreationPage extends EnrollmentBasePage {
   public isServiceSelectEmpty() {
     const elm = element(by.css('#service-select .mat-select-placeholder'));
     return elm.isPresent();
+  }
+
+  public isEnrollmentCheckCardPreset() {
+    const elem = element(by.id('enrollment-check-card'));
+    return elem.isPresent();
   }
 }
