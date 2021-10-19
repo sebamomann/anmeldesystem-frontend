@@ -1,6 +1,7 @@
-import { EnrollmentCreatePage } from '../po/enrollment.create.po';
+import { EnrollmentCreatePage } from './../po/enrollment.create.po';
 
 export class EnrollmentCreateTestUtil {
+
   public enrollmentCreatePage: EnrollmentCreatePage;
 
   public async fillMainForm(data: { name: string, comment: string }) {
@@ -19,4 +20,14 @@ export class EnrollmentCreateTestUtil {
 
     this.enrollmentCreatePage.nextMain();
   };
+
+  public async fillAdditionForm(args: boolean[]) {
+    for (let i = 0; i < args.length; i++) {
+      if (args[i]) {
+        await this.enrollmentCreatePage.selectAddition(String(i));
+      }
+    }
+
+    this.enrollmentCreatePage.nextAdditions();
+  }
 }

@@ -222,7 +222,7 @@ describe('enrollment creation page - create - as unknown user', () => {
         await enrollmentCreatePage.submit();
       });
 
-      it(' ~ main form should have correct values', async () => {
+      it(' ~ main form should still have correct values', async () => {
         expect(enrollmentCreatePage.getNameValue()).toBe(enrollment.name);
         expect(enrollmentCreatePage.getCommentValue()).toBe(commentToSet);
       });

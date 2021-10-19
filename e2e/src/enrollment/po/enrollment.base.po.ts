@@ -92,6 +92,12 @@ export class EnrollmentBasePage {
     return this.buttonClick('next_main')
   }
 
+  public async waitForButtonToBeClickable(buttonId: string) {
+    const elem = element(by.id(buttonId));
+    const EC = protractor.ExpectedConditions;
+    return browser.wait(EC.elementToBeClickable(elem), 10000);
+  }
+
   /**
    * @deprecated
    * centralize

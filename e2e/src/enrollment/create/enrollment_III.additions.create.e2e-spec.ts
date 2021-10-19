@@ -1,12 +1,16 @@
-import {browser} from 'protractor';
-import {EnrollmentCreatePage} from '../po/enrollment.create.po';
-import {LocalStoragePage} from '../../general/localStorage.po';
-import {AppointmentOverviewPage} from '../../appointment/overview/po/appointment.overview.po';
+import { EnrollmentCreateTestUtil } from '../utility/enrollment.create.test.util';
+import { browser } from 'protractor';
+import { EnrollmentCreatePage } from '../po/enrollment.create.po';
+import { LocalStoragePage } from '../../general/localStorage.po';
+import { EnrollmentCreatePreparationUtil } from '../utility/enrollment.create.preparation.util';
+import { LoginPage } from '../../general/login.po';
 
-let page: EnrollmentCreatePage;
-let appointmentPage: AppointmentOverviewPage;
+const enrollmentCreatePreparationUtil: EnrollmentCreatePreparationUtil = new EnrollmentCreatePreparationUtil();
+const enrollmentCreateTestUtil: EnrollmentCreateTestUtil = new EnrollmentCreateTestUtil();
+
+let enrollmentCreatePage: EnrollmentCreatePage;
 let localStoragePage: LocalStoragePage;
-// let loginPage: LoginPage;
+let loginPage: LoginPage;
 
 beforeAll(async () => {
   await browser.get('/'); // needed to be able to clear localStorage
@@ -17,255 +21,180 @@ beforeAll(async () => {
     // @ts-ignore
     window.env.API_URL = '';
   };
+
   browser.executeScript(localStorageSetter);
 
-  page = new EnrollmentCreatePage();
+  enrollmentCreatePage = new EnrollmentCreatePage();
   localStoragePage = new LocalStoragePage();
-  appointmentPage = new AppointmentOverviewPage();
-  // loginPage = new LoginPage();
+  loginPage = new LoginPage();
+
+  enrollmentCreatePreparationUtil.enrollmentCreatePage = enrollmentCreatePage;
+  enrollmentCreatePreparationUtil.localStoragePage = localStoragePage;
+  enrollmentCreatePreparationUtil.loginPage = loginPage;
+
+  enrollmentCreateTestUtil.enrollmentCreatePage = enrollmentCreatePage;
 
   browser.waitForAngularEnabled(false);
 });
 
-const fillForm = async (data) => {
-  const nameToSet = data.name;
-  const commentToSet = data.comment;
+const appointmentLink = "valid-enrollments-create-additions";
 
-  page.waitForFormBuild();
+const enrollment = {
+  name: 'Unknown Enrollment - Additions',
+  comment: 'Unknown Enrollment Comment'
+}
 
-  await page.setName(nameToSet);
-  await page.setComment(commentToSet);
-
-  page.nextMain();
-
-  await page.selectAddition('0');
-  await page.selectAddition('2');
-
-  page.nextAdditions();
-  page.nextCheck();
-};
-
-describe('enrollment creation page - with additions', () => {
-  describe('enroll', () => {
-    describe('correct form', () => {
-      beforeAll(async () => {
-        const appointmentLink = 'valid-additions';
-
-        await localStoragePage.clear();
-        await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
-        await localStoragePage.pinAppointment(appointmentLink);
-
-        await page.navigateToEnrollmentCreation(appointmentLink);
-      });
-
-      const nameToSet = 'Unknown Enroll';
-      const commentToSet = 'unknown enroll comment';
-
-      describe('fill form', () => {
-        beforeAll(async () => {
-          page.waitForFormBuild();
-
-          await page.setName(nameToSet);
-          await page.setComment(commentToSet);
-        });
-
-        describe('next main', () => {
-          beforeAll(() => {
-            page.nextMain();
-          });
-
-          // TODO
-          // ADDITION FORM EXISTS
-
-          describe('correct form values - additions form', () => {
-            it('four additions', async () => {
-              expect(page.getCheckboxes().count()).toEqual(4);
-            });
-
-            it('additions are deselected ', async () => {
-              expect(page.isAdditionUnchecked('0')).toBeTruthy();
-              expect(page.isAdditionUnchecked('1')).toBeTruthy();
-              expect(page.isAdditionUnchecked('2')).toBeTruthy();
-              expect(page.isAdditionUnchecked('3')).toBeTruthy();
-            });
-          });
-        });
-      });
+describe('enrollment creation page - additions', () => {
+  describe(' * form', () => {
+    beforeAll(async () => {
+      await enrollmentCreatePreparationUtil.loadPage(appointmentLink);
+      await enrollmentCreateTestUtil.fillMainForm(enrollment);
     });
 
-    describe('fill form - default', () => {
-      beforeAll(async () => {
-        const appointmentLink = 'valid-additions';
-
-        await localStoragePage.clear();
-        await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
-        await localStoragePage.pinAppointment(appointmentLink);
-
-        await page.navigateToEnrollmentCreation(appointmentLink);
-      });
-
-      describe('unknown user', () => {
-        const nameToSet = 'Unknown Enroll';
-        const commentToSet = 'unknown enroll comment';
-
-        describe('fill form', () => {
-          beforeAll(async () => {
-            page.waitForFormBuild();
-
-            await page.setName(nameToSet);
-            await page.setComment(commentToSet);
-          });
-
-          describe('next main', () => {
-            beforeAll(() => {
-              page.nextMain();
-            });
-
-            describe('select additions', () => {
-              beforeAll(async () => {
-                await page.selectAddition('0');
-                await page.selectAddition('2');
-              });
-
-              describe('next additions', () => {
-                beforeAll(() => {
-                  page.nextAdditions();
-                });
-
-                describe('enrollment check overview', () => {
-                  it('should display check overview', () => {
-                    const isEnrollmentCheckCardPreset = page.isEnrollmentCheckCardPreset();
-                    expect(isEnrollmentCheckCardPreset).toBeTruthy('Enrollment check card should be present but isn\'t');
-                  });
-
-                  it('correct data in check form', () => {
-                    expect(page.getCheckNameValue()).toEqual(nameToSet);
-                    expect(page.getCheckCommentValue()).toEqual(commentToSet);
-
-                    expect(page.getAdditionCheckSelected('0')).toBeTruthy();
-                    expect(page.getAdditionCheckSelected('1')).toBeFalsy();
-                    expect(page.getAdditionCheckSelected('2')).toBeTruthy();
-                    expect(page.getAdditionCheckSelected('3')).toBeFalsy();
-                  });
-
-                  describe('next check', () => {
-                    beforeAll(() => {
-                      page.nextCheck();
-                    });
-
-                    it('login and mail form exists with login part', () => {
-                      expect(page.loginAndMailFormExists()).toBeTruthy();
-                      expect(page.loginAndMailFormLoginContentExists()).toBeTruthy();
-                      expect(page.loginAndMailFormLoginContentAltExists()).toBeFalsy();
-                    });
-
-                    describe('go back to check overview', () => {
-                      beforeAll(() => {
-                        page.goBack();
-                      });
-
-                      it('correct check form', () => {
-                        expect(page.getCheckNameValue()).toEqual(nameToSet);
-                        expect(page.getCheckCommentValue()).toEqual(commentToSet);
-
-                        expect(page.getAdditionCheckSelected('0')).toBeTruthy();
-                        expect(page.getAdditionCheckSelected('1')).toBeFalsy();
-                        expect(page.getAdditionCheckSelected('2')).toBeTruthy();
-                        expect(page.getAdditionCheckSelected('3')).toBeFalsy();
-                      });
-
-                      describe('go back to addition form', () => {
-                        beforeAll(() => {
-                          page.goBackCheck();
-                        });
-
-                        it('correct addition form values', () => {
-                          expect(page.isAdditionChecked('0')).toBeTruthy();
-                          expect(page.isAdditionUnchecked('1')).toBeTruthy();
-                          expect(page.isAdditionChecked('2')).toBeTruthy();
-                          expect(page.isAdditionUnchecked('3')).toBeTruthy();
-                        });
-
-                        describe('go back to main form', () => {
-                          beforeAll(() => {
-                            page.goBackAdditions();
-                          });
-
-                          it('correct main form values', () => {
-                            expect(page.getNameValue()).toEqual(nameToSet);
-                            expect(page.getCommentValue()).toEqual(commentToSet);
-                          });
-                        });
-                      });
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
+    it(' * should have correct values', () => {
+      expect(enrollmentCreatePage.getAdditionValue('0')).toBe("addition-1");
+      expect(enrollmentCreatePage.getAdditionValue('1')).toBe("addition-2");
+      expect(enrollmentCreatePage.getAdditionValue('2')).toBe("addition-3");
+      expect(enrollmentCreatePage.getAdditionValue('3')).toBe("addition-4");
     });
 
-    describe('fill form - with mail', () => {
-      const appointmentLink = 'valid-additions';
+    it('should have correct attributes', () => {
+      expect(enrollmentCreatePage.isAdditionSelected('0')).toBeFalsy("Addition (index) 0 is selected but should not be");
+      expect(enrollmentCreatePage.isAdditionSelected('1')).toBeFalsy("Addition (index) 1 is selected but should not be");
+      expect(enrollmentCreatePage.isAdditionSelected('2')).toBeFalsy("Addition (index) 2 is selected but should not be");
+      expect(enrollmentCreatePage.isAdditionSelected('3')).toBeFalsy("Addition (index) 3 is selected but should not be");
+    })
+  });
 
-      beforeAll(async () => {
-        await localStoragePage.clear();
-        await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
-        await localStoragePage.pinAppointment(appointmentLink);
+  describe(' * fill - check card', () => {
+    beforeAll(async () => {
+      await enrollmentCreatePreparationUtil.loadPage(appointmentLink);
+      await enrollmentCreateTestUtil.fillMainForm(enrollment);
+      await enrollmentCreateTestUtil.fillAdditionForm([true, false, true, false]);
+    });
 
-        await page.navigateToEnrollmentCreation(appointmentLink);
+    it(' ~ should show enrollment check card', () => {
+      const isEnrollmentCheckCardPreset = enrollmentCreatePage.isEnrollmentCheckCardPreset();
+      expect(isEnrollmentCheckCardPreset).toBeTruthy('Enrollment check card should be present but isn\'t');
+    });
 
-        await fillForm({name: 'Unknown Enrollment', comment: 'unknown enrollment comment'});
+    describe(' * should contain correct data', () => {
+      it(' ~ main values', () => {
+        expect(enrollmentCreatePage.getCheckNameValue()).toEqual(enrollment.name);
+        expect(enrollmentCreatePage.getCheckCommentValue()).toEqual(enrollment.comment);
       });
 
-      describe('insert mail', () => {
-        beforeAll(() => {
-          page.setEmail('mail@example.com');
-        });
-
-        describe('send', () => {
-          beforeAll(() => {
-            page.submit();
-          });
-
-          // TODO
-          // TOO FAST I GUESS
-          // it('should swap to start', () => {
-          //   const isMainFormPresent = page.isMainFormPresent();
-          //   expect(isMainFormPresent).toBeTruthy('Main form should be present but isn\'t');
-          // });
-
-          it('should complete enrollment', () => {
-            appointmentPage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
-            expect(page.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
-          });
-
-          it('should store enrollment information', async () => {
-            const storedEnrollmentValues = await localStoragePage.getObject('permissions');
-
-            const id = storedEnrollmentValues[0].enrollments[0].id;
-            const token = storedEnrollmentValues[0].enrollments[0].token;
-            const link = storedEnrollmentValues[0].link;
-
-            expect(id).toEqual('fabedb04-fabb-4773-8ab6-e47722f6f274');
-            expect(token).toEqual('mytoken-additions');
-            expect(link).toEqual(appointmentLink);
-          });
-        });
+      it(' * additions', () => {
+        expect(enrollmentCreatePage.getAdditionCheckSelected('0')).toBeTruthy();
+        expect(enrollmentCreatePage.getAdditionCheckSelected('1')).toBeFalsy();
+        expect(enrollmentCreatePage.getAdditionCheckSelected('2')).toBeTruthy();
+        expect(enrollmentCreatePage.getAdditionCheckSelected('3')).toBeFalsy();
       });
     });
   });
 
-  afterEach(async () => {
-    browser.manage().logs().get('browser').then(browserLogs => {
-      // browserLogs is an array of objects with level and message fields
-      browserLogs.forEach(log => {
-        if (log.level.value > 900) { // it's an error log
-          console.log('Browser console error!');
-          console.log(log.message);
-        }
+  describe(' * fill - login and mail card - go back to check card', () => {
+    beforeAll(async () => {
+      await enrollmentCreatePreparationUtil.loadPage(appointmentLink);
+      await enrollmentCreateTestUtil.fillMainForm(enrollment);
+      await enrollmentCreateTestUtil.fillAdditionForm([true, false, true, false]);
+      enrollmentCreatePage.nextCheck();
+      enrollmentCreatePage.goBack();
+    });
+
+    describe(' * should contain correct data', () => {
+      it(' ~ main values', () => {
+        expect(enrollmentCreatePage.getCheckNameValue()).toEqual(enrollment.name);
+        expect(enrollmentCreatePage.getCheckCommentValue()).toEqual(enrollment.comment);
+      });
+
+      it(' * additions', () => {
+        expect(enrollmentCreatePage.getAdditionCheckSelected('0')).toBeTruthy();
+        expect(enrollmentCreatePage.getAdditionCheckSelected('1')).toBeFalsy();
+        expect(enrollmentCreatePage.getAdditionCheckSelected('2')).toBeTruthy();
+        expect(enrollmentCreatePage.getAdditionCheckSelected('3')).toBeFalsy();
+      });
+    });
+  });
+
+  describe(' * fill - login and mail card - go back to form', () => {
+    beforeAll(async () => {
+      await enrollmentCreatePreparationUtil.loadPage(appointmentLink);
+      await enrollmentCreateTestUtil.fillMainForm(enrollment);
+      await enrollmentCreateTestUtil.fillAdditionForm([true, false, true, false]);
+      enrollmentCreatePage.nextCheck();
+      enrollmentCreatePage.goBack();
+      enrollmentCreatePage.goBackCheck()
+    });
+
+    it(' ~ should still contain inputted values', () => {
+      expect(enrollmentCreatePage.isAdditionSelected('0')).toBeTruthy("Addition (index) 0 is not selected but should be");
+      expect(enrollmentCreatePage.isAdditionSelected('1')).toBeFalsy("Addition (index) 1 is selected but should not be");
+      expect(enrollmentCreatePage.isAdditionSelected('2')).toBeTruthy("Addition (index) 2 is not selected but should be");
+      expect(enrollmentCreatePage.isAdditionSelected('3')).toBeFalsy("Addition (index) 3 is selected but should not be");
+    });
+  });
+
+  describe(' * fill - complete', () => {
+
+    describe(' * mail', () => {
+      beforeAll(async () => {
+        await enrollmentCreatePreparationUtil.loadPage(appointmentLink);
+        await enrollmentCreateTestUtil.fillMainForm(enrollment);
+        await enrollmentCreateTestUtil.fillAdditionForm([true, false, true, false]);
+        await enrollmentCreatePage.nextCheck();
+        await enrollmentCreatePage.setEmail('mail@example.com');
+        await enrollmentCreatePage.submit();
+      });
+
+      // TODO
+      // TOO FAST I GUESS
+      // it(' ~ should swap to start', () => {
+      //   const isMainFormPresent = page.isMainFormPresent();
+      //   expect(isMainFormPresent).toBeTruthy('Main form should be present but isn\'t');
+      // });
+
+      it(' ~ should correctly redirect', () => {
+        enrollmentCreatePage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
+      });
+
+      it(' ~ should show correct snackbar', () => {
+        expect(enrollmentCreatePage.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
+      });
+
+      it(' ~ should store enrollment information', async () => {
+        // fetch stored token to edit enrollment afterwards
+        const storedEnrollmentValues = await localStoragePage.getObject('permissions');
+
+        const id = storedEnrollmentValues[0].enrollments[0].id;
+        const token = storedEnrollmentValues[0].enrollments[0].token;
+        const link = storedEnrollmentValues[0].link;
+
+        expect(id).toEqual('64c3ead0-4d12-452b-94b7-20e0ec064e17');
+        expect(token).toEqual('mytoken');
+        expect(link).toEqual(appointmentLink);
+      });
+    });
+
+    describe(' * mail - already enrolled', () => {
+      const nameToSet = `${enrollment.name} - Already enrolled`
+
+      beforeAll(async () => {
+        await enrollmentCreatePreparationUtil.loadPage(appointmentLink);
+        await enrollmentCreateTestUtil.fillMainForm({ name: nameToSet, comment: enrollment.comment });
+        await enrollmentCreateTestUtil.fillAdditionForm([true, false, true, false]);
+        await enrollmentCreatePage.nextCheck();
+        await enrollmentCreatePage.setEmail('mail@example.com');
+        await enrollmentCreatePage.submit();
+        await enrollmentCreatePage.setName(nameToSet);
+        await enrollmentCreatePage.nextMain();
+      });
+
+      it(' ~ additions form should still have correct attributes', () => {
+        expect(enrollmentCreatePage.isAdditionSelected('0')).toBeTruthy("Addition (index) 0 is not selected but should be");
+        expect(enrollmentCreatePage.isAdditionSelected('1')).toBeFalsy("Addition (index) 1 is selected but should not be");
+        expect(enrollmentCreatePage.isAdditionSelected('2')).toBeTruthy("Addition (index) 2 is not selected but should be");
+        expect(enrollmentCreatePage.isAdditionSelected('3')).toBeFalsy("Addition (index) 3 is selected but should not be");
       });
     });
   });

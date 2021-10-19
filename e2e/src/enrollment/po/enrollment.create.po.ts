@@ -154,15 +154,23 @@ export class EnrollmentCreatePage extends EnrollmentBasePage {
     return element(by.id('selfEnrollment-input'));
   }
 
-  public getAddition(id: string) {
-    const EC = protractor.ExpectedConditions;
+  public isAdditionSelected(id: string) {
     const elem = element(by.id('addition-' + id + '-input'));
-    browser.wait(EC.visibilityOf(elem), 10000);
+    return elem.isSelected();
+  }
 
+  public getAdditionInput(id: string) {
+    const elem = element(by.id('addition-' + id + '-input'));
     return elem;
   }
 
+  public getAdditionValue(id: string) {
+    const elem = element(by.id('addition-' + id));
+    return elem.getText();
+  }
+
   /**
+   * @deprecated TODO
    * @todo back_mail?
    * @returns
    */
@@ -301,6 +309,7 @@ export class EnrollmentCreatePage extends EnrollmentBasePage {
 
   public async selectAddition(id: string) {
     const elm = this.getAdditionElement(id);
+
     if ((await elm.isSelected() === false)) {
       return browser.executeScript('arguments[0].click();', elm.getWebElement());
     }
