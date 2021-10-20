@@ -374,7 +374,16 @@ export class EnrollmentCreatePage extends EnrollmentBasePage {
     return elm.isPresent();
   }
 
-  async selectDriver() {
+  public async deselectDriver() {
+    const elm = this.getDriverCheckbox();
+    if ((await elm.isSelected() === true)) {
+      return browser.executeScript('arguments[0].click();', elm.getWebElement());
+    }
+
+    return Promise.resolve();
+  }
+
+  public async selectDriver() {
     const elm = this.getDriverCheckbox();
     if ((await elm.isSelected() === false)) {
       return browser.executeScript('arguments[0].click();', elm.getWebElement());
@@ -431,28 +440,18 @@ export class EnrollmentCreatePage extends EnrollmentBasePage {
     return elm.isPresent();
   }
 
-  public async isDriverCheckboxChecked() {
-    const elm = element(by.css('#driver.mat-checkbox-checked'));
-    return elm.isPresent();
-  }
-
-  // TODO
-  // ADAPT THIS SO THAT ADDITION CHECK GETS MADE LIKE THIS
-  /**
-   * @deprecated isSelected() // needs to be created
-   */
-  public async isDriverCheckboxUnchecked() {
-    const elm = element(by.css('#driver.mat-checkbox'));
-    const exists: boolean = await elm.isPresent();
-
-    const elm2 = element(by.css('#driver.mat-checkbox-checked'));
-    const isChecked: boolean = await elm2.isPresent();
-
-    return exists && !isChecked;
+  public async isDriverCheckboxSelected() {
+    const elm = element(by.css('#driver-input'));
+    return elm.isSelected();
   }
 
   public getRequirementSelectValue() {
     const elm = element(by.css('#requirement-select .mat-select-value-text'));
+    return elm.getText();
+  }
+
+  public getServiceSelectValue() {
+    const elm = element(by.css('#service-select .mat-select-value-text'));
     return elm.getText();
   }
 

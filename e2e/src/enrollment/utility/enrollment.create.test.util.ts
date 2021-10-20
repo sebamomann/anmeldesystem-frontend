@@ -30,4 +30,19 @@ export class EnrollmentCreateTestUtil {
 
     this.enrollmentCreatePage.nextAdditions();
   }
+
+  public async fillDriverFormPassenger(requirement: string) {
+    this.enrollmentCreatePage.deselectDriver();
+    this.enrollmentCreatePage.selectPassengerValue(requirement);
+
+    this.enrollmentCreatePage.nextDriver();
+  }
+
+  public async fillDriverFormDriver(service: string, seats: number) {
+    this.enrollmentCreatePage.selectDriver();
+    this.enrollmentCreatePage.selectDriverValue(service);
+    this.enrollmentCreatePage.setSeats(seats);
+
+    this.enrollmentCreatePage.nextDriver();
+  }
 }

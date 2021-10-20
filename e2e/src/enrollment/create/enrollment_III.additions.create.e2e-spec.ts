@@ -51,19 +51,19 @@ describe('enrollment creation page - additions', () => {
       await enrollmentCreateTestUtil.fillMainForm(enrollment);
     });
 
-    it(' * should have correct values', () => {
+    it(' ~ should have correct values', () => {
       expect(enrollmentCreatePage.getAdditionValue('0')).toBe("addition-1");
       expect(enrollmentCreatePage.getAdditionValue('1')).toBe("addition-2");
       expect(enrollmentCreatePage.getAdditionValue('2')).toBe("addition-3");
       expect(enrollmentCreatePage.getAdditionValue('3')).toBe("addition-4");
     });
 
-    it('should have correct attributes', () => {
+    it(' ~ should have correct attributes', () => {
       expect(enrollmentCreatePage.isAdditionSelected('0')).toBeFalsy("Addition (index) 0 is selected but should not be");
       expect(enrollmentCreatePage.isAdditionSelected('1')).toBeFalsy("Addition (index) 1 is selected but should not be");
       expect(enrollmentCreatePage.isAdditionSelected('2')).toBeFalsy("Addition (index) 2 is selected but should not be");
       expect(enrollmentCreatePage.isAdditionSelected('3')).toBeFalsy("Addition (index) 3 is selected but should not be");
-    })
+    });
   });
 
   describe(' * fill - check card', () => {
@@ -79,12 +79,12 @@ describe('enrollment creation page - additions', () => {
     });
 
     describe(' * should contain correct data', () => {
-      it(' ~ main values', () => {
+      it(' ~ values', () => {
         expect(enrollmentCreatePage.getCheckNameValue()).toEqual(enrollment.name);
         expect(enrollmentCreatePage.getCheckCommentValue()).toEqual(enrollment.comment);
       });
 
-      it(' * additions', () => {
+      it(' ~ additions', () => {
         expect(enrollmentCreatePage.getAdditionCheckSelected('0')).toBeTruthy();
         expect(enrollmentCreatePage.getAdditionCheckSelected('1')).toBeFalsy();
         expect(enrollmentCreatePage.getAdditionCheckSelected('2')).toBeTruthy();
@@ -103,12 +103,12 @@ describe('enrollment creation page - additions', () => {
     });
 
     describe(' * should contain correct data', () => {
-      it(' ~ main values', () => {
+      it(' ~ values', () => {
         expect(enrollmentCreatePage.getCheckNameValue()).toEqual(enrollment.name);
         expect(enrollmentCreatePage.getCheckCommentValue()).toEqual(enrollment.comment);
       });
 
-      it(' * additions', () => {
+      it(' ~ additions', () => {
         expect(enrollmentCreatePage.getAdditionCheckSelected('0')).toBeTruthy();
         expect(enrollmentCreatePage.getAdditionCheckSelected('1')).toBeFalsy();
         expect(enrollmentCreatePage.getAdditionCheckSelected('2')).toBeTruthy();
