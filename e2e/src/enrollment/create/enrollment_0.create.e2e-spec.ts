@@ -49,7 +49,7 @@ describe('enrollment creation page - general', () => {
         await enrollmentCreatePage.navigateToEnrollmentCreation(appointmentLink);
       });
 
-      it(' ~ appointment not found card hidden', () => {
+      it(' ~ appointment not found card should be hidden', () => {
         const isAppointmentNotFoundCardPresent = enrollmentCreatePage.isAppointmentNotFoundCardPresent();
         expect(isAppointmentNotFoundCardPresent).toBeFalsy('Appointment not found card should not be present but is');
       });

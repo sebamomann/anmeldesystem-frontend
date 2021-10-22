@@ -102,7 +102,7 @@ export class AppointmentDataProvider {
   constructor() {
   }
 
-  public static getAppointment(identifier: string): IAppointmentDataProviderModel {
+  public static getAppointmentByLink(identifier: string): IAppointmentDataProviderModel {
     return this.APPOINTMENTS[identifier];
   }
 }

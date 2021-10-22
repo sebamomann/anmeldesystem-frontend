@@ -1,10 +1,12 @@
-import {browser, by} from 'protractor';
-import {AppointmentOverviewPage} from './po/appointment.overview.po';
-import {LocalStoragePage} from '../../general/localStorage.po';
-import {AppointmentDataProvider} from './providers/appointment.data-provider';
-import {AppointmentOverviewDataPage} from './po/appointment.overview.data.po';
+import { AppointmentOverviewPreparationUtil } from './po/appointment.overview.preparation.util';
+import { browser, by } from 'protractor';
+import { AppointmentOverviewPage } from './po/appointment.overview.po';
+import { LocalStoragePage } from '../../general/localStorage.po';
+import { AppointmentDataProvider } from './providers/appointment.data-provider';
+import { AppointmentOverviewDataPage } from './po/appointment.overview.data.po';
 
-let appointmentLink;
+const appointmentOverviewPreparationUtil: AppointmentOverviewPreparationUtil = new AppointmentOverviewPreparationUtil();
+
 let appointmentPage: AppointmentOverviewPage;
 let appointmentDataPage: AppointmentOverviewDataPage;
 let localStoragePage: LocalStoragePage;
@@ -12,32 +14,42 @@ let localStoragePage: LocalStoragePage;
 beforeAll(async () => {
   await browser.get('/'); // needed to be able to clear localStorage
 
+  const localStorageSetter = () => {
+    // @ts-ignore
+    console.log(window.env);
+    // @ts-ignore
+    window.env.API_URL = 'http://localhost:3001/';
+  };
+  browser.executeScript(localStorageSetter);
+
   appointmentPage = new AppointmentOverviewPage();
   appointmentDataPage = new AppointmentOverviewDataPage();
   localStoragePage = new LocalStoragePage();
 
+  appointmentOverviewPreparationUtil.appointmentOverviewPage = appointmentPage;
+  appointmentOverviewPreparationUtil.localStoragePage = localStoragePage;
+
   browser.waitForAngularEnabled(false);
 });
 
-describe('appointment overview appointment data', () => {
-  describe('default', () => {
-    let appointment;
+const appointmentLink = "valid";
+
+describe('appointment overview - data', () => {
+  describe(' * normal', () => {
+    const appointment = AppointmentDataProvider.getAppointmentByLink(appointmentLink);
 
     beforeAll(async () => {
-      appointmentLink = 'valid';
-
-      await localStoragePage.clear();
-      await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
-      await localStoragePage.pinAppointment(appointmentLink);
-
-      await appointmentPage.navigateToAppointment(appointmentLink);
-
-      appointment = AppointmentDataProvider.getAppointment(appointmentLink);
+      await appointmentOverviewPreparationUtil.loadPage(appointmentLink);
     });
 
-    it('location should be correct', () => {
+    it(' ~ should show location', () => {
       const location = appointmentDataPage.getAppointmentDataLocation();
       expect(location).toBe(appointment.location);
+    });
+
+    it(' ~ should show description', () => {
+      const description = appointmentDataPage.getAppointmentDataDescription();
+      expect(description).toBe(appointment.description);
     });
 
     // TOODO
@@ -56,53 +68,45 @@ describe('appointment overview appointment data', () => {
     //   expect(location).toBe(appointment.deadline);
     // });
 
-    it('creator name should be correct', () => {
+    it(' ~ should show creator name', () => {
       const creatorName = appointmentDataPage.getAppointmentDataCreatorName();
       expect(creatorName).toBe(appointment.creator.name);
     });
 
-    it('creator username should be correct', () => {
+    it(' ~ should show creator username', () => {
       const creatorUsername = appointmentDataPage.getAppointmentDataCreatorUsername();
       expect(creatorUsername).toBe('@' + appointment.creator.username);
     });
   });
 
-  describe('without deadline', () => {
+  describe(' * appointment without deadline', () => {
+    const appointmentLink = "valid-no-deadline";
+
     beforeAll(async () => {
-      appointmentLink = 'no-deadline';
-
-      await localStoragePage.clear();
-      await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
-      await localStoragePage.pinAppointment(appointmentLink);
-
-      await appointmentPage.navigateToAppointment(appointmentLink);
+      await appointmentOverviewPreparationUtil.loadPage(appointmentLink);
     });
 
-    it('deadline should not be present', () => {
+    it(' ~ deadline should not be present', () => {
       const isDeadlinePresent = appointmentDataPage.isAppointmentDataDeadlinePresent();
       expect(isDeadlinePresent).toBeFalsy('Deadline should not be present but is');
     });
   });
 
-  describe('with files', () => {
+  describe(' * appointment with file', () => {
+    const appointmentLink = "valid-file";
+
     beforeAll(async () => {
-      appointmentLink = 'valid-files';
-
-      await localStoragePage.clear();
-      await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
-      await localStoragePage.pinAppointment(appointmentLink);
-
-      await appointmentPage.navigateToAppointment(appointmentLink);
+      await appointmentOverviewPreparationUtil.loadPage(appointmentLink);
     });
 
-    it('should show 1 file', () => {
+    it(' ~ should show one file (block)', () => {
       const getFilesElements = appointmentDataPage.getFileBlocks();
       const numberOfFiles = getFilesElements.count();
 
       expect(numberOfFiles).toBe(1);
     });
 
-    it('correct file name', () => {
+    it(' ~ should have correct filename', () => {
       const filesElements = appointmentDataPage.getFileBlocks();
       const fileElement = filesElements.first().element(by.css('a'));
       const fileName = fileElement.getText();
@@ -122,17 +126,5 @@ describe('appointment overview appointment data', () => {
     //     expect(pageRedirected).toBeTruthy('Not redirected to file download');
     //   });
     // });
-  });
-
-  afterEach(async () => {
-    browser.manage().logs().get('browser').then(browserLogs => {
-      // browserLogs is an array of objects with level and message fields
-      browserLogs.forEach(log => {
-        if (log.level.value > 900) { // it's an error log
-          console.log('Browser console error!');
-          console.log(log.message);
-        }
-      });
-    });
   });
 });
