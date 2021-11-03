@@ -1,4 +1,4 @@
-import {IEnrollmentDataProviderModel} from '../../../IEnrollmentDataProviderModel';
+import { IEnrollmentDataProviderModel } from '../../../IEnrollmentDataProviderModel';
 
 export class EnrollmentDataProvider {
   private static ENROLLMENTS = {
@@ -8,6 +8,23 @@ export class EnrollmentDataProvider {
       creator: {
         name: 'User Enrollment One',
         username: 'userenrollmentone'
+      },
+      iat: '2021-01-01 05:01:23',
+    } as IEnrollmentDataProviderModel,
+    '05e07491-c231-44f0-8de1-04eafa110920': {
+      id: '05e07491-c231-44f0-8de1-04eafa110920',
+      comment: 'Comment One - Permission granted',
+      creator: {
+        name: 'User Enrollment One',
+        username: 'userenrollmentone'
+      },
+      iat: '2021-01-01 05:01:23',
+    } as IEnrollmentDataProviderModel,
+    'c17701cb-3efd-4824-b516-6763f9c60795': {
+      id: 'c17701cb-3efd-4824-b516-6763f9c60795',
+      creator: {
+        name: 'User Enrollment',
+        username: 'userenrollment'
       },
       iat: '2021-01-01 05:01:23',
     } as IEnrollmentDataProviderModel,
@@ -24,6 +41,17 @@ export class EnrollmentDataProvider {
       id: 'c7a18228-9dc5-46f0-9366-def497121ddc',
       comment: 'Comment One',
       name: 'Unknown Enrollment One',
+      iat: '2021-01-01 05:02:23'
+    } as IEnrollmentDataProviderModel,
+    '3cb062fa-9fac-4836-8160-d0af1603dcaa': {
+      id: '3cb062fa-9fac-4836-8160-d0af1603dcaa',
+      comment: 'Comment',
+      name: 'Unknown Enrollment',
+      iat: '2021-01-01 05:02:23'
+    } as IEnrollmentDataProviderModel,
+    '93d7dffd-2e35-4419-880b-9a36c8ca8306': {
+      id: '93d7dffd-2e35-4419-880b-9a36c8ca8306',
+      name: 'Unknown Enrollment - No comment',
       iat: '2021-01-01 05:02:23'
     } as IEnrollmentDataProviderModel,
     'dd5837e5-1f1d-4a2d-85e1-7dcb77e8ab2a': {

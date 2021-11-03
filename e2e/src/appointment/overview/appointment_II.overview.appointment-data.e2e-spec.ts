@@ -35,7 +35,7 @@ beforeAll(async () => {
 const appointmentLink = "valid";
 
 describe('appointment overview - data', () => {
-  describe(' * normal', () => {
+  describe(' * default', () => {
     const appointment = AppointmentDataProvider.getAppointmentByLink(appointmentLink);
 
     beforeAll(async () => {

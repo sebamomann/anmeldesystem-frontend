@@ -1,4 +1,4 @@
-import {browser, by, element, protractor} from 'protractor';
+import { browser, by, element, protractor } from 'protractor';
 
 export class AppointmentOverviewEnrollmentListPage {
   constructor() {
@@ -57,6 +57,10 @@ export class AppointmentOverviewEnrollmentListPage {
 
   public toggleEnrollmentPanel(id: string) {
     const elem = element(by.css('[enrollment-id=\"' + id + '\"].enrollment'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.elementToBeClickable(elem), 2000, 'Enrollment panel for enrollment ' + id + ' taking too long to be present');
+
     return elem.click();
   }
 
