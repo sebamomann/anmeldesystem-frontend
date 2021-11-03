@@ -49,6 +49,18 @@ export class EnrollmentDataProvider {
       name: 'Unknown Enrollment',
       iat: '2021-01-01 05:02:23'
     } as IEnrollmentDataProviderModel,
+    'fa33ed23-e8f5-46f4-a734-dbff28372810': {
+      id: 'fa33ed23-e8f5-46f4-a734-dbff28372810',
+      comment: 'Comment',
+      name: 'Unknown Enrollment',
+      iat: '2021-01-01 05:02:23',
+    } as IEnrollmentDataProviderModel,
+    '775d5788-ebc9-4ab5-ada3-a30b9b02ac4a': {
+      id: '775d5788-ebc9-4ab5-ada3-a30b9b02ac4a',
+      comment: 'Comment',
+      name: 'Unknown Enrollment - Invalid permissions',
+      iat: '2021-01-01 05:02:23',
+    } as IEnrollmentDataProviderModel,
     '93d7dffd-2e35-4419-880b-9a36c8ca8306': {
       id: '93d7dffd-2e35-4419-880b-9a36c8ca8306',
       name: 'Unknown Enrollment - No comment',

@@ -93,10 +93,11 @@ export class AppointmentOverviewEnrollmentListPage {
   }
 
   public isMissingPermissionSnackbarPresent() {
+    // todo centralize
     const elem = element(by.css('.snackbar_missing_permissions'));
 
     const EC = protractor.ExpectedConditions;
-    browser.wait(EC.presenceOf(elem), 2000, 'Element taking too long to be present');
+    browser.wait(EC.visibilityOf(elem), 2000, 'Element taking too long to be present');
 
     return elem.isPresent();
   }
