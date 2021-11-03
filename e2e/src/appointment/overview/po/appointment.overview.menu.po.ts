@@ -1,10 +1,10 @@
-import {by, element} from 'protractor';
+import { by, element } from 'protractor';
 
 export class AppointmentOverviewMenuPage {
   constructor() {
   }
 
-  public openAppointmentMenu() {
+  public clickMenuIcon() {
     const elem = element(by.id('appointment_menu'));
     return elem.click();
   }
@@ -12,6 +12,10 @@ export class AppointmentOverviewMenuPage {
   public isMenuOpened() {
     const elem = element(by.css('.mat-menu-content'));
     return elem.isPresent();
+  }
+
+  public async getMenuItemValueById(id) {
+    return element(by.id(id)).getText();
   }
 
   public getMenuItems() {

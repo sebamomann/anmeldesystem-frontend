@@ -4,15 +4,6 @@ export class AppointmentOverviewDataPage {
   constructor() {
   }
 
-  public openAppointmentMenu() {
-    const elem = element(by.id('appointment_menu'));
-    return elem.click();
-  }
-
-  public isMenuOpened() {
-    const elem = element(by.css('.mat-menu-content'));
-    return elem.isPresent();
-  }
 
   public getAppointmentData() {
     return element(by.css('.appointment-data'));
