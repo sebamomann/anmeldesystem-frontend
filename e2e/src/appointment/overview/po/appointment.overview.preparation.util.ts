@@ -29,4 +29,29 @@ export class AppointmentOverviewPreparationUtil {
     await this.loginPage.loginViaApi(user);
     await this.appointmentOverviewPage.navigateToAppointment(appointmentLink);
   }
+
+  public async loadPageWithPermissionToken(appointmentLink: string, enrollmentId: string, enrollmentEditToken: string): Promise<void> {
+    await this.loginPage.logout();
+    await this.localStoragePage.clear();
+    await this.localStoragePage.set("appointment-pins", [appointmentLink]);
+    await this.setPermissionTokenForEnrollment(appointmentLink, enrollmentId, enrollmentEditToken);
+    await this.appointmentOverviewPage.navigateToAppointment(appointmentLink);
+  }
+
+
+  public async setPermissionTokenForEnrollment(appointmentLink: string, enrollmentId: string, enrollmentEditToken: string): Promise<void> {
+    const permissions = [
+      {
+        link: appointmentLink,
+        enrollments: [
+          {
+            'id': enrollmentId,
+            'token': enrollmentEditToken
+          }
+        ]
+      }
+    ];
+
+    await this.localStoragePage.set("permissions", permissions);
+  }
 }

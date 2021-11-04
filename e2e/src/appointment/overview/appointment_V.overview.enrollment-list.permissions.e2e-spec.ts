@@ -121,56 +121,82 @@ describe('enrollment list - permissions', () => {
       });
     });
   });
+
+  describe(' * as unknown user', () => {
+    const enrollmentEditTokenValid = 'valid-enrollment-edit-token';
+    const enrollmentEditTokenInvalid = 'invalid-enrollment-edit-token';
+
+    describe(' * edit enrollment', () => {
+      const enrollment = EnrollmentDataProvider.getEnrollment('49abf491-b8e3-40bf-8e68-b88b06b279ca');
+
+      beforeAll(async () => {
+        await appointmentOverviewPreparationUtil.loadPageWithPermissionToken(appointmentLink, enrollment.id, enrollmentEditTokenValid);
+        appointmentOverviewEnrollmentListPage.toggleEnrollmentPanel(enrollment.id);
+        appointmentOverviewEnrollmentListPage.clickEnrollmentEditButton(enrollment.id);
+      });
+
+      it(' ~ should redirect to edit page', () => {
+        const url = '/enrollment/edit?a=' + appointmentLink + '&e=' + enrollment.id;
+        const pageRedirected = appointmentOverviewPage.pageRedirectedToUrl(url);
+
+        expect(pageRedirected).toBeTruthy('Not redirected to enrollment edit');
+      });
+    });
+
+    describe(' * edit enrollment - invalid permissions', () => {
+      const enrollment = EnrollmentDataProvider.getEnrollment('1b1d3fa5-6817-4544-abeb-98fd7da3ffba');
+
+      beforeAll(async () => {
+        await appointmentOverviewPreparationUtil.loadPageWithPermissionToken(appointmentLink, enrollment.id, enrollmentEditTokenInvalid);
+        appointmentOverviewEnrollmentListPage.toggleEnrollmentPanel(enrollment.id);
+        appointmentOverviewEnrollmentListPage.clickEnrollmentEditButton(enrollment.id);
+      });
+
+      it(' ~ should show missing permission dialog', () => {
+        const isMissingPermissionSnackbarPresent = appointmentOverviewEnrollmentListPage.isMissingPermissionDialogPresent();
+        expect(isMissingPermissionSnackbarPresent).toBeTruthy('Dialog should be present but isn\'t');
+      });
+    });
+
+    describe(' * delete enrollment', () => {
+      const enrollment = EnrollmentDataProvider.getEnrollment('49abf491-b8e3-40bf-8e68-b88b06b279ca');
+
+      beforeAll(async () => {
+        await appointmentOverviewPreparationUtil.loadPageWithPermissionToken(appointmentLink, enrollment.id, enrollmentEditTokenValid);
+        appointmentOverviewEnrollmentListPage.toggleEnrollmentPanel(enrollment.id);
+        appointmentOverviewEnrollmentListPage.clickEnrollmentDeleteButton(enrollment.id);
+      });
+
+      it(' ~ should prompt delete dialog', () => {
+        const isEnrollmentDeletionConfirmationDialogPresent = appointmentOverviewEnrollmentListPage.isEnrollmentDeletionConfirmationDialogPresent();
+        expect(isEnrollmentDeletionConfirmationDialogPresent).toBeTruthy('Dialog should be present but isn\'t');
+      });
+
+      describe(' * click cancel', () => {
+        beforeAll(() => {
+          appointmentOverviewEnrollmentListPage.cancelEnrollmentDeletion();
+        });
+
+        it(' ~ should hide delete dialog', () => {
+          const isEnrollmentDeletionConfirmationDialogPresent = appointmentOverviewEnrollmentListPage.isEnrollmentDeletionConfirmationDialogGone();
+          expect(!isEnrollmentDeletionConfirmationDialogPresent).toBeFalsy('Dialog should be not present but is');
+        });
+      });
+    });
+
+    describe(' * delete enrollment - invalid permissions', () => {
+      const enrollment = EnrollmentDataProvider.getEnrollment('1b1d3fa5-6817-4544-abeb-98fd7da3ffba');
+
+      beforeAll(async () => {
+        await appointmentOverviewPreparationUtil.loadPageWithPermissionToken(appointmentLink, enrollment.id, enrollmentEditTokenInvalid);
+        appointmentOverviewEnrollmentListPage.toggleEnrollmentPanel(enrollment.id);
+        appointmentOverviewEnrollmentListPage.clickEnrollmentDeleteButton(enrollment.id);
+      });
+
+      it(' ~ should show missing permission dialog', () => {
+        const isMissingPermissionSnackbarPresent = appointmentOverviewEnrollmentListPage.isMissingPermissionDialogPresent();
+        expect(isMissingPermissionSnackbarPresent).toBeTruthy('Dialog should be present but isn\'t');
+      });
+    });
+  });
 });
-// describe('invalid permission (not logged in)', () => {
-//   beforeAll(async () => {
-//     await localStoragePage.clear();
-//     await localStoragePage.preventEnrollmentHintForLink(appointmentLink);
-//   });
-
-//   beforeAll(async () => {
-//     await page.navigateToAppointment(appointmentLink);
-//   });
-
-
-//   describe('enrollment of any user', () => {
-//     const enrollment = EnrollmentDataProvider.getEnrollment('4190a4d4-b8a1-4843-9717-a04ffa7b2dbb');
-
-//     describe('edit', () => {
-//       beforeAll(() => {
-//         enrollmentListPage.toggleEnrollmentPanel(enrollment.id);
-//         enrollmentListPage.clickEnrollmentEditButton(enrollment.id);
-//       });
-
-//       it('should show missing permission dialog', () => {
-//         const isMissingPermissionSnackbarPresent = enrollmentListPage.isMissingPermissionDialogPresent();
-//         expect(isMissingPermissionSnackbarPresent).toBeTruthy('Dialog should be present but isn\'t');
-//       });
-//     });
-
-//     describe('delete', () => {
-//       beforeAll(() => {
-//         enrollmentListPage.toggleEnrollmentPanel(enrollment.id);
-//         enrollmentListPage.clickEnrollmentDeleteButton(enrollment.id);
-//       });
-
-//       it('should show missing permission dialog', () => {
-//         const isMissingPermissionSnackbarPresent = enrollmentListPage.isMissingPermissionDialogPresent();
-//         expect(isMissingPermissionSnackbarPresent).toBeTruthy('Dialog should be present but isn\'t');
-//       });
-//     });
-//   });
-// });
-
-// afterAll(async () => {
-//   browser.manage().logs().get('browser').then(browserLogs => {
-//     // browserLogs is an array of objects with level and message fields
-//     browserLogs.forAll(log => {
-//       if (log.level.value > 900) { // it's an error log
-//         console.log('Browser console error!');
-//         console.log(log.message);
-//       }
-//     });
-//   });
-// });
-//   });
