@@ -50,7 +50,7 @@ const enrollment = {
   comment: "Comment One"
 }
 
-describe('enrollment edit page - edit', () => {
+describe('enrollment edit page - edit - user enrollment', () => {
   describe(' * as unknown user', () => {
     describe(' * form', () => {
       beforeAll(async () => {

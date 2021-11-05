@@ -179,14 +179,10 @@ export class EnrollmentEditComponent implements OnInit, OnDestroy {
     this.appointmentService$$ = this._enrollmentService.update(data, this.appointment)
       .subscribe(
         result => {
-          // this.appointment.enrollments.map((mEnrollment) => mEnrollment.id === data.id ? data : mEnrollment);
-          // TODO UPDATE ELEMENT ()
-          console.log(result);
-
           this.request_success_finalize();
         }, (err: HttpErrorResponse) => {
           this.sendingRequestEmit.emit(false);
-          console.log(err);
+
           if (err.status === HttpStatus.BAD_REQUEST) {
             if (err.error.code === 'DUPLICATE_ENTRY') {
               this.request_error_handleDuplicateValues(err);
@@ -235,7 +231,7 @@ export class EnrollmentEditComponent implements OnInit, OnDestroy {
           .open(message,
             '',
             {
-              duration: 4000,
+              duration: 5000,
               panelClass: `snackbar-${error ? 'error' : 'default'}`
             }
           );

@@ -74,12 +74,12 @@ describe('enrollment creation page - create - as unknown user', () => {
       await enrollmentCreateTestUtil.fillMainForm(enrollment);
     });
 
-    it(' ~ should show enrollment check card', () => {
+    it(' ~ should be present', () => {
       const isEnrollmentCheckCardPreset = enrollmentCreatePage.isEnrollmentCheckCardPreset();
       expect(isEnrollmentCheckCardPreset).toBeTruthy('Enrollment check card should be present but isn\'t');
     });
 
-    it(' ~ check card should contain correct data', () => {
+    it(' ~ should contain correct data', () => {
       expect(enrollmentCreatePage.getCheckNameValue()).toEqual(enrollment.name);
       expect(enrollmentCreatePage.getCheckCommentValue()).toEqual(enrollment.comment);
     });
@@ -193,7 +193,8 @@ describe('enrollment creation page - create - as unknown user', () => {
         enrollmentCreatePage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
       });
 
-      it(' ~ should show correct snackbar', () => {
+      it(' ~ should show correct snackbar', async () => {
+        await enrollmentCreatePage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
         expect(enrollmentCreatePage.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
       });
 

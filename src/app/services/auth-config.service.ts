@@ -68,7 +68,7 @@ export class AuthConfigService {
           this.oauthService.tryLogin()
             .then((loggedIn) => {
               if (this.oauthService.hasValidAccessToken()) {
-                console.log('[KEYCLOAK] - VALID TOKEN');
+                // console.log('[KEYCLOAK] - VALID TOKEN');
                 // this.router.navigate(['/'], {queryParams: {success1: true}});
 
                 this.authenticationValueService.currentUserSubject$.next(this.oauthService.getIdentityClaims() as IUser);
@@ -79,7 +79,7 @@ export class AuthConfigService {
                 resolveFn(true);
               } else {
                 this.authenticationValueService.refreshing = true;
-                console.log('[KEYCLOAK] - INVALID TOKEN');
+                // console.log('[KEYCLOAK] - INVALID TOKEN');
                 this.oauthService.silentRefresh()
                   .then((res) => {
                     this.authenticationValueService.currentUserSubject$.next(this.oauthService.getIdentityClaims() as IUser);
@@ -91,7 +91,7 @@ export class AuthConfigService {
                     resolveFn(true);
                   })
                   .catch((err) => {
-                    console.log('[KEYCLOAK] - ERROR - LOGOUT');
+                    // console.log('[KEYCLOAK] - ERROR - LOGOUT');
                     this.authenticationValueService.refreshing = false;
                     this.oauthService.revokeTokenAndLogout();
                     resolveFn(true);
@@ -99,16 +99,16 @@ export class AuthConfigService {
               }
             })
             .catch((err) => {
-              console.log(err);
-              console.log('[KEYCLOAK] - ERROR (after TRY LOGIN)');
+              // console.log(err);
+              // console.log('[KEYCLOAK] - ERROR (after TRY LOGIN)');
 
               this.authenticationValueService.refreshing = false;
               resolveFn(true);
             });
         })
         .catch((err) => {
-          console.log(err);
-          console.log('[KEYCLOAK] - ERROR (after LOAD DISCOVERY DOCUMENT)');
+          // console.log(err);
+          // console.log('[KEYCLOAK] - ERROR (after LOAD DISCOVERY DOCUMENT)');
 
           this.authenticationValueService.refreshing = false;
           resolveFn(true);

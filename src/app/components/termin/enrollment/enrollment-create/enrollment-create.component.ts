@@ -116,7 +116,6 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
     this.directSend = this.triggerDirectSend && this.userIsLoggedIn;
 
     if (this.triggerDirectSend && !this.creatorError) {
-      console.log('direct');
       this.enrollmentOutput.selfEnrollment = true;
       // set to true because autosend is olny possible when user makes login action
       delete this.enrollmentOutput.name;
@@ -191,7 +190,6 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
     } else {
       // not logged
       // tmp store item for possible login redirect
-      console.log('set storage');
       localStorage.setItem(EnrollmentCreateComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY, JSON.stringify(this.enrollmentOutput));
 
       this.showLoginAndMailForm = true;
@@ -210,7 +208,6 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
 
   public additionsFormDone($event: any) {
     this.enrollmentOutput = { ...this.enrollmentOutput, additions: [...$event] };
-    console.log(this.enrollmentOutput);
 
     setTimeout(() => this.stepper.next());
   }
@@ -231,7 +228,6 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
    * Eventually send enrollment request, depending on edit or no edit;
    */
   public sendEnrollmentRequest() {
-    console.log(this.enrollmentOutput);
     let enrollment = this.enrollmentOutput;
 
     /**
@@ -257,8 +253,6 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
 
           this.request_success_finalize();
         }, (err: HttpErrorResponse) => {
-          console.log(err);
-          console.log('LOL');
           this.sendingRequestEmit.emit(false);
 
           if (err.status === HttpStatus.CONFLICT && err.error.code === 'DUPLICATE_VALUES') {
@@ -284,17 +278,12 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
     this.enrollmentOutput = JSON.parse(localStorage.getItem(EnrollmentCreateComponent.LOCAL_STORAGE_ENROLLMENT_TMP_KEY));
 
     if (!this.enrollmentOutput) {
-      console.log('NOT FROM STORAGE');
       this.enrollmentOutput = new EnrollmentModel();
     }
-
-    console.log('get storage');
-    console.log(this.enrollmentOutput);
   }
 
   private request_error_handleDuplicateValues(err: HttpErrorResponse) {
     err.error.data.forEach(dataElement => {
-      console.log(dataElement);
       if (dataElement.object === 'user') {
         this.setCreatorError();
       } else {

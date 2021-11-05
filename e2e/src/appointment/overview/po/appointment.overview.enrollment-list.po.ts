@@ -92,14 +92,13 @@ export class AppointmentOverviewEnrollmentListPage {
     return elem.isPresent();
   }
 
-  public isMissingPermissionSnackbarPresent() {
+  public getMissingPermissionSnackbar() {
     // todo centralize
-    const elem = element(by.css('.snackbar_missing_permissions'));
-
     const EC = protractor.ExpectedConditions;
-    browser.wait(EC.visibilityOf(elem), 2000, 'Element taking too long to be present');
+    const snackBar = element(by.className('snackbar-error'));
+    browser.wait(EC.visibilityOf(snackBar), 4000);
 
-    return elem.isPresent();
+    return snackBar;
   }
 
   public isEnrollmentDeletionConfirmationDialogPresent() {

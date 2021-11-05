@@ -44,6 +44,7 @@ beforeAll(async () => {
 const appointmentLink = 'valid-enrollment-list-permissions';
 
 describe('enrollment list - permissions', () => {
+
   describe(' * as logged in user', () => {
     const user = UsersDataProvider.getUser('f67e953d-cb85-4f41-b077-4a0bf8485bc5'); // APPOINTMENT CREATOR
 
@@ -75,8 +76,8 @@ describe('enrollment list - permissions', () => {
       });
 
       it(' ~ should show missing permission snackbar', () => {
-        const isMissingPermissionSnackbarPresent = appointmentOverviewEnrollmentListPage.isMissingPermissionSnackbarPresent();
-        expect(isMissingPermissionSnackbarPresent).toBeTruthy('Snackbar should be present but isn\'t');
+        const isMissingPermissionSnackbarPresent = appointmentOverviewEnrollmentListPage.getMissingPermissionSnackbar();
+        expect(isMissingPermissionSnackbarPresent.getText()).toEqual('Fehlende Berechtigungen');
       });
     });
 
@@ -116,8 +117,8 @@ describe('enrollment list - permissions', () => {
       });
 
       it(' ~ should show missing permission snackbar', () => {
-        const isMissingPermissionSnackbarPresent = appointmentOverviewEnrollmentListPage.isMissingPermissionSnackbarPresent();
-        expect(isMissingPermissionSnackbarPresent).toBeTruthy('Snackbar should be present but isn\'t');
+        const isMissingPermissionSnackbarPresent = appointmentOverviewEnrollmentListPage.getMissingPermissionSnackbar();
+        expect(isMissingPermissionSnackbarPresent.getText()).toEqual('Fehlende Berechtigungen');
       });
     });
   });

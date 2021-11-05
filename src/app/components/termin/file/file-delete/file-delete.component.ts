@@ -1,6 +1,6 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {IAppointmentModel} from '../../../../models/IAppointment.model';
-import {AppointmentService} from '../../../../services/appointment.service';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { IAppointmentModel } from '../../../../models/IAppointment.model';
+import { AppointmentService } from '../../../../services/appointment.service';
 import Timer = NodeJS.Timer;
 
 @Component({
@@ -17,7 +17,7 @@ export class FileDeleteComponent implements OnInit {
   @Input()
   appointment: IAppointmentModel;
   public icon: string;
-  @ViewChild('fileRef', {static: false})
+  @ViewChild('fileRef', { static: false })
   private elementReference: ElementRef;
   private timer: Timer;
 
@@ -44,7 +44,6 @@ export class FileDeleteComponent implements OnInit {
         .removeFile(this.file.id, this.appointment)
         .subscribe(
           () => {
-            console.log('DELETED');
             this.deleted.emit(this.file);
             this.elementReference.nativeElement.remove();
           },

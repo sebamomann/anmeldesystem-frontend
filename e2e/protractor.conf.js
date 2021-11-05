@@ -2,7 +2,7 @@
 // Protractor configuration file, see link for more information
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 
-const {SpecReporter} = require("jasmine-spec-reporter");
+const { SpecReporter } = require("jasmine-spec-reporter");
 
 /**
  * @type { import("protractor").Config }
@@ -16,14 +16,14 @@ exports.config = {
     acceptInsecureCerts: true,
     chromeOptions: {
       args: [
-        // '--headless',
+        '--headless',
         '--no-sandbox ',
         '--disable-gpu',
         '--disable-dev-shm-usage',
         "--allow-insecure-localhost"
       ]
     },
-    chromeDriver: "./node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_91.0.4472.101",
+    chromeDriver: "./node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_94.0.4606.81",
     browserName: "chrome",
   },
   directConnect: true,
@@ -39,6 +39,6 @@ exports.config = {
     require("ts-node").register({
       project: require("path").join(__dirname, "./tsconfig.json"),
     });
-    jasmine.getEnv().addReporter(new SpecReporter({spec: {displayStacktrace: true}}));
+    jasmine.getEnv().addReporter(new SpecReporter({ spec: { displayStacktrace: true } }));
   },
 };

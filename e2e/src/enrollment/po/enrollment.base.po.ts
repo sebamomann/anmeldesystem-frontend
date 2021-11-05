@@ -107,11 +107,12 @@ export class EnrollmentBasePage {
   }
 
   public getSnackbar() {
+    // todo centralize
     const EC = protractor.ExpectedConditions;
-    const snackBar = element(by.className('snackbar-default'));
-    browser.wait(EC.visibilityOf(snackBar), 10000);
+    const snackBar = browser.element(by.className('snackbar-default'));
+    browser.wait(EC.visibilityOf(snackBar), 4000, "Cant find snackbar");
 
-    return element(by.className('snackbar-default'));
+    return snackBar;
   }
 
   public getErrorSnackbar() { // TODO EC NEEDED?

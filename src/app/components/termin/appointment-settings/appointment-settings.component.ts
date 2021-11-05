@@ -148,7 +148,6 @@ export class AppointmentSettingsComponent implements OnInit, OnDestroy {
           }
         },
         err => {
-          console.log(err);
           if (err instanceof HttpErrorResponse) {
             this.snackBar.open('Sorry, etwas hat nicht geklappt!', null, {
               duration: 2000,

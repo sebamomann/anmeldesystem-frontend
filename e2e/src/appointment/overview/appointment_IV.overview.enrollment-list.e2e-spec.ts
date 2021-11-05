@@ -48,7 +48,7 @@ describe('enrollment list', () => {
       expect(nrOfEnrollments).toBe(0);
     });
 
-    it('should show empty enrollment hint', () => {
+    it(' ~ should show empty enrollment hint', () => {
       const isEmptyEnrollmentListHintPresent = appointmentOverviewEnrollmentListPage.isEmptyEnrollmentListHintPresent();
       expect(isEmptyEnrollmentListHintPresent).toBeTruthy();
     });
@@ -118,7 +118,7 @@ describe('enrollment list', () => {
       expect(name).toEqual(enrollment.name);
     });
 
-    it('should have no username', () => {
+    it(' ~ should have no username', () => {
       const usernameIsPresent = appointmentOverviewEnrollmentListPage.isEnrollmentUsernamePresent(enrollment.id);
       expect(usernameIsPresent).toBeFalsy();
     });
@@ -138,7 +138,7 @@ describe('enrollment list', () => {
     });
 
     describe(' * no comment', () => {
-      const enrollment = EnrollmentDataProvider.getEnrollment('3cb062fa-9fac-4836-8160-d0af1603dcaa');
+      const enrollment = EnrollmentDataProvider.getEnrollment('93d7dffd-2e35-4419-880b-9a36c8ca8306');
 
       it(' ~ should show comment seperator', () => {
         const enrollmentIsPresent = appointmentOverviewEnrollmentListPage.isEnrollmentPresent(enrollment.id);

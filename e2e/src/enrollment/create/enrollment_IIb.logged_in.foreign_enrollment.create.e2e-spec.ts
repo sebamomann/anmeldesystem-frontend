@@ -149,7 +149,7 @@ describe('enrollment creation page - as logged in user', () => {
         enrollmentCreatePage.goBackCheck();
       });
 
-      it(' ~ should strill have correct attributes', () => {
+      it(' ~ should still have correct attributes', () => {
         expect(enrollmentCreatePage.getSelfEnrollment().isSelected()).toBe(false);
         expect(enrollmentCreatePage.getNextMain().isEnabled()).toBe(true);
       });

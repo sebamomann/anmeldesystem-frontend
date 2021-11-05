@@ -20,13 +20,9 @@ export class EnrollmentCheckComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    console.log('lollllll1');
-    console.log(this.enrollment);
   }
 
   ngAfterViewInit() {
-    console.log('lolllllll2');
-    console.log(this.enrollment);
   }
 
   public save() {

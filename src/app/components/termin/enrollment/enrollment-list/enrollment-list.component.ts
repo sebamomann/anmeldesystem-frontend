@@ -1,18 +1,18 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
-import {IAppointmentModel} from '../../../../models/IAppointment.model';
-import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
-import {FilterDialogComponent} from '../../../dialogs/filter/filterDialog.component';
-import {isObject} from 'util';
-import {MatDialog, MatSnackBar} from '@angular/material';
-import {CommentDialogComponent} from '../../../dialogs/comment/commentDialog.component';
-import {ConfirmationDialogComponent} from '../../../dialogs/confirmation-dialog/confirmation-dialog.component';
-import {Router} from '@angular/router';
-import {AuthenticationService} from '../../../../services/authentication.service';
-import {EnrollmentService} from '../../../../services/enrollment.service';
-import {EnrollmentMissingPermissionDialogComponent} from '../../../dialogs/enrollment-missing-permission-dialog/enrollment-missing-permission.dialog.component';
-import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
-import {BehaviorSubject, Subscription} from 'rxjs';
-import {AppointmentProvider} from '../../appointment.provider';
+import { Component, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core';
+import { IAppointmentModel } from '../../../../models/IAppointment.model';
+import { IEnrollmentModel } from '../../../../models/IEnrollment.model';
+import { FilterDialogComponent } from '../../../dialogs/filter/filterDialog.component';
+import { isObject } from 'util';
+import { MatDialog, MatSnackBar } from '@angular/material';
+import { CommentDialogComponent } from '../../../dialogs/comment/commentDialog.component';
+import { ConfirmationDialogComponent } from '../../../dialogs/confirmation-dialog/confirmation-dialog.component';
+import { Router } from '@angular/router';
+import { AuthenticationService } from '../../../../services/authentication.service';
+import { EnrollmentService } from '../../../../services/enrollment.service';
+import { EnrollmentMissingPermissionDialogComponent } from '../../../dialogs/enrollment-missing-permission-dialog/enrollment-missing-permission.dialog.component';
+import { animate, query, stagger, state, style, transition, trigger } from '@angular/animations';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { AppointmentProvider } from '../../appointment.provider';
 
 const HttpStatus = require('http-status-codes');
 
@@ -22,19 +22,19 @@ const HttpStatus = require('http-status-codes');
   styleUrls: ['./enrollment-list.component.scss'],
   animations: [
     trigger('fadeInOut', [
-      state('in', style({opacity: 100})),
+      state('in', style({ opacity: 100 })),
       transition('* => void', [
-        animate(1000, style({opacity: 1})),
-        animate(500, style({opacity: 0}))
+        animate(1000, style({ opacity: 1 })),
+        animate(500, style({ opacity: 0 }))
       ])
     ]),
     trigger('listAnimation', [
       transition('* => *', [
         query('mat-expansion-panel', [
-          style({opacity: 0, transform: 'scale(0.9ch)'}),
+          style({ opacity: 0, transform: 'scale(0.9ch)' }),
           stagger(75, [
-            animate('0.15s', style({opacity: 1, transform: 'scale(1.025)'})),
-            animate('0.075s', style({opacity: 1, transform: 'scale(1)'})),
+            animate('0.15s', style({ opacity: 1, transform: 'scale(1.025)' })),
+            animate('0.075s', style({ opacity: 1, transform: 'scale(1)' })),
           ])
         ])
       ])
@@ -64,9 +64,9 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
   private checkPermission$$: Subscription;
 
   constructor(public dialog: MatDialog, private router: Router,
-              private authenticationService: AuthenticationService,
-              private enrollmentService: EnrollmentService,
-              private snackBar: MatSnackBar, private appointmentProvider: AppointmentProvider) {
+    private authenticationService: AuthenticationService,
+    private enrollmentService: EnrollmentService,
+    private snackBar: MatSnackBar, private appointmentProvider: AppointmentProvider) {
     setTimeout(() => this.disableAnimation = false);
   }
 
@@ -214,7 +214,7 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
       maxWidth: 'initial',
       height: 'auto',
       maxHeight: '80vh',
-      data: {enrollment},
+      data: { enrollment },
     });
 
     dialogRef.afterClosed().subscribe(() => {
@@ -282,9 +282,9 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
     this.checkPermission$$ = this.enrollmentService
       .checkPermission(enrollment, this.appointment.link)
       .subscribe(() => {
-          this.permissionGranted(operation, enrollment);
-          return null;
-        },
+        this.permissionGranted(operation, enrollment);
+        return null;
+      },
         () => {
           this.sendingRequestEmitEdit.emit(false);
           this.sendingRequestEmitDelete.emit(false);
@@ -293,7 +293,7 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
             this.snackBar.open('Fehlende Berechtigungen',
               '',
               {
-                duration: 4000,
+                duration: 100000,
                 panelClass: ['snackbar-error', 'snackbar_missing_permissions'],
               },
             );
@@ -325,13 +325,13 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
    */
   private initializeFilterObject: (appointment: IAppointmentModel) => any
     = (appointment: IAppointmentModel): any => {
-    const additions = [];
-    if (!appointment.additions) {
-      appointment.additions = [];
-    }
-    appointment.additions.forEach(value => additions.push({id: value.id, name: value.name, active: false}));
-    return {additions, explicitly: 'dynamic', driverPassenger: ''};
-  };
+      const additions = [];
+      if (!appointment.additions) {
+        appointment.additions = [];
+      }
+      appointment.additions.forEach(value => additions.push({ id: value.id, name: value.name, active: false }));
+      return { additions, explicitly: 'dynamic', driverPassenger: '' };
+    };
 
   /**
    * Check for confirmation to delete the enrollment. <br />
@@ -391,12 +391,12 @@ export class EnrollmentListComponent implements OnInit, OnDestroy {
     } else if (operation === 'edit') {
       this.router.navigate(['/enrollment'], {
         queryParams:
-          {
-            a: this.appointment.link,
-            e: enrollment.id,
-            editId: null,
-            operation: null
-          },
+        {
+          a: this.appointment.link,
+          e: enrollment.id,
+          editId: null,
+          operation: null
+        },
         queryParamsHandling: 'merge'
       }).then(() => {
         this.sendingRequestEmitEdit.emit(false);
