@@ -3,7 +3,7 @@ FROM openjdk:8-jdk AS build
 WORKDIR /usr/src/app
 
 # Node.js
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
 	&& apt-get install -y nodejs \
 	&& rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
