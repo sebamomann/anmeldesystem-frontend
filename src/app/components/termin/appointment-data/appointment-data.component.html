@@ -1,9 +1,15 @@
 <div class="appointment-data-wrapper">
-  <mat-card (click)="preview ? redirectToAppointment(appointment) : ''" class="appointment-data">
-    <app-bookmark *ngIf="preview" [classes]="appointment.relations"></app-bookmark>
+  <mat-card
+    (click)="preview ? redirectToAppointment(appointment) : ''"
+    class="appointment-data"
+  >
+    <app-bookmark
+      *ngIf="preview"
+      [classes]="appointment.relations"
+    ></app-bookmark>
 
     <mat-card-title class="headline appointment_title">
-      {{appointment.title | uppercase}}
+      {{ appointment.title | uppercase }}
     </mat-card-title>
 
     <mat-card-content>
@@ -12,100 +18,118 @@
       <div class="details">
         <div class="appointment_location">
           <mat-icon>location_on</mat-icon>
-          <span>{{appointment.location}}</span>
+          <span>{{ appointment.location }}</span>
         </div>
 
         <div class="appointment_creator">
           <mat-icon>verified_user</mat-icon>
           <span class="user-information">
-            <span class="name">{{appointment.creator.name}}</span>
-            <span class="username">@{{appointment.creator.username}}</span>
+            <span class="name">{{ appointment.creator.name }}</span>
+            <span class="username">@{{ appointment.creator.username }}</span>
           </span>
         </div>
 
         <div class="appointment_date">
           <mat-icon>access_time</mat-icon>
-          <span> {{(appointment.date | date: 'dd.MM.y')}}<br/>
-            {{(appointment.date | date: 'HH:mm')}}Uhr
-            </span>
+          <span>
+            {{ appointment.date | date: "dd.MM.y" }}<br />
+            {{ appointment.date | date: "HH:mm" }}Uhr
+          </span>
         </div>
 
-        <ng-container *ngIf="appointment.date != appointment.deadline && appointment.deadline != null">
+        <ng-container
+          *ngIf="
+            appointment.date != appointment.deadline &&
+            appointment.deadline != null
+          "
+        >
           <div class="appointment_deadline">
             <mat-icon>alarm_on</mat-icon>
-            <span> {{(appointment.deadline | date: 'dd.MM.y')}}<br/>
-              {{(appointment.deadline | date: 'HH:mm')}}Uhr</span>
+            <span>
+              {{ appointment.deadline | date: "dd.MM.y" }}<br />
+              {{ appointment.deadline | date: "HH:mm" }}Uhr</span
+            >
           </div>
         </ng-container>
       </div>
 
-
-      <span class="appointment_description_separator separator small light tall center brighter"></span>
+      <span
+        class="
+          appointment_description_separator
+          separator
+          small
+          light
+          tall
+          center
+          brighter
+        "
+      ></span>
 
       <p class="appointment_description">
-        {{appointment.description}}
+        {{ appointment.description }}
       </p>
 
       <ng-container *ngIf="!preview && appointment.files?.length > 0">
-
-        <span class="files_separator separator small light tall center brighter"> </span>
+        <span
+          class="files_separator separator small light tall center brighter"
+        >
+        </span>
 
         <div class="files-wrapper">
           <div *ngFor="let file of appointment.files" class="file">
-            <mat-icon>
-              attach_file
-            </mat-icon>
+            <mat-icon> attach_file </mat-icon>
             <a [href]="file.url">
-              {{file.name}}
+              {{ file.name }}
             </a>
           </div>
         </div>
       </ng-container>
     </mat-card-content>
 
-    <button [matMenuTriggerFor]="menu"
-            *ngIf="!preview"
-            class="share"
-            id="appointment_menu"
-            aria-label="Menu icon for this appointment"
-            mat-icon-button>
+    <button
+      [matMenuTriggerFor]="menu"
+      *ngIf="!preview"
+      class="share"
+      id="appointment_menu"
+      aria-label="Menu icon for this appointment"
+      mat-icon-button
+    >
       <mat-icon>more_vert</mat-icon>
     </button>
 
     <!-- TODO auslagern -->
-    <mat-menu #menu="matMenu"
-              id="menu_content">
-      <button (click)="share()"
-              mat-menu-item>
+    <mat-menu #menu="matMenu" id="menu_content">
+      <button (click)="share()" mat-menu-item>
         <mat-icon>share</mat-icon>
         <span>Teilen</span>
       </button>
-      <button (click)="pin()"
-              mat-menu-item>
+      <button (click)="pin()" mat-menu-item>
         <ng-container *ngIf="!isPinned">
           <mat-icon>bookmark_border</mat-icon>
-          <span>Anpinnen</span>
+          <span id="appointment-menu-pin">Anpinnen</span>
         </ng-container>
         <ng-container *ngIf="isPinned">
           <mat-icon>bookmark</mat-icon>
-          <span>Entfernen</span>
+          <span id="appointment-menu-pin">Entfernen</span>
         </ng-container>
       </button>
-      <button (click)="settings()"
-              *ngIf="userIsLoggedIn"
-              mat-menu-item>
+      <button (click)="settings()" *ngIf="userIsLoggedIn" mat-menu-item>
         <mat-icon>settings</mat-icon>
         <span>Einstellungen</span>
       </button>
-      <button (click)="activateNotifications()"
-              *ngIf="!appointmentNotificationSubscribed"
-              mat-menu-item>
+      <button
+        (click)="activateNotifications()"
+        *ngIf="!appointmentNotificationSubscribed"
+        mat-menu-item
+      >
         <mat-icon>notifications_active</mat-icon>
         <span>Benachrichtigungen aktivieren</span>
       </button>
-      <button (click)="deactivateNotifications()"
-              *ngIf="appointmentNotificationSubscribed"
-              mat-menu-item>
+      <button
+        (click)="deactivateNotifications()"
+        *ngIf="appointmentNotificationSubscribed"
+        mat-menu-item
+      >
         <mat-icon>notifications_off</mat-icon>
         <span>Benachrichtigungen deaktivieren</span>
       </button>

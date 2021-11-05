@@ -1,20 +1,20 @@
-import {Injectable} from '@angular/core';
-import {IAppointmentModel} from '../models/IAppointment.model';
-import {IAppointmentTemplateModel} from '../models/IAppointmentTemplateModel.model';
-import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
-import {CreateAppointmentModel} from '../models/createAppointment.model';
-import {environment} from '../../environments/environment';
-import {catchError, finalize, map} from 'rxjs/operators';
-import {AppointmentUtil} from '../_util/appointmentUtil.util';
-import {AppointmentStatus} from '../components/termin/appointment.status';
+import { Injectable } from '@angular/core';
+import { IAppointmentModel } from '../models/IAppointment.model';
+import { IAppointmentTemplateModel } from '../models/IAppointmentTemplateModel.model';
+import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { CreateAppointmentModel } from '../models/createAppointment.model';
+import { environment } from '../../environments/environment';
+import { catchError, finalize, map } from 'rxjs/operators';
+import { AppointmentUtil } from '../_util/appointmentUtil.util';
+import { AppointmentStatus } from '../components/termin/appointment.status';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppointmentService {
   // CACHING
-  private etag = {current: '', last: ''};
+  private etag = { current: '', last: '' };
 
 
   constructor(private readonly httpClient: HttpClient, private appointmentStatus: AppointmentStatus) {
@@ -48,7 +48,7 @@ export class AppointmentService {
       }
     }
 
-    const res = this.httpClient.get(url, {observe: 'response'});
+    const res = this.httpClient.get(url, { observe: 'response' });
 
     return res.pipe(
       map(response => {
@@ -90,7 +90,7 @@ export class AppointmentService {
       params.append('pin' + (i + 1), fPin);
     });
 
-    const res = this.httpClient.get(url + '?' + params.toString(), {observe: 'response', reportProgress: true});
+    const res = this.httpClient.get(url + '?' + params.toString(), { observe: 'response', reportProgress: true });
 
     return res.pipe(
       map(response => {
@@ -104,8 +104,7 @@ export class AppointmentService {
     );
   }
 
-  updateValues(toChange: {}, {link}): Observable<HttpEvent<IAppointmentModel>> {
-    console.log('update appointment', toChange);
+  updateValues(toChange: {}, { link }): Observable<HttpEvent<IAppointmentModel>> {
     const req = new HttpRequest('PUT', `${environment.API_URL}appointments/${link}`, toChange, {
       reportProgress: true,
     });
@@ -119,7 +118,7 @@ export class AppointmentService {
         description: 'Template description',
         location: 'Template location',
         maxEnrollments: 20,
-        additions: [{name: 'Template Addition 1'}],
+        additions: [{ name: 'Template Addition 1' }],
         driverAddition: true
       },
       {
@@ -127,7 +126,7 @@ export class AppointmentService {
         description: 'Template 2 description',
         location: 'Template 2 location',
         maxEnrollments: 20,
-        additions: [{name: 'Template Addition 2'}],
+        additions: [{ name: 'Template Addition 2' }],
         driverAddition: true
       }
     ];
@@ -210,7 +209,7 @@ export class AppointmentService {
   pin(link: string) {
     const req = new HttpRequest('POST',
       `${environment.API_URL}pins`,
-      {appointment: {link}},
+      { appointment: { link } },
       {
         reportProgress: true,
       });

@@ -1,11 +1,11 @@
 <ng-container *ngIf="appointment$ | async as appointment; else loading">
   <mat-card class="float high">
-    <mat-card-title class="headline">
-      Fahrerverwaltung
-    </mat-card-title>
+    <mat-card-title class="headline"> Fahrerverwaltung </mat-card-title>
 
     <mat-card-content>
-      <ng-container *ngIf="data.gotTo === data.gotFrom then gotSame; else gotDifferent"></ng-container>
+      <ng-container
+        *ngIf="data.gotTo === data.gotFrom; then gotSame; else gotDifferent"
+      ></ng-container>
 
       <div class="driver-wrapper">
         <ng-container *ngFor="let driver of drivers">
@@ -14,18 +14,17 @@
               <mat-icon *ngSwitchCase="3" class="unfold">unfold_less</mat-icon>
               <mat-icon *ngSwitchCase="2" class="back">double_arrow</mat-icon>
               <mat-icon *ngSwitchCase="1">double_arrow</mat-icon>
-
             </ng-container>
-            <span *ngIf="driver.creator"
-                  class="user-information">
-              <span>{{driver.creator.name}}</span>
-              <span>@{{driver.creator.username}}</span>
+            <span *ngIf="driver.creator" class="user-information">
+              <span>{{ driver.creator.name }}</span>
+              <span>@{{ driver.creator.username }}</span>
             </span>
-            <span *ngIf="!driver.creator"
-                  class="user-information">
-              <span>{{driver.name}}</span>
+            <span *ngIf="!driver.creator" class="user-information">
+              <span>{{ driver.name }}</span>
             </span>
-            <span class="space">{{driver.driver.seats}}<span>Plätze</span></span>
+            <span class="space"
+              >{{ driver.driver.seats }}<span>Plätze</span></span
+            >
           </div>
         </ng-container>
       </div>
@@ -48,13 +47,15 @@
 
     <mat-card-actions>
       <div>
-        <button [queryParams]="{a: appointment.link}"
-                [routerLink]="['/enroll']"
-                class="left"
-                color="primary"
-                disableRipple
-                mat-button
-                type="button">
+        <button
+          [queryParams]="{ a: appointment.link }"
+          [routerLink]="['/enroll']"
+          class="left"
+          color="primary"
+          disableRipple
+          mat-button
+          type="button"
+        >
           Zurück
         </button>
       </div>
@@ -67,9 +68,15 @@
   <div class="analysis-block-wrapper same">
     <div class="analysis-block">
       <div class="seats both">
-        <span class="total-seats">{{data.gotTo}}  <span>Plätze</span></span>
+        <span class="total-seats">{{ data.gotTo }} <span>Plätze</span></span>
       </div>
-      <ng-container *ngIf="data.neededTo === data.neededFrom then neededSame; else neededDifferent"></ng-container>
+      <ng-container
+        *ngIf="
+          data.neededTo === data.neededFrom;
+          then neededSame;
+          else neededDifferent
+        "
+      ></ng-container>
     </div>
   </div>
 </ng-template>
@@ -78,18 +85,22 @@
   <div class="analysis-block-wrapper">
     <div class="analysis-block">
       <div class="seats">
-        <span class="total-seats">{{data.gotTo}}  <span>Plätze</span></span>
+        <span class="total-seats">{{ data.gotTo }} <span>Plätze</span></span>
       </div>
-      <ng-container [ngTemplateOutletContext]="{nr1:data.gotTo, nr2: data.neededTo}"
-                    [ngTemplateOutlet]="calculation">
+      <ng-container
+        [ngTemplateOutletContext]="{ nr1: data.gotTo, nr2: data.neededTo }"
+        [ngTemplateOutlet]="calculation"
+      >
       </ng-container>
     </div>
     <div class="analysis-block">
       <div class="seats back">
-        <span class="total-seats">{{data.gotFrom}} <span>Plätze</span></span>
+        <span class="total-seats">{{ data.gotFrom }} <span>Plätze</span></span>
       </div>
-      <ng-container [ngTemplateOutletContext]="{nr1:data.gotFrom, nr2: data.neededFrom}"
-                    [ngTemplateOutlet]="calculation">
+      <ng-container
+        [ngTemplateOutletContext]="{ nr1: data.gotFrom, nr2: data.neededFrom }"
+        [ngTemplateOutlet]="calculation"
+      >
       </ng-container>
     </div>
   </div>
@@ -97,51 +108,52 @@
 
 <ng-template #neededSame>
   <div class="analysis-block">
-    <ng-container [ngTemplateOutletContext]="{nr1:data.gotTo, nr2: data.neededTo}"
-                  [ngTemplateOutlet]="calculation">
+    <ng-container
+      [ngTemplateOutletContext]="{ nr1: data.gotTo, nr2: data.neededTo }"
+      [ngTemplateOutlet]="calculation"
+    >
     </ng-container>
   </div>
 </ng-template>
-
 
 <ng-template #neededDifferent>
   <div class="case-wrapper">
     <div class="case-block">
       <span class="direction">Hinfahrt</span>
-      <ng-container [ngTemplateOutletContext]="{nr1:data.gotTo, nr2: data.neededTo}"
-                    [ngTemplateOutlet]="calculation">
+      <ng-container
+        [ngTemplateOutletContext]="{ nr1: data.gotTo, nr2: data.neededTo }"
+        [ngTemplateOutlet]="calculation"
+      >
       </ng-container>
     </div>
     <div class="case-block">
       <span class="direction">Rückfahrt</span>
-      <ng-container [ngTemplateOutletContext]="{nr1:data.gotFrom, nr2: data.neededFrom}"
-                    [ngTemplateOutlet]="calculation">
+      <ng-container
+        [ngTemplateOutletContext]="{ nr1: data.gotFrom, nr2: data.neededFrom }"
+        [ngTemplateOutlet]="calculation"
+      >
       </ng-container>
     </div>
   </div>
 </ng-template>
 
-<ng-template #calculation let-nr1='nr1' let-nr2='nr2'>
+<ng-template #calculation let-nr1="nr1" let-nr2="nr2">
   <ng-container [ngSwitch]="compare(nr1, nr2)">
-      <span *ngSwitchCase="1" class='case'>
-        <span class="negative">{{nr2}} belegt</span>&nbsp;-
-        <span class="positive">{{nr1 - nr2}} frei</span>
-      </span>
-    <span *ngSwitchCase="0" class='case'>
+    <span *ngSwitchCase="1" class="case">
+      <span class="negative">{{ nr2 }} belegt</span>&nbsp;-
+      <span class="positive">{{ nr1 - nr2 }} frei</span>
+    </span>
+    <span *ngSwitchCase="0" class="case">
       <span class="positive"> Es geht genau auf </span>
     </span>
-    <span *ngSwitchCase="-1" class='case'>
-        <span class="negative">{{nr2}} belegt</span>&nbsp;-
-        <span class="negative">{{nr2 - nr1}} benötigt</span>
+    <span *ngSwitchCase="-1" class="case">
+      <span class="negative">{{ nr2 }} belegt</span>&nbsp;-
+      <span class="negative">{{ nr2 - nr1 }} benötigt</span>
     </span>
   </ng-container>
 </ng-template>
 
 <ng-template #loading>
-  <app-loading *ngIf="!loaded"
-               [@remove]>
-  </app-loading>
-  <app-fetch-appointment
-    [done]="loaded">
-  </app-fetch-appointment>
+  <app-loading *ngIf="!loaded" [@remove]> </app-loading>
+  <app-fetch-appointment [done]="loaded"> </app-fetch-appointment>
 </ng-template>

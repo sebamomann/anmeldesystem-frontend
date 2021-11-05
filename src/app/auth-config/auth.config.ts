@@ -7,7 +7,6 @@ export const authConfig: AuthConfig = {
   redirectUri: environment.keycloak.redirectUri,
   responseType: environment.keycloak.responseType,
   scope: environment.keycloak.scope,
-  requireHttps: environment.keycloak.requireHttps,
   showDebugInformation: environment.keycloak.showDebugInformation,
   disableAtHashCheck: environment.keycloak.disableAtHashCheck,
   silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',

@@ -13,6 +13,7 @@ export class LoginComponent implements OnInit {
               private router: Router, private route: ActivatedRoute) {
     if (!this.authenticationService.userIsLoggedIn()) {
       this.authenticationService.login();
+      return;
     }
 
     let returnUrl = '';
@@ -21,8 +22,6 @@ export class LoginComponent implements OnInit {
     });
 
     returnUrl = decodeURIComponent(returnUrl);
-
-    console.log(returnUrl);
 
     this.router.navigateByUrl(returnUrl ? returnUrl : '/dashboard');
   }

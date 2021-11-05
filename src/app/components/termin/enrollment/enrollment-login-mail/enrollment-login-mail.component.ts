@@ -1,7 +1,7 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {Router} from '@angular/router';
-import {AuthenticationService} from '../../../../services/authentication.service';
-import {FormBuilder, FormControl, Validators} from '@angular/forms';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthenticationService } from '../../../../services/authentication.service';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-enrollment-login-mail',
@@ -21,7 +21,7 @@ export class EnrollmentLoginMailComponent implements OnInit {
   });
 
   constructor(private router: Router, private authenticationService: AuthenticationService,
-              private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder) {
 
   }
 

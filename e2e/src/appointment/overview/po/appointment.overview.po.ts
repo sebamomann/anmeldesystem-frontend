@@ -1,25 +1,26 @@
-import {browser, by, element, protractor} from 'protractor';
-import {HttpClient} from 'protractor-http-client/dist/http-client';
+import { browser, by, element, protractor } from 'protractor';
+import { HttpClient } from 'protractor-http-client/dist/http-client';
+import { AppointmentOverviewEnrollmentListPage } from './appointment.overview.enrollment-list.po';
 
 export class AppointmentOverviewPage {
   constructor() {
   }
 
   public async navigateToAppointment(link: string) {
-    return new Promise((resolve, reject) => {
-        browser.get('/enroll?a=' + link)
-          .then(
-            _ => {
-              this.waitForLoadingSpinnerToBeGone();
+    return new Promise<void>((resolve, reject) => {
+      browser.get('/enroll?a=' + link)
+        .then(
+          _ => {
+            this.waitForLoadingSpinnerToBeGone();
 
-              resolve();
-            })
-          .catch(
-            _ => {
-              reject();
-            }
-          );
-      }
+            resolve();
+          })
+        .catch(
+          _ => {
+            reject();
+          }
+        );
+    }
     );
   }
 
@@ -143,14 +144,20 @@ export class AppointmentOverviewPage {
     return ref.clear();
   }
 
-  public async deselectSelfEnrollment() {
-    const elm = this.getSelfEnrollment();
-    if ((await elm.isSelected() === true)) {
-      return browser.executeScript('arguments[0].click();', elm.getWebElement());
-    }
-
-    return Promise.resolve();
+  public isLoginHintPresent() {
+    const elem = AppointmentOverviewEnrollmentListPage.getElementLoginHint();
+    return elem.isPresent();
   }
+
+  public clickLoginHintLoginButton() {
+    const elem = AppointmentOverviewEnrollmentListPage.getElementLoginHint();
+    const button = elem.element(by.tagName('button'));
+
+    return button.click();
+  }
+
+  // ---------------------NAVIGATIONS---------------------
+  // ---------------------NAVIGATIONS---------------------
 
   public isDriverOverviewButtonPresent() {
     const elem = element(by.id('driver_overview_action_button'));
@@ -158,8 +165,7 @@ export class AppointmentOverviewPage {
   }
 
   public clickDriverOverviewButton() {
-    const elem = element(by.id('driver_overview_action_button'));
-    return elem.click();
+    return this.buttonClick('driver_overview_action_button');
   }
 
   public isCreationEnrollmentButtonPresent() {
@@ -168,12 +174,31 @@ export class AppointmentOverviewPage {
   }
 
   public clickEnrollmentCreationButton() {
-    const elem = element(by.id('enroll_action_button'));
-    return elem.click();
+    return this.buttonClick('enroll_action_button');
   }
 
+  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+
+  /**
+   * @deprecated
+   * centralize
+   */
   public pageRedirectedToUrl(url: string) {
     return browser.wait(protractor.ExpectedConditions.urlContains(url), 5000);
+  }
+
+  /**
+   * @deprecated
+   * centralize
+   */
+  public buttonClick(id: string) {
+    const elm = element(by.id(id));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.elementToBeClickable(elm), 10000, `Button with ID '${id}' taking too long to be clickable`);
+
+    return elm.click();
   }
 
 }

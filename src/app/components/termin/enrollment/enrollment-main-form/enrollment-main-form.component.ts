@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {FormBuilder, FormControl, Validators} from '@angular/forms';
-import {AuthenticationService} from '../../../../services/authentication.service';
-import {IAppointmentModel} from '../../../../models/IAppointment.model';
-import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
-import {EnrollmentModel} from '../../../../models/EnrollmentModel.model';
-import {AuthenticationValuesService} from '../../../../services/authentication.values.service';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { AuthenticationService } from '../../../../services/authentication.service';
+import { IAppointmentModel } from '../../../../models/IAppointment.model';
+import { IEnrollmentModel } from '../../../../models/IEnrollment.model';
+import { EnrollmentModel } from '../../../../models/EnrollmentModel.model';
+import { AuthenticationValuesService } from '../../../../services/authentication.values.service';
 
 @Component({
   selector: 'app-enrollment-main-form',
@@ -42,7 +42,7 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   private oldNameValue: string = undefined;
 
   constructor(private formBuilder: FormBuilder, private authenticationService: AuthenticationService,
-              private authenticationValuesService: AuthenticationValuesService) {
+    private authenticationValuesService: AuthenticationValuesService) {
   }
 
   ngOnInit() {
@@ -73,21 +73,27 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   }
 
   public save() {
-    let creator;
-
     if (this.form.valid) {
-      if (this.isSelfEnrollment) {
-        creator = {} as any;
-        creator.name = this.authenticationValuesService.currentUserSubject$.getValue().name;
-        creator.username = this.authenticationValuesService.currentUserSubject$.getValue().preferred_username;
-      }
 
-      this.done.emit({
+      var object: { name: string, comment: string, selfEnrollment?: boolean, creator?: { name: string, username: string } } = {
         name: this.getFormControl('name').value,
         comment: this.getFormControl('comment').value,
-        selfEnrollment: this.getSelfEnrollment().value,
-        creator
-      });
+      };
+
+      if (this.userIsLoggedIn) {
+        object.selfEnrollment = this.getSelfEnrollment().value;
+
+        if (object.selfEnrollment && !this.isEdit) {
+          const creator = {} as any;
+          creator.name = this.authenticationValuesService.currentUserSubject$.getValue().name;
+          creator.username = this.authenticationValuesService.currentUserSubject$.getValue().preferred_username;
+          object.creator = creator;
+
+          delete object.name;
+        }
+      }
+
+      this.done.emit(object);
     }
   }
 
@@ -106,7 +112,7 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   }
 
   public setNameInUseError() {
-    this.getFormControl('name').setErrors({inUse: true});
+    this.getFormControl('name').setErrors({ inUse: true });
   }
 
   public setCreatorError() {

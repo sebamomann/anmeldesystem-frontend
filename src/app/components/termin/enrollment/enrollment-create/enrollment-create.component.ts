@@ -1,18 +1,18 @@
-import {Component, EventEmitter, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {AuthenticationService} from '../../../../services/authentication.service';
-import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
-import {EnrollmentModel} from '../../../../models/EnrollmentModel.model';
-import {IAppointmentModel} from '../../../../models/IAppointment.model';
-import {MatSnackBar, MatStepper} from '@angular/material';
-import {EnrollmentMainFormComponent} from '../enrollment-main-form/enrollment-main-form.component';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, Subscription} from 'rxjs';
-import {AppointmentProvider} from '../../appointment.provider';
-import {SEOService} from '../../../../_helper/_seo.service';
-import {HttpErrorResponse} from '@angular/common/http';
-import {AppointmentUtil} from '../../../../_util/appointmentUtil.util';
-import {EnrollmentService} from '../../../../services/enrollment.service';
-import {AuthenticationValuesService} from '../../../../services/authentication.values.service';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AuthenticationService } from '../../../../services/authentication.service';
+import { IEnrollmentModel } from '../../../../models/IEnrollment.model';
+import { EnrollmentModel } from '../../../../models/EnrollmentModel.model';
+import { IAppointmentModel } from '../../../../models/IAppointment.model';
+import { MatSnackBar, MatStepper } from '@angular/material';
+import { EnrollmentMainFormComponent } from '../enrollment-main-form/enrollment-main-form.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { AppointmentProvider } from '../../appointment.provider';
+import { SEOService } from '../../../../_helper/_seo.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { EnrollmentService } from '../../../../services/enrollment.service';
+import { AuthenticationValuesService } from '../../../../services/authentication.values.service';
+import { AppointmentUtil } from '../../../../_util/appointmentUtil.util';
 
 const HttpStatus = require('http-status-codes');
 
@@ -24,8 +24,8 @@ const HttpStatus = require('http-status-codes');
 export class EnrollmentCreateComponent implements OnInit, OnDestroy {
   static LOCAL_STORAGE_ENROLLMENT_TMP_KEY = 'enrollmentOutput';
 
-  @ViewChild('stepper', {static: false}) stepper: MatStepper;
-  @ViewChild('mainForm', {static: false}) mainFormRef: EnrollmentMainFormComponent;
+  @ViewChild('stepper', { static: false }) stepper: MatStepper;
+  @ViewChild('mainForm', { static: false }) mainFormRef: EnrollmentMainFormComponent;
 
   public appointment$: Observable<IAppointmentModel>;
   public appointment: IAppointmentModel;
@@ -37,7 +37,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
 
   public enrollmentOutput: IEnrollmentModel = new EnrollmentModel();
 
-  public doneForms = {overall: false, additions: false, driver: false};
+  public doneForms = { overall: false, additions: false, driver: false };
 
   public triggerDirectSend = false;
   public sendingRequestEmit = new EventEmitter();
@@ -50,9 +50,9 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
   private appointmentService$$: Subscription;
 
   constructor(public authenticationService: AuthenticationService, private route: ActivatedRoute,
-              private appointmentProvider: AppointmentProvider, private _seoService: SEOService,
-              private enrollmentService: EnrollmentService, private snackBar: MatSnackBar,
-              private router: Router, private authenticationValuesService: AuthenticationValuesService) {
+    private appointmentProvider: AppointmentProvider, private _seoService: SEOService,
+    private enrollmentService: EnrollmentService, private snackBar: MatSnackBar,
+    private router: Router, private authenticationValuesService: AuthenticationValuesService) {
     this.route.queryParams.subscribe(params => {
       this.linkFromURL = params.a;
 
@@ -61,21 +61,22 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
 
     this.appointment$ = this.appointmentProvider.appointment$;
     this.appointment$$ = this.appointment$
-      .subscribe((sAppointment) => {
-        if (sAppointment !== undefined && !this.loaded) { // CAN BE NULL !!!
-          this.appointment = sAppointment;
-          this.loaded = true;
-          this.main();
+      .subscribe(
+        (sAppointment) => {
+          if (sAppointment !== undefined && !this.loaded) { // CAN BE NULL !!!
+            this.appointment = sAppointment;
+            this.loaded = true;
+            this.main();
 
-          if (this.appointment) {
-            this.__SEO();
+            if (this.appointment) {
+              this.__SEO();
+            }
+          } else if (!this.loaded) {
+            this.appointmentProvider.loadAppointment(this.linkFromURL);
+          } else {
+            // IGNORE FURTHER UPDATES
           }
-        } else if (!this.loaded) {
-          this.appointmentProvider.loadAppointment(this.linkFromURL);
-        } else {
-          // IGNORE FURTHER UPDATES
-        }
-      });
+        });
   }
 
   ngOnInit() {
@@ -89,6 +90,14 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * TODO
+   * When submitting enrollment, and after check loggin into an account
+   * go back to first stepper and ask if user wants to enroll HIMSELF or the name that is already inside the name field
+   * if himself, then initiate normal self login
+   * if not himself, correctly adapt form fields
+   * @returns
+   */
   public main() {
     if (this.userIsLoggedIn) {
       this.isEnrolledAsCreator = this.appointment.enrollments
@@ -107,8 +116,11 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
     this.directSend = this.triggerDirectSend && this.userIsLoggedIn;
 
     if (this.triggerDirectSend && !this.creatorError) {
+      this.enrollmentOutput.selfEnrollment = true;
+      // set to true because autosend is olny possible when user makes login action
+      delete this.enrollmentOutput.name;
       this.initializeEnrollmentSend();
-      this.stepper.selectedIndex = this.stepper.steps.length - 1;
+      // this.stepper.selectedIndex = this.stepper.steps.length - 1;
       return;
     }
   }
@@ -149,8 +161,9 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
     return this.enrollmentOutput.selfEnrollment;
   }
 
-  public inUseError(fColumn: any) {
-    const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
+  public inUseError(data: any) {
+    const attr = data.attribute;
+    const uppercaseName = attr.charAt(0).toUpperCase() + attr.substring(1);
     const fnName: string = 'set' + uppercaseName + 'Error';
 
     this[fnName]();
@@ -188,13 +201,13 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
   public mainFormDone($event: any) {
     this.doneForms.overall = true;
 
-    this.enrollmentOutput = {...this.enrollmentOutput, ...$event};
+    this.enrollmentOutput = { ...this.enrollmentOutput, ...$event };
 
     setTimeout(() => this.stepper.next());
   }
 
-  public additionsFormDone(val) {
-    this.enrollmentOutput.additions = val;
+  public additionsFormDone($event: any) {
+    this.enrollmentOutput = { ...this.enrollmentOutput, additions: [...$event] };
 
     setTimeout(() => this.stepper.next());
   }
@@ -202,7 +215,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
   public driverFormDone($event) {
     this.doneForms.driver = true;
 
-    this.enrollmentOutput = {...this.enrollmentOutput, ...$event};
+    this.enrollmentOutput = { ...this.enrollmentOutput, ...$event };
 
     setTimeout(() => this.stepper.next());
   }
@@ -215,11 +228,19 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
    * Eventually send enrollment request, depending on edit or no edit;
    */
   public sendEnrollmentRequest() {
-    const enrollment = this.enrollmentOutput;
+    let enrollment = this.enrollmentOutput;
 
+    /**
+     * TODO
+     * Does not work after mail send enrollment
+     */
     setTimeout(() => { // needed so loading directive triggers again after login or sth
       this.sendingRequestEmit.emit(true);
     });
+
+    delete enrollment.creator;
+    // remove empty fields
+    Object.keys(enrollment).forEach((k) => (enrollment[k] === null || enrollment[k] === undefined || enrollment[k].length === 0) && delete enrollment[k]);
 
     this.appointmentService$$ = this.enrollmentService.create(enrollment, this.appointment)
       .subscribe(
@@ -227,14 +248,14 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
           this.appointmentProvider.update(this.appointment);
 
           if (result.token) {
-            AppointmentUtil.storeEnrollmentPermissions(this.linkFromURL, {id: result.id, token: result.token});
+            AppointmentUtil.storeEnrollmentPermissions(this.linkFromURL, { id: result.id, token: result.token });
           }
 
           this.request_success_finalize();
         }, (err: HttpErrorResponse) => {
           this.sendingRequestEmit.emit(false);
 
-          if (err.status === HttpStatus.BAD_REQUEST && err.error.code === 'DUPLICATE_ENTRY') {
+          if (err.status === HttpStatus.CONFLICT && err.error.code === 'DUPLICATE_VALUES') {
             this.request_error_handleDuplicateValues(err);
           }
         }
@@ -262,11 +283,11 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
   }
 
   private request_error_handleDuplicateValues(err: HttpErrorResponse) {
-    err.error.data.forEach(fColumn => {
-      if (fColumn === 'creator') {
+    err.error.data.forEach(dataElement => {
+      if (dataElement.object === 'user') {
         this.setCreatorError();
       } else {
-        this.inUseError(fColumn);
+        this.inUseError(dataElement);
       }
     });
   }
@@ -281,7 +302,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
   }
 
   private redirect(message: string, error = false) {
-    this.router.navigate([`enroll`], {queryParams: {a: this.appointment.link}})
+    this.router.navigate([`enroll`], { queryParams: { a: this.appointment.link } })
       .then(() => {
         this.sendingRequestEmit.emit(false);
 
@@ -289,7 +310,7 @@ export class EnrollmentCreateComponent implements OnInit, OnDestroy {
           .open(message,
             '',
             {
-              duration: error ? 4000 : 2000,
+              duration: 4000,
               panelClass: `snackbar-${error ? 'error' : 'default'}`
             }
           );

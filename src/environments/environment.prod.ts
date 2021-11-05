@@ -12,7 +12,6 @@ export const environment = {
     clientId: window['env']['KEYCLOAK_CLIENT_ID'],
     responseType: window['env']['KEYCLOAK_RESPONSE_TYPE'],
     scope: window['env']['KEYCLOAK_SCOPE'],
-    requireHttps: true,
     showDebugInformation: false,
     disableAtHashCheck: true
   }

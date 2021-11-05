@@ -1,23 +1,11 @@
-import {browser, by, element, protractor} from 'protractor';
+import { browser, by, element, protractor } from 'protractor';
 
 export class AppointmentOverviewEnrollmentListPage {
   constructor() {
   }
 
-  private static getElementLoginHint() {
+  public static getElementLoginHint() {
     return element(by.css('#login_hint'));
-  }
-
-  public clickLoginHintLoginButton() {
-    const elem = AppointmentOverviewEnrollmentListPage.getElementLoginHint();
-    const button = elem.element(by.tagName('button'));
-
-    return button.click();
-  }
-
-  public isLoginHintPresent() {
-    const elem = AppointmentOverviewEnrollmentListPage.getElementLoginHint();
-    return elem.isPresent();
   }
 
   public getEnrollmentBlocks() {
@@ -69,6 +57,10 @@ export class AppointmentOverviewEnrollmentListPage {
 
   public toggleEnrollmentPanel(id: string) {
     const elem = element(by.css('[enrollment-id=\"' + id + '\"].enrollment'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.elementToBeClickable(elem), 2000, 'Enrollment panel for enrollment ' + id + ' taking too long to be present');
+
     return elem.click();
   }
 
@@ -86,25 +78,34 @@ export class AppointmentOverviewEnrollmentListPage {
     const elem = element(by.css('#cancel'));
 
     const EC = protractor.ExpectedConditions; // because its a dialog
-    browser.wait(EC.presenceOf(elem), 20000, 'Element taking too long to be present');
+    browser.wait(EC.presenceOf(elem), 2000, 'Element taking too long to be present');
 
     return elem.click();
   }
 
-  public isMissingPermissionSnackbarPresent() {
-    const elem = element(by.css('.snackbar_missing_permissions'));
+  public isEmptyEnrollmentListHintPresent() {
+    const elem = element(by.css('#empty-enrollment-list-hint'));
 
     const EC = protractor.ExpectedConditions;
-    browser.wait(EC.presenceOf(elem), 20000, 'Element taking too long to be present');
+    browser.wait(EC.presenceOf(elem), 2000, 'Element taking too long to be present');
 
     return elem.isPresent();
+  }
+
+  public getMissingPermissionSnackbar() {
+    // todo centralize
+    const EC = protractor.ExpectedConditions;
+    const snackBar = element(by.className('snackbar-error'));
+    browser.wait(EC.visibilityOf(snackBar), 4000);
+
+    return snackBar;
   }
 
   public isEnrollmentDeletionConfirmationDialogPresent() {
     const elem = element(by.css('#enrollment-deletion-confirmation-dialog'));
 
     const EC = protractor.ExpectedConditions;
-    browser.wait(EC.presenceOf(elem), 20000, 'Element taking too long to be present');
+    browser.wait(EC.presenceOf(elem), 2000, 'Element taking too long to be present');
 
     return elem.isPresent();
   }
@@ -113,7 +114,7 @@ export class AppointmentOverviewEnrollmentListPage {
     const elem = element(by.css('#enrollment-deletion-confirmation-dialog'));
 
     const EC = protractor.ExpectedConditions;
-    browser.wait(EC.invisibilityOf(elem), 20000, 'Element taking too long to disappear');
+    browser.wait(EC.invisibilityOf(elem), 2000, 'Element taking too long to disappear');
 
     return elem.isPresent();
   }
@@ -122,7 +123,7 @@ export class AppointmentOverviewEnrollmentListPage {
     const elem = element(by.css('#missing-permission-dialog'));
 
     const EC = protractor.ExpectedConditions;
-    browser.wait(EC.presenceOf(elem), 20000, 'Element taking too long to be present');
+    browser.wait(EC.presenceOf(elem), 2000, 'Element taking too long to be present');
 
     return elem.isPresent();
   }
@@ -136,9 +137,18 @@ export class AppointmentOverviewEnrollmentListPage {
     const elem = element(by.css('[enrollment-id="' + id + '"].enrollment-additions'));
 
     const EC = protractor.ExpectedConditions;
-    browser.wait(EC.invisibilityOf(elem), 20000, 'Element taking too long to disappear');
+    browser.wait(EC.invisibilityOf(elem), 2000, 'Element taking too long to disappear');
 
     return elem.isPresent();
+  }
+
+  public async waitForEnrollmentPanelToBeExpanded(id: string): Promise<void> {
+    const elem = element(by.css('[enrollment-id="' + id + '"].enrollment-additions'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.visibilityOf(elem), 2000, 'Element taking too long to be present');
+
+    return;
   }
 }
 

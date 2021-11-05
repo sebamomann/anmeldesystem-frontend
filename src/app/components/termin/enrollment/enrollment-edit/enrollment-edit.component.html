@@ -1,15 +1,10 @@
 <ng-container *ngIf="appointment$ | async as appointment; else loading">
   <ng-container *ngIf="!enrollmentGone; else enrollmentGoneTmpls">
     <mat-card class="form float high">
-      <mat-card-title class="headline"
-                      id="title">
-        Bearbeiten
-      </mat-card-title>
+      <mat-card-title class="headline" id="title"> Bearbeiten </mat-card-title>
       <mat-card-content>
-        <mat-tab-group [selectedIndex]="selectedIndex"
-                       dynamicHeight>
-
-          <!-- OVERALL -->
+        <mat-tab-group [selectedIndex]="selectedIndex" dynamicHeight>
+          <!-- OVERALL TODO REMOVE HEADER IF ONLY ONE TAB IS POSSIBLE-->
           <!-- OVERALL -->
           <mat-tab label="Allgemein">
             <app-enrollment-main-form
@@ -18,35 +13,36 @@
               [appointment]="appointment"
               [enrollment]="enrollment"
               [isEdit]="true"
-              [isEnrolledAsCreator]="isEnrolledAsCreator">
+              [isEnrolledAsCreator]="isEnrolledAsCreator"
+            >
             </app-enrollment-main-form>
           </mat-tab>
 
           <!-- ADDITIONS -->
           <!-- ADDITIONS -->
-          <mat-tab *ngIf="appointment.additions?.length > 0"
-                   label="Zusätze">
+          <mat-tab *ngIf="appointment.additions?.length > 0" label="Zusätze">
             <app-enrollment-additions
               #additionsForm
               (done)="additionsFormDone($event)"
               (cancel)="cancel()"
               [appointment]="appointment"
               [enrollment]="enrollment"
-              [isEdit]="true">
+              [isEdit]="true"
+            >
             </app-enrollment-additions>
           </mat-tab>
 
           <!-- DRIVER -->
           <!-- DRIVER -->
-          <mat-tab *ngIf="appointment.driverAddition"
-                   label="Fahrer">
+          <mat-tab *ngIf="appointment.driverAddition" label="Fahrer">
             <app-enrollment-driver-passenger
               #driverForm
               (done)="driverFormDone($event)"
               (cancel)="cancel()"
               [appointment]="appointment"
               [enrollment]="enrollment"
-              [isEdit]="true">
+              [isEdit]="true"
+            >
             </app-enrollment-driver-passenger>
           </mat-tab>
         </mat-tab-group>
@@ -56,23 +52,21 @@
 </ng-container>
 
 <ng-template #loading>
-  <app-loading *ngIf="!loaded">
-  </app-loading>
-  <app-fetch-appointment
-    [done]="loaded">
-  </app-fetch-appointment>
+  <app-loading *ngIf="!loaded"> </app-loading>
+  <app-fetch-appointment [done]="loaded"> </app-fetch-appointment>
 </ng-template>
 
-
-<ng-template #enrollmentGoneTmpls> <!--// TODO OWN TEMPLATE -->
-  <mat-card class="float error-card"
-            id="enrollment-not-found">
-    <img alt="anmeldesystem not found robot icon" src="/assets/img/404.svg">
-    <span>Sorry, diese Anmeldung gibt es lieder nicht mehr.</span>
+<ng-template #enrollmentGoneTmpls>
+  <!--// TODO OWN TEMPLATE -->
+  <mat-card class="float error-card" id="enrollment-not-found">
+    <img alt="anmeldesystem not found robot icon" src="/assets/img/404.svg" />
+    <span>Sorry, diese Anmeldung gibt es leider nicht mehr.</span>
     <!-- TODO WAIT REQUEST-->
-    <button [queryParams]="{a: appointment.link}"
-            [routerLink]="['/enroll']"
-            mat-raised-button>
+    <button
+      [queryParams]="{ a: appointment.link }"
+      [routerLink]="['/enroll']"
+      mat-raised-button
+    >
       Okay
     </button>
   </mat-card>
