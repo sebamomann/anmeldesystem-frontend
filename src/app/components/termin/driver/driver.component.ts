@@ -1,13 +1,13 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {IAppointmentModel} from '../../../models/IAppointment.model';
-import {Location} from '@angular/common';
-import {IEnrollmentModel} from '../../../models/IEnrollment.model';
-import {ActivatedRoute} from '@angular/router';
-import {animate, query, state, style, transition, trigger} from '@angular/animations';
-import {Observable, Subscription} from 'rxjs';
-import {SEOService} from '../../../_helper/_seo.service';
-import {AppointmentSocketioService} from '../../../services/appointment-socketio.service';
-import {AppointmentProvider} from '../appointment.provider';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { IAppointmentModel } from '../../../models/IAppointment.model';
+import { Location } from '@angular/common';
+import { IEnrollmentModel } from '../../../models/IEnrollment.model';
+import { ActivatedRoute } from '@angular/router';
+import { animate, query, state, style, transition, trigger } from '@angular/animations';
+import { Observable, Subscription } from 'rxjs';
+import { SEOService } from '../../../_helper/_seo.service';
+import { AppointmentSocketioService } from '../../../services/appointment-socketio.service';
+import { AppointmentProvider } from '../appointment.provider';
 
 @Component({
   selector: 'app-driver',
@@ -16,17 +16,17 @@ import {AppointmentProvider} from '../appointment.provider';
   providers: [SEOService],
   animations: [
     trigger('fadeInOut', [
-      state('in', style({opacity: 100})),
+      state('in', style({ opacity: 100 })),
       transition('* => void', [
-        animate(1000, style({opacity: 1})),
-        animate(500, style({opacity: 0}))
+        animate(1000, style({ opacity: 1 })),
+        animate(500, style({ opacity: 0 }))
       ])
     ]),
     trigger('remove', [
       transition('* => void', [
         query('.layer', [
-          style({opacity: '1'}),
-          animate(500, style({opacity: '0'}))
+          style({ opacity: '1' }),
+          animate(500, style({ opacity: '0' }))
         ])
       ])
     ]),
@@ -45,8 +45,8 @@ export class DriverComponent implements OnInit, OnDestroy {
   private appointment$$: Subscription;
 
   constructor(private location: Location, private route: ActivatedRoute,
-              private appointmentSocketioService: AppointmentSocketioService,
-              private appointmentProvider: AppointmentProvider) {
+    private appointmentSocketioService: AppointmentSocketioService,
+    private appointmentProvider: AppointmentProvider) {
     this.route.queryParams.subscribe(params => {
       this.link = params.a;
     });
@@ -99,7 +99,10 @@ export class DriverComponent implements OnInit, OnDestroy {
         if (sAppointment === null) {
           this.loaded = true;
         } else if (sAppointment !== undefined) {
-          this.drivers = sAppointment.enrollments.filter(fAppointment => fAppointment.driver !== null);
+          sAppointment.enrollments = sAppointment.enrollments ? sAppointment.enrollments : [];
+          this.drivers = sAppointment.enrollments.filter(fEnrollment => fEnrollment.driver);
+
+          console.log(this.drivers);
 
           this.data.neededTo = sAppointment.enrollments.filter(fAppointment => {
             if (fAppointment.passenger != null

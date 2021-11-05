@@ -79,12 +79,6 @@ export class AppointmentSocketioService {
 
         this.socket.on('update', (_link: any) => {
           console.log('SOCKET UPDATE');
-          console.log('SOCKET UPDATE');
-          console.log('SOCKET UPDATE');
-          console.log('SOCKET UPDATE');
-          console.log('SOCKET UPDATE');
-          console.log('SOCKET UPDATE');
-          console.log('SOCKET UPDATE');
           if (this.subscription === _link) {
             // If automatic update is allowed
             if (this.settingsService.autoLoadOnWsCall
