@@ -1,7 +1,5 @@
-<mat-card *ngIf="percentDone === 0"
-          class="form float high">
-  <mat-card-title class="headline"
-                  id="title">
+<mat-card class="form float high">
+  <mat-card-title class="headline" id="title">
     Termin erstellen
   </mat-card-title>
 
@@ -10,20 +8,14 @@
   <!--    <mat-icon>file_copy</mat-icon>-->
   <!--  </span>-->
 
-  <mat-horizontal-stepper #stepper
-                          labelPosition="bottom"
-                          linear>
+  <mat-horizontal-stepper #stepper labelPosition="bottom" linear>
     <!-- OVERALL DATA -->
     <ng-template matStepperIcon="overall">
       <mat-icon>event</mat-icon>
     </ng-template>
-    <mat-step [completed]="doneForms['overall']"
-              state="overall">
-      <ng-template matStepLabel>
-        Allgemein
-      </ng-template>
-      <app-overall-data
-        (save)="getOverallData($event)">
+    <mat-step state="overall" completed="false">
+      <ng-template matStepLabel> Allgemein </ng-template>
+      <app-overall-data (save)="getOverallData($event)" #overalldata>
       </app-overall-data>
     </mat-step>
 
@@ -31,15 +23,13 @@
     <ng-template matStepperIcon="additions">
       <mat-icon>check_box</mat-icon>
     </ng-template>
-    <mat-step [completed]="doneForms['additions']"
-              [optional]="true"
-              state="additions">
-      <ng-template matStepLabel>
-        Zusätze
-      </ng-template>
+    <mat-step [optional]="true" state="additions">
+      <ng-template matStepLabel> Zusätze </ng-template>
       <app-additions
         (save)="getAdditions($event)"
-        (back)="back()">
+        (back)="back()"
+        #additiondata
+      >
       </app-additions>
     </mat-step>
 
@@ -47,14 +37,9 @@
     <ng-template matStepperIcon="link">
       <mat-icon>link</mat-icon>
     </ng-template>
-    <mat-step [completed]="doneForms['link']"
-              state="link">
-      <ng-template matStepLabel>
-        Link
-      </ng-template>
-      <app-link-data
-        (save)="getLinkData($event)"
-        (back)="back()">
+    <mat-step state="link" completed="false">
+      <ng-template matStepLabel> Link </ng-template>
+      <app-link-data (save)="getLinkData($event)" (back)="back()" #linkdata>
       </app-link-data>
     </mat-step>
 
@@ -62,37 +47,40 @@
     <ng-template matStepperIcon="last">
       <mat-icon>done_outline</mat-icon>
     </ng-template>
-    <mat-step [stepControl]="doneGroup" state="last">
-      <ng-template matStepLabel>
-        Fertig
-      </ng-template>
+    <mat-step state="last" completed="false">
+      <ng-template matStepLabel> Fertig </ng-template>
       <form [formGroup]="doneGroup">
-
         <!-- TODO WHAT IS THIS?  -->
         <span class="form-component-title">Fertig?</span>
 
         <mat-card-content>
+          <h3>In arbeit ... einfach weiter klicken</h3>
         </mat-card-content>
 
-        <div class="info">
-          Sind alle Daten korrekt?
-        </div>
+        <div class="info">Sind alle Daten korrekt?</div>
 
         <mat-card-actions class="double">
           <div>
-            <button (click)="back()"
-                    class="left"
-                    color="primary"
-                    mat-button
-                    disableRipple
-                    type="button">
+            <button
+              (click)="back()"
+              class="left"
+              color="primary"
+              mat-button
+              disableRipple
+              type="button"
+            >
               Zurück
             </button>
           </div>
           <button
-            (click)="create()"
+            (click)="create($event)"
+            appLoadingDisable
+            [active]="sendingRequestEmit"
+            [innerValue]="'Erstellen'"
             color="primary"
-            mat-raised-button>
+            mat-raised-button
+            type="button"
+          >
             Erstellen
           </button>
         </mat-card-actions>
@@ -114,7 +102,7 @@
   </mat-horizontal-stepper>
 </mat-card>
 
-<div *ngIf="percentDone !== 0" class="upload-progress">
+<!-- <div class="upload-progress">
   <span>Der Termin wird erstellt</span>
   <ng-container *ngIf="percentDone !== 100">
     <span>{{ percentDone }}%</span>
@@ -126,6 +114,7 @@
   </ng-container>
   <mat-progress-bar
     [value]="percentDone"
-    mode="determinate"></mat-progress-bar>
-</div>
-
+    mode="determinate"
+    color="primary"
+  ></mat-progress-bar>
+</div> -->

@@ -1,22 +1,22 @@
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {IAppointmentModel} from '../../../../models/IAppointment.model';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material';
-import {DatePipe} from '@angular/common';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { IAppointmentModel } from '../../../../models/IAppointment.model';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-overall-data',
   templateUrl: './overall-data.component.html',
   styleUrls: ['./overall-data.component.scss'],
   providers: [
-    {provide: MAT_DATE_LOCALE, useValue: 'de-DE'},
+    { provide: MAT_DATE_LOCALE, useValue: 'de-DE' },
     {
       provide: DateAdapter,
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
     },
-    {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS}]
+    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS }]
 })
 export class OverallDataComponent implements OnInit {
 
@@ -54,6 +54,9 @@ export class OverallDataComponent implements OnInit {
   }
 
   public saveFnc() {
+    console.log("click");
+    console.log(this.event.valid);
+
     if (this.event.valid) {
       const data = {
         title: this.get('title').value,
@@ -63,7 +66,13 @@ export class OverallDataComponent implements OnInit {
         maxEnrollments: this.get('maxEnrollments').value
       };
 
-      this.save.emit(data);
+      try {
+
+        this.save.emit(data);
+      } catch (e) {
+        console.log(e);
+      }
+
     }
   }
 

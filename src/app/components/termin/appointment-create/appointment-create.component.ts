@@ -1,9 +1,12 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl} from '@angular/forms';
-import {MatAutocomplete, MatDialog, MatStepper} from '@angular/material';
-import {HttpErrorResponse, HttpEventType} from '@angular/common/http';
-import {AppointmentService} from '../../../services/appointment.service';
-import {Router} from '@angular/router';
+import { LinkDataComponent } from './../form/link-data/link-data.component';
+import { AdditionsComponent } from './../form/additions/additions.component';
+import { OverallDataComponent } from './../form/overall-data/overall-data.component';
+import { Component, ElementRef, OnInit, ViewChild, EventEmitter } from '@angular/core';
+import { FormBuilder, FormControl } from '@angular/forms';
+import { MatAutocomplete, MatDialog, MatStepper } from '@angular/material';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AppointmentService } from '../../../services/appointment.service';
+import { Router } from '@angular/router';
 
 const HttpStatus = require('http-status-codes');
 
@@ -14,9 +17,13 @@ const HttpStatus = require('http-status-codes');
 })
 export class AppointmentCreateComponent implements OnInit {
 
-  @ViewChild('stepper', null) stepper: MatStepper;
-  @ViewChild('userInput', {static: false}) userInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
+  @ViewChild('stepper', { static: false }) stepper: MatStepper;
+  @ViewChild('userInput', { static: false }) userInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
+
+  @ViewChild('overalldata', { static: true }) overallDataRef: OverallDataComponent;
+  @ViewChild('additiondata', { static: true }) additionDataRef: AdditionsComponent;
+  @ViewChild('linkdata', { static: true }) linkDataRef: LinkDataComponent;
 
   // FormGroups
   doneGroup: any;
@@ -24,11 +31,12 @@ export class AppointmentCreateComponent implements OnInit {
   public output: any = {};
   public percentDone = 0;
   public stepValid = [false, false, false];
-  doneForms = {overall: false, additions: false, link: false};
+
+  public sendingRequestEmit = new EventEmitter()
 
   constructor(private formBuilder: FormBuilder,
-              public dialog: MatDialog, private appointmentService: AppointmentService,
-              private router: Router) {
+    public dialog: MatDialog, private appointmentService: AppointmentService,
+    private router: Router) {
 
     this.doneGroup = this.formBuilder.group({
       saveAsTemplate: new FormControl()
@@ -64,7 +72,9 @@ export class AppointmentCreateComponent implements OnInit {
   // };
 
 
-  async create() {
+  async create(event) {
+    event.preventDefault();
+    this.sendingRequestEmit.emit(true);
     this.output.administrators = [];
     this.output.files = [];
 
@@ -72,31 +82,48 @@ export class AppointmentCreateComponent implements OnInit {
       .create(this.output)
       .subscribe(
         result => {
-          if (result.type === HttpEventType.UploadProgress) {
-            this.percentDone = Math.round(100 * result.loaded / result.total);
-          } else if (result.type === HttpEventType.Response) {
-            setTimeout(() => {
-              if (result.status === HttpStatus.CREATED) {
-                this.router.navigate([`enroll`], {
-                  queryParams: {
-                    a: result.body.link
-                  }
-                });
-              }
-            }, 2000);
-          }
+          this.router.navigate([`enroll`], {
+            queryParams: {
+              a: result.link
+            }
+          }).then(() => {
+            this.sendingRequestEmit.emit(false);
+          });
         },
         (err: HttpErrorResponse) => {
+          this.sendingRequestEmit.emit(false);
           this.percentDone = 0;
-          if (err.status === HttpStatus.BAD_REQUEST) {
-            if (err.error.code === 'DUPLICATE_ENTRY') {
-              err.error.error.forEach(fColumn => {
-                  const uppercaseName = fColumn.charAt(0).toUpperCase() + fColumn.substring(1);
-                  const fnName: string = 'get' + uppercaseName;
-                  this[fnName]().setErrors({inUse: true});
-                  const fnNameForIndex = 'getFormGroupIndexOf' + uppercaseName;
-                  this.stepper.selectedIndex = this[fnNameForIndex]();
+          if (err.status === HttpStatus.CONFLICT) {
+            if (err.error.code === 'DUPLICATE_VALUES') {
+              err.error.data.forEach(dat => {
+                const indexMapping = {
+                  undefined: {
+                    "link": {
+                      index: 2,
+                      ref: this.linkDataRef,
+                      value: "link"
+                    },
+                    "deadline": {
+                      index: 0,
+                      ref: this.overallDataRef,
+                      value: "deadline"
+                    },
+                  },
+                  "addition": {
+                    "name": {
+                      index: 1,
+                      ref: this.additionDataRef,
+                      value: "addition"
+                    }
+                  }
                 }
+
+
+                const mapping = indexMapping[dat.object][dat.attribute];
+                this.stepper.selectedIndex = mapping.index;
+
+                mapping.ref.get(mapping.value).setErrors({ inUse: true })
+              }
               );
             }
           }
@@ -112,8 +139,7 @@ export class AppointmentCreateComponent implements OnInit {
     this.output.location = data.location;
     this.output.maxEnrollments = data.maxEnrollments;
 
-    this.doneForms.overall = true;
-
+    this.stepper.selected.completed = true;
     this.stepper.next();
   }
 
@@ -122,8 +148,7 @@ export class AppointmentCreateComponent implements OnInit {
     this.output.driverAddition = data.driverAddition;
     this.output.additions = data.additions;
 
-    this.doneForms.additions = true;
-
+    this.stepper.selected.completed = true;
     this.stepper.next();
   }
 
@@ -132,8 +157,7 @@ export class AppointmentCreateComponent implements OnInit {
     this.output.link = data.link;
     this.output.description = data.description;
 
-    this.doneForms.link = true;
-
+    this.stepper.selected.completed = true;
     this.stepper.next();
   }
 

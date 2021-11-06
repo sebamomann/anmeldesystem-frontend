@@ -132,17 +132,9 @@ export class AppointmentService {
     ];
   }
 
-  create(appointment: CreateAppointmentModel): Observable<HttpEvent<IAppointmentModel>> {
-    const req = new HttpRequest('POST', `${environment.API_URL}appointments`, appointment, {
-      reportProgress: true,
-    });
-    return this.httpClient.request(req);
-    // return this.httpClient.post<IAppointmentModel>(`${environment.API_URL}appointment`, appointment,
-    //   {
-    //     observe: 'response',
-    //     reportProgress: true
-    //   }
-    // );
+  create(appointment: CreateAppointmentModel): Observable<IAppointmentModel> {
+    const url = `${environment.API_URL}appointments`;
+    return this.httpClient.post<IAppointmentModel>(url, appointment);
   }
 
   // enroll(enrollment: IEnrollmentModel, appointment: IAppointmentModel): Observable<HttpEvent<IEnrollmentModel>> {

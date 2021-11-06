@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {IAppointmentModel} from '../../../../models/IAppointment.model';
-import {FormArray, FormBuilder, FormControl} from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { IAppointmentModel } from '../../../../models/IAppointment.model';
+import { FormArray, FormBuilder, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-additions',
@@ -17,6 +17,8 @@ export class AdditionsComponent implements OnInit {
   public appointment: IAppointmentModel;
   @Input()
   public isEdit = false;
+
+  public additionError = false;
 
   public event: any;
   public sameValues = true;
@@ -89,9 +91,23 @@ export class AdditionsComponent implements OnInit {
     this.event.get('driverAddition').setValue(this.appointment.driverAddition);
   }
 
+  public get(string) {
+    console.log(string)
+    if (string === "addition") {
+      this.additionError = true;
+      return this.event.get("additions");
+    }
+  }
+
   private parseAdditionsFromForm() {
     const additions = [];
-    this.event.controls.additions.controls.forEach(field => field.value != null ? additions.push({name: field.value}) : '');
+    this.event.controls.additions.controls.forEach(field => field.value != null ? additions.push({ name: field.value }) : '');
     return additions;
   };
+
+  public getAdditionErrorMessage() {
+    if (this.get("addition").hasError('isUse')) {
+      return 'Huch, da ist wohl etwas doppelt';
+    }
+  }
 }

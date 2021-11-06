@@ -1,5 +1,4 @@
 <form [formGroup]="event">
-
   <span class="form-component-title">Zusätze</span>
 
   <mat-card-content>
@@ -9,11 +8,15 @@
           Fahrerzusatz
         </mat-checkbox>
         <!--suppress TypeScriptUnresolvedFunction -->
-        <mat-icon #driverAdditionTooltip="matTooltip"
-                  (click)="driverAdditionTooltip.toggle()"
-                  class="tooltip"
-                  matTooltip="{{ 'Hierbei können sich Teilnehmer als Fahrer melden. Sie geben unter Anderem die ' +
-                       'Anzahl freier Plätze ein und in welche Richtung sie fahren.'}}">
+        <mat-icon
+          #driverAdditionTooltip="matTooltip"
+          (click)="driverAdditionTooltip.toggle()"
+          class="tooltip"
+          matTooltip="{{
+            'Hierbei können sich Teilnehmer als Fahrer melden. Sie geben unter Anderem die ' +
+              'Anzahl freier Plätze ein und in welche Richtung sie fahren.'
+          }}"
+        >
           info
         </mat-icon>
       </div>
@@ -27,24 +30,31 @@
 
     <div class="addition-wrapper">
       <!--suppress AngularInvalidExpressionResultType, JSUnusedGlobalSymbols -->
-      <div *ngFor="let addition of event.controls.additions.controls; let i = index"
-           formArrayName="additions">
+      <div
+        *ngFor="
+          let addition of event.controls.additions.controls;
+          let i = index
+        "
+        formArrayName="additions"
+      >
         <mat-form-field>
-          <label for="{{i}}">
-            <input [formControlName]="i.toString()"
-                   id="{{i}}"
-                   matInput
-                   placeholder="Zusatz {{i + 1}}">
+          <label for="{{ i }}">
+            <input
+              [formControlName]="i.toString()"
+              id="{{ i }}"
+              matInput
+              placeholder="Zusatz {{ i + 1 }}"
+            />
           </label>
-          <mat-icon (click)="removeAddition(i)"
-                    matSuffix>clear
-          </mat-icon>
+          <mat-icon (click)="removeAddition(i)" matSuffix>clear </mat-icon>
         </mat-form-field>
       </div>
 
-      <button (click)="addAddition()"
-              class="solo"
-              mat-button>
+      <span class="error" *ngIf="additionError">{{
+        getAdditionErrorMessage()
+      }}</span>
+
+      <button (click)="addAddition()" class="solo" mat-button>
         <mat-icon>library_add</mat-icon>
         Weiterer Zusatz
       </button>
@@ -57,23 +67,27 @@
 
   <mat-card-actions class="double">
     <div *ngIf="isEdit">
-      <button [queryParamsHandling]="'preserve'"
-              [routerLink]="'/enroll' "
-              class="left"
-              color="primary"
-              disableRipple
-              mat-button
-              type="button">
+      <button
+        [queryParamsHandling]="'preserve'"
+        [routerLink]="'/enroll'"
+        class="left"
+        color="primary"
+        disableRipple
+        mat-button
+        type="button"
+      >
         Zum Termin
       </button>
     </div>
     <div *ngIf="!isEdit">
-      <button (click)="goBack()"
-              class="left"
-              color="primary"
-              disableRipple
-              mat-button
-              type="button">
+      <button
+        (click)="goBack()"
+        class="left"
+        color="primary"
+        disableRipple
+        mat-button
+        type="button"
+      >
         Zurück
       </button>
     </div>
@@ -81,8 +95,9 @@
       (click)="saveFnc()"
       [disabled]="sameValues && appointment !== undefined"
       color="primary"
-      mat-raised-button>
-      {{ isEdit ? "Speichern" : (hasAdditions() ? "Weiter" : 'Nein danke') }}
+      mat-raised-button
+    >
+      {{ isEdit ? "Speichern" : hasAdditions() ? "Weiter" : "Nein danke" }}
     </button>
   </mat-card-actions>
 </form>
