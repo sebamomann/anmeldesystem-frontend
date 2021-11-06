@@ -18,6 +18,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 
 COPY package*.json ./
 
+RUN npm ci
 RUN npm install
 
 # Download the chrome binaries
