@@ -7,7 +7,6 @@
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
     "noUnusedLocals": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -22,7 +21,12 @@
       "es2018",
       "dom"
     ],
-    "emitDecoratorMetadata": false
+    "emitDecoratorMetadata": false,
+    "paths": {
+      "@angular/*": [
+        "./node_modules/@angular/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
