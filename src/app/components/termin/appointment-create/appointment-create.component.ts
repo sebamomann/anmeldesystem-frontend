@@ -29,7 +29,6 @@ export class AppointmentCreateComponent implements OnInit {
   doneGroup: any;
 
   public output: any = {};
-  public percentDone = 0;
   public stepValid = [false, false, false];
 
   public sendingRequestEmit = new EventEmitter()
@@ -92,8 +91,7 @@ export class AppointmentCreateComponent implements OnInit {
         },
         (err: HttpErrorResponse) => {
           this.sendingRequestEmit.emit(false);
-          this.percentDone = 0;
-          if (err.status === HttpStatus.CONFLICT) {
+          if (err.status === HttpStatus.CONFLICT || err.status === HttpStatus.BAD_REQUEST) {
             if (err.error.code === 'DUPLICATE_VALUES') {
               err.error.data.forEach(dat => {
                 const indexMapping = {
