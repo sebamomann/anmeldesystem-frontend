@@ -1,11 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {animate, query, stagger, state, style, transition, trigger} from '@angular/animations';
-import {IAppointmentModel} from '../../../models/IAppointment.model';
-import {AuthenticationService} from '../../../services/authentication.service';
-import {AppointmentProvider} from '../appointment.provider';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {AppointmentUtil} from '../../../_util/appointmentUtil.util';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { animate, query, stagger, state, style, transition, trigger } from '@angular/animations';
+import { IAppointmentModel } from '../../../models/IAppointment.model';
+import { AuthenticationService } from '../../../services/authentication.service';
+import { AppointmentProvider } from '../appointment.provider';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { AppointmentUtil } from '../../../_util/appointmentUtil.util';
 
 interface IAppointmentArchive {
   year: number;
@@ -19,21 +19,21 @@ interface IAppointmentArchive {
   styleUrls: ['./dashboard.component.scss'],
   animations: [
     trigger('fadeInOut', [
-      state('in', style({opacity: 100})),
+      state('in', style({ opacity: 100 })),
       transition('* => void', [
-        animate(1000, style({opacity: 1})),
-        animate(500, style({opacity: 0}))
+        animate(1000, style({ opacity: 1 })),
+        animate(500, style({ opacity: 0 }))
       ])
     ]),
     trigger('listAnimation', [
       transition('* => *', [ // each time the binding value changes
         query('mat-card', [
-          style({opacity: 0, transform: 'scale(0.75)'}),
+          style({ opacity: 0, transform: 'scale(0.75)' }),
           stagger(100, [
-            animate('0.15s', style({opacity: 1, transform: 'scale(1.05)'})),
-            animate('0.075s', style({opacity: 1, transform: 'scale(1)'})),
+            animate('0.15s', style({ opacity: 1, transform: 'scale(1.05)' })),
+            animate('0.075s', style({ opacity: 1, transform: 'scale(1)' })),
           ])
-        ], {optional: true})
+        ], { optional: true })
       ])
     ])
   ]
@@ -58,7 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private appointmentsArchive$$: Subscription;
 
   constructor(public router: Router, public authenticationService: AuthenticationService,
-              private appointmentProvider: AppointmentProvider) {
+    private appointmentProvider: AppointmentProvider) {
   }
 
   /**
@@ -97,12 +97,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         if (lastAppointment) {
           _lastAppointmentDate = lastAppointment.date;
-
+          console.log(1);
           if (_lastAppointmentDate === this.lastAppointmentDate) {
+            console.log(2);
             this.hideLoadMoreArchiveAppointments = true;
           }
+          console.log(3);
         } else {
+          console.log(4);
           if (sAppointments.length === 0) {
+            console.log(5);
             this.hideLoadMoreArchiveAppointments = true;
           }
         }

@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, ReplaySubject} from 'rxjs';
-import {IAppointmentModel} from '../../models/IAppointment.model';
-import {AppointmentService} from '../../services/appointment.service';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import { IAppointmentModel } from '../../models/IAppointment.model';
+import { AppointmentService } from '../../services/appointment.service';
 
 @Injectable({
   providedIn: 'root'
@@ -60,7 +60,7 @@ export class AppointmentProvider {
 
   public loadAppointmentsArchive(before, limit) {
     this.appointmentService
-      .getAppointments(true, new Date(), null, limit)
+      .getAppointments(true, before ? new Date(before) : new Date(), null, limit)
       .subscribe(
         async (result: IAppointmentModel[]) => {
           if (result) {
