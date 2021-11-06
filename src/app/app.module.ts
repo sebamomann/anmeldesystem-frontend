@@ -1,20 +1,20 @@
-import {LOCALE_ID, NgModule} from '@angular/core';
-import {AppComponent} from './components/app.component';
-import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatButtonModule, MatDialogModule, MatProgressSpinnerModule, MatSnackBarModule} from '@angular/material';
-import {WINDOW_PROVIDERS} from './provider/window.provider';
-import {DatePipe, LocationStrategy, PathLocationStrategy, registerLocaleData} from '@angular/common';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {ServiceWorkerModule} from '@angular/service-worker';
-import {PwaDialogComponent} from './components/dialogs/pwa-dialog/pwa-dialog.component';
-import {Globals} from './globals';
+import { LOCALE_ID, NgModule } from '@angular/core';
+import { AppComponent } from './components/app.component';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonModule, MatDialogModule, MatProgressSpinnerModule, MatSnackBarModule } from '@angular/material';
+import { WINDOW_PROVIDERS } from './provider/window.provider';
+import { DatePipe, LocationStrategy, PathLocationStrategy, registerLocaleData } from '@angular/common';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { PwaDialogComponent } from './components/dialogs/pwa-dialog/pwa-dialog.component';
+import { Globals } from './globals';
 import localeDe from '@angular/common/locales/de';
-import {AppRoutingModule} from './app-routing.module';
-import {MonthnamePipe} from './pipes/monthname.pipe';
-import {LoadingModule} from './components/html-template/loading/loading.module';
-import {UpdateService} from './services/update.service';
-import {AuthConfigModule} from './auth-config/auth-config.module';
-import {AuthInterceptor} from './interceptor/authentication.interceptor';
+import { AppRoutingModule } from './app-routing.module';
+import { MonthnamePipe } from './pipes/monthname.pipe';
+import { LoadingModule } from './components/html-template/loading/loading.module';
+import { UpdateService } from './services/update.service';
+import { AuthConfigModule } from './auth-config/auth-config.module';
+import { AuthInterceptor } from './interceptor/authentication.interceptor';
 
 registerLocaleData(localeDe);
 
@@ -28,8 +28,7 @@ registerLocaleData(localeDe);
     HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    NoopAnimationsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {enabled: true, registrationStrategy: 'registerImmediately'}),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: true, registrationStrategy: 'registerImmediately' }),
     MatProgressSpinnerModule,
     MatDialogModule,
     MatButtonModule,
