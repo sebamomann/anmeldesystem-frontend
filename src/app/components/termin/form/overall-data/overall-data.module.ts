@@ -1,7 +1,7 @@
-import {NgModule} from '@angular/core';
-import {CommonModule, DatePipe} from '@angular/common';
-import {OverallDataComponent} from './overall-data.component';
-import {ReactiveFormsModule} from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { OverallDataComponent } from './overall-data.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import {
   MatButtonModule,
   MatCardModule,
@@ -10,8 +10,8 @@ import {
   MatInputModule,
   MatProgressSpinnerModule
 } from '@angular/material';
-import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
-import {RouterModule} from '@angular/router';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -28,12 +28,12 @@ import {RouterModule} from '@angular/router';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatCardModule,
-    RouterModule
+    RouterModule,
   ],
   providers: [DatePipe,
     {
       provide: STEPPER_GLOBAL_OPTIONS,
-      useValue: {displayDefaultIndicatorType: false}
+      useValue: { displayDefaultIndicatorType: false }
     }]
 })
 export class OverallDataModule {

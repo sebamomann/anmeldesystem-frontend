@@ -97,7 +97,6 @@ pipeline {
           image = docker.build("anmeldesystem/anmeldesystem-ui:" + tagName,
             "--build-arg BACKEND_URL=http://" + apiName + ":3000 " +
 //              "--network " + netName + " " +
-"--no-cache " +
               "-f Dockerfile .")
         }
       }
