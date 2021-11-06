@@ -97,16 +97,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         if (lastAppointment) {
           _lastAppointmentDate = lastAppointment.date;
-          console.log(1);
+
           if (_lastAppointmentDate === this.lastAppointmentDate) {
-            console.log(2);
+
             this.hideLoadMoreArchiveAppointments = true;
           }
-          console.log(3);
+
         } else {
-          console.log(4);
+
           if (sAppointments.length === 0) {
-            console.log(5);
+
             this.hideLoadMoreArchiveAppointments = true;
           }
         }
