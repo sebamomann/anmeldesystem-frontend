@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {IAppointmentModel} from '../../../../models/IAppointment.model';
-import {IAdditionModel} from '../../../../models/IAddition.model';
-import {FormArray, FormBuilder, FormControl} from '@angular/forms';
-import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { IAppointmentModel } from '../../../../models/IAppointment.model';
+import { IAdditionModel } from '../../../../models/IAddition.model';
+import { FormArray, FormBuilder, FormControl } from '@angular/forms';
+import { IEnrollmentModel } from '../../../../models/IEnrollment.model';
 
 @Component({
   selector: 'app-enrollment-additions',
@@ -46,6 +46,7 @@ export class EnrollmentAdditionsComponent implements OnInit {
       // if output has addition with this id then set to true
       let selected = false;
       if (this.enrollment) {
+        if (!this.enrollment.additions) this.enrollment.additions = [];
         selected = this.enrollment.additions.some(iAddition => iAddition.id === o.id);
       }
       const control = new FormControl(selected);
@@ -61,7 +62,7 @@ export class EnrollmentAdditionsComponent implements OnInit {
     const additionList = [];
 
     additionListRaw.forEach(fAddition => {
-      const addition = {id: fAddition};
+      const addition = { id: fAddition };
       additionList.push(addition);
     });
 
