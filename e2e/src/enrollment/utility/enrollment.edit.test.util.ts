@@ -19,4 +19,16 @@ export class EnrollmentEditTestUtil {
 
     this.enrollmentEditPage.nextMain();
   };
+
+  public async fillAdditionForm(args: boolean[]) {
+    for (let i = 0; i < args.length; i++) {
+      if (args[i]) {
+        await this.enrollmentEditPage.selectAddition(String(i));
+      } else {
+        await this.enrollmentEditPage.deselectAddition(String(i));
+      }
+    }
+
+    this.enrollmentEditPage.nextAdditions();
+  }
 }

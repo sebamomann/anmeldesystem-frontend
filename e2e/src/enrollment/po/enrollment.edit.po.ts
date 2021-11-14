@@ -1,4 +1,4 @@
-import { browser } from "protractor";
+import { browser, by, protractor } from "protractor";
 import { EnrollmentBasePage } from "./enrollment.base.po";
 
 export class EnrollmentEditPage extends EnrollmentBasePage {
@@ -19,5 +19,13 @@ export class EnrollmentEditPage extends EnrollmentBasePage {
           reject();
         });
     });
+  }
+
+  public navigateToAdditionsTab() {
+    const EC = protractor.ExpectedConditions;
+    const elem = browser.element(by.id('mat-tab-label-0-1'));
+    browser.wait(EC.visibilityOf(elem), 4000, "Cant find additions tab");
+
+    return elem.click();
   }
 }

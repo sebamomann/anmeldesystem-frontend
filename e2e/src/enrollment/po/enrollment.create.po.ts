@@ -154,21 +154,6 @@ export class EnrollmentCreatePage extends EnrollmentBasePage {
     return element(by.id('selfEnrollment-input'));
   }
 
-  public isAdditionSelected(id: string) {
-    const elem = element(by.id('addition-' + id + '-input'));
-    return elem.isSelected();
-  }
-
-  public getAdditionInput(id: string) {
-    const elem = element(by.id('addition-' + id + '-input'));
-    return elem;
-  }
-
-  public getAdditionValue(id: string) {
-    const elem = element(by.id('addition-' + id));
-    return elem.getText();
-  }
-
   /**
    * @deprecated TODO
    * @todo back_mail?
@@ -268,10 +253,6 @@ export class EnrollmentCreatePage extends EnrollmentBasePage {
     return this.buttonClick('next_check')
   }
 
-  public nextAdditions() {
-    return this.buttonClick('next_additions')
-  }
-
   public nextDriver() {
     return this.buttonClick('next_driver')
   }
@@ -303,24 +284,6 @@ export class EnrollmentCreatePage extends EnrollmentBasePage {
     const elem = element.all(by.css('.addition-checkbox'));
 
     browser.wait(EC.presenceOf(elem.get(0)), 10000, 'Element taking too long to be present');
-
-    return elem;
-  }
-
-  public async selectAddition(id: string) {
-    const elm = this.getAdditionElement(id);
-
-    if ((await elm.isSelected() === false)) {
-      return browser.executeScript('arguments[0].click();', elm.getWebElement());
-    }
-
-    return Promise.resolve();
-  }
-
-  public getAdditionElement(id: string) {
-    const elem = element(by.id('addition-' + id + '-input'));
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.visibilityOf(elem), 10000);
 
     return elem;
   }

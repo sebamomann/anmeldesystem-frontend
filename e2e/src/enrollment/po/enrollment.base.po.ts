@@ -98,6 +98,56 @@ export class EnrollmentBasePage {
     return browser.wait(EC.elementToBeClickable(elem), 10000);
   }
 
+  /** ADDITIONS */
+  /** ADDITIONS */
+
+  public async selectAddition(id: string) {
+    const elm = this.getAdditionElement(id);
+
+    if ((await elm.isSelected() === false)) {
+      return browser.executeScript('arguments[0].click();', elm.getWebElement());
+    }
+
+    return Promise.resolve();
+  }
+
+  public getAdditionElement(id: string) {
+    const elem = element(by.id('addition-' + id + '-input'));
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.visibilityOf(elem), 10000);
+
+    return elem;
+  }
+
+  public async deselectAddition(id: string) {
+    const elm = this.getAdditionElement(id);
+
+    if ((await elm.isSelected() === true)) {
+      return browser.executeScript('arguments[0].click();', elm.getWebElement());
+    }
+
+    return Promise.resolve();
+  }
+
+  public isAdditionSelected(id: string) {
+    const elem = element(by.id('addition-' + id + '-input'));
+    return elem.isSelected();
+  }
+
+  public getAdditionInput(id: string) {
+    const elem = element(by.id('addition-' + id + '-input'));
+    return elem;
+  }
+
+  public getAdditionValue(id: string) {
+    const elem = element(by.css('#addition-' + id + ' .mat-checkbox-label'));
+    return elem.getText();
+  }
+
+  public nextAdditions() {
+    return this.buttonClick('next_additions')
+  }
+
   /**
    * @deprecated
    * centralize

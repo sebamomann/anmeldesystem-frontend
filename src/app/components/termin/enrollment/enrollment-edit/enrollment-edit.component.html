@@ -20,7 +20,10 @@
 
           <!-- ADDITIONS -->
           <!-- ADDITIONS -->
-          <mat-tab *ngIf="appointment.additions?.length > 0" label="Zusätze">
+          <mat-tab
+            *ngIf="appointment.additions?.length > 0"
+            label="Zusätze"
+          >
             <app-enrollment-additions
               #additionsForm
               (done)="additionsFormDone($event)"
