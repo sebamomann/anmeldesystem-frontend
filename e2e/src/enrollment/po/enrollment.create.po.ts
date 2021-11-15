@@ -33,16 +33,6 @@ export class EnrollmentCreatePage extends EnrollmentBasePage {
     return browser.wait(EC.invisibilityOf(loader), 10000);
   }
 
-
-
-  public getSeats() {
-    return element(by.id('seats'));
-  }
-
-  public async getSeatsValue() {
-    return this.getSeats().getAttribute('value');
-  }
-
   public getUsername() {
     const EC = protractor.ExpectedConditions;
     const elem = element(by.id('username'));
@@ -253,10 +243,6 @@ export class EnrollmentCreatePage extends EnrollmentBasePage {
     return this.buttonClick('next_check')
   }
 
-  public nextDriver() {
-    return this.buttonClick('next_driver')
-  }
-
   public getCheckNameValue() {
     const elm = element(by.css('.enrollment .user-information .name'));
     return elm.getText();
@@ -301,96 +287,12 @@ export class EnrollmentCreatePage extends EnrollmentBasePage {
     return elm.isPresent();
   }
 
-  getDriverCheckbox() {
-    const elem = element(by.css('#driver-input'));
-    const EC = protractor.ExpectedConditions;
-    browser.wait(EC.visibilityOf(elem), 10000);
-
-    return elem;
-  }
-
-  selectPassengerValue(val: string) {
-    const EC = protractor.ExpectedConditions;
-    const elem = element(by.id('requirement-select'));
-    browser.wait(EC.elementToBeClickable(elem), 10000);
-    elem.click();
-
-    const elem2 = element(by.cssContainingText('.mat-option-text', val));
-    browser.wait(EC.visibilityOf(elem2), 10000);
-
-    return elem2.click();
-  }
-
-  passengerFormExists() {
-    const until = protractor.ExpectedConditions;
-    const elm = element(by.id('passenger-form-wrapper'));
-    browser.wait(until.presenceOf(elm), 10000);
-
-    return elm.isPresent();
-  }
-
-  driverFormExists() {
-    const until = protractor.ExpectedConditions;
-    const elm = element(by.id('driver-form-wrapper'));
-    browser.wait(until.presenceOf(elm), 10000);
-
-    return elm.isPresent();
-  }
-
-  public async deselectDriver() {
-    const elm = this.getDriverCheckbox();
-    if ((await elm.isSelected() === true)) {
-      return browser.executeScript('arguments[0].click();', elm.getWebElement());
-    }
-
-    return Promise.resolve();
-  }
-
-  public async selectDriver() {
-    const elm = this.getDriverCheckbox();
-    if ((await elm.isSelected() === false)) {
-      return browser.executeScript('arguments[0].click();', elm.getWebElement());
-    }
-
-    return Promise.resolve();
-  }
-
-  setSeats(val: number) {
-    const ref = this.getSeats();
-    const EC2 = protractor.ExpectedConditions;
-    browser.wait(EC2.elementToBeClickable(ref), 10000, 'Element taking too long to be clickable');
-
-    return ref.clear().then(async () => {
-      await ref.sendKeys(val);
-    });
-  }
-
   driverIconExists() {
     const until = protractor.ExpectedConditions;
     const elm = element(by.css('.isDriver-icon'));
     browser.wait(until.presenceOf(elm), 10000);
 
     return elm.isPresent();
-  }
-
-  getDriverService() {
-    return element(by.css('.mat-select-value-text span'));
-  }
-
-  getPassengerRequirement() {
-    return element(by.css('.mat-select-value-text span'));
-  }
-
-  selectDriverValue(val: string) {
-    const EC = protractor.ExpectedConditions;
-    const elem = element(by.id('service-select'));
-    browser.wait(EC.elementToBeClickable(elem), 10000);
-    elem.click();
-
-    const elem2 = element(by.cssContainingText('.mat-option-text', val));
-    browser.wait(EC.visibilityOf(elem2), 10000);
-
-    return elem2.click();
   }
 
   public getMail() {
@@ -400,40 +302,6 @@ export class EnrollmentCreatePage extends EnrollmentBasePage {
 
   public getAdditionCheckSelected(id: string) {
     const elm = element(by.css('.addition-list .addition-index-' + id + ' .checkbox_selected'));
-    return elm.isPresent();
-  }
-
-  public async isDriverCheckboxSelected() {
-    const elm = element(by.css('#driver-input'));
-    return elm.isSelected();
-  }
-
-  public getRequirementSelectValue() {
-    const elm = element(by.css('#requirement-select .mat-select-value-text'));
-    return elm.getText();
-  }
-
-  public getServiceSelectValue() {
-    const elm = element(by.css('#service-select .mat-select-value-text'));
-    return elm.getText();
-  }
-
-  public isRequirementSelectEmpty() {
-    const elm = element(by.css('#requirement-select .mat-select-placeholder'));
-    return elm.isPresent();
-  }
-
-  public async selectDriverCheckbox() {
-    const elm = this.getDriverCheckbox();
-    if ((await elm.isSelected() === false)) {
-      return browser.executeScript('arguments[0].click();', elm.getWebElement());
-    }
-
-    return Promise.resolve();
-  }
-
-  public isServiceSelectEmpty() {
-    const elm = element(by.css('#service-select .mat-select-placeholder'));
     return elm.isPresent();
   }
 

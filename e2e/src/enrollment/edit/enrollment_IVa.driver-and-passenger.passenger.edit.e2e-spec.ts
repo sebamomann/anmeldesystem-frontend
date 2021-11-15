@@ -1,4 +1,4 @@
-import { EnrollmentEditTestUtil } from './../utility/enrollment.edit.test.util';
+import { EnrollmentEditTestUtil } from '../utility/enrollment.edit.test.util';
 import { browser } from "protractor";
 import { LocalStoragePage } from "../../general/localStorage.po";
 import { LoginPage } from "../../general/login.po";
@@ -37,38 +37,47 @@ beforeAll(async () => {
   browser.waitForAngularEnabled(false);
 });
 
-const appointmentLink = "valid-enrollments-edit-additions";
-const enrollmentId = "c9cecfdd-0b3c-48b5-9371-000500def265";
-const enrollmentEditTokenValid = "valid-enrollment-edit-token"
+const appointmentLink = "valid-enrollments-edit-driverandpassenger";
+const enrollmentId = "cabd942e-d21e-4b98-89d5-c9aeea1334f7";
 
-describe('enrollment edit page - edit - additions', () => {
+describe('enrollment edit page - edit - driver and passenger - passenger', () => {
   describe(' * form', () => {
     beforeAll(async () => {
       await enrollmentEditPreparationUtil.loadPage(appointmentLink, enrollmentId);
-      enrollmentEditPage.navigateToAdditionsTab();
+      await enrollmentEditPage.navigateToDriverTab();
     });
 
     it(' ~ should have correct values', () => {
-      expect(enrollmentEditPage.getAdditionValue('0')).toBe("addition-1");
-      expect(enrollmentEditPage.getAdditionValue('1')).toBe("addition-2");
-      expect(enrollmentEditPage.getAdditionValue('2')).toBe("addition-3");
-      expect(enrollmentEditPage.getAdditionValue('3')).toBe("addition-4");
+      expect(enrollmentEditPage.getRequirementSelectValue()).toEqual("Nur Hin");
     });
 
     it(' ~ should have correct attributes', () => {
-      expect(enrollmentEditPage.isAdditionSelected('0')).toBeTruthy("Addition (index) 0 is not selected but should be");
-      expect(enrollmentEditPage.isAdditionSelected('1')).toBeFalsy("Addition (index) 1 is selected but should not be");
-      expect(enrollmentEditPage.isAdditionSelected('2')).toBeTruthy("Addition (index) 0 is not selected but should be");
-      expect(enrollmentEditPage.isAdditionSelected('3')).toBeFalsy("Addition (index) 3 is selected but should not be");
+      expect(enrollmentEditPage.isDriverCheckboxSelected()).toBeFalsy();
     });
   });
 
-  describe(' * edit values', () => {
-    describe(' * additions', () => {
+  describe(' * change values', () => {
+    describe(' * requirement', () => {
       beforeAll(async () => {
-        await enrollmentEditPreparationUtil.loadPageWithPermissionToken(appointmentLink, enrollmentId, enrollmentEditTokenValid);
-        enrollmentEditPage.navigateToAdditionsTab();
-        enrollmentEditTestUtil.fillAdditionForm([false, false, true, false])
+        await enrollmentEditPreparationUtil.loadPage(appointmentLink, enrollmentId);
+        await enrollmentEditPage.navigateToDriverTab();
+        await enrollmentEditTestUtil.fillPassengerForm("Nur Zurück");
+      });
+
+      it(' ~ should correctly redirect', () => {
+        enrollmentEditPage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
+      });
+
+      it(' ~ should show correct snackbar', () => {
+        expect(enrollmentEditPage.getSnackbar().getText()).toEqual('Erfolgreich bearbeitet');
+      });
+    });
+
+    describe(' * to driver', () => {
+      beforeAll(async () => {
+        await enrollmentEditPreparationUtil.loadPage(appointmentLink, enrollmentId);
+        await enrollmentEditPage.navigateToDriverTab();
+        await enrollmentEditTestUtil.fillDriverForm("Hin und Zurück", 1);
       });
 
       it(' ~ should correctly redirect', () => {

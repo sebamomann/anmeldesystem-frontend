@@ -23,8 +23,16 @@ export class EnrollmentEditPage extends EnrollmentBasePage {
 
   public navigateToAdditionsTab() {
     const EC = protractor.ExpectedConditions;
-    const elem = browser.element(by.id('mat-tab-label-0-1'));
+    const elem = browser.element(by.css('.additions-tab'));
     browser.wait(EC.visibilityOf(elem), 4000, "Cant find additions tab");
+
+    return elem.click();
+  }
+
+  public navigateToDriverTab() {
+    const EC = protractor.ExpectedConditions;
+    const elem = browser.element(by.css('.driver-tab'));
+    browser.wait(EC.visibilityOf(elem), 4000, "Cant find driver tab");
 
     return elem.click();
   }

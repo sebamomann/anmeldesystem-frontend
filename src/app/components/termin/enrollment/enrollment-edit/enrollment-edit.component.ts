@@ -140,6 +140,9 @@ export class EnrollmentEditComponent implements OnInit, OnDestroy {
     output.driver = $event.driver;
     output.passenger = $event.passenger;
 
+    if (output.driver) delete output.passenger;
+    if (output.passenger) delete output.driver;
+
     this.sendEnrollmentRequest(output);
   }
 

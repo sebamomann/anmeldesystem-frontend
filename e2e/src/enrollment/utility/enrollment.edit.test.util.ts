@@ -31,4 +31,21 @@ export class EnrollmentEditTestUtil {
 
     this.enrollmentEditPage.nextAdditions();
   }
+
+  public async fillDriverForm(service: string, seats: number) {
+    await this.enrollmentEditPage.selectDriver();
+
+    if (service) this.enrollmentEditPage.selectDriverValue(service);
+    if (seats) await this.enrollmentEditPage.setSeats(seats);
+
+    await this.enrollmentEditPage.nextDriver();
+  }
+
+  public async fillPassengerForm(requirement: string) {
+    await this.enrollmentEditPage.deselectDriver();
+
+    this.enrollmentEditPage.selectPassengerValue(requirement);
+
+    await this.enrollmentEditPage.nextDriver();
+  }
 }
