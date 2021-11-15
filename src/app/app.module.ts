@@ -1,6 +1,6 @@
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { AppComponent } from './components/app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatDialogModule, MatProgressSpinnerModule, MatSnackBarModule } from '@angular/material';
 import { WINDOW_PROVIDERS } from './provider/window.provider';
 import { DatePipe, LocationStrategy, PathLocationStrategy, registerLocaleData } from '@angular/common';
@@ -15,6 +15,7 @@ import { LoadingModule } from './components/html-template/loading/loading.module
 import { UpdateService } from './services/update.service';
 import { AuthConfigModule } from './auth-config/auth-config.module';
 import { AuthInterceptor } from './interceptor/authentication.interceptor';
+import { environment } from 'src/environments/environment';
 
 registerLocaleData(localeDe);
 
@@ -27,7 +28,7 @@ registerLocaleData(localeDe);
     MatSnackBarModule,
     HttpClientModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
+    environment.production ? BrowserAnimationsModule : NoopAnimationsModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: true, registrationStrategy: 'registerImmediately' }),
     MatProgressSpinnerModule,
     MatDialogModule,
