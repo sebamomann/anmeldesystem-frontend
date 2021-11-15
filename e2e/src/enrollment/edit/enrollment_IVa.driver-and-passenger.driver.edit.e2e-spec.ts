@@ -49,7 +49,7 @@ describe('enrollment edit page - edit - driver and passenger - driver', () => {
 
     it(' ~ should have correct values', () => {
       expect(enrollmentEditPage.getServiceSelectValue()).toEqual("Nur Zurück");
-      expect(enrollmentEditPage.getSeatsValue()).toBe(4);
+      expect(enrollmentEditPage.getSeatsValue()).toBe('4');
     });
 
     it(' ~ should have correct attributes', () => {
