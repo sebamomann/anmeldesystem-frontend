@@ -150,5 +150,10 @@ export class AppointmentOverviewEnrollmentListPage {
 
     return;
   }
+
+  public isAdditionOfEnrollmentSelected(enrollmentId: string, additionIndex: number) {
+    const elm = element(by.css('[enrollment-id="' + enrollmentId + '"] .addition-list .addition-index-' + additionIndex + ' .checkbox_selected'));
+    return elm.isPresent();
+  }
 }
 

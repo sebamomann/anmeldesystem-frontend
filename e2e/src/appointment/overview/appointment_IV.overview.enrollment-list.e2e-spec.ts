@@ -55,7 +55,6 @@ describe('enrollment list', () => {
   });
 
   // TODO
-  // additions
   // driver
   // hidden
 
@@ -149,6 +148,38 @@ describe('enrollment list', () => {
         expect(enrollmentCommentPresent).toBeFalsy('Enrollment comment should not be present but is');
         expect(commentSeparatorPresent).toBeFalsy('Enrollment comment separator should not be present but is');
       });
+    });
+  });
+
+  describe(' * filled list - additions', () => {
+    const appointmentLink = "valid-enrollment-list-additions";
+
+    beforeAll(async () => {
+      await appointmentOverviewPreparationUtil.loadPage(appointmentLink);
+    });
+
+    it(' ~ have correct additions selected - all', () => {
+      const enrollmentId = "51ae537f-4569-444a-90b4-3c76267662e6";
+      expect(appointmentOverviewEnrollmentListPage.isAdditionOfEnrollmentSelected(enrollmentId, 0)).toBeTruthy("Addition should be selected but is not");
+      expect(appointmentOverviewEnrollmentListPage.isAdditionOfEnrollmentSelected(enrollmentId, 1)).toBeTruthy("Addition should be selected but is not");
+      expect(appointmentOverviewEnrollmentListPage.isAdditionOfEnrollmentSelected(enrollmentId, 2)).toBeTruthy("Addition should be selected but is not");
+      expect(appointmentOverviewEnrollmentListPage.isAdditionOfEnrollmentSelected(enrollmentId, 3)).toBeTruthy("Addition should be selected but is not");
+    });
+
+    it(' ~ have correct additions selected - mixed', () => {
+      const enrollmentId = "ede5e52a-3e4f-46ab-af67-22df50a04014";
+      expect(appointmentOverviewEnrollmentListPage.isAdditionOfEnrollmentSelected(enrollmentId, 0)).toBeTruthy("Addition should be selected but is not");
+      expect(appointmentOverviewEnrollmentListPage.isAdditionOfEnrollmentSelected(enrollmentId, 1)).toBeTruthy("Addition should be selected but is not");
+      expect(appointmentOverviewEnrollmentListPage.isAdditionOfEnrollmentSelected(enrollmentId, 2)).toBeFalsy("Addition should not be selected but is");
+      expect(appointmentOverviewEnrollmentListPage.isAdditionOfEnrollmentSelected(enrollmentId, 3)).toBeFalsy("Addition should not be selected but is");
+    });
+
+    it(' ~ have correct additions selected - none', () => {
+      const enrollmentId = "682679e5-5cc7-4a11-b7b0-1a5fbb5af03f";
+      expect(appointmentOverviewEnrollmentListPage.isAdditionOfEnrollmentSelected(enrollmentId, 0)).toBeFalsy("Addition should not be selected but is");
+      expect(appointmentOverviewEnrollmentListPage.isAdditionOfEnrollmentSelected(enrollmentId, 1)).toBeFalsy("Addition should not be selected but is");
+      expect(appointmentOverviewEnrollmentListPage.isAdditionOfEnrollmentSelected(enrollmentId, 2)).toBeFalsy("Addition should not be selected but is");
+      expect(appointmentOverviewEnrollmentListPage.isAdditionOfEnrollmentSelected(enrollmentId, 3)).toBeFalsy("Addition should not be selected but is");
     });
   });
 
