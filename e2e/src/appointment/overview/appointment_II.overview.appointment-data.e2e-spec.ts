@@ -114,17 +114,15 @@ describe('appointment overview - data', () => {
       expect(fileName).toBe('testfile-1.pdf');
     });
 
-    // TODO
-    // BLEAKS CLI RUN
-    // describe('click', () => {
-    //   it('correct redirect', () => {
-    //     appointmentDataPage.clickFirstFile();
-    //
-    //     const url = 'https://localhost:3000/files/2e57b350-78fa-472b-b42f-b1de84dac157';
-    //     const pageRedirected = appointmentPage.pageRedirectedToUrl(url);
-    //
-    //     expect(pageRedirected).toBeTruthy('Not redirected to file download');
-    //   });
-    // });
+    describe(' * click', () => {
+      it(' ~ should correctly redirect', () => {
+        appointmentDataPage.clickFirstFile();
+
+        const url = 'https://localhost:3000/files/2e57b350-78fa-472b-b42f-b1de84dac157';
+        const pageRedirected = appointmentPage.pageRedirectedToUrl(url);
+
+        expect(pageRedirected).toBeTruthy('Not redirected to file download');
+      });
+    });
   });
 });
