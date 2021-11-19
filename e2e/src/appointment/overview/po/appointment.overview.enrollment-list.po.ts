@@ -92,6 +92,15 @@ export class AppointmentOverviewEnrollmentListPage {
     return elem.isPresent();
   }
 
+  public isHiddenEnrollmentHintPresent() {
+    const elem = element(by.css('#hidden-enrollment-hint'));
+
+    const EC = protractor.ExpectedConditions;
+    browser.wait(EC.presenceOf(elem), 2000, 'Element taking too long to be present');
+
+    return elem.isPresent();
+  }
+
   public getMissingPermissionSnackbar() {
     // todo centralize
     const EC = protractor.ExpectedConditions;

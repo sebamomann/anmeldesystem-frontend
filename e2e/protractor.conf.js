@@ -23,7 +23,7 @@ exports.config = {
         "--allow-insecure-localhost"
       ]
     },
-    chromeDriver: "./node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_94.0.4606.81",
+    chromeDriver: "./node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_96.0.4664.45",
     browserName: "chrome",
   },
   directConnect: true,

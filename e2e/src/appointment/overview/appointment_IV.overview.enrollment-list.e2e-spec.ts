@@ -56,7 +56,6 @@ describe('enrollment list', () => {
 
   // TODO
   // driver
-  // hidden
 
   describe(' * filled list', () => {
     beforeAll(async () => {

@@ -147,12 +147,13 @@
 
   <div *ngIf="appointment.hidden"
        [routerLink]="['/support']"
+       id="hidden-enrollment-hint"
        class="info spacing small link"
        fragment="anonymous">
     Warum sehe ich so wenig Anmeldungen?
   </div>
 
-  <mat-card *ngIf="!hasEnrollments" id="empty-enrollment-list-hint">
+  <mat-card *ngIf="!hasEnrollments && !appointment.hidden" id="empty-enrollment-list-hint">
     <span>Es hat sich noch niemand angemeldet.</span>
   </mat-card>
 

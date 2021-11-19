@@ -1,4 +1,4 @@
-import { LoginPage } from './../../general/login.po';
+import { LoginPage } from '../../general/login.po';
 import { AppointmentOverviewEnrollmentListPage } from './po/appointment.overview.enrollment-list.po';
 import { AppointmentOverviewPreparationUtil } from './po/appointment.overview.preparation.util';
 import { browser } from 'protractor';
