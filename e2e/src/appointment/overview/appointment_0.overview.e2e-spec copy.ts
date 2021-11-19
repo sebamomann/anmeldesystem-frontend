@@ -21,11 +21,6 @@ beforeAll(async () => {
 
 const appointmentLink = "valid";
 
-/**
- * TODO
- * what about hidden appointments ?
- */
-
 describe('appointment overview - general', () => {
   describe(' * not found card', () => {
     describe(' * faulty navigation', () => {

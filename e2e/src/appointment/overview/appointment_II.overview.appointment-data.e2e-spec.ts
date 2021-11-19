@@ -123,6 +123,10 @@ describe('appointment overview - data', () => {
 
         expect(pageRedirected).toBeTruthy('Not redirected to file download');
       });
+
+      afterEach(async () => {
+        await browser.get(browser.baseUrl);
+      });
     });
   });
 });
