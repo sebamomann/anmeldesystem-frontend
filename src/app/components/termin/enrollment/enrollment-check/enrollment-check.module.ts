@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {EnrollmentCheckComponent} from './enrollment-check.component';
-import {MatButtonModule, MatCardModule, MatDividerModule} from '@angular/material';
+import { MatButtonModule, MatCardModule, MatDividerModule, MatIconModule } from '@angular/material';
 import {LoadingDisableModule} from '../../../../directives/loading-disable/loading-disable.module';
 import {EnrollmentDetailsModule} from '../enrollment-details/enrollment-details.module';
 
@@ -15,7 +15,8 @@ import {EnrollmentDetailsModule} from '../enrollment-details/enrollment-details.
     MatButtonModule,
     LoadingDisableModule,
     EnrollmentDetailsModule,
-    MatDividerModule
+    MatDividerModule,
+    MatIconModule
   ]
 })
 export class EnrollmentCheckModule {

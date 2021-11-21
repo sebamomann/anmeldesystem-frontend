@@ -1,0 +1,22 @@
+@import "src/_variables";
+
+mat-divider {
+    margin-bottom: 16px;
+    position: relative !important;
+}
+
+.driver-information {
+    mat-icon {
+      @include md-icon-size(18px);
+      margin-right: 5px;
+
+        &.back {
+            transform: rotate(180deg);
+        }
+
+        &.unfold {
+            transform: rotate(90deg) scale(1.125);
+            font-weight: bold;
+        }
+    }
+}

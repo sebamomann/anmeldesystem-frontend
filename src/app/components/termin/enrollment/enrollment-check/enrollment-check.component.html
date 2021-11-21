@@ -4,35 +4,90 @@
   <mat-card-content>
     <app-enrollment-details
       [appointment]="appointment"
-      [enrollment]="enrollment">
+      [enrollment]="enrollment"
+    >
     </app-enrollment-details>
   </mat-card-content>
 
-  <!--  <mat-divider></mat-divider>-->
+  <mat-divider></mat-divider>
 
-  <div class="info">
-    Sind alle Daten korrekt?
-  </div>
+  <mat-card-content>
+    <div *ngIf="enrollment.driver" class="driver-information">
+      <div class="driverpassenger-header">
+        <mat-icon>directions_car</mat-icon>
+        <span>Fahrer</span>
+      </div>
+      <div class="direction">
+        <ng-container [ngSwitch]="enrollment.driver.service">
+          <ng-container *ngSwitchCase="3">
+            <mat-icon class="unfold">unfold_less</mat-icon>
+            <span>Hin und Zurück</span>
+          </ng-container>
+          <ng-container *ngSwitchCase="2">
+            <mat-icon class="back">double_arrow</mat-icon>
+            <span>Nur Zurück</span>
+          </ng-container>
+          <ng-container *ngSwitchCase="1">
+            <mat-icon>double_arrow</mat-icon>
+            <span>Nur Hin</span>
+          </ng-container>
+        </ng-container>
+      </div>
+      <div class="seats">
+        <mat-icon>event_seat</mat-icon>
+        <span>{{ enrollment.driver.seats }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="enrollment.passenger" class="driver-information">
+      <div class="driverpassenger-header">
+        <mat-icon>people</mat-icon>
+        <span>Passagier</span>
+      </div>
+      <div class="direction">
+        <ng-container [ngSwitch]="enrollment.passenger.requirement">
+          <ng-container *ngSwitchCase="3">
+            <mat-icon class="unfold">unfold_less</mat-icon>
+            <span>Hin und Zurück</span>
+          </ng-container>
+          <ng-container *ngSwitchCase="2">
+            <mat-icon class="back">double_arrow</mat-icon>
+            <span>Nur Zurück</span>
+          </ng-container>
+          <ng-container *ngSwitchCase="1">
+            <mat-icon>double_arrow</mat-icon>
+            <span>Nur Hin</span>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <div class="info">Sind alle Daten korrekt?</div>
 
   <mat-card-actions class="double">
     <div>
-      <button (click)="cancel()"
-              class="left"
-              color="primary"
-              id="back_check"
-              mat-button
-              type="button">
+      <button
+        (click)="cancel()"
+        class="left"
+        color="primary"
+        id="back_check"
+        mat-button
+        type="button"
+      >
         Zurück
       </button>
     </div>
-    <button (click)="save()"
-            [active]="sendingRequestEmit"
-            [innerValue]="'Anmelden'"
-            appLoadingDisable
-            color="primary"
-            id="next_check"
-            mat-raised-button
-            type="submit">
+    <button
+      (click)="save()"
+      [active]="sendingRequestEmit"
+      [innerValue]="'Anmelden'"
+      appLoadingDisable
+      color="primary"
+      id="next_check"
+      mat-raised-button
+      type="submit"
+    >
       Anmelden
     </button>
   </mat-card-actions>
