@@ -243,7 +243,7 @@ describe('enrollment creation page - create - as unknown user', () => {
       });
 
       it(' ~ should swap to start', () => {
-        const isMainFormPresent = page.isMainFormPresent();
+        const isMainFormPresent = enrollmentCreatePage.isMainFormPresent();
         expect(isMainFormPresent).toBeTruthy('Main form should be present but isn\'t');
       });
 
