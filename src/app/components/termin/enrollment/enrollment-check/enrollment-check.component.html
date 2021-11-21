@@ -9,7 +9,7 @@
     </app-enrollment-details>
   </mat-card-content>
 
-  <mat-divider></mat-divider>
+  <mat-divider *ngIf="appointment.driverAddition"></mat-divider>
 
   <mat-card-content>
     <div *ngIf="enrollment.driver" class="driver-information">

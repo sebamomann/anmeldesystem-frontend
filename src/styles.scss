@@ -670,6 +670,26 @@ mat-card {
       }
     }
 
+    .info {
+      text-align: left;
+      margin: 24px 0 0;
+      font-size: 14px;
+      width: 75%;
+      max-width: 350px;
+
+      &.after-input {
+        margin: calc(26px - 1.25em) 0 0;
+      }
+
+      &.long {
+        width: 80%;
+      }
+
+      &.link {
+        text-decoration: underline;
+      }
+    }
+
     mat-card-actions {
       margin: 26px auto 0;
       padding: 0;
