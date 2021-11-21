@@ -140,7 +140,7 @@ describe(' * enrollment creation page - as logged in user', () => {
       });
 
       it(' ~ should correctly redirect', () => {
-        enrollmentCreatePage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
+        enrollmentCreatePage.currentUrlContains('/enroll?a=' + appointmentLink);
       });
 
       it(' ~ should show correct snackbar', () => {

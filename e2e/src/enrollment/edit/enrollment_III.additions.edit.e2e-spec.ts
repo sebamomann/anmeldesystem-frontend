@@ -72,7 +72,7 @@ describe('enrollment edit page - edit - additions', () => {
       });
 
       it(' ~ should correctly redirect', () => {
-        enrollmentEditPage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
+        enrollmentEditPage.currentUrlContains('/enroll?a=' + appointmentLink);
       });
 
       it(' ~ should show correct snackbar', () => {

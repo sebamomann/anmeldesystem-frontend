@@ -46,7 +46,6 @@ describe('enrollment list - permissions', () => {
   describe(' * as logged in user', () => {
     const user = UsersDataProvider.getUser('f67e953d-cb85-4f41-b077-4a0bf8485bc5'); // APPOINTMENT CREATOR
 
-    // TODO EXTRACT?
     describe(' * edit enrollment', () => {
       const enrollment = EnrollmentDataProvider.getEnrollment('fa33ed23-e8f5-46f4-a734-dbff28372810');
 
@@ -58,7 +57,7 @@ describe('enrollment list - permissions', () => {
 
       it(' ~ should redirect to edit page', () => {
         const url = '/enrollment/edit?a=' + appointmentLink + '&e=' + enrollment.id;
-        const pageRedirected = appointmentOverviewPage.pageRedirectedToUrl(url);
+        const pageRedirected = appointmentOverviewPage.currentUrlContains(url);
 
         expect(pageRedirected).toBeTruthy('Not redirected to enrollment edit');
       });
@@ -74,7 +73,7 @@ describe('enrollment list - permissions', () => {
       });
 
       it(' ~ should show missing permission snackbar', () => {
-        const isMissingPermissionSnackbarPresent = appointmentOverviewEnrollmentListPage.getMissingPermissionSnackbar();
+        const isMissingPermissionSnackbarPresent = appointmentOverviewEnrollmentListPage.getErrorSnackbar();
         expect(isMissingPermissionSnackbarPresent.getText()).toEqual('Fehlende Berechtigungen');
       });
     });
@@ -115,7 +114,7 @@ describe('enrollment list - permissions', () => {
       });
 
       it(' ~ should show missing permission snackbar', () => {
-        const isMissingPermissionSnackbarPresent = appointmentOverviewEnrollmentListPage.getMissingPermissionSnackbar();
+        const isMissingPermissionSnackbarPresent = appointmentOverviewEnrollmentListPage.getErrorSnackbar();
         expect(isMissingPermissionSnackbarPresent.getText()).toEqual('Fehlende Berechtigungen');
       });
     });
@@ -136,7 +135,7 @@ describe('enrollment list - permissions', () => {
 
       it(' ~ should redirect to edit page', () => {
         const url = '/enrollment/edit?a=' + appointmentLink + '&e=' + enrollment.id;
-        const pageRedirected = appointmentOverviewPage.pageRedirectedToUrl(url);
+        const pageRedirected = appointmentOverviewPage.currentUrlContains(url);
 
         expect(pageRedirected).toBeTruthy('Not redirected to enrollment edit');
       });

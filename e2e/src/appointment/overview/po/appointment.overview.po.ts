@@ -1,9 +1,11 @@
+import { BasePage } from './../../../base.po';
 import { browser, by, element, protractor } from 'protractor';
 import { HttpClient } from 'protractor-http-client/dist/http-client';
 import { AppointmentOverviewEnrollmentListPage } from './appointment.overview.enrollment-list.po';
 
-export class AppointmentOverviewPage {
+export class AppointmentOverviewPage extends BasePage {
   constructor() {
+    super();
   }
 
   public async navigateToAppointment(link: string) {
@@ -180,13 +182,6 @@ export class AppointmentOverviewPage {
   // ------------------------------------------------------------------
   // ------------------------------------------------------------------
 
-  /**
-   * @deprecated
-   * centralize
-   */
-  public pageRedirectedToUrl(url: string) {
-    return browser.wait(protractor.ExpectedConditions.urlContains(url), 5000);
-  }
 
   /**
    * @deprecated

@@ -126,15 +126,13 @@ describe('enrollment creation page - driver and passenger - driver', () => {
         await enrollmentCreatePage.submit();
       });
 
-      // TODO
-      // TOO FAST I GUESS
-      // it(' ~ should swap to start', () => {
-      //   const isMainFormPresent = page.isMainFormPresent();
-      //   expect(isMainFormPresent).toBeTruthy('Main form should be present but isn\'t');
-      // });
+      it(' ~ should swap to start', () => {
+        const isMainFormPresent = enrollmentCreatePage.isMainFormPresent();
+        expect(isMainFormPresent).toBeTruthy('Main form should be present but isn\'t');
+      });
 
       it(' ~ should correctly redirect', () => {
-        enrollmentCreatePage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
+        enrollmentCreatePage.currentUrlContains('/enroll?a=' + appointmentLink);
       });
 
       it(' ~ should show correct snackbar', () => {

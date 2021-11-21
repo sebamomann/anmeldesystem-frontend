@@ -1,7 +1,9 @@
+import { BasePage } from './../../base.po';
 import { browser, by, element, protractor } from 'protractor';
 
-export class EnrollmentBasePage {
+export class EnrollmentBasePage extends BasePage {
   constructor() {
+    super();
   }
 
   public waitForLoadingSpinnerToBeGone() {
@@ -147,33 +149,6 @@ export class EnrollmentBasePage {
   public nextAdditions() {
     return this.buttonClick('next_additions')
   }
-
-  /**
-   * @deprecated
-   * centralize
-   */
-  public pageRedirectedToUrl(url: string) {
-    return browser.wait(protractor.ExpectedConditions.urlContains(url), 5000);
-  }
-
-  public getSnackbar() {
-    // todo centralize
-    const EC = protractor.ExpectedConditions;
-    const snackBar = browser.element(by.className('snackbar-default'));
-    browser.wait(EC.visibilityOf(snackBar), 4000, "Cant find snackbar");
-
-    return snackBar;
-  }
-
-  public getErrorSnackbar() { // TODO EC NEEDED?
-    const EC = protractor.ExpectedConditions;
-    const snackBar = element(by.className('snackbar-error'));
-    browser.wait(EC.visibilityOf(snackBar), 10000);
-
-    return element(by.className('snackbar-error'));
-  }
-
-
 
   public textNotToBePresentInElement(elem, text) {
     return async () => {

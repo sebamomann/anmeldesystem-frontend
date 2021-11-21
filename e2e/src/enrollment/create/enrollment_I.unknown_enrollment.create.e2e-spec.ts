@@ -182,19 +182,17 @@ describe('enrollment creation page - create - as unknown user', () => {
         await enrollmentCreatePage.submit();
       });
 
-      // TODO
-      // TOO FAST I GUESS
-      // it(' ~ should swap to start', () => {
-      //   const isMainFormPresent = page.isMainFormPresent();
-      //   expect(isMainFormPresent).toBeTruthy('Main form should be present but isn\'t');
-      // });
+      it(' ~ should swap to start', () => {
+        const isMainFormPresent = enrollmentCreatePage.isMainFormPresent();
+        expect(isMainFormPresent).toBeTruthy('Main form should be present but isn\'t');
+      });
 
       it(' ~ should correctly redirect', () => {
-        enrollmentCreatePage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
+        enrollmentCreatePage.currentUrlContains('/enroll?a=' + appointmentLink);
       });
 
       it(' ~ should show correct snackbar', async () => {
-        await enrollmentCreatePage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
+        await enrollmentCreatePage.currentUrlContains('/enroll?a=' + appointmentLink);
         expect(enrollmentCreatePage.getSnackbar().getText()).toEqual('Erfolgreich angemeldet');
       });
 
@@ -244,16 +242,13 @@ describe('enrollment creation page - create - as unknown user', () => {
         await loginPage.loginViaUI(user);
       });
 
-      // TODO
-      // Test fails due to redirect after login
-      // html is not build, but redirect is happening???
-      // it(' ~ should swap to start', () => {
-      //   const isMainFormPresent = page.isMainFormPresent();
-      //   expect(isMainFormPresent).toBeTruthy('Main form should be present but isn\'t');
-      // });
+      it(' ~ should swap to start', () => {
+        const isMainFormPresent = page.isMainFormPresent();
+        expect(isMainFormPresent).toBeTruthy('Main form should be present but isn\'t');
+      });
 
       it(' ~ should correctly redirect', () => {
-        enrollmentCreatePage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
+        enrollmentCreatePage.currentUrlContains('/enroll?a=' + appointmentLink);
       });
 
       it(' ~ should show correct snackbar', () => {

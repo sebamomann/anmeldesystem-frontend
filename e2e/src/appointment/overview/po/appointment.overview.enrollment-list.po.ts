@@ -1,7 +1,9 @@
+import { BasePage } from './../../../base.po';
 import { browser, by, element, protractor } from 'protractor';
 
-export class AppointmentOverviewEnrollmentListPage {
+export class AppointmentOverviewEnrollmentListPage extends BasePage {
   constructor() {
+    super();
   }
 
   public static getElementLoginHint() {
@@ -99,15 +101,6 @@ export class AppointmentOverviewEnrollmentListPage {
     browser.wait(EC.presenceOf(elem), 2000, 'Element taking too long to be present');
 
     return elem.isPresent();
-  }
-
-  public getMissingPermissionSnackbar() {
-    // todo centralize
-    const EC = protractor.ExpectedConditions;
-    const snackBar = element(by.className('snackbar-error'));
-    browser.wait(EC.visibilityOf(snackBar), 4000);
-
-    return snackBar;
   }
 
   public isEnrollmentDeletionConfirmationDialogPresent() {

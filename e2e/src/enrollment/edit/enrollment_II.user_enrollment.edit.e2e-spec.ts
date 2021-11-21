@@ -84,7 +84,7 @@ describe('enrollment edit page - edit - user enrollment', () => {
         });
 
         it(' ~ should correctly redirect', () => {
-          enrollmentEditPage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
+          enrollmentEditPage.currentUrlContains('/enroll?a=' + appointmentLink);
         });
 
         it(' ~ should show correct snackbar', () => {
@@ -146,7 +146,7 @@ describe('enrollment edit page - edit - user enrollment', () => {
         });
 
         it(' ~ should correctly redirect', () => {
-          enrollmentEditPage.pageRedirectedToUrl('/enroll?a=' + appointmentLink);
+          enrollmentEditPage.currentUrlContains('/enroll?a=' + appointmentLink);
         });
 
         it(' ~ should show correct snackbar', () => {

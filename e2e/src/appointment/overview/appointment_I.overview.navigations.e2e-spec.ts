@@ -53,7 +53,7 @@ describe('appointment overview - navigations', () => {
       });
       it(' ~ should redirect to enrollment creation page', () => {
         const url = '/enrollment/add?a=' + appointmentLink;
-        const pageRedirected = appointmentPage.pageRedirectedToUrl(url);
+        const pageRedirected = appointmentPage.currentUrlContains(url);
 
         expect(pageRedirected).toBeTruthy('Not redirected to enrollment page');
       });
@@ -86,7 +86,7 @@ describe('appointment overview - navigations', () => {
         appointmentPage.clickDriverOverviewButton();
 
         const url = '/appointment/driver?a=' + appointmentDriverLink;
-        const pageRedirected = appointmentPage.pageRedirectedToUrl(url);
+        const pageRedirected = appointmentPage.currentUrlContains(url);
 
         expect(pageRedirected).toBeTruthy('No redirect to driver page');
       });
@@ -116,7 +116,7 @@ describe('appointment overview - navigations', () => {
         });
 
         it(' ~ should redirect to login page', async () => {
-          const validRedirect = appointmentPage.pageRedirectedToUrl(loginUrl);
+          const validRedirect = appointmentPage.currentUrlContains(loginUrl);
           expect(validRedirect).toBeTruthy('No redirect to login page');
         });
       });
