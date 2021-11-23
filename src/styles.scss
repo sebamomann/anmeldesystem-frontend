@@ -1067,6 +1067,11 @@ $ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
    max-width: 200px;
  }
 
+  &.prominent {
+    color: black;
+    font-size: 1.25em;
+  }
+
  &.link {
    cursor: pointer;
    text-decoration: underline;

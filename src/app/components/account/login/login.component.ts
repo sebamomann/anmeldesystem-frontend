@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthenticationService} from '../../../services/authentication.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '../../../services/authentication.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,8 +9,11 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
+  public loggedIn = false;
+
   constructor(private authenticationService: AuthenticationService,
-              private router: Router, private route: ActivatedRoute) {
+    private router: Router, private route: ActivatedRoute
+  ) {
     if (!this.authenticationService.userIsLoggedIn()) {
       this.authenticationService.login();
       return;
@@ -23,7 +26,12 @@ export class LoginComponent implements OnInit {
 
     returnUrl = decodeURIComponent(returnUrl);
 
-    this.router.navigateByUrl(returnUrl ? returnUrl : '/dashboard');
+    this.loggedIn = true;
+
+    setTimeout(() => {
+      console.log(returnUrl);
+      this.router.navigateByUrl(returnUrl !== "undefined" ? returnUrl : '/dashboard');
+    }, 1000)
   }
 
   ngOnInit() {

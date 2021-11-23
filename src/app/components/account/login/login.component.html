@@ -1,1 +1,19 @@
-<p>login works!</p>
+<mat-card class="float">
+  <mat-card-content>
+    <app-hexagon-loader
+      *ngIf="!loggedIn"
+      [message]="'Sekunde, ich logge dich schnell aus ...'"
+    >
+    </app-hexagon-loader>
+    <div *ngIf="loggedIn" class="info prominent">
+      <span> Here we go - Viel Spaß! </span>
+      <div class="arrow-wrapper-outer">
+        <div id="arrow-wrapper-inner">
+          <mat-icon class="arrow first">keyboard_arrow_right</mat-icon>
+          <mat-icon class="arrow second">keyboard_arrow_right</mat-icon>
+          <mat-icon class="arrow third">keyboard_arrow_right</mat-icon>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
