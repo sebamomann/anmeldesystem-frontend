@@ -1,10 +1,11 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule, Routes} from '@angular/router';
-import {AccountComponent} from './account.component';
+import { MatCardModule, MatButtonModule } from '@angular/material';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
+import { AccountComponent } from './account.component';
 
 const routes: Routes = [
-  {path: '', component: AccountComponent},
+  { path: '', component: AccountComponent },
   {
     path: 'login',
     loadChildren: './login/login.module#LoginModule'
@@ -25,6 +26,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    MatCardModule,
+    MatButtonModule
   ]
 })
 export class AccountModule {

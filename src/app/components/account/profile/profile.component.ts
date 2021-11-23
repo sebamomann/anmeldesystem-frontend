@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthenticationService} from '../../../services/authentication.service';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthenticationService } from '../../../services/authentication.service';
 
 @Component({
   selector: 'app-profile',
@@ -8,11 +9,14 @@ import {AuthenticationService} from '../../../services/authentication.service';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(private authenticationService: AuthenticationService) {
+  constructor(private authenticationService: AuthenticationService,
+    private router: Router) {
     this.authenticationService.openAccountSettings();
   }
 
   ngOnInit() {
+    this.router
+      .navigate(['/account'], {});
   }
 
 }
