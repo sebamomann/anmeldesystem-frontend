@@ -94,7 +94,7 @@
             placeholder="Mail-Adresse"
           />
         </label>
-        <mat-error id="mail-error">
+        <mat-error *ngIf="getMail().invalid" id="mail-error">
           {{ getMailErrorMessage() }}
         </mat-error>
       </mat-form-field>
@@ -105,9 +105,7 @@
         [innerValue]="'Absenden'"
         (click)="save()"
         id="submit"
-      >
-        Absenden
-      </button>
+      ></button>
     </div>
   </div>
 </ng-template>
