@@ -33,7 +33,7 @@ export class EnrollmentLoginMailComponent implements OnInit {
 
   public getMailErrorMessage() {
     if (this.getMail().hasError('required')) {
-      return 'Erforderlich';
+      return 'Bitte gebe deine E-Mail Adresse an';
     }
     if (this.getMail().hasError('email')) {
       return 'Bitte gebe eine gültige E-Mail Adresse an';
