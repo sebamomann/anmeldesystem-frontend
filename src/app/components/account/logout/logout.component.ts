@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthenticationService} from '../../../services/authentication.service';
+import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '../../../services/authentication.service';
 
 @Component({
   selector: 'app-logout',
@@ -7,6 +7,8 @@ import {AuthenticationService} from '../../../services/authentication.service';
   styleUrls: ['./logout.component.scss']
 })
 export class LogoutComponent implements OnInit {
+
+  public loggedIn = true;
 
   constructor(private authenticationService: AuthenticationService) {
     this.authenticationService.logout();
