@@ -1,3 +1,4 @@
+import { LoadingDisableModule } from './../../../../directives/loading-disable/loading-disable.module';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {EnrollmentMainFormComponent} from './enrollment-main-form.component';
@@ -29,7 +30,8 @@ import {RouterModule} from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     RouterModule,
-    MatButtonModule
+    MatButtonModule,
+    LoadingDisableModule
   ]
 })
 export class EnrollmentMainFormModule {

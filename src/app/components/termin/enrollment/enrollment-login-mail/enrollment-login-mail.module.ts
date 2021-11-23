@@ -1,3 +1,4 @@
+import { LoadingDisableModule } from './../../../../directives/loading-disable/loading-disable.module';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {EnrollmentLoginMailComponent} from './enrollment-login-mail.component';
@@ -20,7 +21,8 @@ import {ReactiveFormsModule} from '@angular/forms';
     MatTooltipModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    LoadingDisableModule
   ]
 })
 export class EnrollmentLoginMailModule {

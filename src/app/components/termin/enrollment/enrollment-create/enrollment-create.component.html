@@ -1,28 +1,24 @@
 <ng-container *ngIf="appointment$ | async as appointment; else loading">
   <mat-card class="form float high">
-    <mat-card-title class="headline"
-                    id="title">
-      Anmelden
-    </mat-card-title>
+    <mat-card-title class="headline" id="title"> Anmelden </mat-card-title>
 
-    <mat-horizontal-stepper #stepper
-                            labelPosition="bottom"
-                            linear>
+    <mat-horizontal-stepper #stepper labelPosition="bottom" linear>
       <!-- OVERALL DATA-->
       <!-- OVERALL DATA-->
       <ng-template matStepperIcon="overall">
         <mat-icon>person</mat-icon>
       </ng-template>
-      <mat-step [completed]="doneForms['overall']"
-                state="overall">
+      <mat-step [completed]="doneForms['overall']" state="overall">
         <ng-template matStepLabel>Allgemein</ng-template>
         <app-enrollment-main-form
           #mainForm
           (done)="mainFormDone($event)"
+          [sendingRequestEmit]="sendingRequestEmit"
           [appointment]="appointment"
           [directSend]="directSend"
           [enrollment]="enrollmentOutput"
-          [isEnrolledAsCreator]="isEnrolledAsCreator">
+          [isEnrolledAsCreator]="isEnrolledAsCreator"
+        >
         </app-enrollment-main-form>
       </mat-step>
 
@@ -31,16 +27,20 @@
       <ng-template matStepperIcon="additions">
         <mat-icon>check_box</mat-icon>
       </ng-template>
-      <mat-step *ngIf="appointment.additions?.length > 0"
-                [completed]="doneForms['additions']"
-                [optional]="true"
-                state="additions">
+      <mat-step
+        *ngIf="appointment.additions?.length > 0"
+        [completed]="doneForms['additions']"
+        [optional]="true"
+        state="additions"
+      >
         <ng-template matStepLabel>Zusätze</ng-template>
         <app-enrollment-additions
           #additionsForm
           (cancel)="stepperPrevious()"
           (done)="additionsFormDone($event)"
-          [appointment]="appointment">
+          [sendingRequestEmit]="sendingRequestEmit"
+          [appointment]="appointment"
+        >
         </app-enrollment-additions>
       </mat-step>
 
@@ -49,15 +49,19 @@
       <ng-template matStepperIcon="driver">
         <mat-icon>directions_car</mat-icon>
       </ng-template>
-      <mat-step *ngIf="appointment.driverAddition"
-                [completed]="doneForms['driver']"
-                state="driver">
+      <mat-step
+        *ngIf="appointment.driverAddition"
+        [completed]="doneForms['driver']"
+        state="driver"
+      >
         <ng-template matStepLabel>Fahrer</ng-template>
         <app-enrollment-driver-passenger
           #driverForm
           (cancel)="stepperPrevious()"
           (done)="driverFormDone($event)"
-          [appointment]="appointment">
+          [sendingRequestEmit]="sendingRequestEmit"
+          [appointment]="appointment"
+        >
         </app-enrollment-driver-passenger>
       </mat-step>
 
@@ -74,7 +78,8 @@
           (done)="enrollmentAssignmentDecision()"
           [appointment]="appointment"
           [enrollment]="enrollmentOutput"
-          [sendingRequestEmit]="sendingRequestEmit">
+          [sendingRequestEmit]="sendingRequestEmit"
+        >
         </app-enrollment-check>
       </mat-step>
 
@@ -83,12 +88,13 @@
       <ng-template matStepperIcon="email">
         <mat-icon>email</mat-icon>
       </ng-template>
-      <mat-step [optional]="!showLoginAndMailForm"
-                state="mail">
+      <mat-step [optional]="!showLoginAndMailForm" state="mail">
         <ng-template matStepLabel>Mail</ng-template>
         <app-enrollment-login-mail
           (cancel)="mailFormCancel()"
-          (done)="mailFormSubmit($event)">
+          (done)="mailFormSubmit($event)"
+          [sendingRequestEmit]="sendingRequestEmit"
+        >
         </app-enrollment-login-mail>
       </mat-step>
     </mat-horizontal-stepper>
@@ -96,9 +102,6 @@
 </ng-container>
 
 <ng-template #loading>
-  <app-loading *ngIf="!loaded">
-  </app-loading>
-  <app-fetch-appointment
-    [done]="loaded">
-  </app-fetch-appointment>
+  <app-loading *ngIf="!loaded"> </app-loading>
+  <app-fetch-appointment [done]="loaded"> </app-fetch-appointment>
 </ng-template>

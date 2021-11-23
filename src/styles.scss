@@ -1232,12 +1232,11 @@ $ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
 
 .loading-circle-wrapper {
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: sub;
 
   .loading-circle {
     display: block;
     margin-right: 20px;
-    vertical-align: middle;
   }
 
   .loading-circle:after {

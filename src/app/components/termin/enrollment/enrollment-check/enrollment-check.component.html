@@ -79,13 +79,13 @@
       </button>
     </div>
     <button
+      mat-raised-button
+      appLoadingDisable
       (click)="save()"
       [active]="sendingRequestEmit"
       [innerValue]="'Anmelden'"
-      appLoadingDisable
       color="primary"
       id="next_check"
-      mat-raised-button
       type="submit"
     >
       Anmelden

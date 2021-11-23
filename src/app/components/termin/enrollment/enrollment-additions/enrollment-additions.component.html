@@ -1,43 +1,44 @@
-<form (ngSubmit)="save()"
-      [formGroup]="form">
-
+<form (ngSubmit)="save()" [formGroup]="form">
   <span class="form-component-title"> Zusätze </span>
 
   <mat-card-content>
     <div class="addition-list">
-      <div *ngFor="let addition of getAdditionsControls(); let i = index;"
-           [attr.addition-index]="i"
-           class="addition-checkbox"
-           formArrayName="additions">
-        <mat-checkbox
-          [formControlName]="'' + i"
-          id="{{ 'addition-' + i }}">
-          {{appointment.additions[i].name}}
+      <div
+        *ngFor="let addition of getAdditionsControls(); let i = index"
+        [attr.addition-index]="i"
+        class="addition-checkbox"
+        formArrayName="additions"
+      >
+        <mat-checkbox [formControlName]="'' + i" id="{{ 'addition-' + i }}">
+          {{ appointment.additions[i].name }}
         </mat-checkbox>
       </div>
     </div>
   </mat-card-content>
 
-  <div class="info long">
-    Genauere Informationen zu deiner Anmeldung.
-  </div>
+  <div class="info long">Genauere Informationen zu deiner Anmeldung.</div>
 
   <mat-card-actions class="double">
     <div>
-      <button (click)="cancel()"
-              class="left"
-              color="primary"
-              id="back_additions"
-              mat-button
-              type="button">
+      <button
+        (click)="cancel()"
+        class="left"
+        color="primary"
+        id="back_additions"
+        mat-button
+        type="button"
+      >
         Zurück
       </button>
     </div>
-    <button color="primary"
-            id="next_additions"
-            mat-raised-button
-            type="submit">
-      {{isEdit ? "Speichern" : "Weiter"}}
-    </button>
+    <button
+      mat-raised-button
+      appLoadingDisable
+      [active]="sendingRequestEmit"
+      [innerValue]="isEdit ? 'Speichern' : 'Weiter'"
+      id="next_additions"
+      type="submit"
+      color="primary"
+    ></button>
   </mat-card-actions>
 </form>

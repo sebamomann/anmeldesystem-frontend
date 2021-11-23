@@ -1,17 +1,22 @@
 <div id="login-mail-form">
   <ng-container *ngIf="!userIsLoggedIn; else userLoggedInMessageTempl">
-
     <span class="form-component-title"> Login </span>
 
     <mat-card-content id="login-content">
       <span>
-        Logge dich ein um deine Anmeldung deinem Account zuzuordnen und sie später bearbeiten/löschen zu können.
+        Logge dich ein um deine Anmeldung deinem Account zuzuordnen und sie
+        später bearbeiten/löschen zu können.
       </span>
-      <button [queryParams]="{returnUrl: currentURL + '&send=true'}"
-              [routerLink]="['/account/login']"
-              color="primary"
-              id="login"
-              mat-raised-button>
+      <button
+        mat-raised-button
+        appLoadingDisable
+        [active]="sendingRequestEmit"
+        [innerValue]="'Login'"
+        [queryParams]="{ returnUrl: currentURL + '&send=true' }"
+        [routerLink]="['/account/login']"
+        color="primary"
+        id="login"
+      >
         Login
       </button>
     </mat-card-content>
@@ -19,12 +24,16 @@
     <div class="separator middle center dividing">
       <div class="tooltip-wrapper center">
         <!--suppress TypeScriptUnresolvedFunction -->
-        <mat-icon #tooltip="matTooltip"
-                  (click)="tooltip.toggle()"
-                  class="highlight-animation tooltip"
-                  matTooltip="{{'Wenn du keinen Account hast, dann gebe hier deine Mail-Adresse ein, um später deine ' +
-                  'Anmeldung ändern oder löschen zu können. Mit der Angabe der Mail-Adresse, kannst du die ' +
-                  'Berechtigung zum Bearbeiten auf verschiedenen Geräten erhalten.' }}">
+        <mat-icon
+          #tooltip="matTooltip"
+          (click)="tooltip.toggle()"
+          class="highlight-animation tooltip"
+          matTooltip="{{
+            'Wenn du keinen Account hast, dann gebe hier deine Mail-Adresse ein, um später deine ' +
+              'Anmeldung ändern oder löschen zu können. Mit der Angabe der Mail-Adresse, kannst du die ' +
+              'Berechtigung zum Bearbeiten auf verschiedenen Geräten erhalten.'
+          }}"
+        >
           help_outline
         </mat-icon>
       </div>
@@ -32,7 +41,8 @@
 
     <mat-card-content>
       <span>
-        Oder gebe deine Email-Adresse an um die Berechtigungen per Mail zu erhalten.
+        Oder gebe deine Email-Adresse an um die Berechtigungen per Mail zu
+        erhalten.
       </span>
 
       <ng-container *ngIf="false; else emailFormTempl"></ng-container>
@@ -41,13 +51,15 @@
 
   <mat-card-actions class="double">
     <div>
-      <button (click)="cancel()"
-              id="back"
-              class="left"
-              color="primary"
-              mat-button
-              disableRipple
-              type="button">
+      <button
+        (click)="cancel()"
+        id="back"
+        class="left"
+        color="primary"
+        mat-button
+        disableRipple
+        type="button"
+      >
         Zurück
       </button>
     </div>
@@ -59,8 +71,9 @@
 
   <mat-card-content id="login-content-alt">
     <span>
-      Du bist zwar eingeloggt, meldest aber jemand anderen an. Bitte gebe dessen E-Mail Adresse ein, damit er später dazu
-      in der Lage ist, seine Anmeldung zu ändern. In dieser Mail befinden sich die Berechtigungen zum Editieren.
+      Du bist zwar eingeloggt, meldest aber jemand anderen an. Bitte gebe dessen
+      E-Mail Adresse ein, damit er später dazu in der Lage ist, seine Anmeldung
+      zu ändern. In dieser Mail befinden sich die Berechtigungen zum Editieren.
     </span>
   </mat-card-content>
 
@@ -74,18 +87,25 @@
     <div class="input-with-button-wrapper">
       <mat-form-field>
         <label>
-          <input formControlName="mail"
-                 id="mail"
-                 matInput
-                 placeholder="Mail-Adresse">
+          <input
+            matInput
+            id="mail"
+            formControlName="mail"
+            placeholder="Mail-Adresse"
+          />
         </label>
         <mat-error id="mail-error">
           {{ getMailErrorMessage() }}
         </mat-error>
       </mat-form-field>
-      <button (click)="save()"
-              id="submit"
-              mat-raised-button>
+      <button
+        mat-raised-button
+        appLoadingDisable
+        [active]="sendingRequestEmit"
+        [innerValue]="'Absenden'"
+        (click)="save()"
+        id="submit"
+      >
         Absenden
       </button>
     </div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../../../services/authentication.service';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
@@ -12,6 +12,8 @@ export class EnrollmentLoginMailComponent implements OnInit {
 
   @Output('done') done__ = new EventEmitter<string>();
   @Output('cancel') cancel__ = new EventEmitter<void>();
+
+  @Input() sendingRequestEmit: EventEmitter<any>;
 
   public currentURL: string;
   public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
@@ -31,8 +33,9 @@ export class EnrollmentLoginMailComponent implements OnInit {
 
   public getMailErrorMessage() {
     if (this.getMail().hasError('required')) {
-      return 'Bitte erforderlich';
+      return 'Erforderliches Feld';
     }
+
     if (this.getMail().hasError('email')) {
       return 'Bitte gebe eine gültige E-Mail Adresse an';
     }

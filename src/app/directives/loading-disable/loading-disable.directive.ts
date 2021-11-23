@@ -1,5 +1,5 @@
-import {Directive, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Renderer2} from '@angular/core';
-import {Subscription} from 'rxjs';
+import { Directive, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Directive({
   selector: '[appLoadingDisable]',
@@ -7,11 +7,11 @@ import {Subscription} from 'rxjs';
 export class LoadingDisableDirective implements OnInit, OnDestroy {
 
   @Input() active: EventEmitter<boolean>;
-  subscription: Subscription;
 
   @Input() innerValue: string;
   @Input() hideValue: boolean;
 
+  private subscription: Subscription;
   private value: any;
 
   constructor(

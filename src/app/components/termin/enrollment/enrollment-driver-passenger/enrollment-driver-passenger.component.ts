@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {IAppointmentModel} from '../../../../models/IAppointment.model';
-import {FormBuilder, FormControl, Validators} from '@angular/forms';
-import {IEnrollmentModel} from '../../../../models/IEnrollment.model';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { IAppointmentModel } from '../../../../models/IAppointment.model';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { IEnrollmentModel } from '../../../../models/IEnrollment.model';
 
 @Component({
   selector: 'app-enrollment-driver-passenger',
@@ -16,6 +16,7 @@ export class EnrollmentDriverPassengerComponent implements OnInit {
   @Input() appointment: IAppointmentModel;
   @Input() enrollment: IEnrollmentModel;
   @Input() isEdit = false;
+  @Input() sendingRequestEmit = new EventEmitter<any>();
 
   public form = this.formBuilder.group({
     driver: new FormControl(false),

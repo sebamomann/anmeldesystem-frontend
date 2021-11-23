@@ -19,6 +19,7 @@ export class EnrollmentMainFormComponent implements OnInit, OnChanges {
   @Input() isEdit = false;
   @Input() directSend: boolean;
   @Input() isEnrolledAsCreator: boolean;
+  @Input() sendingRequestEmit: EventEmitter<any>;
 
   public userIsLoggedIn: boolean = this.authenticationService.userIsLoggedIn();
   public isSelfEnrollment = this.userIsLoggedIn;

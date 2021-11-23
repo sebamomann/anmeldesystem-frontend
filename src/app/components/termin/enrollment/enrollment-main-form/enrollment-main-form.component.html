@@ -1,35 +1,43 @@
 <div id="main-form">
-  <form (ngSubmit)="save()"
-        [formGroup]="form">
-
+  <form (ngSubmit)="save()" [formGroup]="form">
     <span class="form-component-title"> Allgemein </span>
 
     <mat-card-content>
-      <div *ngIf="userIsLoggedIn && !isEdit"
-           [formGroup]="form_selfEnrollment"
-           class="tooltip-container checkbox-standalone">
-        <mat-checkbox (change)="changeSelfEnrollment()"
-                      formControlName="selfEnrollment"
-                      id="selfEnrollment">
+      <div
+        *ngIf="userIsLoggedIn && !isEdit"
+        [formGroup]="form_selfEnrollment"
+        class="tooltip-container checkbox-standalone"
+      >
+        <mat-checkbox
+          (change)="changeSelfEnrollment()"
+          formControlName="selfEnrollment"
+          id="selfEnrollment"
+        >
           Ich melde mich selber an
         </mat-checkbox>
         <!--suppress TypeScriptUnresolvedFunction -->
-        <mat-icon #tooltip="matTooltip"
-                  (click)="tooltip.toggle()"
-                  class="tooltip"
-                  matTooltip="{{'Diese Anmeldung wird mit deinem Account verbunden. ' +
-                     'Somit kannst du von überall deine Anmeldung bearbeiten oder löschen.'}}">
+        <mat-icon
+          #tooltip="matTooltip"
+          (click)="tooltip.toggle()"
+          class="tooltip"
+          matTooltip="{{
+            'Diese Anmeldung wird mit deinem Account verbunden. ' +
+              'Somit kannst du von überall deine Anmeldung bearbeiten oder löschen.'
+          }}"
+        >
           info
         </mat-icon>
       </div>
 
       <mat-form-field class="name">
         <label for="name">
-          <input formControlName="name"
-                 id="name"
-                 matInput
-                 placeholder="Name"
-                 required>
+          <input
+            formControlName="name"
+            id="name"
+            matInput
+            placeholder="Name"
+            required
+          />
         </label>
         <mat-error id="name-error">
           {{ getNameErrorMessage() }}
@@ -37,15 +45,16 @@
       </mat-form-field>
 
       <mat-form-field [formGroup]="form">
-      <textarea
-        cdkAutosizeMaxRows="5"
-        cdkAutosizeMinRows="1"
-        cdkTextareaAutosize
-        formControlName="comment"
-        id="comment"
-        matInput
-        placeholder="Kommentar">
-      </textarea>
+        <textarea
+          cdkAutosizeMaxRows="5"
+          cdkAutosizeMinRows="1"
+          cdkTextareaAutosize
+          formControlName="comment"
+          id="comment"
+          matInput
+          placeholder="Kommentar"
+        >
+        </textarea>
       </mat-form-field>
     </mat-card-content>
 
@@ -53,8 +62,7 @@
       Wenn du noch etwas mitteilen möchtest, schreibe es hier in den Kommentar.
     </div>
 
-    <div *ngIf="creatorError"
-         class="info">
+    <div *ngIf="creatorError" class="info">
       <mat-error id="creator-error">
         {{ getCreatorErrorMessage() }}
       </mat-error>
@@ -62,22 +70,28 @@
 
     <mat-card-actions class="double">
       <div>
-        <button [queryParams]="{a: appointment.link}"
-                [routerLink]="['/enroll']"
-                class="left"
-                color="primary"
-                id="back_main"
-                mat-button
-                type="button">
-          {{isEdit ? "Zurück" : "Abbrechen"}}
+        <button
+          [queryParams]="{ a: appointment.link }"
+          [routerLink]="['/enroll']"
+          class="left"
+          color="primary"
+          id="back_main"
+          mat-button
+          type="button"
+        >
+          {{ isEdit ? "Zurück" : "Abbrechen" }}
         </button>
       </div>
-      <button [disabled]="creatorError"
-              color="primary"
-              id="next_main"
-              mat-raised-button
-              type="submit">
-        {{isEdit ? "Speichern" : "Weiter"}}
+      <button
+        mat-raised-button
+        appLoadingDisable
+        [active]="sendingRequestEmit"
+        [innerValue]="isEdit ? 'Speichern' : 'Weiter'"
+        [disabled]="creatorError"
+        color="primary"
+        id="next_main"
+        type="submit"
+      >
       </button>
     </mat-card-actions>
   </form>

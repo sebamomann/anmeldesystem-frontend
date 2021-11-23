@@ -17,6 +17,7 @@ export class EnrollmentAdditionsComponent implements OnInit {
   @Input() appointment: IAppointmentModel;
   @Input() enrollment: IEnrollmentModel;
   @Input() isEdit = false;
+  @Input() sendingRequestEmit = new EventEmitter<any>();
 
   public form = this.formBuilder.group({
     additions: new FormArray([]),
