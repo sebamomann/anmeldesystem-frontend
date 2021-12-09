@@ -59,7 +59,7 @@
         </div>
       </mat-card>
 
-      <div *ngIf="tableCount() > 1 && appointment.additions.length > 0"
+      <div *ngIf="tableCount() > 1 && appointment.additions?.length > 0"
            class="managing-bar">
         <button (click)="toggleShowAdditions()"
                 *ngIf="appointment.additions.length > 0"
