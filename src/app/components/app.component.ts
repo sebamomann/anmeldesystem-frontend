@@ -66,7 +66,7 @@ export class AppComponent {
     private update: UpdateService,
     private matomoInjector: MatomoInjector
   ) {
-    this.matomoInjector.init("https://matomo.sebamomann.de", 3);
+    this.matomoInjector.init("https://matomo.sebamomann.de/", 3);
 
     const source = interval(1000 * 60);
 
