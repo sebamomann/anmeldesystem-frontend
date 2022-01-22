@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { IUserModel } from '../models/IUserModel.model';
 import { MatDialog } from '@angular/material';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
