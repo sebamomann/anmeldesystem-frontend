@@ -16,6 +16,7 @@ import { UpdateService } from './services/update.service';
 import { AuthConfigModule } from './auth-config/auth-config.module';
 import { AuthInterceptor } from './interceptor/authentication.interceptor';
 import { environment } from 'src/environments/environment';
+import { MatomoModule } from 'ngx-matomo';
 
 registerLocaleData(localeDe);
 
@@ -34,7 +35,8 @@ registerLocaleData(localeDe);
     MatDialogModule,
     MatButtonModule,
     LoadingModule,
-    AuthConfigModule
+    AuthConfigModule,
+    MatomoModule
   ],
   providers: [
     WINDOW_PROVIDERS,

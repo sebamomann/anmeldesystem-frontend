@@ -1,58 +1,66 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>GJM-Anmeldesystem</title>
-  <base href="/">
-  <meta content="width=device-width, initial-scale=1" name="viewport">
-  <link href="favicon.ico" rel="icon" type="image/x-icon">
-  <link href="assets/icons/icon-192x192.png" rel="apple-touch-icon"/>
-  <script src="assets/env.js"></script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap" rel="stylesheet">
-  <link crossorigin href="https://www.google-analytics.com" rel="preconnect">
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <link href="manifest.webmanifest" rel="manifest">
-  <meta content="#2C2C2F" name="theme-color">
-  <meta content="1 days" name="revisit-after">
-  <meta content="GJM-Anmeldesystem"
-        property="og:site_name">
-  <meta
-    content="Behalte bei Veranstaltungen immer den &Uuml;berblick &uuml;ber die Teilnehmer. Anmeldung, ohne Anmeldung!"
-    name="description">
-  <meta content="Seba Momann, Sebastian Momann, sebamomann" name="author">
-  <meta content="Seba Momann, Sebastian Momann, sebamomann" name="owner">
-  <meta content="1 days" name="revisit-after">
-  <meta content="GJM-Anmeldesystem"
-        property="og:title">
-  <meta content="GJM-Anmeldesystem"
-        property="og:site_name">
-  <meta
-    content="Behalte bei Veranstaltungen immer den &Uuml;berblick &uuml;ber die Teilnehmer. Anmeldung, ohne Anmeldung!"
-    property="og:description">
-  <meta content="0wBE5pStYqMYpkmEAjbAY2v0OSFCAJxaPveOX-sKOIA" name="google-site-verification"/>
-</head>
-<body>
-<noscript>
-  Please enable JavaScript to run this application.
-</noscript>
-<app-root></app-root>
-<script>
-  (function (i, s, o, g, r, a, m) {
-    i['GoogleAnalyticsObject'] = r;
-    i[r] = i[r] || function () {
-      (i[r].q = i[r].q || []).push(arguments)
-    }, i[r].l = 1 * new Date();
-    a = s.createElement(o),
-      m = s.getElementsByTagName(o)[0];
-    a.async = 1;
-    a.src = g;
-    m.parentNode.insertBefore(a, m)
-  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-
-  ga('create', 'UA-156937255-1', 'auto', {'allowLinker': true});
-  ga('require', 'linker');
-  ga('linker:autoLink', ['neu.eca.cg-hh.de', 'eca.cg-hh.de', 'go-join.me']);
-
-</script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>GJM-Anmeldesystem</title>
+    <base href="/" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link href="favicon.ico" rel="icon" type="image/x-icon" />
+    <link href="assets/icons/icon-192x192.png" rel="apple-touch-icon" />
+    <script src="assets/env.js"></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      crossorigin
+      href="https://www.google-analytics.com"
+      rel="preconnect"
+    />
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <link href="manifest.webmanifest" rel="manifest" />
+    <meta content="#2C2C2F" name="theme-color" />
+    <meta content="1 days" name="revisit-after" />
+    <meta content="GJM-Anmeldesystem" property="og:site_name" />
+    <meta
+      content="Behalte bei Veranstaltungen immer den &Uuml;berblick &uuml;ber die Teilnehmer. Anmeldung, ohne Anmeldung!"
+      name="description"
+    />
+    <meta content="Seba Momann, Sebastian Momann, sebamomann" name="author" />
+    <meta content="Seba Momann, Sebastian Momann, sebamomann" name="owner" />
+    <meta content="1 days" name="revisit-after" />
+    <meta content="GJM-Anmeldesystem" property="og:title" />
+    <meta content="GJM-Anmeldesystem" property="og:site_name" />
+    <meta
+      content="Behalte bei Veranstaltungen immer den &Uuml;berblick &uuml;ber die Teilnehmer. Anmeldung, ohne Anmeldung!"
+      property="og:description"
+    />
+    <meta
+      content="0wBE5pStYqMYpkmEAjbAY2v0OSFCAJxaPveOX-sKOIA"
+      name="google-site-verification"
+    />
+  </head>
+  <body>
+    <noscript> Please enable JavaScript to run this application. </noscript>
+    <app-root></app-root>
+    <!-- Matomo -->
+    <script>
+      var _paq = (window._paq = window._paq || []);
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(["trackPageView"]);
+      _paq.push(["enableLinkTracking"]);
+      (function () {
+        var u = "//matomo.sebamomann.de/";
+        _paq.push(["setTrackerUrl", u + "matomo.php"]);
+        _paq.push(["setSiteId", "3"]);
+        var d = document,
+          g = d.createElement("script"),
+          s = d.getElementsByTagName("script")[0];
+        g.async = true;
+        g.src = u + "matomo.js";
+        s.parentNode.insertBefore(g, s);
+      })();
+    </script>
+    <!-- End Matomo Code -->
+  </body>
 </html>

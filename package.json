@@ -45,6 +45,7 @@
     "masonry-layout": "^4.2.2",
     "moment": "^2.29.1",
     "ngx-infinite-scroll": "^9.1.0",
+    "ngx-matomo": "^0.1.4",
     "npm-force-resolutions": "0.0.3",
     "particles.js": "^2.0.0",
     "protractor-http-client": "^1.0.4",
