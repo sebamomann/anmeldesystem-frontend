@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 import { IUserModel } from '../models/IUserModel.model';
 import { MatDialog } from '@angular/material';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
@@ -7,7 +7,8 @@ import { MonthnamePipe } from '../pipes/monthname.pipe';
 import { AuthenticationValuesService } from '../services/authentication.values.service';
 import { interval } from 'rxjs';
 import { UpdateService } from '../services/update.service';
-import { MatomoInjector } from 'ngx-matomo';
+import { MatomoInjector, MatomoTracker } from 'ngx-matomo';
+import { filter } from 'rxjs/operators';
 
 const version = require('../../../package.json').version;
 
@@ -64,10 +65,13 @@ export class AppComponent {
     private monthnamePipe: MonthnamePipe,
     private authenticationValuesService: AuthenticationValuesService,
     private update: UpdateService,
-    private matomoInjector: MatomoInjector
+    private matomoInjector: MatomoInjector,
+    private matomoTracker: MatomoTracker
   ) {
     this.matomoInjector.init("https://matomo.sebamomann.de/", 3);
-
+    router.events.pipe(filter(event => event instanceof NavigationStart && event.id !== 1)).subscribe((val) => {
+      this.matomoTracker.trackPageView();
+    });
     const source = interval(1000 * 60);
 
     source.subscribe(
