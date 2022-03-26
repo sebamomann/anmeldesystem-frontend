@@ -13,7 +13,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e --port 4200",
     "build:ci": "npm run build:prod",
-    "stats": "webpack-bundle-analyzer dist/stats.json"
+    "stats": "webpack-bundle-analyzer dist/stats.json",
+    "prepare": "npm run snyk-protect",
+    "snyk-protect": "snyk-protect"
   },
   "private": true,
   "dependencies": {
@@ -53,7 +55,8 @@
     "sitemap-generator": "^8.5.1",
     "source-map-explorer": "^2.5.2",
     "tslib": "^1.14.1",
-    "zone.js": "~0.9.1"
+    "zone.js": "~0.9.1",
+    "@snyk/protect": "latest"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.803.29",
@@ -87,5 +90,6 @@
   },
   "resolutions": {
     "@babel/preset-env": "7.8.7"
-  }
+  },
+  "snyk": true
 }
