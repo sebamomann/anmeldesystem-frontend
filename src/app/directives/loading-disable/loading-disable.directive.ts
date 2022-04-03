@@ -47,6 +47,8 @@ export class LoadingDisableDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (!this.subscription) return; // fallback if directive present but not used
+
     this.subscription.unsubscribe();
   }
 
