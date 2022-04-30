@@ -94,9 +94,9 @@
             placeholder="Mail-Adresse"
           />
         </label>
-        <mat-error *ngIf="getMail().invalid" id="mail-error">
-          {{ getMailErrorMessage() }}
-        </mat-error>
+        <mat-error *ngIf="getMail().invalid" id="mail-error">{{
+          getMailErrorMessage()
+        }}</mat-error>
       </mat-form-field>
       <button
         mat-raised-button

@@ -1,0 +1,13 @@
+{
+  "code": "DUPLICATE_VALUES",
+  "message": "Provided values are already in use",
+  "data": [
+    {
+      "object": "user",
+      "attribute": "sub",
+      "in": "authorization-header",
+      "value": "bcf27563-e7b0-4334-ab91-d35bbb5e63f2",
+      "message": "Authenticated user already enrolled"
+    }
+  ]
+}

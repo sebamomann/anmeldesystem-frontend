@@ -1,13 +1,13 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
-import {MatSnackBar} from '@angular/material';
-import {IAppointmentModel} from '../../../models/IAppointment.model';
-import {Router} from '@angular/router';
-import {WINDOW} from '../../../provider/window.provider';
-import {environment} from '../../../../environments/environment';
-import {AppointmentService} from '../../../services/appointment.service';
-import {AppointmentUtil} from '../../../_util/appointmentUtil.util';
-import {AuthenticationService} from '../../../services/authentication.service';
-import {PushService} from '../../../services/push.service';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
+import { IAppointmentModel } from '../../../models/IAppointment.model';
+import { Router } from '@angular/router';
+import { WINDOW } from '../../../provider/window.provider';
+import { environment } from '../../../../environments/environment';
+import { AppointmentService } from '../../../services/appointment.service';
+import { AppointmentUtil } from '../../../_util/appointmentUtil.util';
+import { AuthenticationService } from '../../../services/authentication.service';
+import { PushService } from '../../../services/push.service';
 
 @Component({
   selector: 'app-appointment-data',
@@ -28,8 +28,8 @@ export class AppointmentDataComponent implements OnInit {
   public appointmentNotificationSubscribed: boolean;
 
   constructor(private snackBar: MatSnackBar, private router: Router, @Inject(WINDOW) public window: Window,
-              private appointmentService: AppointmentService, private authenticationService: AuthenticationService,
-              private pushService: PushService) {
+    private appointmentService: AppointmentService, private authenticationService: AuthenticationService,
+    private pushService: PushService) {
     if (!this.preview) {
       this.type = '';
     }
@@ -59,7 +59,7 @@ export class AppointmentDataComponent implements OnInit {
   }
 
   redirectToAppointment(appointment: IAppointmentModel) {
-    this.router.navigate(['/enroll'], {queryParams: {a: appointment.link}});
+    this.router.navigate(['/enroll'], { queryParams: { a: appointment.link } });
   }
 
   copyLink() {
@@ -99,7 +99,7 @@ export class AppointmentDataComponent implements OnInit {
   }
 
   settings() {
-    this.router.navigate(['appointment/settings'], {queryParamsHandling: 'merge'});
+    this.router.navigate(['appointment/settings'], { queryParamsHandling: 'merge' });
   }
 
   pin() {
@@ -130,16 +130,8 @@ export class AppointmentDataComponent implements OnInit {
           .pin(this.appointment.link)
           .toPromise()
           .then(() => {
-            msg = 'Angepinnt';
             this.isPinned = true;
             AppointmentUtil.pin(this.appointment.link);
-
-            this.snackBar.open(msg,
-              '',
-              {
-                duration: 2000,
-                panelClass: 'snackbar-default'
-              });
           });
       }
     }
@@ -151,8 +143,8 @@ export class AppointmentDataComponent implements OnInit {
       .then(() => {
         this.appointmentNotificationSubscribed = true;
         this.snackBar.open('Benachrichtigungen aktiviert', 'OK', {
-            duration: 1500
-          }
+          duration: 1500
+        }
         );
       })
       .catch(() => {
@@ -166,12 +158,12 @@ export class AppointmentDataComponent implements OnInit {
     (await this.pushService
       .unsubscribeFromAppointment(this.appointment.link))
       .subscribe(() => {
-          this.appointmentNotificationSubscribed = false;
-          this.snackBar.open('Benachrichtigungen deaktiviert', 'OK', {
-              duration: 1500
-            }
-          );
-        },
+        this.appointmentNotificationSubscribed = false;
+        this.snackBar.open('Benachrichtigungen deaktiviert', 'OK', {
+          duration: 1500
+        }
+        );
+      },
         () => {
           this.snackBar.open('Benachrichtigungen konnten nicht deaktiviert werden', 'OK', {
             duration: 2500

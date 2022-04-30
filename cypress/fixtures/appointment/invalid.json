@@ -1,0 +1,6 @@
+{
+  "attribute": "link",
+  "in": "path",
+  "value": "invalid",
+  "message": "Specified appointment does not exist"
+}

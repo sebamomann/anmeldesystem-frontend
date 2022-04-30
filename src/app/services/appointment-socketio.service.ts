@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import * as io from 'socket.io-client';
-import {environment} from '../../environments/environment';
-import {AppointmentProvider} from '../components/termin/appointment.provider';
-import {SettingsService} from './settings.service';
-import {BehaviorSubject} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { io } from 'socket.io-client';
+import { environment } from '../../environments/environment';
+import { AppointmentProvider } from '../components/termin/appointment.provider';
+import { SettingsService } from './settings.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class AppointmentSocketioService {
   private subscription = '';
 
   constructor(private appointmentProvider: AppointmentProvider,
-              private settingsService: SettingsService) {
+    private settingsService: SettingsService) {
   }
 
   public _hasUpdate$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -58,7 +58,7 @@ export class AppointmentSocketioService {
       //   });
       // } else {
       this.socket = await io(environment.API_URL + 'appointment', {
-        'force new connection': true,
+        forceNew: true,
         reconnectionAttempts: 5,
       });
       // }
@@ -114,7 +114,7 @@ export class AppointmentSocketioService {
     }
 
     this.subscription = link;
-    this.socket.emit('subscribe-appointment', {appointment: {link}});
+    this.socket.emit('subscribe-appointment', { appointment: { link } });
   }
 
   public reload(_link: string) {

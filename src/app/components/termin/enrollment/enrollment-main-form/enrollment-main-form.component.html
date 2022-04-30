@@ -39,9 +39,7 @@
             required
           />
         </label>
-        <mat-error id="name-error">
-          {{ getNameErrorMessage() }}
-        </mat-error>
+        <mat-error id="name-error">{{ getNameErrorMessage() }}</mat-error>
       </mat-form-field>
 
       <mat-form-field [formGroup]="form">
@@ -63,9 +61,7 @@
     </div>
 
     <div *ngIf="creatorError" class="info">
-      <mat-error id="creator-error">
-        {{ getCreatorErrorMessage() }}
-      </mat-error>
+      <mat-error id="creator-error">{{ getCreatorErrorMessage() }}</mat-error>
     </div>
 
     <mat-card-actions class="double">
@@ -91,8 +87,7 @@
         color="primary"
         id="next_main"
         type="submit"
-      >
-      </button>
+      ></button>
     </mat-card-actions>
   </form>
 </div>

@@ -1,42 +1,52 @@
-<div [attr.enrollment-id]="enrollment.id"
-     [ngClass]="{
-       'creator': enrollment.creator,
-       'unknown': !enrollment.creator
-       }"
-     class="enrollment">
+<div
+  [attr.enrollment-id]="enrollment.id"
+  [ngClass]="{
+    creator: enrollment.creator,
+    unknown: !enrollment.creator
+  }"
+  class="enrollment"
+>
   <div class="user-information">
-    <mat-icon *ngIf="enrollment.driver" class="isDriver-icon"> directions_car</mat-icon>
+    <mat-icon *ngIf="enrollment.driver" class="isDriver-icon">
+      directions_car</mat-icon
+    >
     <span class="name">
-        <ng-container *ngIf="enrollment.creator">{{enrollment.creator.name}}</ng-container>
-        <ng-container *ngIf="!enrollment.creator">{{enrollment.name}}</ng-container>
+      <ng-container *ngIf="enrollment.creator">{{
+        enrollment.creator.name
+      }}</ng-container>
+      <ng-container *ngIf="!enrollment.creator">{{
+        enrollment.name
+      }}</ng-container>
     </span>
-    <span *ngIf="enrollment.creator"
-          class="username">
-      @{{enrollment.creator.username}}
-    </span>
+    <span *ngIf="enrollment.creator" class="username"
+      >@{{ enrollment.creator.username }}</span
+    >
   </div>
 
   <ng-container *ngIf="enrollment.comment">
     <span class="separator small colored high comment-separator"></span>
-    <span class="comment"> {{ enrollment.comment }} </span>
+    <span class="comment">{{ enrollment.comment }}</span>
   </ng-container>
 
-  <div *ngIf="appointment.additions?.length > 0 && showAdditions"
-       class="addition-list-wrapper">
-
+  <div
+    *ngIf="appointment.additions?.length > 0 && showAdditions"
+    class="addition-list-wrapper"
+  >
     <span class="separator light small high"></span>
 
     <div class="addition-list">
-      <div *ngFor="let addition of appointment.additions; let i = index"
-           class="{{ 'addition-index-' + i}}">
-        <mat-icon *ngIf="enrollmentCheckedAddition(enrollment, addition.id); else blank"
-                  class="checkbox_selected">
+      <div
+        *ngFor="let addition of appointment.additions; let i = index"
+        class="{{ 'addition-index-' + i }}"
+      >
+        <mat-icon
+          *ngIf="enrollmentCheckedAddition(enrollment, addition.id); else blank"
+          class="checkbox_selected"
+        >
           check_box
         </mat-icon>
         <ng-template #blank>
-          <mat-icon class="checkbox_blank">
-            check_box_outline_blank
-          </mat-icon>
+          <mat-icon class="checkbox_blank"> check_box_outline_blank </mat-icon>
         </ng-template>
         <span> {{ addition.name }} </span>
       </div>

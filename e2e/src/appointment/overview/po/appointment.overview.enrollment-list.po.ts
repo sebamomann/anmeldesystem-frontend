@@ -122,7 +122,7 @@ export class AppointmentOverviewEnrollmentListPage extends BasePage {
   }
 
   public isMissingPermissionDialogPresent() {
-    const elem = element(by.css('#missing-permission-dialog'));
+    const elem = element(by.css('#missing-permissions-dialog'));
 
     const EC = protractor.ExpectedConditions;
     browser.wait(EC.presenceOf(elem), 2000, 'Element taking too long to be present');

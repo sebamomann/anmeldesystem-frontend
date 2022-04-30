@@ -1,4 +1,3 @@
-import { browser } from 'protractor';
 import { AppointmentOverviewPage } from './po/appointment.overview.po';
 
 let appointmentPage: AppointmentOverviewPage;

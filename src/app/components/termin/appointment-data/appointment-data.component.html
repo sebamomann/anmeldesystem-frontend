@@ -54,20 +54,10 @@
       </div>
 
       <span
-        class="
-          appointment_description_separator
-          separator
-          small
-          light
-          tall
-          center
-          brighter
-        "
+        class="appointment_description_separator separator small light tall center brighter"
       ></span>
 
-      <p class="appointment_description">
-        {{ appointment.description }}
-      </p>
+      <p class="appointment_description">{{ appointment.description }}</p>
 
       <ng-container *ngIf="!preview && appointment.files?.length > 0">
         <span
@@ -78,9 +68,7 @@
         <div class="files-wrapper">
           <div *ngFor="let file of appointment.files" class="file">
             <mat-icon> attach_file </mat-icon>
-            <a [href]="file.url">
-              {{ file.name }}
-            </a>
+            <a [href]="file.url">{{ file.name }}</a>
           </div>
         </div>
       </ng-container>

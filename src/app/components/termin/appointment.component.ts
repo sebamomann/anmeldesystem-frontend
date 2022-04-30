@@ -1,22 +1,22 @@
-import {Component, NgModule, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IEnrollmentModel} from '../../models/IEnrollment.model';
-import {IAppointmentModel} from '../../models/IAppointment.model';
-import {ActivatedRoute, Router} from '@angular/router';
-import {animate, state, style, transition, trigger} from '@angular/animations';
-import {AuthenticationService} from '../../services/authentication.service';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {SEOService} from '../../_helper/_seo.service';
-import {AppointmentSocketioService} from '../../services/appointment-socketio.service';
-import {AppointmentProvider} from './appointment.provider';
-import {SettingsService} from '../../services/settings.service';
-import {AppointmentService} from '../../services/appointment.service';
-import {AppointmentUtil} from '../../_util/appointmentUtil.util';
-import {MatSnackBar} from '@angular/material';
-import {AppointmentStatus} from './appointment.status';
-import {EnrollmentListComponent} from './enrollment/enrollment-list/enrollment-list.component';
-import {EnrollmentModel} from '../../models/EnrollmentModel.model';
-import {LoadingService} from '../../services/loading.service';
-import {DomSanitizer} from '@angular/platform-browser';
+import { Component, NgModule, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IEnrollmentModel } from '../../models/IEnrollment.model';
+import { IAppointmentModel } from '../../models/IAppointment.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { AuthenticationService } from '../../services/authentication.service';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { SEOService } from '../../_helper/_seo.service';
+import { AppointmentSocketioService } from '../../services/appointment-socketio.service';
+import { AppointmentProvider } from './appointment.provider';
+import { SettingsService } from '../../services/settings.service';
+import { AppointmentService } from '../../services/appointment.service';
+import { AppointmentUtil } from '../../_util/appointmentUtil.util';
+import { MatSnackBar } from '@angular/material';
+import { AppointmentStatus } from './appointment.status';
+import { EnrollmentListComponent } from './enrollment/enrollment-list/enrollment-list.component';
+import { EnrollmentModel } from '../../models/EnrollmentModel.model';
+import { LoadingService } from '../../services/loading.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-appointment',
@@ -25,19 +25,19 @@ import {DomSanitizer} from '@angular/platform-browser';
   providers: [SEOService],
   animations: [
     trigger('fadeInOut', [
-      state('in', style({opacity: 100})),
+      state('in', style({ opacity: 100 })),
       transition('* => void', [
-        animate(1000, style({opacity: 1})),
-        animate(500, style({opacity: 0}))
+        animate(1000, style({ opacity: 1 })),
+        animate(500, style({ opacity: 0 }))
       ])
     ]),
   ],
 })
 @NgModule({})
 export class AppointmentComponent implements OnInit, OnDestroy {
-  @ViewChild('enrollments_actual', {static: false}) enrollments_actualRef: EnrollmentListComponent;
-  @ViewChild('enrollments_waiting', {static: false}) enrollments_waitingRef: EnrollmentListComponent;
-  @ViewChild('enrollments_late', {static: false}) enrollments_lateRef: EnrollmentListComponent;
+  @ViewChild('enrollments_actual', { static: false }) enrollments_actualRef: EnrollmentListComponent;
+  @ViewChild('enrollments_waiting', { static: false }) enrollments_waitingRef: EnrollmentListComponent;
+  @ViewChild('enrollments_late', { static: false }) enrollments_lateRef: EnrollmentListComponent;
 
   public link: string;
 
@@ -79,10 +79,10 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   private editOperation: string;
 
   constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
-              private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
-              private appointmentProvider: AppointmentProvider, public settingsService: SettingsService,
-              private appointmentService: AppointmentService, private snackBar: MatSnackBar, private appointmentStatus: AppointmentStatus,
-              private loadingService: LoadingService, public sanitizer: DomSanitizer) {
+    private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
+    private appointmentProvider: AppointmentProvider, public settingsService: SettingsService,
+    private appointmentService: AppointmentService, private snackBar: MatSnackBar, private appointmentStatus: AppointmentStatus,
+    private loadingService: LoadingService, public sanitizer: DomSanitizer) {
     this.loadingService.message = '';
 
     this.route.queryParams.subscribe(params => {
@@ -94,7 +94,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       if (params.link !== undefined) {
         this.link = params.link;
-        this.router.navigate(['/enroll'], {queryParams: {a: this.link}}).then(() => ''); // convert link to query parameter
+        this.router.navigate(['/enroll'], { queryParams: { a: this.link } }).then(() => ''); // convert link to query parameter
       }
     });
 
@@ -184,13 +184,6 @@ export class AppointmentComponent implements OnInit, OnDestroy {
               }
 
               sAppointment.relations.push('PINNED');
-
-              this.snackBar.open('Angepinnt',
-                '',
-                {
-                  duration: 2000,
-                  panelClass: 'snackbar-default'
-                });
             }
 
             this._seoService.updateTitle(`${sAppointment.title} | GJM - Anmeldesystem`);
@@ -238,7 +231,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   scroll(val: string) {
     const el = document.getElementById(val);
-    el.scrollIntoView({behavior: 'smooth'});
+    el.scrollIntoView({ behavior: 'smooth' });
   }
 
   tableCount() {
