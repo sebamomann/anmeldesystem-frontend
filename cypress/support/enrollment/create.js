@@ -4,11 +4,13 @@ Cypress.Commands.add('enrollment_create_fill_main_form', (data) => {
 
   if (nameToSet) {
     cy.enrollment_create_main_form_name_field()
+      .clear()
       .type(nameToSet);
   }
 
   if (commentToSet) {
     cy.enrollment_create_main_form_comment_field()
+      .clear()
       .type(commentToSet);
   }
 
@@ -28,12 +30,22 @@ Cypress.Commands.add('enrollment_create_fill_login_and_mail_form', (mail) => {
 });
 
 
-
 Cypress.Commands.add('enrollment_create_main_form_cause_empty_name', _ => {
   cy.enrollment_create_main_form_name_field()
     .type("r{backspace}");
 });
 
+Cypress.Commands.add('enrollment_create_fill_additions_form', (args) => {
+  for (let i = 0; i < args.length; i++) {
+    if (args[i]) {
+      cy.enrollment_create_additions_form_addition_field(i)
+        .click();
+    }
+  }
+
+  cy.enrollment_create_additions_form_submit()
+    .click();
+});
 
 // ELEMENTS
 // ELEMENTS
@@ -88,6 +100,12 @@ Cypress.Commands.add('enrollment_create_check_form_comment', _ => {
   return cy.get('.enrollment .comment');
 });
 
+Cypress.Commands.add('enrollment_create_check_form_addition_field_checked', (id, bool) => {
+  return cy.get(`.addition-list .addition-index-${id}`)
+    .children("mat-icon")
+    .should((bool ? "" : "not.") + "have.class", "checkbox_selected");
+});
+
 Cypress.Commands.add('enrollment_create_check_form_submit', _ => {
   return cy.get('#next_check');
 });
@@ -116,7 +134,7 @@ Cypress.Commands.add('enrollment_create_login_and_main_form_login', _ => {
   return cy.get('#login');
 });
 
-Cypress.Commands.add('enrollment_create_check_card', _ => {
+Cypress.Commands.add('enrollment_create_check_form', _ => {
   return cy.get('#enrollment-check-card');
 });
 
@@ -132,4 +150,20 @@ Cypress.Commands.add('enrollment_create_login_and_mail_form_login_alternative_bl
   return cy.get('#login-content-alt');
 });
 
+Cypress.Commands.add('enrollment_create_additions_form', (id) => {
+  return cy.get(`#additions-form`);
+});
+
+Cypress.Commands.add('enrollment_create_additions_form_addition_field', (id) => {
+  return cy.get(`#addition-${id}`);
+});
+
+Cypress.Commands.add('enrollment_create_additions_form_addition_field_checked', (id, bool) => {
+  return cy.get(`#addition-${id}`)
+    .should((bool ? "" : "not.") + "have.class", "mat-checkbox-checked");
+});
+
+Cypress.Commands.add('enrollment_create_additions_form_submit', _ => {
+  return cy.get('#next_additions');
+});
 

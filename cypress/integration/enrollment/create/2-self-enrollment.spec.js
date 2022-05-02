@@ -109,7 +109,7 @@ describe('Enrollment - Create - Self Enrollment', () => {
             .should("be.checked");
         });
 
-        it(' ~ siabled submit button', () => {
+        it(' ~ disabled submit button', () => {
           cy.enrollment_create_main_form_submit()
             .should("be.disabled");
         });
@@ -147,7 +147,7 @@ describe('Enrollment - Create - Self Enrollment', () => {
     });
 
     it(' ~ should be present and be visible', () => {
-      cy.enrollment_create_check_card()
+      cy.enrollment_create_check_form()
         .should("exist")
         .should("be.visible");
     });

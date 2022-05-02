@@ -85,7 +85,7 @@ describe('Enrollment - Create - Unknown User', () => {
     });
 
     it(' ~ should be present and be visible', () => {
-      cy.enrollment_create_check_card()
+      cy.enrollment_create_check_form()
         .should("exist")
         .should("be.visible");
     });
@@ -149,7 +149,7 @@ describe('Enrollment - Create - Unknown User', () => {
     });
 
     it(' ~ should be present and be visible', () => {
-      cy.enrollment_create_check_card()
+      cy.enrollment_create_check_form()
         .should("exist")
         .should("be.visible");
     });

@@ -1,0 +1,12 @@
+{
+  "code": "DUPLICATE_VALUES",
+  "message": "Provided values are already in use",
+  "data": [
+    {
+      "attribute": "name",
+      "in": "body",
+      "value": "Unknown Enrollment - Additions - Already enrolled",
+      "message": "Enrollment with specified name already existing."
+    }
+  ]
+}
