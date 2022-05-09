@@ -70,7 +70,7 @@ pipeline {
             KEYCLOAK_POST_LOGOUT_REDIRECT_URI=https://localhost:4200/
             KEYCLOAK_CLIENT_ID=test
             KEYCLOAK_RESPONSE_TYPE=code
-            KEYCLOAK_SCOPE=openid profile email
+            KEYCLOAK_SCOPE='openid profile email'
             docker run --network $netName -v $PWD/cypress:/e2e -w /e2e cypress/included:3.2.0
           '''
         }
