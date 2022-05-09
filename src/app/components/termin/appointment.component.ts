@@ -11,7 +11,6 @@ import { AppointmentProvider } from './appointment.provider';
 import { SettingsService } from '../../services/settings.service';
 import { AppointmentService } from '../../services/appointment.service';
 import { AppointmentUtil } from '../../_util/appointmentUtil.util';
-import { MatSnackBar } from '@angular/material';
 import { AppointmentStatus } from './appointment.status';
 import { EnrollmentListComponent } from './enrollment/enrollment-list/enrollment-list.component';
 import { EnrollmentModel } from '../../models/EnrollmentModel.model';
@@ -81,7 +80,7 @@ export class AppointmentComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute, public router: Router, public authenticationService: AuthenticationService,
     private _seoService: SEOService, private appointmentSocketioService: AppointmentSocketioService,
     private appointmentProvider: AppointmentProvider, public settingsService: SettingsService,
-    private appointmentService: AppointmentService, private snackBar: MatSnackBar, private appointmentStatus: AppointmentStatus,
+    private appointmentService: AppointmentService, private appointmentStatus: AppointmentStatus,
     private loadingService: LoadingService, public sanitizer: DomSanitizer) {
     this.loadingService.message = '';
 
