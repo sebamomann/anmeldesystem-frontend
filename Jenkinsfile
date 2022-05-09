@@ -117,7 +117,8 @@ pipeline {
           echo err.getMessage()
         }
 
-        sh 'docker container rm ' + uiName + ' -f'
+        try {
+          sh 'docker container rm ' + uiName + ' -f'
         } catch (err) {
           echo err.getMessage()
         }
