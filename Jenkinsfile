@@ -7,6 +7,7 @@ def tagName = 'jb_' + branch_name + "_" + build_number
 def dbName = 'protractor_db_' + tagName
 def netName = 'protractor_net_' + tagName
 def apiName = 'protractor_backend_' + tagName
+def uiName = 'cypress_frontend_' + tagName
 
 def backendImageLatest
 
@@ -30,67 +31,6 @@ pipeline {
       }
     }
 
-//    stage('pull required images') {
-//      steps {
-//        script {
-//          docker.withRegistry('http://localhost:34015') {
-//            backendImageLatest = docker.image('anmeldesystem/anmeldesystem-backend:latest')
-//            backendImageLatest.pull()
-//          }
-//        }
-//      }
-//    }
-
-//    stage('e2e prepare') {
-//      steps {
-//        script {
-//          try {
-//            sh 'docker network create ' + netName
-//          } catch (err) {
-//            echo err.getMessage()
-//          }
-//
-//          sh 'docker run -d ' +
-//            '--name ' + dbName + ' ' +
-//            '--env MYSQL_ROOT_PASSWORD=password ' +
-//            '--env MYSQL_DATABASE=anmeldesystem-api-protractor ' +
-//            '--env MYSQL_USER=user ' +
-//            '--env MYSQL_PASSWORD=password ' +
-//            '--network ' + netName + ' ' +
-//            '--health-cmd=\'mysqladmin ping --silent\' ' +
-//            'mysql ' +
-//            'mysqld --default-authentication-plugin=mysql_native_password'
-//
-//          waitUntil {
-//            "healthy" == sh(returnStdout: true,
-//              script: "docker inspect " + dbName + " --format=\"{{ .State.Health.Status }}\"").trim()
-//          }
-//
-//          sh 'docker run -d ' +
-//            '--name ' + apiName + ' ' +
-//            '--env DB_USERNAME=root ' +
-//            '--env DB_PASSWORD=password ' +
-//            '--env DB_HOST=' + dbName + ' ' +
-//            '--env DB_PORT=3306 ' +
-//            '--env DB_DATABASE=anmeldesystem-api-protractor ' +
-//            '--env SALT_JWT=mysalt ' +
-//            '--env SALT_MAIL=mysalt ' +
-//            '--env SALT_ENROLLMENT=mysalt ' +
-//            '--env DOMAIN=go-join.me ' +
-//            '--env NODE_ENV=protractor ' +
-//            '--network ' + netName + ' ' +
-//            '--health-cmd=\'curl localhost:3000/healthcheck || exit 1 \' ' +
-//            '--health-interval=2s ' +
-//            'localhost:34015/anmeldesystem/anmeldesystem-backend:latest'
-//
-//          waitUntil {
-//            "healthy" == sh(returnStdout: true,
-//              script: "docker inspect " + apiName + " --format=\"{{ .State.Health.Status }}\"").trim()
-//          }
-//        }
-//      }
-//    }
-
     stage('Build Docker image') {
       steps {
         script {
@@ -98,6 +38,45 @@ pipeline {
             "--build-arg BACKEND_URL=http://" + apiName + ":3000 " +
 //              "--network " + netName + " " +
               "-f Dockerfile .")
+        }
+      }
+    }
+
+   stage('cypress prepare') {
+     steps {
+       script {
+         try {
+           sh 'docker network create ' + netName
+         } catch (err) {
+           echo err.getMessage()
+         }
+       }
+     }
+   }
+
+    stage('Start new image') {
+      steps {
+        script {
+          sh 'docker run -it --network ' + netName + ' --name ' + uiName + ' anmeldesystem/anmeldesystem-ui:' + tagName
+        }
+      }
+    }
+
+    stage('Run cypress') {
+      steps {
+        script {
+          sh '''
+            API_URL=http://localhost:3000/
+            BASE_URL=http://uiName/
+            KEYCLOAK_URL=https://account.sebamomann.de/auth/
+            KEYCLOAK_REALM=test
+            KEYCLOAK_REDIRECT_URI=https://localhost:4200/
+            KEYCLOAK_POST_LOGOUT_REDIRECT_URI=https://localhost:4200/
+            KEYCLOAK_CLIENT_ID=test
+            KEYCLOAK_RESPONSE_TYPE=code
+            KEYCLOAK_SCOPE=openid profile email
+            docker run -it --network $netName -v $PWD/cypress:/e2e -w /e2e cypress/included:3.2.0
+          '''
         }
       }
     }
