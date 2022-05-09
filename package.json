@@ -13,7 +13,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e --port 4200",
     "build:ci": "npm run build:prod",
-    "stats": "webpack-bundle-analyzer dist/stats.json"
+    "stats": "webpack-bundle-analyzer dist/stats.json",
+    "cypress:headless": "cypress run --headless --record false",
+    "cypress:open": "cypress open"
   },
   "private": true,
   "dependencies": {

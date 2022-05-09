@@ -9,10 +9,6 @@ const enrollmentInput = {
 };
 
 describe('Enrollment - Create - Self Enrollment', () => {
-  before(() => {
-    cy.visit('http://localhost:4200');
-  });
-
   describe(' * main form', () => {
     describe(' * ', () => {
 
@@ -25,7 +21,6 @@ describe('Enrollment - Create - Self Enrollment', () => {
         cy.fixture(fixture_user_location)
           .then(user => {
             fixture_user = user;
-            cy.keycloack_login_via_api(user.username, user.password);
             cy.navigate_to_enrollment_creation(link, user);
             cy.saveLocalStorage();
           });
@@ -77,7 +72,6 @@ describe('Enrollment - Create - Self Enrollment', () => {
         cy.fixture(fixture_user_location)
           .then(user => {
             fixture_user = user;
-            cy.keycloack_login_via_api(user.username, user.password);
             cy.navigate_to_enrollment_creation(link, user);
             cy.saveLocalStorage();
           });
@@ -139,9 +133,8 @@ describe('Enrollment - Create - Self Enrollment', () => {
       cy.fixture(fixture_user_location)
         .then(user => {
           fixture_user = user;
-          cy.keycloack_login_via_api(user.username, user.password);
           cy.navigate_to_enrollment_creation(link, user);
-          cy.enrollment_create_fill_main_form(enrollmentInput);
+          cy.enrollment_create_fill_forms(enrollmentInput);
           cy.saveLocalStorage();
         });
     });
@@ -180,9 +173,8 @@ describe('Enrollment - Create - Self Enrollment', () => {
       cy.fixture(fixture_user_location)
         .then(user => {
           fixture_user = user;
-          cy.keycloack_login_via_api(user.username, user.password);
           cy.navigate_to_enrollment_creation(link, user);
-          cy.enrollment_create_fill_main_form(enrollmentInput);
+          cy.enrollment_create_fill_forms(enrollmentInput);
           cy.enrollment_create_check_form_back()
             .click();
           cy.saveLocalStorage();
@@ -233,11 +225,8 @@ describe('Enrollment - Create - Self Enrollment', () => {
         cy.fixture(fixture_user_location)
           .then(user => {
             fixture_user = user;
-            cy.keycloack_login_via_api(user.username, user.password);
             cy.navigate_to_enrollment_creation(link, user);
-            cy.enrollment_create_fill_main_form(enrollmentInput);
-            cy.enrollment_create_check_form_submit()
-              .click();
+            cy.enrollment_create_fill_forms({ ...enrollmentInput, check: true });
             cy.wait("@enrollment_create_intercept_submit");
             cy.saveLocalStorage();
           });
@@ -280,11 +269,8 @@ describe('Enrollment - Create - Self Enrollment', () => {
       cy.fixture(fixture_user_location)
         .then(user => {
           fixture_user = user;
-          cy.keycloack_login_via_api(user.username, user.password);
           cy.navigate_to_enrollment_creation(link, user);
-          cy.enrollment_create_fill_main_form(enrollmentInput);
-          cy.enrollment_create_check_form_submit()
-            .click();
+          cy.enrollment_create_fill_forms({ ...enrollmentInput, check: true });
           cy.wait("@enrollment_create_intercept_submit");
           cy.saveLocalStorage();
         });

@@ -1,10 +1,6 @@
 /// <reference types="cypress" />
 
 describe('Appointment - Overview - Navigations', () => {
-  before(() => {
-    cy.visit('http://localhost:4200');
-  });
-
   describe('* navigate to default appointment', () => {
     const link = "valid";
 
@@ -83,11 +79,9 @@ describe('Appointment - Overview - Navigations', () => {
           const fixture_user_location = "user/gjm-test-protractor-appointment-creator-user.json";
           cy.fixture(fixture_user_location)
             .then(user => {
-              cy.keycloack_login_via_api(user.username, user.password);
-
               const fixture = 'appointment/' + link + '.json';
               cy.appointment_overview_intercept_appointment(200, link, fixture);
-              cy.navigate_to_appointment(link);
+              cy.navigate_to_appointment(link, user);
             });
         });
 

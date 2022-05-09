@@ -1,10 +1,6 @@
 /// <reference types='cypress' />
 
 describe('Appointment - Overview - Appointment Data', () => {
-  before(() => {
-    cy.visit('http://localhost:4200');
-  });
-
   describe('* default appointment', () => {
     let fixture_appointment = undefined;
     const link = 'valid';

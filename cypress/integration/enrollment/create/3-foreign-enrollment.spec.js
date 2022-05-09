@@ -10,10 +10,6 @@ const enrollmentInput = {
 };
 
 describe('Enrollment - Create - Foreign Enrollment', () => {
-  before(() => {
-    cy.visit('http://localhost:4200');
-  });
-
   describe(' * main form', () => {
     describe(' * ', () => {
       let fixture_user;
@@ -25,10 +21,8 @@ describe('Enrollment - Create - Foreign Enrollment', () => {
         cy.fixture(fixture_user_location)
           .then(user => {
             fixture_user = user;
-            cy.keycloack_login_via_api(user.username, user.password);
             cy.navigate_to_enrollment_creation(link, user);
-            cy.enrollment_create_main_form_self_enrollment_field().
-              uncheck({ force: true }); // otherwise error that element is covered
+            cy.enrollment_create_fill_forms({ isSelf: false });
             cy.saveLocalStorage();
           });
       });
@@ -78,10 +72,8 @@ describe('Enrollment - Create - Foreign Enrollment', () => {
         cy.fixture(fixture_user_location)
           .then(user => {
             fixture_user = user;
-            cy.keycloack_login_via_api(user.username, user.password);
             cy.navigate_to_enrollment_creation(link, user);
-            cy.enrollment_create_main_form_self_enrollment_field().
-              uncheck({ force: true }); // otherwise error that element is covered
+            cy.enrollment_create_fill_forms({ isSelf: false });
             cy.saveLocalStorage();
           });
       });
@@ -128,7 +120,6 @@ describe('Enrollment - Create - Foreign Enrollment', () => {
   });
 
   describe(' * check card', () => {
-    let fixture_user;
 
     before(() => {
       const fixture = 'appointment/' + link + '.json';
@@ -136,12 +127,8 @@ describe('Enrollment - Create - Foreign Enrollment', () => {
       const fixture_user_location = "user/gjm-test-protractor-general-enrollmentcreator-user-1.json";
       cy.fixture(fixture_user_location)
         .then(user => {
-          fixture_user = user;
-          cy.keycloack_login_via_api(user.username, user.password);
           cy.navigate_to_enrollment_creation(link, user);
-          cy.enrollment_create_main_form_self_enrollment_field().
-            uncheck({ force: true }); // otherwise error that element is covered
-          cy.enrollment_create_fill_main_form(enrollmentInput);
+          cy.enrollment_create_fill_forms({ ...enrollmentInput, isSelf: false });
           cy.saveLocalStorage();
         });
     });
@@ -180,13 +167,8 @@ describe('Enrollment - Create - Foreign Enrollment', () => {
       cy.fixture(fixture_user_location)
         .then(user => {
           fixture_user = user;
-          cy.keycloack_login_via_api(user.username, user.password);
           cy.navigate_to_enrollment_creation(link, user);
-          cy.enrollment_create_main_form_self_enrollment_field().
-            uncheck({ force: true }); // otherwise error that element is covered
-          cy.enrollment_create_fill_main_form(enrollmentInput);
-          cy.enrollment_create_check_form_submit()
-            .click();
+          cy.enrollment_create_fill_forms({ ...enrollmentInput, isSelf: false, check: true });
           cy.saveLocalStorage();
         });
     });
@@ -219,13 +201,8 @@ describe('Enrollment - Create - Foreign Enrollment', () => {
       cy.fixture(fixture_user_location)
         .then(user => {
           fixture_user = user;
-          cy.keycloack_login_via_api(user.username, user.password);
           cy.navigate_to_enrollment_creation(link, user);
-          cy.enrollment_create_main_form_self_enrollment_field().
-            uncheck({ force: true }); // otherwise error that element is covered
-          cy.enrollment_create_fill_main_form(enrollmentInput);
-          cy.enrollment_create_check_form_submit()
-            .click();
+          cy.enrollment_create_fill_forms({ ...enrollmentInput, isSelf: false, check: true });
           cy.enrollment_create_login_and_mail_form_back()
             .click();
           cy.enrollment_create_check_form_back()
@@ -277,14 +254,8 @@ describe('Enrollment - Create - Foreign Enrollment', () => {
       cy.fixture(fixture_user_location)
         .then(user => {
           fixture_user = user;
-          cy.keycloack_login_via_api(user.username, user.password);
           cy.navigate_to_enrollment_creation(link, user);
-          cy.enrollment_create_main_form_self_enrollment_field().
-            uncheck({ force: true }); // otherwise error that element is covered
-          cy.enrollment_create_fill_main_form(enrollmentInput);
-          cy.enrollment_create_check_form_submit()
-            .click();
-          cy.enrollment_create_fill_login_and_mail_form("mail@example.com");
+          cy.enrollment_create_fill_forms({ ...enrollmentInput, isSelf: false, check: true, mail: "mail@example.com" });
           cy.wait("@enrollment_create_intercept_submit");
           cy.saveLocalStorage();
         });
@@ -346,14 +317,8 @@ describe('Enrollment - Create - Foreign Enrollment', () => {
       cy.fixture(fixture_user_location)
         .then(user => {
           fixture_user = user;
-          cy.keycloack_login_via_api(user.username, user.password);
           cy.navigate_to_enrollment_creation(link, user);
-          cy.enrollment_create_main_form_self_enrollment_field().
-            uncheck({ force: true }); // otherwise error that element is covered
-          cy.enrollment_create_fill_main_form(enrollmentInput);
-          cy.enrollment_create_check_form_submit()
-            .click();
-          cy.enrollment_create_fill_login_and_mail_form("mail@example.com");
+          cy.enrollment_create_fill_forms({ ...enrollmentInput, isSelf: false, check: true, mail: "mail@example.com" });
           cy.wait("@enrollment_create_intercept_submit");
         });
     });

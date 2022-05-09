@@ -21,6 +21,11 @@ import './appointment/overview';
 import './appointment/appointment-data';
 import './appointment/enrollment-list';
 import './enrollment/create';
+import './enrollment/form/main_form';
+import './enrollment/form/additions_form';
+import './enrollment/form/driver_and_passenger';
+import './enrollment/form/check_form';
+import './enrollment/form/login_and_mail_form';
 import './keycloak/login';
 
 // Alternatively you can use CommonJS syntax:

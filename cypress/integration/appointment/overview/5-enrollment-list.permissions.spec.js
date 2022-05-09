@@ -3,12 +3,6 @@
 // REMOVE ANPINNEN DIALOG
 describe('Appointment - Overview - Enrollment List - Permissions', () => {
   const link = "valid-enrollment-list-permissions";
-
-  before(() => {
-    cy.visit('http://localhost:4200');
-  });
-
-
   describe(' * as logged in user', () => {
     beforeEach(() => {
       const fixture_user_location = "user/gjm-test-protractor-appointment-creator-user.json";

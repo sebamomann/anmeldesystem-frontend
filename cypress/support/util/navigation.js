@@ -26,13 +26,19 @@ Cypress.Commands.add('enrollment_create_intercept_submit', (code, fixture) => {
   }).as("enrollment_create_intercept_submit");
 });
 
-Cypress.Commands.add('navigate_to_appointment', (appointmentLink) => {
+Cypress.Commands.add('navigate_to_appointment', (appointmentLink, user) => {
+  if (user)
+    cy.keycloack_login_via_api(user.username, user.password);
+
   cy.visit('http://localhost:4200/enroll?a=' + appointmentLink);
   cy.wait_for_loading_spinner_to_be_gone();
   cy.waitUntil(() => cy.get('.mat-card', { timeout: 10000 }).should('be.visible'));
 });
 
-Cypress.Commands.add('navigate_to_enrollment_creation', (appointmentLink) => {
+Cypress.Commands.add('navigate_to_enrollment_creation', (appointmentLink, user = undefined) => {
+  if (user)
+    cy.keycloack_login_via_api(user.username, user.password);
+
   cy.visit('http://localhost:4200/enrollment/add?a=' + appointmentLink);
   cy.wait_for_loading_spinner_to_be_gone();
   cy.waitUntil(() => cy.get('.mat-card', { timeout: 10000 }).should('be.visible'));

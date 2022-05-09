@@ -1,10 +1,6 @@
 /// <reference types="cypress" />
 
 describe('Appointment - Overview - Enrollment List', () => {
-  before(() => {
-    cy.visit('http://localhost:4200');
-  });
-
   describe(' * appointment with no enrollments', () => {
     const link = "valid-enrollment-list-empty";
 
