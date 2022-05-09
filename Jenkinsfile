@@ -61,8 +61,7 @@ pipeline {
     stage('Run cypress') {
       steps {
         script {
-          sh "
-            API_URL=http://localhost:3000/ \
+          sh "API_URL=http://localhost:3000/ \
             BASE_URL=http://${uiName}/ \
             KEYCLOAK_URL=https://account.sebamomann.de/auth/ \
             KEYCLOAK_REALM=test \
@@ -71,7 +70,7 @@ pipeline {
             KEYCLOAK_CLIENT_ID=test \
             KEYCLOAK_RESPONSE_TYPE=code \
             KEYCLOAK_SCOPE='openid profile email' \
-            docker run --network ${netName} -v \$PWD/cypress:/e2e -w /e2e cypress/included:3.2.0
+            docker run --network ${netName} -v \$PWD/cypress:/e2e -w /e2e cypress/included:3.2.0 \
           "
         }
       }
