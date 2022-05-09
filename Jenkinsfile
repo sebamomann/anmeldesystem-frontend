@@ -53,7 +53,7 @@ pipeline {
     stage('Start new image') {
       steps {
         script {
-          sh 'docker run --network ' + netName + ' --name ' + uiName + ' anmeldesystem/anmeldesystem-ui:' + tagName
+          sh 'docker run -d --network ' + netName + ' --name ' + uiName + ' anmeldesystem/anmeldesystem-ui:' + tagName
         }
       }
     }
@@ -113,6 +113,11 @@ pipeline {
       script {
         try {
           sh 'docker network rm protractor_net_' + tagName
+        } catch (err) {
+          echo err.getMessage()
+        }
+
+        sh 'docker container rm ' + uiName + ' -f'
         } catch (err) {
           echo err.getMessage()
         }
