@@ -38,43 +38,34 @@ pipeline {
       }
     }
 
-   stage('cypress prepare') {
-     steps {
-       script {
-         try {
-           sh 'docker network create ' + netName
-         } catch (err) {
-           echo err.getMessage()
-         }
-       }
-     }
-   }
+  //  stage('cypress prepare') {
+  //    steps {
+  //      script {
+  //        try {
+  //          sh 'docker network create ' + netName
+  //        } catch (err) {
+  //          echo err.getMessage()
+  //        }
+  //      }
+  //    }
+  //  }
 
-    stage('Start new image') {
-      steps {
-        script {
-          sh 'docker run -d --network ' + netName + ' --name ' + uiName + ' anmeldesystem/anmeldesystem-ui:' + tagName
-        }
-      }
-    }
+  //   stage('Start new image') {
+  //     steps {
+  //       script {
+  //         sh 'docker run -d --network ' + netName + ' --name ' + uiName + ' anmeldesystem/anmeldesystem-ui:' + tagName
+  //       }
+  //     }
+  //   }
 
-    stage('Run cypress') {
-      steps {
-        script {
-          sh "API_URL=http://localhost:3000/ \
-            BASE_URL=http://${uiName}/ \
-            KEYCLOAK_URL=https://account.sebamomann.de/auth/ \
-            KEYCLOAK_REALM=test \
-            KEYCLOAK_REDIRECT_URI=https://localhost:4200/ \
-            KEYCLOAK_POST_LOGOUT_REDIRECT_URI=https://localhost:4200/ \
-            KEYCLOAK_CLIENT_ID=test \
-            KEYCLOAK_RESPONSE_TYPE=code \
-            KEYCLOAK_SCOPE='openid profile email' \
-            docker run --network ${netName} -v /var/www/vhosts/dankoe.de/jenkins.dankoe.de/data/workspace/anmeldesystem-frontend_cypress:/e2e -w /e2e cypress/included:3.2.0 \
-          "
-        }
-      }
-    }
+  //   stage('Run cypress') {
+  //     steps {
+  //       script {
+  //         sh 'echo \'{"production":true,"API_URL":"http:\/\/localhost:3000\/","BASE_URL":"http:\/\/localhost:4200\/","KEYCLOAK_URL":"https:\/\/account.sebamomann.de\/auth\/","KEYCLOAK_REALM":"test","KEYCLOAK_REDIRECT_URI":"https:\/\/localhost:4200\/","KEYCLOAK_POST_LOGOUT_REDIRECT_URI":"https:\/\/localhost:4200\/","KEYCLOAK_CLIENT_ID":"test","KEYCLOAK_RESPONSE_TYPE":"code","KEYCLOAK_SCOPE":"openid profile email"}\' > cypress.env.json'
+  //         sh 'npm run-script cypress:headless'
+  //       }
+  //     }
+  //   }
 
     stage('Publish to registry') {
       when {
