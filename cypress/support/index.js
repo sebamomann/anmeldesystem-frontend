@@ -21,6 +21,7 @@ import './appointment/overview';
 import './appointment/appointment-data';
 import './appointment/enrollment-list';
 import './enrollment/create';
+import './enrollment/edit';
 import './enrollment/form/main_form';
 import './enrollment/form/additions_form';
 import './enrollment/form/driver_and_passenger';

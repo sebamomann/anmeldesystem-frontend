@@ -1,0 +1,12 @@
+{
+  "code": "INSUFFICIENT_PERMISSIONS",
+  "message": "Following values are duplicates and can not be used",
+  "data": [
+    {
+      "attribute": "id",
+      "in": "path",
+      "value": "1ff2e7e7-9048-46b2-b02b-fe95b874ef6d",
+      "message": "Specified enrollment is not in your ownership. You are also not permitted by being a manager of the related appointment."
+    }
+  ]
+}

@@ -19,7 +19,7 @@ Cypress.Commands.add('enrollment_create_fill_main_form', ({ name, comment }) => 
 
 Cypress.Commands.add('enrollment_create_main_form_cause_empty_name', _ => {
   cy.enrollment_create_main_form_name_field()
-    .type("r{backspace}");
+    .clear();
 });
 
 Cypress.Commands.add('enrollment_create_main_form', _ => {

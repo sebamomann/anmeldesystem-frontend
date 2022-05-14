@@ -16,6 +16,14 @@ Cypress.Commands.add('enrollment_create_intercept_appointment', (code, link, fix
     .as("enrollment_create_intercept_appointment");
 });
 
+Cypress.Commands.add('enrollment_edit_intercept_appointment', (code, link, fixture) => {
+  cy.intercept('GET', 'http://localhost:3000/appointments/' + link + "*", {
+    statusCode: code,
+    fixture: fixture
+  })
+    .as("enrollment_edit_intercept_appointment");
+});
+
 Cypress.Commands.add('enrollment_create_intercept_submit', (code, fixture) => {
   cy.intercept({
     method: 'POST',
@@ -24,6 +32,16 @@ Cypress.Commands.add('enrollment_create_intercept_submit', (code, fixture) => {
     statusCode: code,
     fixture: fixture
   }).as("enrollment_create_intercept_submit");
+});
+
+Cypress.Commands.add('enrollment_edit_intercept_submit', (code, fixture, id) => {
+  cy.intercept({
+    method: 'PUT',
+    url: "http://localhost:3000/enrollments/" + id,
+  }, {
+    statusCode: code,
+    fixture: fixture
+  }).as("enrollment_edit_intercept_submit");
 });
 
 Cypress.Commands.add('navigate_to_appointment', (appointmentLink, user) => {
@@ -40,6 +58,15 @@ Cypress.Commands.add('navigate_to_enrollment_creation', (appointmentLink, user =
     cy.keycloack_login_via_api(user.username, user.password);
 
   cy.visit('http://localhost:4200/enrollment/add?a=' + appointmentLink);
+  cy.wait_for_loading_spinner_to_be_gone();
+  cy.waitUntil(() => cy.get('.mat-card', { timeout: 10000 }).should('be.visible'));
+});
+
+Cypress.Commands.add('navigate_to_enrollment_edit', (appointmentLink, enrollmentId, user = undefined) => {
+  if (user)
+    cy.keycloack_login_via_api(user.username, user.password);
+
+  cy.visit('http://localhost:4200/enrollment/edit?a=' + appointmentLink + "&e=" + enrollmentId);
   cy.wait_for_loading_spinner_to_be_gone();
   cy.waitUntil(() => cy.get('.mat-card', { timeout: 10000 }).should('be.visible'));
 });

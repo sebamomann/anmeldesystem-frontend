@@ -1,7 +1,7 @@
 <ng-container *ngIf="appointment$ | async as appointment; else loading">
   <ng-container *ngIf="!enrollmentGone; else enrollmentGoneTmpls">
     <mat-card class="form float high">
-      <mat-card-title class="headline" id="title"> Bearbeiten </mat-card-title>
+      <mat-card-title class="headline" id="title">Bearbeiten</mat-card-title>
       <mat-card-content>
         <mat-tab-group [selectedIndex]="selectedIndex" dynamicHeight>
           <!-- OVERALL TODO REMOVE HEADER IF ONLY ONE TAB IS POSSIBLE-->

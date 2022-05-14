@@ -208,6 +208,7 @@ export class EnrollmentEditComponent implements OnInit, OnDestroy {
   }
 
   private main() {
+    console.log(this.appointment.title);
     this.enrollment = this.appointment.enrollments.filter(fEnrollment => {
       return fEnrollment.id === this.enrollmentId;
     })[0];
