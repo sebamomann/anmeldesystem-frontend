@@ -43,7 +43,7 @@
     "http-status-codes": "^1.4.0",
     "jsonwebtoken": "^8.5.1",
     "masonry-layout": "^4.2.2",
-    "moment": "^2.29.2",
+    "moment": "^2.29.4",
     "ngx-infinite-scroll": "^9.1.0",
     "ngx-matomo": "^0.1.4",
     "npm-force-resolutions": "0.0.3",
