@@ -11,7 +11,7 @@ RUN npm run-script build:prod
 
 
 ## STAGE 2
-FROM nginx:1.22.0-alpine
+FROM nginx:1.23.0-alpine
 
 #COPY --from=build /usr/src/app/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /usr/src/app/dist/anmeldesystem-ui /usr/share/nginx/html
