@@ -51,7 +51,7 @@
     "protractor-http-client": "^1.0.4",
     "rxjs": "~6.6.7",
     "sitemap-generator": "^8.5.1",
-    "source-map-explorer": "^2.5.2",
+    "source-map-explorer": "^2.5.3",
     "tslib": "^1.14.1",
     "zone.js": "~0.11.4"
   },
