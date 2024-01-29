@@ -31,7 +31,7 @@
     "@angular/pwa": "^0.1102.18",
     "@angular/router": "~8.2.12",
     "@angular/service-worker": "~8.2.12",
-    "@babel/compat-data": "^7.23.3",
+    "@babel/compat-data": "^7.23.5",
     "@babel/core": "^7.23.3",
     "angular-oauth2-oidc": "^10.0.3",
     "atob": "^2.1.2",
