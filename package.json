@@ -32,7 +32,7 @@
     "@angular/router": "~8.2.12",
     "@angular/service-worker": "~8.2.12",
     "@babel/compat-data": "^7.23.3",
-    "@babel/core": "^7.23.3",
+    "@babel/core": "^7.23.7",
     "angular-oauth2-oidc": "^10.0.3",
     "atob": "^2.1.2",
     "axios": "^0.26.1",
